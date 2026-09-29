@@ -10,3 +10,12 @@ The brief says the retaining walls include "the buried part of the north and sou
 
 ## Q3 (2026-09-29, spec 01) — South passage 1.50 m or 1.92 m?
 The brief says the south side passage is 1.50 m and the north ramp 4.0 m. `plan-v2.json` puts the house 1.92 m from the south boundary, which leaves about 3.5–4.5 m on the north. I used plan-v2.json (1.92 m). **Which one is right?**
+
+## Q4 (2026-09-29, spec 02) — The down flight crosses the retaining wall at the cut
+In Version 2 the down flight starts at y 8.2 on the street level and goes over the cut line (y 8.5), where the lower level's front retaining wall stands. The app notches the wall under the flight, so the model is consistent, but the engineer must detail how the retaining wall steps down under the stair (or the flight must start behind the cut line). **Please flag this for the architect/engineer.**
+
+## Q5 (2026-09-29, spec 02) — North ramp: from the street or from the house front?
+A 12.5 % ramp from −0.32 at the house front would only reach the garden at y ≈ 17.8, and would pass above the studio window. I started it at the street (0.00 at the sidewalk), so it reaches the garden at y ≈ 16.4 and stays below the studio window sill. It is also only 3.5–4.5 m wide there (see Q3). **Is that the intended ramp?**
+
+## Q6 (2026-09-29, spec 02) — Garage roof and lower-level roof
+The front of the street level (garage and entry, y 0–5) has no floor above, so I gave it a flat roof at +3.70 with a 0.30 m parapet (reserved for 6 more solar modules). In Version 1 the lower-level roof behind the street level has no veranda, so it got a parapet too. **Confirm, or say if these should be terraces with guards instead.**

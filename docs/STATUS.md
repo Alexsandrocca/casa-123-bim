@@ -2,6 +2,49 @@
 
 _Updated by Claude Code after every spec. The manager reads this file._
 
+## 2026-09-29 — Spec 02 done: 3D model of site, cut, structure and shell
+
+### What was built
+- **Three views:** 2D, 3D and Split (2D left, 3D right), from buttons above the plan. All of them draw the same model, so moving a wall in 2D changes the 3D at once.
+- **3D camera:** orbit, pan and zoom with the mouse or trackpad. Presets: Street, Garden, North ramp, Top. **Walk** mode puts you on the sidewalk at eye height 1.60 m. Arrow keys or W A S D move you (drag to look around, Shift to go faster), and there are on-screen arrows for the tablet. Walls block you; stairs and steps carry you up and down.
+- **Site:** the lot (14 m front, 15 m rear, 25 m sides) falls from 0.00 at the street to −2.00 at the rear. The rear half is cut to −2.55 behind retaining walls. The north walking ramp (12.5 %) goes from the street down to the garden, and the south passage slopes down to the garden. There are setback lines on the ground (orange), low walls on the neighbour boundaries, the street and the sidewalk, and entry steps up to the front door.
+- **Structure,** generated from the grid and the floors and stored in the model:
+  - 15 steel columns (W200 by default), and concrete piers under the raised street floor over the crawlspace;
+  - steel beams on the grid lines, along the slab edges and around the stair wells;
+  - steel-deck slabs (0.14 m slab + 0.26 m beams = 0.40 m);
+  - pad footings under every column and pier, and strip footings under the retaining walls.
+
+  Click any part to see it. Column and beam sections, roof eaves and the parapet can be changed in the properties panel.
+- **"Nothing floats" check:** every footing, column, beam, slab, wall, stair and deck must rest on something that is itself supported, down to the ground. It passes on Version 2 and Version 1. It fails when a footing, beam or floor is removed.
+- **Walls** have their real thickness and join at the corners. Doors and windows are real holes with frames and glass. Door leaves have an open/closed switch (the garage door rolls up).
+- **Stairs** are built from riser, tread and width, with stringers and the Version 1 landings. **Guards 1.10 m** are added automatically wherever a floor edge drops more than 0.50 m and no wall is there: the veranda, around the stair wells, and between the two flights.
+- **Roof:** flat at +6.80 with a parapet to +7.10 and 0.40 m eaves (editable). The garage roof is at +3.70. The checks now include the eaves against the city's 0.70 m limit.
+- **Section tool:** a floor cut (LL, SL or UF) and a vertical section (Across or Along). The vertical section can be moved by dragging the red bar on top of it, or with the slider, and the camera turns to face the cut.
+- **Sun:** the correct position for Piracicaba for any date and hour, with shadows. Presets: 21 June and 21 December at 9:00 and 15:00.
+- **Selection:** clicking something in 3D selects it in both views. The 2D plan switches to that element's floor.
+
+### How to see it
+- Double-click **`Open Casa 123.command`**, then click **3D** or **Split** above the plan.
+- Screenshots: `docs/screens/02-street.png`, `02-garden.png`, `02-section.png` (a section through the stairs, looking from the north).
+
+### Tests
+- `npm test`: 49 unit tests, including the walk from the street through the entry, down the stair and out of the garden door; the support check passing and failing; guards; holes in walls; the sun position.
+- `npm run e2e`: 13 browser tests, including switching views, clicking a wall in 3D, walk mode, dragging the section plane, and the three screenshots.
+- `npm run build` passes.
+
+### Not done yet / known gaps
+- Section cuts are hollow: you see inside the walls, but the cut faces are not filled in (poché).
+- The frame rate was not measured on the family laptop. The scene has about 700 simple parts and rebuilds in about 20 ms after an edit, which should be comfortable.
+- Footing sizes, column and beam sections are placeholders until the engineer's design and the SPT soil borings.
+- Walk mode walks through door openings whether the doors are shown open or closed.
+- The model gained footings, beams, columns and new slabs. Models saved in the browser before this spec are upgraded automatically, keeping the room edits.
+
+### Open questions
+See `docs/QUESTIONS.md` (Q4–Q6 are new).
+
+### Next
+Spec 03 — plumbing (still a draft; the manager marks it ready).
+
 ## 2026-09-29 — Spec 01 done: building model and 2D plan editor
 
 ### What was built

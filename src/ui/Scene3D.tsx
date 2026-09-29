@@ -207,10 +207,50 @@ function SectionClip() {
     }
   });
   if (section.v === 'off') return null;
-  const quad: [number, number, number][] = section.v === 'across'
-    ? [T([-3, section.pos, -4]), T([13, section.pos, -4]), T([13, section.pos, 8]), T([-3, section.pos, 8]), T([-3, section.pos, -4])]
-    : [T([section.pos, -5, -4]), T([section.pos, 22, -4]), T([section.pos, 22, 8]), T([section.pos, -5, 8]), T([section.pos, -5, -4])];
-  return <Line points={quad} color="#B4432F" lineWidth={2} raycast={() => null} />;
+  return <SectionHandle />;
+}
+
+const HANDLE_Z = 8;
+const handleMat = new THREE.MeshBasicMaterial({ color: '#B4432F' });
+
+/** The red frame of the vertical section, with a bar on top you can drag. */
+function SectionHandle() {
+  const section = useApp((s) => s.section);
+  const { controls } = useThree() as unknown as { controls: { enabled: boolean } | null };
+  const drag = useRef(false);
+  const across = section.v === 'across';
+  const quad: [number, number, number][] = across
+    ? [T([-3, section.pos, -4]), T([13, section.pos, -4]), T([13, section.pos, HANDLE_Z]), T([-3, section.pos, HANDLE_Z]), T([-3, section.pos, -4])]
+    : [T([section.pos, -5, -4]), T([section.pos, 22, -4]), T([section.pos, 22, HANDLE_Z]), T([section.pos, -5, HANDLE_Z]), T([section.pos, -5, -4])];
+  const bar: BoxPart = across
+    ? { kind: 'box', id: 'handle', mat: 'rail', c: [5, section.pos, HANDLE_Z], s: [16, 0.35, 0.35] }
+    : { kind: 'box', id: 'handle', mat: 'rail', c: [section.pos, 8.5, HANDLE_Z], s: [0.35, 27, 0.35] };
+  const onMove = (e: ThreeEvent<PointerEvent>) => {
+    if (!drag.current) return;
+    e.stopPropagation();
+    const hit = e.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), -HANDLE_Z), new THREE.Vector3());
+    if (!hit) return;
+    const st = useApp.getState();
+    const v = across ? Math.min(21, Math.max(-4, -hit.z)) : Math.min(12, Math.max(-2, hit.x));
+    st.set3d({ section: { ...st.section, pos: Math.round(v / 0.05) * 0.05 } });
+  };
+  const end = (e: ThreeEvent<PointerEvent>) => {
+    if (!drag.current) return;
+    drag.current = false;
+    if (controls) controls.enabled = true;
+    (e.target as unknown as Element).releasePointerCapture?.(e.pointerId);
+  };
+  return (
+    <>
+      <Line points={quad} color="#B4432F" lineWidth={2} raycast={() => null} />
+      <mesh
+        geometry={unitBox} material={handleMat} position={T(bar.c)} scale={[bar.s[0], bar.s[2], bar.s[1]]}
+        onPointerDown={(e) => { e.stopPropagation(); drag.current = true; if (controls) controls.enabled = false; (e.target as unknown as Element).setPointerCapture?.(e.pointerId); }}
+        onPointerMove={onMove} onPointerUp={end} onPointerCancel={end}
+        onPointerOver={() => { document.body.style.cursor = 'ew-resize'; }} onPointerOut={() => { document.body.style.cursor = ''; }}
+      />
+    </>
+  );
 }
 
 function TestHook() {

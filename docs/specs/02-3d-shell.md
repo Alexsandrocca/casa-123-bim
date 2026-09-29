@@ -1,5 +1,5 @@
 # 02 — 3D model: site, cut, structure and building shell
-Status: in progress
+Status: done (2026-09-29)
 
 ## Goal
 A 3D view of the same model, next to or switchable with the 2D plan. Editing in either view updates both at once. It must be physically believable and measured, not a sketch.

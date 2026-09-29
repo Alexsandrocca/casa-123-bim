@@ -71,3 +71,22 @@ test('walk mode starts at the street and moves with the keyboard', async ({ page
   const after = await page.evaluate(() => (window as unknown as { __casa3d: Hook }).__casa3d.project(4.5, 0, 3.2));
   expect(after).not.toEqual(before); // the camera moved
 });
+
+test('drag the section plane by its red bar', async ({ page }) => {
+  await page.goto('/');
+  await page.getByTestId('view-3d').click();
+  await ready(page);
+  await page.getByRole('button', { name: 'Section & sun ▾' }).click();
+  await page.getByTestId('section-along').click();
+  await page.getByRole('button', { name: 'Less ▴' }).click();
+  await page.waitForTimeout(500);
+  const [x, y] = await screen(page, 2.45, 14, 8);
+  const [x2, y2] = await screen(page, 4.45, 14, 8);
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  for (let i = 1; i <= 10; i++) await page.mouse.move(x + ((x2 - x) * i) / 10, y + ((y2 - y) * i) / 10);
+  await page.mouse.up();
+  await page.getByRole('button', { name: 'Section & sun ▾' }).click();
+  const v = Number(await page.getByTestId('section-pos').inputValue());
+  expect(v).toBeGreaterThan(3.5);
+});
