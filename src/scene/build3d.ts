@@ -322,6 +322,12 @@ function sitePartsAndSurfaces(p: Project, out: Part[], surfaces: Surface[]) {
     surfaces.push({ id: `site:${z.id}`, poly: z.poly, z0: z.z0, y0: z.y0, dzdy: z.dzdy });
   }
   const g = (x: number, y: number) => groundAt(p, x, y, zones);
+  // The neighbours' land around the lot, at the natural slope.
+  const far = f.yRear + 25, nz = (y: number) => f.natural(Math.min(y, f.yRear + 10));
+  const nb = (pts: [number, number][]) => out.push({ kind: 'poly', id: 'site:neighbours', mat: 'grass', pts: pts.map(([x, y]) => [x, y, nz(y) - 0.02] as V3) });
+  nb([[f.xSouth - 25, f.yStreet], [f.xSouth, f.yStreet], [f.xSouth, far], [f.xSouth - 25, far]]);
+  nb([[f.xNorth(f.yStreet), f.yStreet], [f.xNorth(f.yStreet) + 25, f.yStreet], [f.xNorth(f.yStreet) + 25, far], [f.xNorth(f.yRear), far], [f.xNorth(f.yRear), f.yRear]]);
+  nb([[f.xSouth, f.yRear], [f.xNorth(f.yRear), f.yRear], [f.xNorth(f.yRear), far], [f.xSouth, far]]);
   // Street and sidewalk in front.
   const xs0 = f.xSouth - 12, xs1 = f.xNorth(f.yStreet) + 12;
   out.push(box('site:sidewalk', 'sidewalk', xs0, f.yStreet - 2.5, -0.12, xs1, f.yStreet, 0));

@@ -2,10 +2,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { minArea, needsDaylight, runChecks, summarize, type CheckResult } from '../model/checks';
 import {
-  deleteOpening, doorMax, flipOpening, renameSpace, resizeOpening, setOpeningSize, setWallThickness,
+  deleteOpening, doorMax, flipOpening, renameSpace, resizeOpening, setElementProps, setOpeningSize, setWallThickness,
 } from '../model/commands';
+import { BEAM_PROFILES, COLUMN_PROFILES, PIER_PROFILES, profile } from '../model/profiles';
 import { byLevel, getEl, glassArea, openingSegIn, spaceArea, wallLength, wallSeg } from '../model/geometry';
-import type { Element, Opening, PlanLevel, Project, Space, Wall } from '../model/schema';
+import type { Beam, Column, Element, Footing, Opening, PlanLevel, Project, Slab, Space, Stair, Wall } from '../model/schema';
 import { useApp, useProject } from '../store';
 import { ZONE_COLOR } from './PlanView';
 
@@ -83,7 +84,12 @@ export function PropertiesPanel() {
       {el?.type === 'Space' && <SpaceProps p={p} s={el} />}
       {el?.type === 'Wall' && <WallProps p={p} w={el} />}
       {el?.type === 'Opening' && <OpeningProps p={p} op={el} />}
-      {el && !['Space', 'Wall', 'Opening'].includes(el.type) && <GenericProps el={el} />}
+      {el?.type === 'Column' && <ColumnProps c={el} />}
+      {el?.type === 'Beam' && <BeamProps b={el} />}
+      {el?.type === 'Slab' && <SlabProps s={el} />}
+      {el?.type === 'Footing' && <FootingProps f={el} />}
+      {el?.type === 'Stair' && <StairProps st={el} />}
+      {el && !['Space', 'Wall', 'Opening', 'Column', 'Beam', 'Slab', 'Footing', 'Stair'].includes(el.type) && <GenericProps el={el} />}
     </aside>
   );
 }
@@ -197,6 +203,109 @@ function OpeningProps({ p, op }: { p: Project; op: Opening }) {
         {isDoor && <Row k="Width range" v={`0.60 – ${doorMax(op).toFixed(2)} m`} />}
       </div>
       <p className="hint">Drag it in the plan to slide it along its wall. Delete or Backspace removes it.</p>
+    </>
+  );
+}
+
+function ProfileSelect({ label, value, options, onChange }: { label: string; value: string; options: string[]; onChange: (v: string) => void }) {
+  return (
+    <label className="field">
+      <span>{label}</span>
+      <select value={value} onChange={(e) => onChange(e.target.value)} data-testid="profile">
+        {options.includes(value) ? null : <option value={value}>{value}</option>}
+        {options.map((o) => <option key={o} value={o}>{o}</option>)}
+      </select>
+    </label>
+  );
+}
+
+const lvl = (v: number) => `${v < 0 ? '−' : '+'}${Math.abs(v).toFixed(2)}`;
+
+function ColumnProps({ c }: { c: Column }) {
+  const run = useApp((st) => st.run);
+  const pier = c.props.kind === 'pier';
+  const pr = profile(c.props.profile);
+  return (
+    <>
+      <Header title={pier ? 'Pier' : 'Steel column'} sub={`${pier ? 'Pier' : 'Column'} · ${c.id} · generated from the grid`} />
+      <ProfileSelect label="Section" value={c.props.profile} options={(pier ? PIER_PROFILES : COLUMN_PROFILES).map((p) => p.name)}
+        onChange={(v) => run(setElementProps(c.id, { profile: v }, 'Change column section'))} />
+      <div className="kvs">
+        <Row k="Size" v={`${m(pr.b)} × ${m(pr.d)} m`} />
+        <Row k="At" v={`x ${m(c.props.at[0])}, y ${m(c.props.at[1])}`} />
+        <Row k="From" v={`${lvl(c.props.baseElevation)} (top of footing)`} />
+        <Row k="To" v={`${lvl(c.props.topElevation)} (under the beams)`} />
+        <Row k="Height" v={`${m(c.props.topElevation - c.props.baseElevation)} m`} />
+      </div>
+      <p className="hint">Sizes are for design only. The structural engineer sizes the real frame (NBR 8800).</p>
+    </>
+  );
+}
+
+function BeamProps({ b }: { b: Beam }) {
+  const run = useApp((st) => st.run);
+  const pr = profile(b.props.profile);
+  const len = Math.hypot(b.props.end[0] - b.props.start[0], b.props.end[1] - b.props.start[1]);
+  return (
+    <>
+      <Header title="Steel beam" sub={`Beam · ${b.id} · generated`} />
+      <ProfileSelect label="Section" value={b.props.profile} options={BEAM_PROFILES.map((p) => p.name)}
+        onChange={(v) => run(setElementProps(b.id, { profile: v }, 'Change beam section'))} />
+      <div className="kvs">
+        <Row k="Length" v={`${m(len)} m`} />
+        <Row k="Depth" v={`${m(pr.d)} m`} />
+        <Row k="Top of steel" v={lvl(b.props.elevation)} />
+        <Row k="From → to" v={`(${m(b.props.start[0])}, ${m(b.props.start[1])}) → (${m(b.props.end[0])}, ${m(b.props.end[1])})`} />
+      </div>
+    </>
+  );
+}
+
+function SlabProps({ s }: { s: Slab }) {
+  const run = useApp((st) => st.run);
+  return (
+    <>
+      <Header title={s.props.name} sub={`Slab · ${s.id}${s.props.onGrade ? ' · on the ground' : ' · steel deck'}`} />
+      {s.props.eaves !== undefined && <NumberField label="Eaves" value={s.props.eaves} onCommit={(v) => run(setElementProps(s.id, { eaves: Math.max(0, v) }, 'Change eaves'))} />}
+      {s.props.parapet !== undefined && <NumberField label="Parapet" value={s.props.parapet} onCommit={(v) => run(setElementProps(s.id, { parapet: Math.max(0, v) }, 'Change parapet'))} />}
+      <div className="kvs">
+        <Row k="Top" v={lvl(s.props.topElevation)} />
+        <Row k="Thickness" v={`${m(s.props.thickness)} m`} />
+        {s.props.parapet !== undefined && <Row k="Parapet top" v={lvl(s.props.topElevation + s.props.parapet)} />}
+      </div>
+      {s.props.eaves !== undefined && <p className="hint">Eaves up to 0.70 m are not counted in site coverage (Piracicaba LC 474/2025).</p>}
+    </>
+  );
+}
+
+function FootingProps({ f }: { f: Footing }) {
+  const r = f.props.rect;
+  return (
+    <>
+      <Header title={f.props.kind === 'pad' ? 'Pad footing' : 'Strip footing'} sub={`Footing · ${f.id}${f.props.carries ? ` · carries ${f.props.carries}` : ''}`} />
+      <div className="kvs">
+        <Row k="Plan size" v={`${m(r.x1 - r.x0)} × ${m(r.y1 - r.y0)} m`} />
+        <Row k="Top" v={lvl(f.props.topElevation)} />
+        <Row k="Depth" v={`${m(f.props.depth)} m`} />
+      </div>
+      <p className="hint">Placeholder sizes. Real footings come from the soil borings (SPT) and NBR 6122.</p>
+    </>
+  );
+}
+
+function StairProps({ st }: { st: Stair }) {
+  const { riser, tread, width, flights, name } = st.props;
+  const n = flights.reduce((a, f) => a + f.risers, 0);
+  return (
+    <>
+      <Header title={name} sub={`Stair · ${st.id}`} />
+      <div className="kvs">
+        <Row k="Risers" v={`${n} × ${riser.toFixed(3)} m = ${(n * riser).toFixed(2)} m`} />
+        <Row k="Tread" v={`${m(tread)} m`} />
+        <Row k="Width" v={`${m(width)} m`} />
+        <Row k="2h + b" v={`${(2 * riser + tread).toFixed(3)} m`} />
+        <Row k="Flights" v={String(flights.length)} />
+      </div>
     </>
   );
 }

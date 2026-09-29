@@ -3,7 +3,7 @@
 import {
   E, MIN_ROOM_WIDTH, eq, findHandle, getEl, q, snap, spacesOn, wallSeg, type Orient,
 } from './geometry';
-import type { Element, Opening, Project, Rect, Wall } from './schema';
+import { Element as ElementSchema, type Element, type Opening, type Project, type Rect, type Wall } from './schema';
 import { clampToHost, nextId, rebuildLevel } from './walls';
 
 export interface Command {
@@ -208,4 +208,18 @@ export function resetLevel(level: string, original: Project): Command {
 
 export function replaceProject(next: Project): Command {
   return { label: 'Open model', apply: () => next };
+}
+
+/** Change properties of any element; the result must still be a valid element. */
+export function setElementProps(id: string, patch: Record<string, unknown>, label = 'Change properties'): Command {
+  return {
+    label,
+    apply(p) {
+      const e = getEl(p, id);
+      if (!e) throw new CommandError(`No element ${id}`);
+      const parsed = ElementSchema.safeParse({ ...e, props: { ...e.props, ...patch } });
+      if (!parsed.success) throw new CommandError('That value is not allowed here.');
+      return replace(p, parsed.data);
+    },
+  };
 }

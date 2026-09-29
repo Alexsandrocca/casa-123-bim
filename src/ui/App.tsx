@@ -1,10 +1,12 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { Suspense, lazy, useEffect, useRef, type ReactNode } from 'react';
 import { deleteOpening, resetLevel } from '../model/commands';
 import { getEl } from '../model/geometry';
 import { PLAN_LEVELS } from '../model/schema';
 import { BASES, useApp, useProject, type Tool } from '../store';
 import { AboutDialog, ChecksBar, PropertiesPanel } from './Panels';
 import { PlanView } from './PlanView';
+
+const Scene3D = lazy(() => import('./Scene3D'));
 
 function ToolButton({ label, pressed, onClick, disabled, children, testId }: {
   label: string; pressed?: boolean; onClick: () => void; disabled?: boolean; children: ReactNode; testId?: string;
@@ -31,6 +33,7 @@ export function App() {
   const level = useApp((s) => s.level);
   const tool = useApp((s) => s.tool);
   const message = useApp((s) => s.message);
+  const view = useApp((s) => s.view);
   const canUndo = useApp((s) => s.versions[s.active].past.length > 0);
   const canRedo = useApp((s) => s.versions[s.active].future.length > 0);
   const p = useProject();
@@ -104,6 +107,11 @@ export function App() {
 
       <main className="center">
         <div className="viewbar">
+          <div className="seg" role="group" aria-label="View">
+            {(['2d', '3d', 'split'] as const).map((v) => (
+              <button key={v} aria-pressed={view === v} onClick={() => st.setView(v)} data-testid={`view-${v}`}>{v === 'split' ? 'Split' : v.toUpperCase()}</button>
+            ))}
+          </div>
           <div className="seg" role="tablist" aria-label="Floor">
             {PLAN_LEVELS.map((l) => (
               <button key={l} role="tab" aria-selected={level === l} aria-pressed={level === l} onClick={() => st.setLevel(l)}>
@@ -115,7 +123,10 @@ export function App() {
             {tool === 'door' ? 'Click a wall to add a door.' : tool === 'window' ? 'Click an outside wall to add a window.' : 'Drag inside walls, doors and windows. Double-click a wall to add an opening.'}
           </span>
         </div>
-        <PlanView />
+        <div className={'views ' + view}>
+          {view !== '3d' && <PlanView />}
+          {view !== '2d' && <Suspense fallback={<div className="scene3d loading">Loading 3D…</div>}><Scene3D /></Suspense>}
+        </div>
         <div className="flash" role="status" aria-live="polite">{message}</div>
       </main>
 

@@ -9,6 +9,10 @@ import { PLAN_LEVELS, parseProject, type PlanLevel, type Project } from './model
 
 export type VersionId = 'v1' | 'v2';
 export type Tool = 'select' | 'door' | 'window';
+export type ViewMode = '2d' | '3d' | 'split';
+export type CameraPreset = 'street' | 'garden' | 'ramp' | 'top';
+export interface Section { h: 'off' | 'LL' | 'SL' | 'UF'; v: 'off' | 'across' | 'along'; pos: number }
+export interface SunTime { month: number; day: number; hour: number }
 
 export const BASES: Record<VersionId, Project> = { v1: parseProject(v1json), v2: parseProject(v2json) };
 
@@ -22,14 +26,15 @@ function readStored(v: VersionId): Project {
   return BASES[v];
 }
 
-function readUi(): { active: VersionId; level: PlanLevel } {
+function readUi(): { active: VersionId; level: PlanLevel; view: ViewMode } {
   try {
-    const ui = JSON.parse(localStorage.getItem(KEY.ui) ?? '{}') as { active?: string; level?: string };
+    const ui = JSON.parse(localStorage.getItem(KEY.ui) ?? '{}') as { active?: string; level?: string; view?: string };
     return {
       active: ui.active === 'v1' ? 'v1' : 'v2',
       level: (PLAN_LEVELS as readonly string[]).includes(ui.level ?? '') ? (ui.level as PlanLevel) : 'SL',
+      view: ui.view === '3d' || ui.view === 'split' ? ui.view : '2d',
     };
-  } catch { return { active: 'v2', level: 'SL' }; }
+  } catch { return { active: 'v2', level: 'SL', view: '2d' }; }
 }
 
 export interface AppState {
@@ -44,6 +49,12 @@ export interface AppState {
   checksOpen: boolean;
   checksScope: 'level' | 'all';
   aboutOpen: boolean;
+  view: ViewMode;
+  doorsOpen: boolean;
+  walk: boolean;
+  camera: { preset: CameraPreset; n: number; pos?: [number, number, number]; target?: [number, number, number] };
+  section: Section;
+  sun: SunTime;
 
   run(cmd: Command): boolean;
   previewCmd(cmd: Command): void;
@@ -60,6 +71,13 @@ export interface AppState {
   setChecksOpen(open: boolean): void;
   setChecksScope(s: 'level' | 'all'): void;
   setAbout(open: boolean): void;
+  setView(v: ViewMode): void;
+  set3d(patch: Partial<Pick<AppState, 'doorsOpen' | 'walk' | 'section' | 'sun'>>): void;
+  goCamera(preset: CameraPreset): void;
+  /** Point the camera from pos to target (house coordinates). */
+  lookFrom(pos: [number, number, number], target: [number, number, number]): void;
+  /** Select from the 3D view: also shows the element's floor in 2D. */
+  pick(id: string | null): void;
 }
 
 let flashTimer: ReturnType<typeof setTimeout> | undefined;
@@ -84,6 +102,12 @@ export const useApp = create<AppState>((set, get) => {
     checksOpen: false,
     checksScope: 'level',
     aboutOpen: false,
+    view: ui.view,
+    doorsOpen: false,
+    walk: false,
+    camera: { preset: 'street', n: 0 },
+    section: { h: 'off', v: 'off', pos: 6 },
+    sun: { month: 6, day: 21, hour: 9 },
 
     run(cmd) {
       try {
@@ -130,6 +154,16 @@ export const useApp = create<AppState>((set, get) => {
     setChecksOpen(open) { set({ checksOpen: open }); },
     setChecksScope(s) { set({ checksScope: s }); },
     setAbout(open) { set({ aboutOpen: open }); },
+    setView(v) { set({ view: v, walk: v === '2d' ? false : get().walk }); },
+    set3d(patch) { set(patch); },
+    goCamera(preset) { set((s) => ({ camera: { preset, n: s.camera.n + 1 }, walk: false })); },
+    lookFrom(pos, target) { set((s) => ({ camera: { preset: s.camera.preset, n: s.camera.n + 1, pos, target }, walk: false })); },
+    pick(id) {
+      if (!id) { set({ selection: null }); return; }
+      const el = hist().present.elements.find((e) => e.id === id);
+      const lv = el && (PLAN_LEVELS as readonly string[]).includes(el.level) ? (el.level as PlanLevel) : get().level;
+      set({ selection: id, level: lv });
+    },
   };
 });
 
@@ -139,7 +173,7 @@ export const useProject = () => useApp((s) => s.preview ?? s.versions[s.active].
 // Autosave to this browser.
 let saveTimer: ReturnType<typeof setTimeout> | undefined;
 useApp.subscribe((s, prev) => {
-  if (s.versions === prev.versions && s.active === prev.active && s.level === prev.level) return;
+  if (s.versions === prev.versions && s.active === prev.active && s.level === prev.level && s.view === prev.view) return;
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
     try {
@@ -148,7 +182,7 @@ useApp.subscribe((s, prev) => {
           localStorage.setItem(KEY.model(v), JSON.stringify(s.versions[v].present));
         }
       }
-      localStorage.setItem(KEY.ui, JSON.stringify({ active: s.active, level: s.level }));
+      localStorage.setItem(KEY.ui, JSON.stringify({ active: s.active, level: s.level, view: s.view }));
     } catch { /* storage full or blocked: the model still lives in memory */ }
   }, 250);
 });
