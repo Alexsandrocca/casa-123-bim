@@ -91,3 +91,28 @@ test('double-click an outside wall adds a window; checks list opens', async ({ p
   await page.getByRole('button', { name: 'About' }).click();
   await expect(page.getByRole('dialog')).toContainText('licensed professionals');
 });
+
+test('drag a door along its wall', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('[data-opening="SL-door-03"] .hit').click();
+  await expect(page.getByText('y = 5.00, x 3.40 → 4.20')).toBeVisible();
+  await dragLine(page, '[data-opening="SL-door-03"] .hit', 60, 0);
+  await expect(page.getByText('y = 5.00, x 3.40 → 4.20')).toHaveCount(0);
+  await expect(page.getByText(/^y = 5\.00, x /)).toBeVisible();
+});
+
+test('Save model downloads the JSON and Open model loads it back', async ({ page }) => {
+  await page.goto('/');
+  const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Save model' }).click()]);
+  expect(download.suggestedFilename()).toBe('casa-123-v2.json');
+  const model = JSON.parse(await (await download.createReadStream()).toArray().then((c) => Buffer.concat(c).toString('utf8')));
+  // Rename the kitchen in the saved file, then open it.
+  const kitchen = model.elements.find((e: { type: string; level: string; props: { name: string } }) => e.type === 'Space' && e.level === 'SL' && e.props.name === 'Kitchen');
+  kitchen.props.name = 'Cozinha';
+  await page.getByTestId('open-file').setInputFiles({ name: 'm.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(model)) });
+  await expect(area(page, 'Cozinha')).toHaveText('14.0 m²');
+  await page.getByTestId('undo').click();
+  await expect(area(page, 'Kitchen')).toHaveText('14.0 m²');
+  await page.getByTestId('open-file').setInputFiles({ name: 'bad.json', mimeType: 'application/json', buffer: Buffer.from('{"hello":1}') });
+  await expect(page.getByRole('status')).toContainText('not a Casa 123 model');
+});

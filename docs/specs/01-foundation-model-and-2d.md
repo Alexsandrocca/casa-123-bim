@@ -1,5 +1,5 @@
 # 01 — Foundation: project setup, building model, 2D plan editor
-Status: in progress
+Status: done (2026-09-29)
 
 ## Goal
 A running web app, with tests, that loads Casa 123 Version 2 from `model/casa-123.json`. The family can edit the floor plans in 2D exactly as in the prototype, with the same checks.
