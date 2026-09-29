@@ -1,0 +1,890 @@
+{
+ "meta": {
+  "project": "Casa 123",
+  "version": "Version 2",
+  "units": "metres",
+  "source": "Casa 123 studio (claude.ai artifact DXqvPPacsqSDUnfeub89F8), exported 2026-09-29",
+  "coordinates": "house-local: x = from south wall (0) to north wall (8.6); y = from the front building line (0, which is 4.0 m from the street boundary) to the rear. Street is EAST, rear is WEST, x+ is NORTH.",
+  "lot": {
+   "front_m": 14,
+   "rear_m": 15,
+   "sides_m": 25,
+   "house_origin_on_lot": {
+    "x_from_south_boundary": 1.92,
+    "y_from_street_boundary": 4
+   },
+   "fall_street_to_rear_m": 2
+  },
+  "levels": {
+   "LL": {
+    "floor": -2.5
+   },
+   "SL": {
+    "floor": 0.6
+   },
+   "UF": {
+    "floor": 3.7
+   },
+   "roof": {
+    "top_of_slab": 6.8,
+    "parapet_top": 7.1
+   },
+   "garage": {
+    "floor": 0.1
+   },
+   "garden": {
+    "level": -2.55,
+    "from_house_y": 8.5
+   }
+  },
+  "structure": {
+   "floor_to_floor": 3.1,
+   "clear_height": 2.7,
+   "structure_depth": 0.4,
+   "steel_grid_x": [
+    0,
+    3.2,
+    8.6
+   ],
+   "notes": "Steel W-beam frame, steel-deck slabs, raised street-level floor (0.60) with an inspectable crawlspace over the uncut front half."
+  },
+  "stairs": {
+   "riser": 0.182,
+   "tread": 0.27,
+   "risers_per_floor": 17,
+   "width": 1.5,
+   "notes": "Two straight flights side by side in the south band x 0-3.2. SL->UF flight (up) in x 0-1.5 rising west from y 8.2 to 12.5. SL->LL flight (down) in x 1.7-3.2 descending west from y 8.2 to 12.5; you arrive on the LL facing the garden door."
+  },
+  "cell_format": "room cells are rectangles {room, zone, x0,y0,x1,y1, lock}; a room can have several cells. doors {o:h|v, c: wall coordinate, p: start along wall, w: width, s: swing side +1/-1, k: garage|slider}; windows {o, c, a, b, k: win|slider|high}; overlays [room, u, v, kind, label] = position inside the room first cell (0..1)."
+ },
+ "plan": {
+  "LL": {
+   "name": "Lower level −2.50",
+   "outline": [
+    0,
+    8.5,
+    8.6,
+    15
+   ],
+   "cells": [
+    {
+     "room": "Stair",
+     "zone": "stair",
+     "x0": 1.6,
+     "y0": 8.5,
+     "x1": 3.2,
+     "y1": 12.5,
+     "lock": true,
+     "kind": "lane"
+    },
+    {
+     "room": "Storage",
+     "zone": "service",
+     "x0": 0,
+     "y0": 8.5,
+     "x1": 1.6,
+     "y1": 10.5,
+     "lock": false
+    },
+    {
+     "room": "Laundry",
+     "zone": "service",
+     "x0": 0,
+     "y0": 10.5,
+     "x1": 1.6,
+     "y1": 12.5,
+     "lock": false
+    },
+    {
+     "room": "Hall",
+     "zone": "circ",
+     "x0": 0,
+     "y0": 12.5,
+     "x1": 3.2,
+     "y1": 15,
+     "lock": false
+    },
+    {
+     "room": "WC",
+     "zone": "wet",
+     "x0": 3.2,
+     "y0": 13.3,
+     "x1": 4.8,
+     "y1": 15,
+     "lock": false
+    },
+    {
+     "room": "Studio · office",
+     "zone": "work",
+     "x0": 4.8,
+     "y0": 8.5,
+     "x1": 8.6,
+     "y1": 15,
+     "lock": false
+    },
+    {
+     "room": "Studio · office",
+     "zone": "work",
+     "x0": 3.2,
+     "y0": 8.5,
+     "x1": 4.8,
+     "y1": 13.3,
+     "lock": false
+    }
+   ],
+   "doors": [
+    {
+     "o": "h",
+     "c": 12.5,
+     "p": 0.4,
+     "w": 0.8,
+     "s": -1
+    },
+    {
+     "o": "h",
+     "c": 10.5,
+     "p": 0.4,
+     "w": 0.7,
+     "s": -1
+    },
+    {
+     "o": "v",
+     "c": 3.2,
+     "p": 13.65,
+     "w": 0.7,
+     "s": 1
+    },
+    {
+     "o": "v",
+     "c": 3.2,
+     "p": 12.55,
+     "w": 0.7,
+     "s": 1
+    },
+    {
+     "o": "h",
+     "c": 15,
+     "p": 0.4,
+     "w": 2.4,
+     "s": 1,
+     "k": "slider"
+    }
+   ],
+   "windows": [
+    {
+     "o": "v",
+     "c": 0,
+     "a": 10.8,
+     "b": 12.2,
+     "k": "win"
+    },
+    {
+     "o": "h",
+     "c": 15,
+     "a": 3.5,
+     "b": 4.5,
+     "k": "high"
+    },
+    {
+     "o": "h",
+     "c": 15,
+     "a": 5.1,
+     "b": 8.3,
+     "k": "slider"
+    },
+    {
+     "o": "v",
+     "c": 8.6,
+     "a": 9,
+     "b": 14.6,
+     "k": "win"
+    }
+   ],
+   "extras": [
+    {
+     "x0": 0,
+     "y0": 15,
+     "x1": 8.6,
+     "y1": 16.2,
+     "label": "garden −2.55 →"
+    }
+   ]
+  },
+  "SL": {
+   "name": "Street level +0.60",
+   "outline": [
+    0,
+    0,
+    8.6,
+    12.6
+   ],
+   "cells": [
+    {
+     "room": "Garage",
+     "zone": "garage",
+     "x0": 3.2,
+     "y0": 0,
+     "x1": 8.6,
+     "y1": 5,
+     "lock": false
+    },
+    {
+     "room": "Entry · hall",
+     "zone": "circ",
+     "x0": 0,
+     "y0": 0,
+     "x1": 3.2,
+     "y1": 2,
+     "lock": false
+    },
+    {
+     "room": "Entry · hall",
+     "zone": "circ",
+     "x0": 2,
+     "y0": 2,
+     "x1": 3.2,
+     "y1": 7,
+     "lock": false
+    },
+    {
+     "room": "Entry · hall",
+     "zone": "circ",
+     "x0": 0,
+     "y0": 7,
+     "x1": 3.2,
+     "y1": 8.2,
+     "lock": false
+    },
+    {
+     "room": "WC",
+     "zone": "wet",
+     "x0": 0,
+     "y0": 2,
+     "x1": 2,
+     "y1": 3.8,
+     "lock": false
+    },
+    {
+     "room": "Storage",
+     "zone": "service",
+     "x0": 0,
+     "y0": 3.8,
+     "x1": 2,
+     "y1": 5,
+     "lock": false
+    },
+    {
+     "room": "Pantry",
+     "zone": "service",
+     "x0": 0,
+     "y0": 5,
+     "x1": 2,
+     "y1": 7,
+     "lock": false
+    },
+    {
+     "room": "Kitchen",
+     "zone": "social",
+     "x0": 3.2,
+     "y0": 5,
+     "x1": 8.6,
+     "y1": 7.6,
+     "lock": false
+    },
+    {
+     "room": "Dining",
+     "zone": "social",
+     "x0": 3.2,
+     "y0": 7.6,
+     "x1": 8.6,
+     "y1": 9.6,
+     "lock": false
+    },
+    {
+     "room": "Living",
+     "zone": "social",
+     "x0": 3.2,
+     "y0": 9.6,
+     "x1": 8.6,
+     "y1": 12.6,
+     "lock": false
+    },
+    {
+     "room": "Stair",
+     "zone": "stair",
+     "x0": 0,
+     "y0": 8.2,
+     "x1": 3.2,
+     "y1": 12.6,
+     "lock": true,
+     "kind": "dual"
+    }
+   ],
+   "doors": [
+    {
+     "o": "h",
+     "c": 0,
+     "p": 0.9,
+     "w": 1,
+     "s": 1
+    },
+    {
+     "o": "h",
+     "c": 0,
+     "p": 3.4,
+     "w": 5,
+     "s": 1,
+     "k": "garage"
+    },
+    {
+     "o": "h",
+     "c": 5,
+     "p": 3.4,
+     "w": 0.8,
+     "s": 1
+    },
+    {
+     "o": "v",
+     "c": 2,
+     "p": 2.5,
+     "w": 0.7,
+     "s": -1
+    },
+    {
+     "o": "v",
+     "c": 2,
+     "p": 4.05,
+     "w": 0.8,
+     "s": -1
+    },
+    {
+     "o": "v",
+     "c": 2,
+     "p": 5.6,
+     "w": 0.8,
+     "s": -1
+    }
+   ],
+   "windows": [
+    {
+     "o": "h",
+     "c": 0,
+     "a": 2.1,
+     "b": 2.9,
+     "k": "win"
+    },
+    {
+     "o": "v",
+     "c": 0,
+     "a": 2.4,
+     "b": 3.4,
+     "k": "high"
+    },
+    {
+     "o": "v",
+     "c": 0,
+     "a": 5.4,
+     "b": 6.6,
+     "k": "high"
+    },
+    {
+     "o": "v",
+     "c": 8.6,
+     "a": 5.3,
+     "b": 7.3,
+     "k": "win"
+    },
+    {
+     "o": "v",
+     "c": 8.6,
+     "a": 7.8,
+     "b": 9.4,
+     "k": "win"
+    },
+    {
+     "o": "v",
+     "c": 8.6,
+     "a": 9.9,
+     "b": 12.3,
+     "k": "slider"
+    },
+    {
+     "o": "h",
+     "c": 12.6,
+     "a": 3.4,
+     "b": 8.4,
+     "k": "slider"
+    },
+    {
+     "o": "v",
+     "c": 0,
+     "a": 8.6,
+     "b": 12.2,
+     "k": "win"
+    },
+    {
+     "o": "h",
+     "c": 12.6,
+     "a": 0.3,
+     "b": 2.9,
+     "k": "win"
+    }
+   ],
+   "extras": [
+    {
+     "x0": 0,
+     "y0": 12.6,
+     "x1": 8.6,
+     "y1": 15,
+     "label": "Veranda 20.6 m² · roof of the lower level"
+    }
+   ]
+  },
+  "UF": {
+   "name": "Upper level +3.70",
+   "outline": [
+    0,
+    5,
+    8.6,
+    13.6
+   ],
+   "cells": [
+    {
+     "room": "Bedroom 2",
+     "zone": "private",
+     "x0": 0,
+     "y0": 5,
+     "x1": 3.2,
+     "y1": 8.2,
+     "lock": false
+    },
+    {
+     "room": "Bath 2",
+     "zone": "wet",
+     "x0": 3.2,
+     "y0": 5,
+     "x1": 5,
+     "y1": 6.6,
+     "lock": false
+    },
+    {
+     "room": "Bath 3",
+     "zone": "wet",
+     "x0": 3.2,
+     "y0": 6.6,
+     "x1": 5,
+     "y1": 8.2,
+     "lock": false
+    },
+    {
+     "room": "Bedroom 3",
+     "zone": "private",
+     "x0": 5,
+     "y0": 5,
+     "x1": 8.6,
+     "y1": 9,
+     "lock": false
+    },
+    {
+     "room": "Bedroom 3",
+     "zone": "private",
+     "x0": 3.2,
+     "y0": 8.2,
+     "x1": 5,
+     "y1": 9,
+     "lock": false
+    },
+    {
+     "room": "Master bedroom",
+     "zone": "private",
+     "x0": 5,
+     "y0": 9,
+     "x1": 8.6,
+     "y1": 13.6,
+     "lock": false
+    },
+    {
+     "room": "Master bedroom",
+     "zone": "private",
+     "x0": 3.2,
+     "y0": 9,
+     "x1": 5,
+     "y1": 10,
+     "lock": false
+    },
+    {
+     "room": "Master bath",
+     "zone": "wet",
+     "x0": 3.2,
+     "y0": 10,
+     "x1": 5,
+     "y1": 12.2,
+     "lock": false
+    },
+    {
+     "room": "Closet",
+     "zone": "private",
+     "x0": 3.2,
+     "y0": 12.2,
+     "x1": 5,
+     "y1": 13.6,
+     "lock": false
+    },
+    {
+     "room": "Hall",
+     "zone": "circ",
+     "x0": 1.6,
+     "y0": 8.2,
+     "x1": 3.2,
+     "y1": 12.5,
+     "lock": false
+    },
+    {
+     "room": "Hall",
+     "zone": "circ",
+     "x0": 0,
+     "y0": 12.5,
+     "x1": 3.2,
+     "y1": 13.6,
+     "lock": false
+    },
+    {
+     "room": "Stair",
+     "zone": "stair",
+     "x0": 0,
+     "y0": 8.2,
+     "x1": 1.6,
+     "y1": 12.5,
+     "lock": true,
+     "kind": "void"
+    }
+   ],
+   "doors": [
+    {
+     "o": "h",
+     "c": 8.2,
+     "p": 1.9,
+     "w": 0.8,
+     "s": -1
+    },
+    {
+     "o": "v",
+     "c": 3.2,
+     "p": 5.5,
+     "w": 0.7,
+     "s": 1
+    },
+    {
+     "o": "v",
+     "c": 5,
+     "p": 7.2,
+     "w": 0.7,
+     "s": -1
+    },
+    {
+     "o": "v",
+     "c": 3.2,
+     "p": 8.25,
+     "w": 0.7,
+     "s": 1
+    },
+    {
+     "o": "v",
+     "c": 3.2,
+     "p": 9.1,
+     "w": 0.8,
+     "s": 1
+    },
+    {
+     "o": "v",
+     "c": 5,
+     "p": 10.4,
+     "w": 0.7,
+     "s": -1
+    },
+    {
+     "o": "v",
+     "c": 5,
+     "p": 12.4,
+     "w": 0.8,
+     "s": -1
+    }
+   ],
+   "windows": [
+    {
+     "o": "h",
+     "c": 5,
+     "a": 0.4,
+     "b": 2.8,
+     "k": "win"
+    },
+    {
+     "o": "v",
+     "c": 0,
+     "a": 5.5,
+     "b": 7.7,
+     "k": "win"
+    },
+    {
+     "o": "h",
+     "c": 5,
+     "a": 3.5,
+     "b": 4.7,
+     "k": "high"
+    },
+    {
+     "o": "h",
+     "c": 5,
+     "a": 5.4,
+     "b": 8.2,
+     "k": "win"
+    },
+    {
+     "o": "v",
+     "c": 8.6,
+     "a": 5.5,
+     "b": 8.1,
+     "k": "win"
+    },
+    {
+     "o": "v",
+     "c": 8.6,
+     "a": 9.2,
+     "b": 13,
+     "k": "win"
+    },
+    {
+     "o": "h",
+     "c": 13.6,
+     "a": 5.4,
+     "b": 8.2,
+     "k": "win"
+    },
+    {
+     "o": "h",
+     "c": 13.6,
+     "a": 0.3,
+     "b": 2.9,
+     "k": "win"
+    },
+    {
+     "o": "v",
+     "c": 0,
+     "a": 8.6,
+     "b": 12.1,
+     "k": "win"
+    }
+   ]
+  }
+ },
+ "overlays": {
+  "LL": {
+   "plumb": [
+    [
+     "WC",
+     0.5,
+     0.85,
+     "wc"
+    ],
+    [
+     "WC",
+     0.2,
+     0.2,
+     "sink"
+    ],
+    [
+     "WC",
+     0.8,
+     0.25,
+     "shower"
+    ],
+    [
+     "Laundry",
+     0.3,
+     0.5,
+     "wm"
+    ],
+    [
+     "Laundry",
+     0.7,
+     0.5,
+     "tank"
+    ],
+    [
+     "Hall",
+     0.1,
+     0.25,
+     "lift"
+    ],
+    [
+     "Hall",
+     0.5,
+     0.95,
+     "drain"
+    ]
+   ],
+   "elec": [
+    [
+     "Storage",
+     0.5,
+     0.5,
+     "panel",
+     "Sub-panel"
+    ],
+    [
+     "Studio · office",
+     0.5,
+     0.1,
+     "rack",
+     "Rack · NVR · UPS"
+    ],
+    [
+     "Studio · office",
+     0.5,
+     0.95,
+     "ac"
+    ]
+   ]
+  },
+  "SL": {
+   "plumb": [
+    [
+     "Kitchen",
+     0.95,
+     0.5,
+     "sink"
+    ],
+    [
+     "WC",
+     0.3,
+     0.8,
+     "wc"
+    ],
+    [
+     "WC",
+     0.8,
+     0.2,
+     "sink"
+    ],
+    [
+     "Kitchen",
+     0.03,
+     0.6,
+     "stack"
+    ],
+    [
+     "Living",
+     0.03,
+     0.5,
+     "stack"
+    ],
+    [
+     "Garage",
+     0.5,
+     0.02,
+     "exit"
+    ]
+   ],
+   "elec": [
+    [
+     "Garage",
+     0.03,
+     0.5,
+     "panel",
+     "Main panel"
+    ],
+    [
+     "Garage",
+     0.97,
+     0.5,
+     "ev",
+     "EV 7 kW"
+    ],
+    [
+     "Living",
+     0.95,
+     0.5,
+     "ac"
+    ],
+    [
+     "Kitchen",
+     0.5,
+     0.1,
+     "hob"
+    ]
+   ]
+  },
+  "UF": {
+   "plumb": [
+    [
+     "Bath 2",
+     0.6,
+     0.3,
+     "wc"
+    ],
+    [
+     "Bath 2",
+     0.6,
+     0.8,
+     "shower"
+    ],
+    [
+     "Bath 3",
+     0.6,
+     0.7,
+     "wc"
+    ],
+    [
+     "Bath 3",
+     0.6,
+     0.2,
+     "shower"
+    ],
+    [
+     "Master bath",
+     0.6,
+     0.2,
+     "wc"
+    ],
+    [
+     "Master bath",
+     0.6,
+     0.75,
+     "shower"
+    ],
+    [
+     "Bath 2",
+     0.05,
+     0.95,
+     "stack"
+    ],
+    [
+     "Master bath",
+     0.05,
+     0.45,
+     "stack"
+    ]
+   ],
+   "elec": [
+    [
+     "Bedroom 2",
+     0.5,
+     0.05,
+     "ac"
+    ],
+    [
+     "Bedroom 3",
+     0.5,
+     0.05,
+     "ac"
+    ],
+    [
+     "Master bedroom",
+     0.5,
+     0.95,
+     "ac"
+    ]
+   ]
+  }
+ }
+}

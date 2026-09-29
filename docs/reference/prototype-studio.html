@@ -1,0 +1,662 @@
+<title>Casa 123 Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root { --paper:#F2F4F1; --sheet:#FBFCFA; --ink:#1D2A2F; --muted:#63727A; --rule:#D5DBD8; --accent:#2B6389; --accent-w:#DCE8F1;
+  --soc:#EAD9B6; --pri:#D3E0EA; --wet:#DCE3E3; --svc:#E4E0D6; --cir:#F6F6F1; --wrk:#D8E4CC; --str:#E8ECEA; --gar:#E2E3DE;
+  --ok:#3F7A45; --bad:#B4432F; --water:#2F7FB5; --sewer:#8A5A2B; --rain:#3AA0A0; --elec:#C27A00; --cam:#7A3FB0;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"Barlow","Helvetica Neue",Arial,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme:dark; --paper:#0F1A1F; --sheet:#132128; --ink:#DCE7EA; --muted:#8FA2A8; --rule:#26363C; --accent:#7DB3DA; --accent-w:#1C3445;
+  --soc:#3B3322; --pri:#1F3242; --wet:#243034; --svc:#2E2B24; --cir:#17252B; --wrk:#243322; --str:#1A2A30; --gar:#1E2A2F; --ok:#7CC083; --bad:#E58A74; --water:#6FB4E4; --sewer:#C8955E; --rain:#6ACACA; --elec:#E7A93A; --cam:#B585E3; } }
+:root[data-theme="dark"] { color-scheme:dark; --paper:#0F1A1F; --sheet:#132128; --ink:#DCE7EA; --muted:#8FA2A8; --rule:#26363C; --accent:#7DB3DA; --accent-w:#1C3445;
+  --soc:#3B3322; --pri:#1F3242; --wet:#243034; --svc:#2E2B24; --cir:#17252B; --wrk:#243322; --str:#1A2A30; --gar:#1E2A2F; --ok:#7CC083; --bad:#E58A74; --water:#6FB4E4; --sewer:#C8955E; --rain:#6ACACA; --elec:#E7A93A; --cam:#B585E3; }
+[hidden] { display:none !important; }
+body { background:var(--paper); color:var(--ink); font-family:var(--body); font-size:15px; line-height:1.5; }
+.wrap { max-width:1280px; margin:0 auto; padding-inline:18px; padding-block:20px 60px; display:grid; gap:18px; }
+header { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:end; gap:10px 24px; border-bottom:2px solid var(--ink); padding-bottom:12px; }
+.eyebrow { font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+h1 { font-family:var(--display); font-weight:700; font-size:clamp(30px,5vw,44px); line-height:1; margin:4px 0 0; }
+h2 { font-family:var(--display); font-weight:700; font-size:24px; margin:0; }
+h3 { font-family:var(--display); font-weight:600; font-size:18px; margin:0; letter-spacing:.02em; }
+h4 { font-family:var(--display); font-weight:600; font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:0 0 4px; }
+p { margin:0; max-width:72ch; }
+.tabs { display:flex; gap:4px; }
+.tab { font:inherit; font-family:var(--display); font-weight:600; font-size:16px; letter-spacing:.04em; border:1px solid var(--rule); background:var(--sheet); color:var(--ink); padding:7px 16px; border-radius:3px; cursor:pointer; }
+.tab[aria-selected="true"] { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+button { font:inherit; font-size:13.5px; color:var(--ink); background:var(--sheet); border:1px solid var(--rule); border-radius:3px; padding:5px 11px; cursor:pointer; }
+button:hover { border-color:var(--accent); } button[aria-pressed="true"] { background:var(--accent); color:var(--sheet); border-color:var(--accent); }
+button:focus-visible, .tab:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+.editor { display:grid; grid-template-columns:minmax(0,1fr) 330px; gap:16px; align-items:start; }
+@media (max-width:900px) { .editor { grid-template-columns:1fr; } }
+.board { background:var(--sheet); border:1px solid var(--rule); padding:10px; display:grid; gap:8px; }
+.bar { display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; }
+.bar label { display:inline-flex; gap:6px; align-items:center; font-size:13.5px; cursor:pointer; }
+#plan { width:100%; height:auto; display:block; touch-action:none; user-select:none; max-height:78vh; }
+.hint { font-size:12.5px; color:var(--muted); }
+#dragInfo { font-family:var(--mono); font-size:12px; color:var(--accent); min-height:16px; }
+.side { background:var(--sheet); border:1px solid var(--rule); padding:12px; display:grid; gap:10px; }
+.side table { width:100%; border-collapse:collapse; font-size:13px; font-variant-numeric:tabular-nums; }
+.side th { text-align:left; font-family:var(--display); font-weight:600; letter-spacing:.06em; color:var(--muted); border-bottom:1.5px solid var(--ink); padding:3px 4px 3px 0; }
+.side td { border-bottom:1px solid var(--rule); padding:4px 4px 4px 0; }
+.side td i { display:inline-block; width:9px; height:9px; margin-right:6px; border:1px solid var(--muted); vertical-align:0; }
+.side td:nth-child(n+2) { font-family:var(--mono); font-size:12px; text-align:right; }
+.ok { color:var(--ok); } .bad { color:var(--bad); }
+#exp { position:fixed; inset:0; background:rgba(10,20,25,.5); display:grid; place-items:center; padding:16px; z-index:5; }
+#exp .box { background:var(--sheet); border:1px solid var(--rule); padding:14px; width:min(640px,100%); display:grid; gap:8px; }
+#expText { width:100%; min-height:260px; font-family:var(--mono); font-size:11.5px; box-sizing:border-box; background:var(--paper); color:var(--ink); border:1px solid var(--rule); }
+/* plan drawing */
+.floor { fill:var(--sheet); } .cell { stroke:none; } .ext { fill:none; stroke:var(--ink); stroke-width:5; } .wall { stroke:var(--ink); stroke-width:2.6; }
+.gap { stroke:var(--sheet); stroke-width:7; } .glass { stroke:var(--accent); stroke-width:3; } .glassh { stroke:var(--accent); stroke-width:3; stroke-dasharray:4 2; }
+.leaf { stroke:var(--ink); stroke-width:1.6; } .swing { fill:none; stroke:var(--muted); stroke-width:.8; stroke-dasharray:3 2; } .gdoor { stroke:var(--ink); stroke-width:1.6; stroke-dasharray:7 3; }
+.hit { fill:transparent; cursor:grab; } .hit.sel { fill:var(--accent); fill-opacity:.18; stroke:var(--accent); stroke-width:1; }
+.handle { stroke:transparent; stroke-width:12; cursor:grab; } .handle:hover { stroke:var(--accent); stroke-opacity:.35; } .handle.locked { cursor:not-allowed; } .handle.locked:hover { stroke:var(--bad); stroke-opacity:.25; }
+.stairbg { fill:var(--str); } .tread { stroke:var(--muted); stroke-width:.8; } .cwall { fill:var(--ink); }
+.rn { font-family:var(--display); font-weight:600; font-size:14px; fill:var(--ink); pointer-events:none; } .rn2 { font-family:var(--display); font-weight:600; font-size:11.5px; fill:var(--ink); pointer-events:none; }
+.ra { font-family:var(--mono); font-size:10.5px; fill:var(--accent); pointer-events:none; } .ra.bad { fill:var(--bad); }
+.dim { stroke:var(--muted); stroke-width:.8; } .dt { font-family:var(--mono); font-size:10px; fill:var(--muted); }
+.street { font-family:var(--display); font-weight:600; font-size:12px; letter-spacing:.1em; fill:var(--muted); }
+.pipe { fill:none; stroke:var(--sewer); stroke-width:2.2; pointer-events:none; } .pipe.dash { stroke-dasharray:6 4; }
+.pl { fill:var(--sheet); stroke:var(--water); stroke-width:1.6; pointer-events:none; } .pl.stack, .pl.exit, .pl.lift { fill:var(--sewer); stroke:var(--sewer); }
+.ovt { font-family:var(--mono); font-size:9px; pointer-events:none; } .pt { fill:var(--sewer); } .et { fill:var(--elec); }
+.lamp { fill:var(--sheet); stroke:var(--elec); stroke-width:1.4; pointer-events:none; } .lampx { stroke:var(--elec); stroke-width:1.2; pointer-events:none; }
+  .sarrow { fill:none; stroke:var(--accent); stroke-width:1.3; marker-end:none; pointer-events:none; } .stxt { font-family:var(--mono); font-size:9px; fill:var(--accent); pointer-events:none; }
+.deck { fill:var(--soc); fill-opacity:.35; stroke:var(--muted); stroke-width:1; stroke-dasharray:5 3; } .deckt { font-family:var(--mono); font-size:9.5px; fill:var(--muted); pointer-events:none; } .tread.faint { stroke-dasharray:2 3; } .rail { stroke:var(--ink); stroke-width:1.4; stroke-dasharray:6 2; }
+.ebx { fill:var(--elec); fill-opacity:.25; stroke:var(--elec); stroke-width:1.4; pointer-events:none; }
+/* systems */
+.sysgrid { display:grid; gap:18px; }
+.sys { background:var(--sheet); border:1px solid var(--rule); padding:14px; display:grid; gap:10px; }
+.sys .two { display:grid; grid-template-columns:minmax(0,3fr) minmax(0,2fr); gap:16px; align-items:start; }
+@media (max-width:900px) { .sys .two { grid-template-columns:1fr; } }
+.scroll { overflow-x:auto; } svg.scheme { width:100%; min-width:560px; height:auto; display:block; }
+.sys ul, .sys ol { margin:0; padding-left:18px; display:grid; gap:4px; font-size:14px; }
+.calc { font-family:var(--mono); font-size:12.5px; background:var(--paper); border:1px solid var(--rule); padding:10px; display:grid; gap:3px; }
+.calc .r { display:flex; justify-content:space-between; gap:10px; }
+.verdict { border-left:3px solid var(--bad); padding-left:10px; }
+.legend { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:12.5px; color:var(--muted); } .legend i { display:inline-block; width:18px; height:0; border-top:3px solid; margin-right:6px; vertical-align:3px; }
+.earth { fill:#DCD5C8; stroke:#6B6258; stroke-width:1; } .natl { fill:none; stroke:#8A8278; stroke-width:1; stroke-dasharray:5 4; }
+.road { fill:#5F6466; } .walk { fill:#CFCBC2; } .blk { fill:#F4F3EE; stroke:#1D2A2F; stroke-width:1; } .slab { fill:#1D2A2F; }
+.st { font-family:var(--display); font-weight:600; font-size:11px; letter-spacing:.1em; fill:#56646A; } .sn { font-family:var(--body); font-size:10.5px; fill:#56646A; } .sl { font-family:var(--body); font-size:11px; font-weight:600; fill:#1D2A2F; }
+.wmain { fill:#2F7FB5; } .smain { fill:#8A5A2B; } .sw { font-family:var(--mono); font-size:10px; fill:#2F7FB5; } .ss { font-family:var(--mono); font-size:10px; fill:#8A5A2B; } .sr { font-family:var(--mono); font-size:10px; fill:#2A8A8A; }
+.water { fill:none; stroke:#2F7FB5; stroke-width:2.2; } .waterd { fill:none; stroke:#2F7FB5; stroke-width:1.6; stroke-dasharray:6 3; }
+.sewer { fill:none; stroke:#8A5A2B; stroke-width:2.6; } .press { fill:none; stroke:#8A5A2B; stroke-width:1.8; stroke-dasharray:3 3; }
+.rainp { fill:none; stroke:#2A9A9A; stroke-width:2.4; } .rpress { fill:none; stroke:#2A9A9A; stroke-width:1.6; stroke-dasharray:3 3; }
+.meter, .box { fill:#FFFFFF; stroke:#1D2A2F; stroke-width:1; } .tank { fill:#D6E8F4; stroke:#2F7FB5; stroke-width:1.2; } .sump { fill:#EADBC8; stroke:#8A5A2B; stroke-width:1.2; }
+.cistern { fill:#D3EEEE; stroke:#2A9A9A; stroke-width:1.2; } .trench { fill:#E8E1D0; stroke:#2A9A9A; stroke-width:1; stroke-dasharray:3 2; } .arh { fill:#56646A; }
+.ebox { fill:#FFFFFF; stroke:#1D2A2F; stroke-width:1.2; } .ebox.main { fill:#FFF4E0; stroke:#C27A00; } .ebox.pv { fill:#EAF3FB; stroke:#2B6389; } .ebox.ess { fill:#EEF6EC; stroke:#3F7A45; } .ebox.rack { fill:#F2ECF8; stroke:#7A3FB0; }
+.bt { font-family:var(--display); font-weight:600; font-size:15px; fill:#1D2A2F; } .bl { font-family:var(--body); font-size:12px; fill:#3B4A50; } .ew { fill:none; stroke:#56646A; stroke-width:1.6; }
+.lotf { fill:#EEF1EA; stroke:#1D2A2F; stroke-width:1.2; stroke-dasharray:8 3; } .gardenf { fill:#DDE8D2; } .rampf { fill:#E9E4D8; stroke:#8A8278; stroke-width:.6; } .pavedf { fill:#E2E3DE; }
+.housef { fill:#FFFFFF; stroke:#1D2A2F; stroke-width:2; } .llf { fill:none; stroke:#1D2A2F; stroke-width:1; stroke-dasharray:4 3; } .deckf { fill:#EFE3CE; stroke:#A98A62; stroke-width:.8; } .roadf { fill:#CFCBC2; }
+.cone { fill:#7A3FB0; fill-opacity:.12; stroke:#7A3FB0; stroke-opacity:.4; stroke-width:.8; } .cam { fill:#7A3FB0; } .camt { font-family:var(--mono); font-size:9.5px; fill:#FFFFFF; font-weight:500; } .rackf { fill:#F2ECF8; stroke:#7A3FB0; }
+.roof1 { fill:#E7E9E6; stroke:#1D2A2F; stroke-width:1.6; } .roof2 { fill:#F1F2EF; stroke:#1D2A2F; stroke-width:1; stroke-dasharray:5 3; } .module { fill:#1F2E45; stroke:#8FA7C4; stroke-width:.8; } .tankf { fill:#D6E8F4; stroke:#2F7FB5; }
+.sys svg text { paint-order:stroke; }
+/* styles */
+.styles { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; } @media (max-width:900px) { .styles { grid-template-columns:1fr; } }
+.stylecard { background:var(--sheet); border:1px solid var(--rule); display:grid; } .stylecard.chosen { border:2px solid var(--accent); }
+.elevwrap svg { width:100%; height:auto; display:block; } .sky { fill:#EAF1F4; } .gnd { fill:#C9D6B8; }
+.scbody { padding:12px 14px 14px; display:grid; gap:8px; } .schead { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+.cost { font-family:var(--mono); font-size:11.5px; color:var(--accent); }
+.pal { display:flex; flex-wrap:wrap; gap:6px 12px; font-size:12.5px; color:var(--muted); } .pal i { display:inline-block; width:14px; height:14px; border:1px solid var(--rule); margin-right:5px; vertical-align:-2px; }
+.pc2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:13.5px; } .pc2 ul { margin:0; padding-left:16px; display:grid; gap:3px; }
+.scbody button { justify-self:start; }
+</style>
+<div class="wrap">
+<header>
+  <div><div class="eyebrow">Casa 123 · Rua Alceu Maynardi Araújo, 123 · floor plans, versions 1 and 2</div><h1>Casa 123 studio</h1></div>
+  <nav class="tabs" role="tablist"><button class="tab" role="tab" data-t="plan">Plan editor</button><button class="tab" role="tab" data-t="systems">Systems</button><button class="tab" role="tab" data-t="styles">Styles</button></nav>
+</header>
+
+<section class="pane" id="pane-plan">
+  <div class="editor">
+    <div class="board">
+      <div class="bar"><div id="versions" class="bar"><button data-v="v1">Version 1</button><button data-v="v2">Version 2</button></div></div>
+      <div class="bar">
+        <div id="levels" class="bar"><button data-l="LL">Lower −2.50</button><button data-l="SL">Street +0.60</button><button data-l="UF">Upper +3.70</button></div>
+        <label><input type="checkbox" id="layPlumb"> Plumbing</label><label><input type="checkbox" id="layElec"> Electrical</label>
+        <button id="undoBtn">Undo</button><button id="resetBtn">Reset floor</button><button id="exportBtn">Export</button>
+      </div>
+      <div class="bar" id="selBar" hidden><b id="selLabel"></b><button id="wMinus">− 10 cm</button><button id="wPlus">+ 10 cm</button><button id="flipBtn">Flip swing</button><button id="delBtn">Delete</button></div>
+      <svg id="plan" viewBox="0 0 448 688" role="img" aria-label="Editable floor plan"></svg>
+      <div id="dragInfo" aria-live="polite"></div>
+      <p class="hint">Drag an inside wall to resize the rooms on both sides (5 cm steps). Drag a door or window to slide it along its wall. Double-click a wall to add a door (inside) or a window (outside). Select one to change its width, flip it or delete it. The outer walls and the stair stay fixed. Your changes are saved in this browser.</p>
+    </div>
+    <aside class="side">
+      <h3 id="levelSum"></h3>
+      <p id="verNote" class="hint"></p>
+      <div id="checkSum"></div>
+      <table id="roomTable"></table>
+      <p class="hint">Minimums from the São Paulo sanitary code: first bedroom 10 m², others 8 m², bathroom 2.5 m², kitchen 4 m², living room 8 m². Window glass at least 1/8 of the floor area.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="pane" id="pane-systems" hidden>
+  <div class="sysgrid">
+    <div class="sys">
+      <h2>Water and sewage</h2>
+      <div class="legend"><span><i style="border-color:var(--water)"></i>water supply</span><span><i style="border-color:var(--sewer)"></i>sewage, gravity</span><span><i style="border-color:var(--sewer);border-top-style:dashed"></i>sewage, pumped</span></div>
+      <div class="scroll"><svg viewBox="0 0 913.6 391.0" class="scheme" role="img" aria-label="Water and sewer section"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arh"/></marker></defs><polygon points="20.0,251.4 228.0,251.4 553.0,277.4 553.0,328.1 722.0,328.1 722.0,317.7 878.0,317.7 878.0,303.4 893.6,304.6 893.6,371.0 20.0,371.0" class="earth"/><polyline points="553.0,277.4 878.0,303.4" class="natl"/><rect x="20.0" y="251.4" width="143.0" height="4.7" class="road"/><rect x="163.0" y="247.5" width="65.0" height="3.9" class="walk"/><text x="85.0" y="242.3" class="st" text-anchor="middle">STREET</text><text x="195.5" y="239.7" class="sn" text-anchor="middle">sidewalk</text><rect x="332.0" y="163.0" width="130.0" height="85.8" class="blk"/><rect x="462.0" y="74.6" width="210.6" height="161.2" class="blk"/><rect x="553.0" y="235.8" width="169.0" height="80.6" class="blk"/><rect x="332.0" y="235.8" width="340.6" height="7.8" class="slab"/><rect x="462.0" y="155.2" width="210.6" height="7.8" class="slab"/><rect x="553.0" y="316.4" width="169.0" height="7.8" class="slab"/><rect x="332.0" y="248.8" width="130.0" height="7.8" class="slab"/><text x="397.0" y="209.8" class="sl" text-anchor="middle">garage</text><text x="417.8" y="194.2" class="sl" text-anchor="start"></text><text x="566.0" y="209.8" class="sl" text-anchor="middle">kitchen · living</text><text x="566.0" y="121.4" class="sl" text-anchor="middle">bedrooms + baths</text><text x="638.8" y="285.2" class="sl" text-anchor="middle">WC · laundry · studio</text><text x="800.0" y="309.9" class="sn" text-anchor="middle">garden −2.55</text><circle cx="82.4" cy="290.4" r="3.1" class="wmain"/><text x="82.4" y="278.7" class="sw" text-anchor="middle">water main −1.50</text><circle cx="118.8" cy="329.4" r="5.2" class="smain"/><text x="118.8" y="343.7" class="ss" text-anchor="middle">sewer −3.00</text><polyline points="82.4,290.4 82.4,272.2 222.8,272.2 222.8,241.0" class="water"/><rect x="216.3" y="220.2" width="13.0" height="20.8" class="meter"/><text x="222.8" y="213.7" class="sw" text-anchor="middle">meter</text><polyline points="229.3,230.6 254.0,230.6 254.0,261.8 581.6,261.8 581.6,61.6" class="water"/><rect x="589.4" y="43.4" width="78.0" height="31.2" class="tank"/><text x="628.4" y="36.9" class="sw" text-anchor="middle">2 × 1,000 L tanks over the stair</text><polyline points="581.6,61.6 589.4,61.6" class="water"/><polyline points="667.4,69.4 677.8,69.4 677.8,303.4" class="waterd"/><text x="681.7" y="137.0" class="sw" text-anchor="start">down-feed + pressure pump for upstairs showers</text><polyline points="514.0,90.2 514.0,260.5 254.0,265.7" class="sewer"/><rect x="246.2" y="251.4" width="15.6" height="22.1" class="box"/><text x="254.0" y="282.6" class="ss" text-anchor="middle">inspection box</text><polyline points="261.8,270.9 124.0,324.2" class="sewer" marker-end="url(#ah)"/><text x="363.2" y="277.4" class="ss" text-anchor="start">street + upper floors: gravity, 2 %</text><rect x="446.4" y="242.3" width="26.0" height="14.3" class="box"/><text x="459.4" y="238.4" class="ss" text-anchor="middle">grease trap</text><polyline points="703.8,322.9 592.0,325.5" class="sewer"/><rect x="576.4" y="321.6" width="26.0" height="26.0" class="sump"/><text x="589.4" y="354.1" class="ss" text-anchor="middle">lift station (sealed, alarm)</text><polyline points="589.4,326.8 589.4,267.0 547.8,267.0" class="press" marker-end="url(#ah)"/><text x="593.3" y="298.2" class="ss" text-anchor="start">pressure line + check valve</text><text x="649.2" y="335.9" class="ss" text-anchor="middle">lower WC + laundry −2.80</text></svg></div>
+      <div class="two">
+        <div class="calc">
+          <b>Can the lower level drain to the street by gravity?</b>
+          <div class="r"><span>Lower floor</span><span>−2.50</span></div>
+          <div class="r"><span>WC outlet below the slab</span><span>−2.80</span></div>
+          <div class="r"><span>Pipe leaves the house (front wall of the lower level)</span><span>−2.85</span></div>
+          <div class="r"><span>Run to the street sewer</span><span>≈ 19 m</span></div>
+          <div class="r"><span>Minimum fall, 100 mm pipe (NBR 8160: 1 %)</span><span>−0.19</span></div>
+          <div class="r"><span>Arrives at the sewer at</span><span>−3.04</span></div>
+          <div class="r"><span>Street sewer depth (given)</span><span>−3.00</span></div>
+          <div class="verdict"><b>No.</b> The pipe would reach the sewer at or below its bottom. A side connection has to come in above the sewer pipe, so gravity only works if SEMAE confirms the sewer is at least about 3.4 m deep in front of number 123.</div>
+        </div>
+        <ul>
+          <li><b>Lower WC and laundry:</b> a sealed lift station (a pit with a pump, an alarm and a check valve) pumps up to the gravity line under the street floor. It's small, it sits in the lower WC, and it runs on the backup-power circuit.</li>
+          <li><b>Street floor and upper floor:</b> gravity at 2 % in a 100 mm pipe, with a grease trap for the kitchen and an inspection box at the property line. They reach the sewer at about −2.7, above the pipe.</li>
+          <li><b>Backflow valve:</b> every fixture below street level gets one, so the street sewer can never back up into the house.</li>
+          <li><b>Water:</b> the main is 1.50 m deep. The meter at the front wall feeds 2 × 1,000 L tanks on the roof over the stair (1–2 days for 5 people). Everything is fed from the tanks, with a small pressure pump for the upstairs showers. Hot water comes from a 300 L heat-pump water heater running on the solar power.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sys">
+      <h2>Rainwater (separate 100 mm drainage)</h2>
+      <div class="legend"><span><i style="border-color:var(--rain)"></i>rainwater, gravity</span><span><i style="border-color:var(--rain);border-top-style:dashed"></i>rainwater, pumped</span></div>
+      <div class="scroll"><svg viewBox="0 0 913.6 391.0" class="scheme" role="img" aria-label="Rainwater section"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arh"/></marker></defs><polygon points="20.0,251.4 228.0,251.4 553.0,277.4 553.0,328.1 722.0,328.1 722.0,317.7 878.0,317.7 878.0,303.4 893.6,304.6 893.6,371.0 20.0,371.0" class="earth"/><polyline points="553.0,277.4 878.0,303.4" class="natl"/><rect x="20.0" y="251.4" width="143.0" height="4.7" class="road"/><rect x="163.0" y="247.5" width="65.0" height="3.9" class="walk"/><text x="85.0" y="242.3" class="st" text-anchor="middle">STREET</text><text x="195.5" y="239.7" class="sn" text-anchor="middle">sidewalk</text><rect x="332.0" y="163.0" width="130.0" height="85.8" class="blk"/><rect x="462.0" y="74.6" width="210.6" height="161.2" class="blk"/><rect x="553.0" y="235.8" width="169.0" height="80.6" class="blk"/><rect x="332.0" y="235.8" width="340.6" height="7.8" class="slab"/><rect x="462.0" y="155.2" width="210.6" height="7.8" class="slab"/><rect x="553.0" y="316.4" width="169.0" height="7.8" class="slab"/><rect x="332.0" y="248.8" width="130.0" height="7.8" class="slab"/><text x="397.0" y="209.8" class="sl" text-anchor="middle">garage</text><text x="417.8" y="194.2" class="sl" text-anchor="start"></text><text x="566.0" y="209.8" class="sl" text-anchor="middle">kitchen · living</text><text x="566.0" y="121.4" class="sl" text-anchor="middle">bedrooms + baths</text><text x="638.8" y="285.2" class="sl" text-anchor="middle">WC · laundry · studio</text><text x="800.0" y="309.9" class="sn" text-anchor="middle">garden −2.55</text><polyline points="337.2,163.0 337.2,246.2" class="rainp"/><polyline points="467.2,74.6 467.2,160.4" class="rainp"/><polyline points="667.4,74.6 667.4,235.8" class="rainp"/><text x="342.4" y="157.8" class="sr" text-anchor="start">roofs: DN100 downpipes</text><polyline points="667.4,241.0 667.4,259.2 306.0,259.2" class="rainp" marker-end="url(#ah)"/><rect x="233.2" y="261.8" width="72.8" height="49.4" class="cistern"/><text x="269.6" y="287.8" class="sr" text-anchor="middle">5,000 L</text><text x="269.6" y="320.3" class="sr" text-anchor="middle">reuse cistern (garden, WCs, laundry)</text><polyline points="233.2,264.4 165.6,250.9" class="rainp" marker-end="url(#ah)"/><text x="170.8" y="237.1" class="sr" text-anchor="start">overflow → street gutter</text><polyline points="865.0,320.3 748.0,322.9" class="rainp"/><rect x="727.2" y="321.6" width="20.8" height="23.4" class="sump"/><text x="737.6" y="352.8" class="sr" text-anchor="middle">garden sump + pump</text><rect x="774.0" y="321.6" width="91.0" height="10.4" class="trench"/><text x="819.5" y="339.8" class="sr" text-anchor="middle">infiltration trench</text><polyline points="737.6,324.2 737.6,220.2 306.0,220.2 306.0,261.8" class="rpress" marker-end="url(#ah)"/><text x="436.0" y="215.0" class="sr" text-anchor="start">storm pump line to cistern / gutter</text></svg></div>
+      <ul>
+        <li>Rainwater never goes into the sewer. By law the two networks stay separate, and in this plan they share no pipe.</li>
+        <li><b>Roofs</b> (about 150 m²): 100 mm downpipes feed a 5,000 L cistern under the front setback. It supplies garden watering, WC flushing and the laundry through a separate non-potable line (NBR 15527). Overflow goes by gravity to the street gutter at the curb.</li>
+        <li><b>Garden and lower terrace</b> (−2.55) sit below the street and below the neighbour at the rear. They drain into a lawn infiltration trench first. A sump with a float pump sends heavy storms up to the cistern or the gutter.</li>
+        <li>Downpipes and horizontal runs are 100 mm with at least 1 % fall. Gutters are sized for Piracicaba's rainfall per NBR 10844 in the detailed design.</li>
+      </ul>
+    </div>
+    <div class="sys">
+      <h2>Electrical, panels and solar</h2>
+      <div class="scroll"><svg viewBox="0 0 900 520" class="scheme" role="img" aria-label="Electrical one-line diagram"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arh"/></marker></defs><rect x="20" y="30" width="170" height="70" rx="3" class="ebox"/><text x="30" y="50" class="bt">Utility grid</text><text x="30" y="68" class="bl">3-phase 127/220 V</text><text x="30" y="83" class="bl">bidirectional meter</text><rect x="20" y="140" width="170" height="90" rx="3" class="ebox"/><text x="30" y="160" class="bt">Entry at the front</text><text x="30" y="178" class="bl">main breaker per utility</text><text x="30" y="193" class="bl">grounding (TN-S)</text><text x="30" y="208" class="bl">surge protection class I</text><rect x="260" y="110" width="250" height="200" rx="3" class="ebox main"/><text x="270" y="130" class="bt">Main panel · garage</text><text x="270" y="148" class="bl">surge protection class II</text><text x="270" y="163" class="bl">RCD 30 mA on every circuit group</text><text x="270" y="178" class="bl">smart energy meter (per circuit)</text><text x="270" y="193" class="bl">app-controlled relays / breakers</text><text x="270" y="208" class="bl">C1–C3 lighting · C4–C8 sockets</text><text x="270" y="223" class="bl">C9 induction hob · C10 oven</text><text x="270" y="238" class="bl">C11 washer/dryer · C12 heat-pump water</text><text x="270" y="253" class="bl">C13–C16 air-conditioning (4 splits)</text><text x="270" y="268" class="bl">C17 EV charger 7 kW (garage)</text><text x="270" y="283" class="bl">C18 sub-panel lower level</text><rect x="580" y="30" width="300" height="110" rx="3" class="ebox pv"/><text x="590" y="50" class="bt">Solar 6.6 kWp</text><text x="590" y="68" class="bl">12 modules × 550 W, north, 20°</text><text x="590" y="83" class="bl">≈ 750–800 kWh/month (≈115 kWh/kWp)</text><text x="590" y="98" class="bl">hybrid inverter 6 kW</text><text x="590" y="113" class="bl">grid credit (Law 14.300/2022)</text><rect x="580" y="165" width="300" height="80" rx="3" class="ebox pv"/><text x="590" y="185" class="bt">Battery 10 kWh (optional)</text><text x="590" y="203" class="bl">LFP, backs up essential loads</text><text x="590" y="218" class="bl">automatic switchover in a blackout</text><rect x="580" y="270" width="300" height="110" rx="3" class="ebox ess"/><text x="590" y="290" class="bt">Essential-loads panel</text><text x="590" y="308" class="bl">lights (one circuit per floor)</text><text x="590" y="323" class="bl">fridge · internet · rack</text><text x="590" y="338" class="bl">water pressure pump</text><text x="590" y="353" class="bl">sewage lift + garden sump pumps</text><rect x="260" y="350" width="250" height="130" rx="3" class="ebox"/><text x="270" y="370" class="bt">Sub-panel · lower level</text><text x="270" y="388" class="bl">studio sockets + AC</text><text x="270" y="403" class="bl">lift station pump (alarm)</text><text x="270" y="418" class="bl">garden sump pump</text><text x="270" y="433" class="bl">rack power (via UPS)</text><rect x="580" y="405" width="300" height="95" rx="3" class="ebox rack"/><text x="590" y="425" class="bt">Network + CCTV rack (lower level)</text><text x="590" y="443" class="bl">router · PoE switch 24 ports</text><text x="590" y="458" class="bl">16-channel NVR · 8 TB</text><text x="590" y="473" class="bl">UPS 1.5 kVA · home automation hub</text><polyline points="105,100 105,140" class="ew" marker-end="url(#ah)"/><polyline points="190,185 260,185" class="ew" marker-end="url(#ah)"/><polyline points="730,140 730,165" class="ew" marker-end="url(#ah)"/><polyline points="580,85 540,85 540,150 510,150" class="ew" marker-end="url(#ah)"/><polyline points="730,245 730,270" class="ew" marker-end="url(#ah)"/><polyline points="385,310 385,350" class="ew" marker-end="url(#ah)"/><polyline points="510,440 580,440" class="ew" marker-end="url(#ah)"/><polyline points="510,290 545,290 545,325 580,325" class="ew" marker-end="url(#ah)"/></svg></div>
+      <div class="two">
+        <div class="scroll"><svg viewBox="0 0 360.4 496.4" class="scheme" role="img" aria-label="Solar roof layout"><rect x="34.0" y="306.0" width="292.4" height="170.0" class="roof2" /><text x="180.2" y="391.0" class="sn" text-anchor="middle">garage + entry roof (room for 6 more modules)</text><rect x="34.0" y="30.6" width="292.4" height="275.4" class="roof1" /><rect x="40.8" y="37.4" width="68.0" height="102.0" class="tankf" /><text x="74.8" y="91.8" class="sn" text-anchor="middle">water</text><text x="74.8" y="105.4" class="sn" text-anchor="middle">tanks</text><rect x="136.0" y="244.8" width="72.8" height="37.4" class="module" /><rect x="136.0" y="205.7" width="72.8" height="37.4" class="module" /><rect x="136.0" y="166.6" width="72.8" height="37.4" class="module" /><rect x="136.0" y="127.5" width="72.8" height="37.4" class="module" /><rect x="136.0" y="88.4" width="72.8" height="37.4" class="module" /><rect x="136.0" y="49.3" width="72.8" height="37.4" class="module" /><rect x="241.4" y="244.8" width="72.8" height="37.4" class="module" /><rect x="241.4" y="205.7" width="72.8" height="37.4" class="module" /><rect x="241.4" y="166.6" width="72.8" height="37.4" class="module" /><rect x="241.4" y="127.5" width="72.8" height="37.4" class="module" /><rect x="241.4" y="88.4" width="72.8" height="37.4" class="module" /><rect x="241.4" y="49.3" width="72.8" height="37.4" class="module" /><text x="180.2" y="17.0" class="sn" text-anchor="middle">12 modules × 550 W = 6.6 kWp · rows tilted 20° to the north · 1 m walkway</text><text x="350.2" y="170.0" class="st" text-anchor="middle">N →</text></svg></div>
+        <ul>
+          <li><b>Supply:</b> three-phase from the local utility (CPFL in Piracicaba; confirm the voltage and the entry standard with them). The meter is bidirectional for solar credits.</li>
+          <li><b>Main panel in the garage:</b> surge protection, 30 mA RCDs on every circuit group (NBR 5410), a per-circuit energy meter, and breakers or relays you can switch from the app. There's a sub-panel on the lower level for the studio, pumps and the rack.</li>
+          <li><b>Solar:</b> 12 × 550 W = 6.6 kWp on the upper roof, tilted 20° to the north. That's roughly 750–800 kWh a month, about what a family of 5 uses with air-conditioning, induction cooking, a heat-pump water heater and an electric car. The garage roof takes 6 more modules later.</li>
+          <li><b>Battery (optional, 10 kWh):</b> keeps lights, fridge, internet, cameras and pumps running in a blackout. The lift pump and the garden sump must never stop, so they're on this circuit.</li>
+          <li><b>Controls:</b> a home automation hub with smart switches (Matter/Zigbee), app control of the air-conditioning and water heater, and alerts for the pumps and the tank levels.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sys">
+      <h2>Cameras (16)</h2>
+      <div class="two">
+        <div class="scroll"><svg viewBox="0 0 348.0 572.0" class="scheme" role="img" aria-label="Camera plan"><polygon points="35.6,520.0 315.6,520.0 325.6,20.0 25.6,20.0" class="lotf"/><polygon points="30.6,270.0 320.6,270.0 325.6,20.0 25.6,20.0" class="gardenf"/><polygon points="236.0,520.0 315.6,520.0 323.8,112.0 236.0,112.0" class="rampf"/><rect x="64.0" y="440.0" width="108.0" height="80.0" class="pavedf" /><rect x="182.0" y="440.0" width="44.0" height="80.0" class="pavedf" /><rect x="64.0" y="178.0" width="172.0" height="262.0" class="housef" /><rect x="64.0" y="140.0" width="172.0" height="38.0" class="deckf" /><rect x="64.0" y="140.0" width="172.0" height="130.0" class="llf" /><text x="150.0" y="390.0" class="sn" text-anchor="middle">garage</text><text x="150.0" y="250.0" class="sl" text-anchor="middle">house</text><text x="150.0" y="70.0" class="sn" text-anchor="middle">garden</text><text x="278.0" y="340.0" class="sn" text-anchor="middle">ramp</text><rect x="4.0" y="524.0" width="340.0" height="44.0" class="roadf" /><text x="150.0" y="548.0" class="st" text-anchor="middle">STREET · EAST</text><polygon points="66.0,442.0 -11.8,519.8 112.5,541.7" class="cone"/><polygon points="234.0,442.0 187.5,541.7 311.8,519.8" class="cone"/><polygon points="204.0,439.0 140.9,529.1 267.1,529.1" class="cone"/><polygon points="168.0,344.0 108.9,354.4 157.6,403.1" class="cone"/><polygon points="240.0,516.0 317.8,438.2 193.5,416.3" class="cone"/><polygon points="240.0,320.0 303.1,229.9 176.9,229.9" class="cone"/><polygon points="240.0,144.0 339.7,97.5 230.4,34.4" class="cone"/><polygon points="62.0,436.0 125.1,345.9 -1.1,345.9" class="cone"/><polygon points="62.0,200.0 108.5,100.3 -15.8,122.2" class="cone"/><polygon points="66.0,138.0 165.7,91.5 56.4,28.4" class="cone"/><polygon points="234.0,138.0 243.6,28.4 134.3,91.5" class="cone"/><polygon points="150.0,140.0 213.1,49.9 86.9,49.9" class="cone"/><polygon points="124.0,139.0 214.1,75.9 95.5,32.7" class="cone"/><polygon points="308.0,28.0 201.7,-0.5 244.9,118.1" class="cone"/><polygon points="48.0,28.0 111.1,118.1 154.3,-0.5" class="cone"/><polygon points="124.0,260.0 178.4,234.6 118.8,200.2" class="cone"/><circle cx="66.0" cy="442.0" r="8" class="cam"/><text x="66.0" y="445.6" class="camt" text-anchor="middle">1</text><circle cx="234.0" cy="442.0" r="8" class="cam"/><text x="234.0" y="445.6" class="camt" text-anchor="middle">2</text><circle cx="204.0" cy="439.0" r="8" class="cam"/><text x="204.0" y="442.6" class="camt" text-anchor="middle">3</text><circle cx="168.0" cy="344.0" r="8" class="cam"/><text x="168.0" y="347.6" class="camt" text-anchor="middle">4</text><circle cx="240.0" cy="516.0" r="8" class="cam"/><text x="240.0" y="519.6" class="camt" text-anchor="middle">5</text><circle cx="240.0" cy="320.0" r="8" class="cam"/><text x="240.0" y="323.6" class="camt" text-anchor="middle">6</text><circle cx="240.0" cy="144.0" r="8" class="cam"/><text x="240.0" y="147.6" class="camt" text-anchor="middle">7</text><circle cx="62.0" cy="436.0" r="8" class="cam"/><text x="62.0" y="439.6" class="camt" text-anchor="middle">8</text><circle cx="62.0" cy="200.0" r="8" class="cam"/><text x="62.0" y="203.6" class="camt" text-anchor="middle">9</text><circle cx="66.0" cy="138.0" r="8" class="cam"/><text x="66.0" y="141.6" class="camt" text-anchor="middle">10</text><circle cx="234.0" cy="138.0" r="8" class="cam"/><text x="234.0" y="141.6" class="camt" text-anchor="middle">11</text><circle cx="150.0" cy="140.0" r="8" class="cam"/><text x="150.0" y="143.6" class="camt" text-anchor="middle">12</text><circle cx="124.0" cy="139.0" r="8" class="cam"/><text x="124.0" y="142.6" class="camt" text-anchor="middle">13</text><circle cx="308.0" cy="28.0" r="8" class="cam"/><text x="308.0" y="31.6" class="camt" text-anchor="middle">14</text><circle cx="48.0" cy="28.0" r="8" class="cam"/><text x="48.0" y="31.6" class="camt" text-anchor="middle">15</text><circle cx="124.0" cy="260.0" r="8" class="cam"/><text x="124.0" y="263.6" class="camt" text-anchor="middle">16</text><rect x="170.0" y="222.0" width="24.0" height="16.0" class="rackf"/><text x="182.0" y="246.0" class="sn" text-anchor="middle">rack</text></svg></div>
+        <div><ol><li><b>1</b> Driveway + street (left)</li><li><b>2</b> Sidewalk + street (right)</li><li><b>3</b> Front door (video doorbell)</li><li><b>4</b> Garage inside</li><li><b>5</b> Ramp top / north gate</li><li><b>6</b> Ramp middle</li><li><b>7</b> Ramp bottom / north garden</li><li><b>8</b> South passage (front)</li><li><b>9</b> South passage (rear)</li><li><b>10</b> Garden (from south-west corner)</li><li><b>11</b> Garden (from north-west corner)</li><li><b>12</b> Terrace + garden overview</li><li><b>13</b> Lower garden door + laundry yard</li><li><b>14</b> Rear corner, looking at the house</li><li><b>15</b> Rear corner (south)</li><li><b>16</b> Lower hall / studio access</li></ol>
+        <p class="hint" style="margin-top:8px">Equipment: 16 × 4 MP IP cameras on PoE (IP66 outside, infrared), a 16-channel NVR with 8 TB (about 30 days of recording), a 24-port PoE switch and a 1.5 kVA UPS. It all sits in a rack in the lower storage room, on the battery circuit. Each camera gets its own Cat6 cable run back to the rack.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pane" id="pane-styles" hidden>
+  <p>Four ways to dress the same plan, seen from the street (east facade). The plan doesn't change, only the materials and the roof. Your choice is saved in this browser.</p>
+  <div class="styles" style="margin-top:14px"><article class="stylecard" data-id="tropical">
+      <div class="elevwrap"><svg viewBox="0 0 462.0 336.0" class="elev" role="img" aria-label="Front elevation, Contemporary tropical"><rect x="0" y="0" width="462.0" height="336.0" class="sky"/><polygon points="0.0,252.0 324.0,252.0 324.0,267.0 453.00000000000006,328.5 461.99999999999994,328.5 461.99999999999994,336.0 0.0,336.0" class="gnd"/><rect x="66.0" y="39.0" width="258.0" height="102.0" fill="#F1EEE6" stroke="#3B3A36" stroke-width="1.2"/><rect x="66.0" y="39.0" width="258.0" height="9.0" fill="#6E8F5A" /><rect x="81.0" y="72.0" width="78.0" height="45.0" fill="#9FB8C6" stroke="#3B3A36" stroke-width="1.2"/><rect x="240.0" y="72.0" width="72.0" height="45.0" fill="#9FB8C6" stroke="#3B3A36" stroke-width="1.2"/><rect x="183.0" y="72.0" width="36.0" height="24.0" fill="#9FB8C6" stroke="#3B3A36" stroke-width="1.2"/><rect x="72.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="81.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="90.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="99.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="108.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="117.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="126.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="135.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="144.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="153.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="162.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="171.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="180.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="189.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="198.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="207.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="216.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="225.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="234.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="243.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="252.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="261.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="270.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="279.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="288.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="297.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="306.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="315.0" y="60.0" width="2.4" height="63.0" fill="#A4774B" /><rect x="66.0" y="150.0" width="258.0" height="99.0" fill="#F1EEE6" stroke="#3B3A36" stroke-width="1.2"/><rect x="66.0" y="141.0" width="258.0" height="9.0" fill="#6E8F5A" /><rect x="66.0" y="234.0" width="258.0" height="15.0" fill="#9C9A92" /><rect x="72.0" y="177.0" width="150.0" height="72.0" fill="#A4774B" stroke="#3B3A36" stroke-width="1.2"/><line x1="72.00000000000001" y1="231.0" x2="222.0" y2="231.0" stroke="#00000033" stroke-width="1"/><line x1="72.00000000000001" y1="213.00000000000003" x2="222.0" y2="213.00000000000003" stroke="#00000033" stroke-width="1"/><line x1="72.00000000000001" y1="195.0" x2="222.0" y2="195.0" stroke="#00000033" stroke-width="1"/><rect x="261.0" y="168.0" width="30.0" height="66.0" fill="#A4774B" stroke="#3B3A36" stroke-width="1.2"/><rect x="300.0" y="168.0" width="18.0" height="66.0" fill="#9FB8C6" stroke="#3B3A36" stroke-width="1.2"/><rect x="246.0" y="252.0" width="60.0" height="5.1" fill="#CFCBC2" /><rect x="246.0" y="246.9" width="60.0" height="5.1" fill="#CFCBC2" /><rect x="246.0" y="241.8" width="60.0" height="5.1" fill="#CFCBC2" /><text x="390.0" y="282.0" class="sn" text-anchor="middle">ramp down</text><circle cx="345.0" cy="204.00000000000003" r="3.5999999999999996" fill="#6B7479"/><rect x="341.99999999999994" y="208.5" width="6.0" height="22.5" fill="#6B7479"/></svg></div>
+      <div class="scbody"><div class="schead"><h3>Contemporary tropical</h3><span class="cost">cost: Medium</span></div>
+      <p>White volumes, vertical wood brise on the bedrooms, a wooden garage door and a green roof edge. Easy to live with, and fits the climate.</p><div class="pal"><span class="sw"><i style="background:#F1EEE6"></i>white textured plaster</span><span class="sw"><i style="background:#A4774B"></i>cumaru wood brise + door</span><span class="sw"><i style="background:#3B3A36"></i>graphite aluminium frames</span><span class="sw"><i style="background:#9C9A92"></i>grey concrete base</span><span class="sw"><i style="background:#6E8F5A"></i>planted edge</span></div>
+      <div class="pc2"><div><h4>Good</h4><ul><li>Cool facade, low maintenance plaster</li><li>Brise gives privacy from the street</li></ul></div><div><h4>Watch</h4><ul><li>Wood needs oil every 1–2 years (or use wood-look aluminium)</li></ul></div></div>
+      <button type="button" aria-pressed="false">Choose this style</button></div></article><article class="stylecard" data-id="industrial">
+      <div class="elevwrap"><svg viewBox="0 0 462.0 336.0" class="elev" role="img" aria-label="Front elevation, Exposed steel"><rect x="0" y="0" width="462.0" height="336.0" class="sky"/><polygon points="0.0,252.0 324.0,252.0 324.0,267.0 453.00000000000006,328.5 461.99999999999994,328.5 461.99999999999994,336.0 0.0,336.0" class="gnd"/><rect x="66.0" y="39.0" width="258.0" height="102.0" fill="#3A3E40" stroke="#1F2224" stroke-width="1.2"/><rect x="81.0" y="72.0" width="78.0" height="45.0" fill="#9FB8C6" stroke="#1F2224" stroke-width="1.2"/><rect x="240.0" y="72.0" width="72.0" height="45.0" fill="#9FB8C6" stroke="#1F2224" stroke-width="1.2"/><rect x="183.0" y="72.0" width="36.0" height="24.0" fill="#9FB8C6" stroke="#1F2224" stroke-width="1.2"/><rect x="63.0" y="39.0" width="6.0" height="210.0" fill="#1F2224" /><rect x="225.0" y="39.0" width="6.0" height="210.0" fill="#1F2224" /><rect x="321.0" y="39.0" width="6.0" height="210.0" fill="#1F2224" /><rect x="63.0" y="139.5" width="264.0" height="6.0" fill="#1F2224" /><rect x="63.0" y="39.0" width="264.0" height="6.0" fill="#1F2224" /><rect x="66.0" y="150.0" width="258.0" height="99.0" fill="#B5654A" stroke="#1F2224" stroke-width="1.2"/><line x1="66.0" y1="249.00000000000003" x2="228.00000000000003" y2="249.00000000000003" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="244.5" x2="228.00000000000003" y2="244.5" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="240.0" x2="228.00000000000003" y2="240.0" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="235.50000000000003" x2="228.00000000000003" y2="235.50000000000003" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="231.0" x2="228.00000000000003" y2="231.0" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="226.50000000000003" x2="228.00000000000003" y2="226.50000000000003" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="222.0" x2="228.00000000000003" y2="222.0" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="217.5" x2="228.00000000000003" y2="217.5" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="213.00000000000003" x2="228.00000000000003" y2="213.00000000000003" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="208.5" x2="228.00000000000003" y2="208.5" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="204.00000000000003" x2="228.00000000000003" y2="204.00000000000003" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="199.5" x2="228.00000000000003" y2="199.5" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="195.0" x2="228.00000000000003" y2="195.0" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="190.50000000000003" x2="228.00000000000003" y2="190.50000000000003" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="186.0" x2="228.00000000000003" y2="186.0" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="181.50000000000003" x2="228.00000000000003" y2="181.50000000000003" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="177.0" x2="228.00000000000003" y2="177.0" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="172.5" x2="228.00000000000003" y2="172.5" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="168.00000000000003" x2="228.00000000000003" y2="168.00000000000003" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="163.5" x2="228.00000000000003" y2="163.5" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="159.00000000000003" x2="228.00000000000003" y2="159.00000000000003" stroke="#8E4A36" stroke-width=".5"/><line x1="66.0" y1="154.5" x2="228.00000000000003" y2="154.5" stroke="#8E4A36" stroke-width=".5"/><rect x="66.0" y="141.0" width="258.0" height="9.0" fill="#6F6A64" /><rect x="66.0" y="234.0" width="258.0" height="15.0" fill="#6F6A64" /><rect x="72.0" y="177.0" width="150.0" height="72.0" fill="#1F2224" stroke="#1F2224" stroke-width="1.2"/><line x1="72.00000000000001" y1="231.0" x2="222.0" y2="231.0" stroke="#00000033" stroke-width="1"/><line x1="72.00000000000001" y1="213.00000000000003" x2="222.0" y2="213.00000000000003" stroke="#00000033" stroke-width="1"/><line x1="72.00000000000001" y1="195.0" x2="222.0" y2="195.0" stroke="#00000033" stroke-width="1"/><rect x="261.0" y="168.0" width="30.0" height="66.0" fill="#7A4B35" stroke="#1F2224" stroke-width="1.2"/><rect x="300.0" y="168.0" width="18.0" height="66.0" fill="#9FB8C6" stroke="#1F2224" stroke-width="1.2"/><rect x="246.0" y="252.0" width="60.0" height="5.1" fill="#CFCBC2" /><rect x="246.0" y="246.9" width="60.0" height="5.1" fill="#CFCBC2" /><rect x="246.0" y="241.8" width="60.0" height="5.1" fill="#CFCBC2" /><text x="390.0" y="282.0" class="sn" text-anchor="middle">ramp down</text><circle cx="345.0" cy="204.00000000000003" r="3.5999999999999996" fill="#6B7479"/><rect x="341.99999999999994" y="208.5" width="6.0" height="22.5" fill="#6B7479"/></svg></div>
+      <div class="scbody"><div class="schead"><h3>Exposed steel</h3><span class="cost">cost: Medium</span></div>
+      <p>The steel frame shows on the outside: black columns and beams, brick on the garage block, dark metal panels upstairs. It suits the way the house is built.</p><div class="pal"><span class="sw"><i style="background:#1F2224"></i>black steel frame (painted)</span><span class="sw"><i style="background:#B5654A"></i>clay brick (tijolinho)</span><span class="sw"><i style="background:#3A3E40"></i>dark metal panels</span><span class="sw"><i style="background:#6F6A64"></i>cement floor + base</span><span class="sw"><i style="background:#C9D3D6"></i>clear glass</span></div>
+      <div class="pc2"><div><h4>Good</h4><ul><li>Honest to the structure; fast dry build</li><li>Brick is durable and cheap to maintain</li></ul></div><div><h4>Watch</h4><ul><li>Dark walls absorb heat: needs insulated panels and eaves</li><li>Steel paint must be kept up near the ground</li></ul></div></div>
+      <button type="button" aria-pressed="false">Choose this style</button></div></article><article class="stylecard" data-id="modernista">
+      <div class="elevwrap"><svg viewBox="0 0 462.0 336.0" class="elev" role="img" aria-label="Front elevation, Brazilian modern"><rect x="0" y="0" width="462.0" height="336.0" class="sky"/><polygon points="0.0,252.0 324.0,252.0 324.0,267.0 453.00000000000006,328.5 461.99999999999994,328.5 461.99999999999994,336.0 0.0,336.0" class="gnd"/><rect x="66.0" y="39.0" width="258.0" height="102.0" fill="#D8D2C6" stroke="#2F3437" stroke-width="1.2"/><rect x="81.0" y="72.0" width="78.0" height="45.0" fill="#9FB8C6" stroke="#2F3437" stroke-width="1.2"/><rect x="240.0" y="72.0" width="72.0" height="45.0" fill="#9FB8C6" stroke="#2F3437" stroke-width="1.2"/><rect x="183.0" y="72.0" width="36.0" height="24.0" fill="#9FB8C6" stroke="#2F3437" stroke-width="1.2"/><rect x="54.0" y="61.5" width="282.0" height="7.5" fill="#8C8A84" /><rect x="54.0" y="118.5" width="282.0" height="6.0" fill="#8C8A84" /><rect x="66.0" y="150.0" width="258.0" height="99.0" fill="#D8D2C6" stroke="#2F3437" stroke-width="1.2"/><rect x="66.0" y="141.0" width="258.0" height="9.0" fill="#B9A98E" /><rect x="66.0" y="234.0" width="258.0" height="15.0" fill="#B9A98E" /><rect x="72.0" y="177.0" width="150.0" height="72.0" fill="#2F3437" stroke="#2F3437" stroke-width="1.2"/><line x1="72.00000000000001" y1="231.0" x2="222.0" y2="231.0" stroke="#00000033" stroke-width="1"/><line x1="72.00000000000001" y1="213.00000000000003" x2="222.0" y2="213.00000000000003" stroke="#00000033" stroke-width="1"/><line x1="72.00000000000001" y1="195.0" x2="222.0" y2="195.0" stroke="#00000033" stroke-width="1"/><rect x="261.0" y="168.0" width="30.0" height="66.0" fill="#8C8A84" stroke="#2F3437" stroke-width="1.2"/><rect x="300.0" y="168.0" width="18.0" height="66.0" fill="#9FB8C6" stroke="#2F3437" stroke-width="1.2"/><rect x="246.0" y="252.0" width="60.0" height="5.1" fill="#CFCBC2" /><rect x="246.0" y="246.9" width="60.0" height="5.1" fill="#CFCBC2" /><rect x="246.0" y="241.8" width="60.0" height="5.1" fill="#CFCBC2" /><text x="390.0" y="282.0" class="sn" text-anchor="middle">ramp down</text><circle cx="345.0" cy="204.00000000000003" r="3.5999999999999996" fill="#6B7479"/><rect x="341.99999999999994" y="208.5" width="6.0" height="22.5" fill="#6B7479"/></svg></div>
+      <div class="scbody"><div class="schead"><h3>Brazilian modern</h3><span class="cost">cost: Medium-high</span></div>
+      <p>A long horizontal concrete brise over the upper windows, a stone base and warm earth tones. The Paulista modern house, made simple.</p><div class="pal"><span class="sw"><i style="background:#D8D2C6"></i>sand-colour plaster</span><span class="sw"><i style="background:#8C8A84"></i>exposed-concrete-look brise</span><span class="sw"><i style="background:#B9A98E"></i>São Tomé stone base</span><span class="sw"><i style="background:#2F3437"></i>dark frames</span><span class="sw"><i style="background:#7D5A3C"></i>wood front door</span></div>
+      <div class="pc2"><div><h4>Good</h4><ul><li>Horizontal brise works on the north and east</li><li>Timeless look</li></ul></div><div><h4>Watch</h4><ul><li>A concrete brise is heavy on a steel frame: use GRC or aluminium</li></ul></div></div>
+      <button type="button" aria-pressed="false">Choose this style</button></div></article><article class="stylecard" data-id="telhado">
+      <div class="elevwrap"><svg viewBox="0 0 462.0 336.0" class="elev" role="img" aria-label="Front elevation, Simple house with metal roof"><rect x="0" y="0" width="462.0" height="336.0" class="sky"/><polygon points="0.0,252.0 324.0,252.0 324.0,267.0 453.00000000000006,328.5 461.99999999999994,328.5 461.99999999999994,336.0 0.0,336.0" class="gnd"/><rect x="66.0" y="57.0" width="258.0" height="84.0" fill="#F4F2EC" stroke="#4A4A46" stroke-width="1.2"/><polygon points="45.00000000000001,57.000000000000014 345.0,57.000000000000014 345.0,49.500000000000014 45.00000000000001,34.500000000000014" fill="#8A9096" stroke="#4A4A46" stroke-width="1"/><rect x="45.0" y="57.0" width="300.0" height="4.5" fill="#B08658" /><rect x="81.0" y="72.0" width="78.0" height="45.0" fill="#9FB8C6" stroke="#4A4A46" stroke-width="1.2"/><rect x="240.0" y="72.0" width="72.0" height="45.0" fill="#9FB8C6" stroke="#4A4A46" stroke-width="1.2"/><rect x="183.0" y="72.0" width="36.0" height="24.0" fill="#9FB8C6" stroke="#4A4A46" stroke-width="1.2"/><rect x="66.0" y="150.0" width="258.0" height="99.0" fill="#F4F2EC" stroke="#4A4A46" stroke-width="1.2"/><polygon points="45.00000000000001,150.0 345.0,150.0 345.0,144.00000000000003 45.00000000000001,136.50000000000003" fill="#8A9096" stroke="#4A4A46" stroke-width="1"/><rect x="66.0" y="234.0" width="258.0" height="15.0" fill="#A7A39A" /><rect x="72.0" y="177.0" width="150.0" height="72.0" fill="#B08658" stroke="#4A4A46" stroke-width="1.2"/><line x1="72.00000000000001" y1="231.0" x2="222.0" y2="231.0" stroke="#00000033" stroke-width="1"/><line x1="72.00000000000001" y1="213.00000000000003" x2="222.0" y2="213.00000000000003" stroke="#00000033" stroke-width="1"/><line x1="72.00000000000001" y1="195.0" x2="222.0" y2="195.0" stroke="#00000033" stroke-width="1"/><rect x="261.0" y="168.0" width="30.0" height="66.0" fill="#B08658" stroke="#4A4A46" stroke-width="1.2"/><rect x="300.0" y="168.0" width="18.0" height="66.0" fill="#9FB8C6" stroke="#4A4A46" stroke-width="1.2"/><rect x="246.0" y="252.0" width="60.0" height="5.1" fill="#CFCBC2" /><rect x="246.0" y="246.9" width="60.0" height="5.1" fill="#CFCBC2" /><rect x="246.0" y="241.8" width="60.0" height="5.1" fill="#CFCBC2" /><text x="390.0" y="282.0" class="sn" text-anchor="middle">ramp down</text><circle cx="345.0" cy="204.00000000000003" r="3.5999999999999996" fill="#6B7479"/><rect x="341.99999999999994" y="208.5" width="6.0" height="22.5" fill="#6B7479"/></svg></div>
+      <div class="scbody"><div class="schead"><h3>Simple house with metal roof</h3><span class="cost">cost: Lowest</span></div>
+      <p>A low-pitch insulated metal roof with 0.70 m eaves instead of flat slabs, white walls and a wood-look soffit. The cheapest way to keep water and heat out.</p><div class="pal"><span class="sw"><i style="background:#8A9096"></i>insulated metal roof (termoacústica)</span><span class="sw"><i style="background:#F4F2EC"></i>white plaster</span><span class="sw"><i style="background:#B08658"></i>wood-look soffit + door</span><span class="sw"><i style="background:#4A4A46"></i>graphite frames</span><span class="sw"><i style="background:#A7A39A"></i>concrete base</span></div>
+      <div class="pc2"><div><h4>Good</h4><ul><li>No flat-roof waterproofing to fail</li><li>Roof pitch carries the solar panels</li></ul></div><div><h4>Watch</h4><ul><li>Less of a roof terrace; flat areas only over the garage</li></ul></div></div>
+      <button type="button" aria-pressed="false">Choose this style</button></div></article></div>
+</section>
+
+<div id="exp" hidden><div class="box"><b>Your plan as JSON</b><p class="hint">Copy this and send it to me to turn your edits into the next version.</p><textarea id="expText" spellcheck="false" aria-label="Plan JSON"></textarea><div class="bar"><button id="expCopy">Copy</button><button id="expClose">Close</button></div></div></div>
+</div>
+<script>(function () {
+'use strict';
+const $ = (id) => document.getElementById(id);
+const LS = { get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+             set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+
+/* ---------------- base plan v5 (house-local metres: x south→north, y street→rear) ---------------- */
+function C(room, zone, x0, y0, x1, y1, lock) { return { room, zone, x0, y0, x1, y1, lock: !!lock }; }
+const BASE1 = {
+  LL: { name: 'Lower level −2.50', outline: [0, 8.5, 8.6, 15.0],
+    cells: [C('Stair', 'stair', 0, 8.5, 2.4, 11.9, 1), C('Hall', 'circ', 0, 11.9, 2.4, 15.0), C('Hall', 'circ', 2.4, 11.9, 4.4, 13.1),
+            C('Laundry', 'service', 2.4, 10.2, 4.4, 11.9), C('Storage', 'service', 2.4, 8.5, 4.4, 10.2), C('WC', 'wet', 2.4, 13.1, 4.4, 15.0),
+            C('Studio · office', 'work', 4.4, 8.5, 8.6, 15.0)],
+    doors: [{ o: 'h', c: 11.9, p: 2.9, w: 0.8, s: -1 }, { o: 'h', c: 10.2, p: 2.9, w: 0.8, s: -1 }, { o: 'v', c: 2.4, p: 13.5, w: 0.7, s: 1 },
+            { o: 'v', c: 4.4, p: 12.1, w: 0.9, s: 1 }, { o: 'h', c: 15.0, p: 0.3, w: 1.8, s: 1, k: 'slider' }],
+    windows: [{ o: 'h', c: 15.0, a: 2.8, b: 4.0, k: 'high' }, { o: 'h', c: 15.0, a: 4.8, b: 8.2, k: 'slider' }, { o: 'v', c: 8.6, a: 9.0, b: 14.6, k: 'win' }] },
+  SL: { name: 'Street level +0.60', outline: [0, 0, 8.6, 13.1],
+    cells: [C('Garage', 'garage', 0, 0, 5.4, 5.0), C('Entry', 'circ', 5.4, 0, 8.6, 3.4), C('Entry', 'circ', 7.0, 3.4, 8.6, 5.0), C('WC', 'wet', 5.4, 3.4, 7.0, 5.0),
+            C('Kitchen', 'social', 0, 5.0, 5.4, 8.5), C('Dining', 'social', 5.4, 5.0, 8.6, 8.5), C('Living', 'social', 2.4, 8.5, 8.6, 13.1),
+            C('Living', 'social', 0, 11.9, 2.4, 13.1), C('Stair', 'stair', 0, 8.5, 2.4, 11.9, 1)],
+    doors: [{ o: 'h', c: 0, p: 6.5, w: 1.0, s: 1 }, { o: 'v', c: 5.4, p: 1.2, w: 0.9, s: -1 }, { o: 'h', c: 5.0, p: 0.5, w: 0.8, s: 1 },
+            { o: 'h', c: 3.4, p: 5.8, w: 0.7, s: 1 }, { o: 'h', c: 0, p: 0.2, w: 5.0, s: 1, k: 'garage' }],
+    windows: [{ o: 'v', c: 0, a: 5.5, b: 8.1, k: 'win' }, { o: 'v', c: 8.6, a: 5.4, b: 8.2, k: 'win' }, { o: 'v', c: 8.6, a: 8.9, b: 12.8, k: 'slider' },
+              { o: 'h', c: 13.1, a: 2.7, b: 8.3, k: 'slider' }, { o: 'h', c: 13.1, a: 0.3, b: 2.1, k: 'win' }, { o: 'v', c: 8.6, a: 3.6, b: 4.8, k: 'win' }, { o: 'h', c: 0, a: 7.8, b: 8.4, k: 'win' }] },
+  UF: { name: 'Upper level +3.70', outline: [0, 5.0, 8.6, 13.1],
+    cells: [C('Bedroom 2', 'private', 0, 5.0, 3.6, 8.5), C('Bath 2', 'wet', 3.6, 5.0, 5.4, 6.75), C('Bath 3', 'wet', 3.6, 6.75, 5.4, 8.5),
+            C('Bedroom 3', 'private', 5.4, 5.0, 8.6, 8.5), C('Hall', 'circ', 2.4, 8.5, 8.6, 9.7), C('Hall', 'circ', 2.4, 9.7, 3.6, 11.9), C('Hall', 'circ', 0, 11.9, 3.6, 13.1),
+            C('Stair', 'stair', 0, 8.5, 2.4, 11.9, 1), C('Master bath', 'wet', 3.6, 9.7, 5.6, 11.9), C('Closet', 'private', 3.6, 11.9, 5.6, 13.1),
+            C('Master bedroom', 'private', 5.6, 9.7, 8.6, 13.1)],
+    doors: [{ o: 'h', c: 8.5, p: 2.6, w: 0.8, s: -1 }, { o: 'h', c: 8.5, p: 6.2, w: 0.8, s: -1 }, { o: 'v', c: 3.6, p: 5.3, w: 0.7, s: 1 },
+            { o: 'v', c: 5.4, p: 7.4, w: 0.7, s: -1 }, { o: 'v', c: 3.6, p: 12.1, w: 0.8, s: 1 }, { o: 'h', c: 11.9, p: 4.2, w: 0.7, s: -1 }, { o: 'v', c: 5.6, p: 12.1, w: 0.8, s: 1 }],
+    windows: [{ o: 'h', c: 5.0, a: 0.5, b: 3.1, k: 'win' }, { o: 'v', c: 0, a: 5.6, b: 8.0, k: 'win' }, { o: 'h', c: 5.0, a: 3.9, b: 5.1, k: 'high' },
+              { o: 'h', c: 5.0, a: 5.8, b: 8.2, k: 'win' }, { o: 'v', c: 8.6, a: 5.5, b: 8.1, k: 'win' }, { o: 'v', c: 8.6, a: 8.7, b: 9.5, k: 'win' },
+              { o: 'v', c: 8.6, a: 10.0, b: 12.8, k: 'win' }, { o: 'h', c: 13.1, a: 5.9, b: 8.3, k: 'win' }, { o: 'h', c: 13.1, a: 0.3, b: 3.3, k: 'win' }] },
+};
+// Systems overlays anchored to rooms (u,v = position inside the room's first cell, 0..1 from its left/front corner)
+const OVER1 = {
+  LL: { plumb: [['WC', 0.5, 0.9, 'wc'], ['WC', 0.85, 0.15, 'sink'], ['WC', 0.2, 0.2, 'shower'], ['Laundry', 0.3, 0.5, 'wm'], ['Laundry', 0.75, 0.5, 'tank'], ['Storage', 0.8, 0.15, 'lift'], ['Hall', 0.5, 0.95, 'drain']],
+        elec: [['Storage', 0.2, 0.5, 'panel', 'Sub-panel'], ['Studio · office', 0.5, 0.12, 'rack', 'Rack · NVR · UPS'], ['Studio · office', 0.5, 0.95, 'ac']] },
+  SL: { plumb: [['Kitchen', 0.06, 0.5, 'sink'], ['WC', 0.5, 0.85, 'wc'], ['WC', 0.15, 0.2, 'sink'], ['Dining', 0.02, 0.5, 'stack'], ['Living', 0.21, 0.33, 'stack'], ['Garage', 0.5, 0.02, 'exit']],
+        elec: [['Garage', 0.97, 0.3, 'panel', 'Main panel'], ['Garage', 0.03, 0.6, 'ev', 'EV 7 kW'], ['Living', 0.95, 0.5, 'ac'], ['Kitchen', 0.3, 0.1, 'hob']] },
+  UF: { plumb: [['Bath 2', 0.2, 0.5, 'wc'], ['Bath 2', 0.7, 0.25, 'shower'], ['Bath 3', 0.8, 0.5, 'wc'], ['Bath 3', 0.3, 0.75, 'shower'], ['Master bath', 0.2, 0.2, 'wc'], ['Master bath', 0.75, 0.3, 'shower'], ['Bath 2', 1.0, 1.0, 'stack'], ['Master bath', 0.05, 0.1, 'stack']],
+        elec: [['Bedroom 2', 0.5, 0.05, 'ac'], ['Bedroom 3', 0.5, 0.05, 'ac'], ['Master bedroom', 0.5, 0.95, 'ac']] },
+};
+
+/* ---------------- Version 2: south service spine + two straight flights, social band on the north side ---------------- */
+const ST = (x0, y0, x1, y1, kind) => Object.assign(C('Stair', 'stair', x0, y0, x1, y1, 1), { kind });
+const BASE2 = {
+  LL: { name: 'Lower level −2.50', outline: [0, 8.5, 8.6, 15.0],
+    cells: [ST(1.6, 8.5, 3.2, 12.5, 'lane'), C('Storage', 'service', 0, 8.5, 1.6, 10.5), C('Laundry', 'service', 0, 10.5, 1.6, 12.5),
+            C('Hall', 'circ', 0, 12.5, 3.2, 15.0), C('WC', 'wet', 3.2, 13.3, 4.8, 15.0),
+            C('Studio · office', 'work', 4.8, 8.5, 8.6, 15.0), C('Studio · office', 'work', 3.2, 8.5, 4.8, 13.3)],
+    doors: [{ o: 'h', c: 12.5, p: 0.4, w: 0.8, s: -1 }, { o: 'h', c: 10.5, p: 0.4, w: 0.7, s: -1 }, { o: 'v', c: 3.2, p: 13.65, w: 0.7, s: 1 },
+            { o: 'v', c: 3.2, p: 12.55, w: 0.7, s: 1 }, { o: 'h', c: 15.0, p: 0.4, w: 2.4, s: 1, k: 'slider' }],
+    windows: [{ o: 'v', c: 0, a: 10.8, b: 12.2, k: 'win' }, { o: 'h', c: 15.0, a: 3.5, b: 4.5, k: 'high' }, { o: 'h', c: 15.0, a: 5.1, b: 8.3, k: 'slider' },
+              { o: 'v', c: 8.6, a: 9.0, b: 14.6, k: 'win' }],
+    extras: [{ x0: 0, y0: 15.0, x1: 8.6, y1: 16.2, label: 'garden −2.55 →' }] },
+  SL: { name: 'Street level +0.60', outline: [0, 0, 8.6, 12.6],
+    cells: [C('Garage', 'garage', 3.2, 0, 8.6, 5.0), C('Entry · hall', 'circ', 0, 0, 3.2, 2.0), C('Entry · hall', 'circ', 2.0, 2.0, 3.2, 7.0), C('Entry · hall', 'circ', 0, 7.0, 3.2, 8.2),
+            C('WC', 'wet', 0, 2.0, 2.0, 3.8), C('Storage', 'service', 0, 3.8, 2.0, 5.0), C('Pantry', 'service', 0, 5.0, 2.0, 7.0),
+            C('Kitchen', 'social', 3.2, 5.0, 8.6, 7.6), C('Dining', 'social', 3.2, 7.6, 8.6, 9.6), C('Living', 'social', 3.2, 9.6, 8.6, 12.6),
+            ST(0, 8.2, 3.2, 12.6, 'dual')],
+    doors: [{ o: 'h', c: 0, p: 0.9, w: 1.0, s: 1 }, { o: 'h', c: 0, p: 3.4, w: 5.0, s: 1, k: 'garage' }, { o: 'h', c: 5.0, p: 3.4, w: 0.8, s: 1 },
+            { o: 'v', c: 2.0, p: 2.5, w: 0.7, s: -1 }, { o: 'v', c: 2.0, p: 4.05, w: 0.8, s: -1 }, { o: 'v', c: 2.0, p: 5.6, w: 0.8, s: -1 }],
+    windows: [{ o: 'h', c: 0, a: 2.1, b: 2.9, k: 'win' }, { o: 'v', c: 0, a: 2.4, b: 3.4, k: 'high' }, { o: 'v', c: 0, a: 5.4, b: 6.6, k: 'high' },
+              { o: 'v', c: 8.6, a: 5.3, b: 7.3, k: 'win' }, { o: 'v', c: 8.6, a: 7.8, b: 9.4, k: 'win' }, { o: 'v', c: 8.6, a: 9.9, b: 12.3, k: 'slider' },
+              { o: 'h', c: 12.6, a: 3.4, b: 8.4, k: 'slider' }, { o: 'v', c: 0, a: 8.6, b: 12.2, k: 'win' }, { o: 'h', c: 12.6, a: 0.3, b: 2.9, k: 'win' }],
+    extras: [{ x0: 0, y0: 12.6, x1: 8.6, y1: 15.0, label: 'Veranda 20.6 m² · roof of the lower level' }] },
+  UF: { name: 'Upper level +3.70', outline: [0, 5.0, 8.6, 13.6],
+    cells: [C('Bedroom 2', 'private', 0, 5.0, 3.2, 8.2), C('Bath 2', 'wet', 3.2, 5.0, 5.0, 6.6), C('Bath 3', 'wet', 3.2, 6.6, 5.0, 8.2),
+            C('Bedroom 3', 'private', 5.0, 5.0, 8.6, 9.0), C('Bedroom 3', 'private', 3.2, 8.2, 5.0, 9.0),
+            C('Master bedroom', 'private', 5.0, 9.0, 8.6, 13.6), C('Master bedroom', 'private', 3.2, 9.0, 5.0, 10.0),
+            C('Master bath', 'wet', 3.2, 10.0, 5.0, 12.2), C('Closet', 'private', 3.2, 12.2, 5.0, 13.6),
+            C('Hall', 'circ', 1.6, 8.2, 3.2, 12.5), C('Hall', 'circ', 0, 12.5, 3.2, 13.6), ST(0, 8.2, 1.6, 12.5, 'void')],
+    doors: [{ o: 'h', c: 8.2, p: 1.9, w: 0.8, s: -1 }, { o: 'v', c: 3.2, p: 5.5, w: 0.7, s: 1 }, { o: 'v', c: 5.0, p: 7.2, w: 0.7, s: -1 },
+            { o: 'v', c: 3.2, p: 8.25, w: 0.7, s: 1 }, { o: 'v', c: 3.2, p: 9.1, w: 0.8, s: 1 }, { o: 'v', c: 5.0, p: 10.4, w: 0.7, s: -1 }, { o: 'v', c: 5.0, p: 12.4, w: 0.8, s: -1 }],
+    windows: [{ o: 'h', c: 5.0, a: 0.4, b: 2.8, k: 'win' }, { o: 'v', c: 0, a: 5.5, b: 7.7, k: 'win' }, { o: 'h', c: 5.0, a: 3.5, b: 4.7, k: 'high' },
+              { o: 'h', c: 5.0, a: 5.4, b: 8.2, k: 'win' }, { o: 'v', c: 8.6, a: 5.5, b: 8.1, k: 'win' }, { o: 'v', c: 8.6, a: 9.2, b: 13.0, k: 'win' },
+              { o: 'h', c: 13.6, a: 5.4, b: 8.2, k: 'win' }, { o: 'h', c: 13.6, a: 0.3, b: 2.9, k: 'win' }, { o: 'v', c: 0, a: 8.6, b: 12.1, k: 'win' }] },
+};
+const OVER2 = {
+  LL: { plumb: [['WC', 0.5, 0.85, 'wc'], ['WC', 0.2, 0.2, 'sink'], ['WC', 0.8, 0.25, 'shower'], ['Laundry', 0.3, 0.5, 'wm'], ['Laundry', 0.7, 0.5, 'tank'], ['Hall', 0.1, 0.25, 'lift'], ['Hall', 0.5, 0.95, 'drain']],
+        elec: [['Storage', 0.5, 0.5, 'panel', 'Sub-panel'], ['Studio · office', 0.5, 0.1, 'rack', 'Rack · NVR · UPS'], ['Studio · office', 0.5, 0.95, 'ac']] },
+  SL: { plumb: [['Kitchen', 0.95, 0.5, 'sink'], ['WC', 0.3, 0.8, 'wc'], ['WC', 0.8, 0.2, 'sink'], ['Kitchen', 0.03, 0.6, 'stack'], ['Living', 0.03, 0.5, 'stack'], ['Garage', 0.5, 0.02, 'exit']],
+        elec: [['Garage', 0.03, 0.5, 'panel', 'Main panel'], ['Garage', 0.97, 0.5, 'ev', 'EV 7 kW'], ['Living', 0.95, 0.5, 'ac'], ['Kitchen', 0.5, 0.1, 'hob']] },
+  UF: { plumb: [['Bath 2', 0.6, 0.3, 'wc'], ['Bath 2', 0.6, 0.8, 'shower'], ['Bath 3', 0.6, 0.7, 'wc'], ['Bath 3', 0.6, 0.2, 'shower'], ['Master bath', 0.6, 0.2, 'wc'], ['Master bath', 0.6, 0.75, 'shower'], ['Bath 2', 0.05, 0.95, 'stack'], ['Master bath', 0.05, 0.45, 'stack']],
+        elec: [['Bedroom 2', 0.5, 0.05, 'ac'], ['Bedroom 3', 0.5, 0.05, 'ac'], ['Master bedroom', 0.5, 0.95, 'ac']] },
+};
+const VERS = {
+  v1: { key: 'casa123.plan.v6', base: BASE1, over: OVER1, label: 'Version 1',
+        note: 'Version 1: U-stair in the middle of the south side, living room on the west (garden) side, three suites upstairs reached from the rear landing.' },
+  v2: { key: 'casa123.plan.v2', base: BASE2, over: OVER2, label: 'Version 2',
+        note: 'Version 2: one service spine along the south wall (entry, WC, storage, pantry, stairs, laundry), all living rooms along the north side for the best light, a 20 m² veranda shaded by the upper floor, and two straight stair flights side by side: down goes west straight to the garden door, up lands at the rear with the master bedroom next to it.' },
+};
+let ver = LS.get('casa123.ver', 'v2'); if (!VERS[ver]) ver = 'v2';
+let KEY = VERS[ver].key, BASE = VERS[ver].base, OVER = VERS[ver].over;
+const ZONE_COL = { social: 'var(--soc)', private: 'var(--pri)', wet: 'var(--wet)', service: 'var(--svc)', circ: 'var(--cir)', work: 'var(--wrk)', stair: 'var(--str)', garage: 'var(--gar)' };
+const OPEN = (a, b) => { const s = new Set([a, b]); if (a === b && (a === 'social' || a === 'circ')) return true; if (s.has('stair') && (s.has('circ') || s.has('social'))) return true; if (s.has('social') && s.has('circ')) return true; return false; };
+function minArea(level, room, zone) {
+  if (room === 'Closet') return 0;
+  if (zone === 'private') return room === 'Master bedroom' ? 10 : 8;
+  if (zone === 'wet') return 2.5;
+  if (room === 'Kitchen') return 4;
+  if (room === 'Living' || zone === 'work') return 8;
+  return 0;
+}
+
+/* ---------------- state ---------------- */
+const clone = (o) => JSON.parse(JSON.stringify(o));
+let state = LS.get(KEY, null);
+if (!state || !state.LL || !state.SL || !state.UF) state = clone(BASE);
+function loadVersion(v) { ver = v; LS.set('casa123.ver', v); KEY = VERS[v].key; BASE = VERS[v].base; OVER = VERS[v].over;
+  state = LS.get(KEY, null); if (!state || !state.LL || !state.SL || !state.UF) state = clone(BASE); undoStack = []; sel = null; }
+let level = LS.get(KEY + '.level', 'SL'); if (!state[level]) level = 'SL';
+let layers = LS.get(KEY + '.layers', { plumb: false, elec: false });
+let undoStack = [];
+let sel = null; // {type:'door'|'window', i}
+function save() { LS.set(KEY, state); }
+function snapshot() { undoStack.push(JSON.stringify(state)); if (undoStack.length > 60) undoStack.shift(); }
+
+/* ---------------- geometry ---------------- */
+const S = 40; let XMIN = -1.3, XMAX = 9.9, YMIN = -1.3, YMAX = 15.9;
+const px = (x) => (x - XMIN) * S, py = (y) => (YMAX - y) * S;
+const f1 = (v) => v.toFixed(1);
+const E = 1e-6;
+const snap = (v) => Math.round(v / 0.05) * 0.05;
+function edgesAt(L, o, c) {  // intervals along the line where a cell has an edge at coordinate c
+  const out = [];
+  for (const cl of L.cells) {
+    if (o === 'v') { if (Math.abs(cl.x0 - c) < E || Math.abs(cl.x1 - c) < E) out.push([cl.y0, cl.y1]); }
+    else { if (Math.abs(cl.y0 - c) < E || Math.abs(cl.y1 - c) < E) out.push([cl.x0, cl.x1]); }
+  }
+  return out;
+}
+function components(iv) {
+  iv = iv.slice().sort((a, b) => a[0] - b[0]); const out = [];
+  for (const [a, b] of iv) { if (out.length && a <= out[out.length - 1][1] + E) out[out.length - 1][1] = Math.max(out[out.length - 1][1], b); else out.push([a, b]); }
+  return out;
+}
+function onOutline(L, o, c) { const [x0, y0, x1, y1] = L.outline; return o === 'v' ? (Math.abs(c - x0) < E || Math.abs(c - x1) < E) : (Math.abs(c - y0) < E || Math.abs(c - y1) < E); }
+function lineHandles(L) {
+  const seen = new Map(), out = [];
+  for (const cl of L.cells) {
+    for (const [o, c] of [['v', cl.x0], ['v', cl.x1], ['h', cl.y0], ['h', cl.y1]]) {
+      const k = o + ':' + c.toFixed(3); if (seen.has(k)) continue; seen.set(k, 1);
+      if (onOutline(L, o, c)) continue;
+      for (const [a, b] of components(edgesAt(L, o, c))) {
+        const cells = L.cells.filter(cl2 => o === 'v' ? ((Math.abs(cl2.x0 - c) < E || Math.abs(cl2.x1 - c) < E) && cl2.y0 >= a - E && cl2.y1 <= b + E)
+                                                      : ((Math.abs(cl2.y0 - c) < E || Math.abs(cl2.y1 - c) < E) && cl2.x0 >= a - E && cl2.x1 <= b + E));
+        out.push({ o, c, a, b, cells, locked: cells.some(x => x.lock) });
+      }
+    }
+  }
+  return out;
+}
+function shared(a, b) {
+  const r = [];
+  if (Math.abs(a.x1 - b.x0) < E || Math.abs(a.x0 - b.x1) < E) { const x = Math.abs(a.x1 - b.x0) < E ? a.x1 : a.x0; const s0 = Math.max(a.y0, b.y0), s1 = Math.min(a.y1, b.y1); if (s1 - s0 > 0.02) r.push({ o: 'v', c: x, a: s0, b: s1 }); }
+  if (Math.abs(a.y1 - b.y0) < E || Math.abs(a.y0 - b.y1) < E) { const y = Math.abs(a.y1 - b.y0) < E ? a.y1 : a.y0; const s0 = Math.max(a.x0, b.x0), s1 = Math.min(a.x1, b.x1); if (s1 - s0 > 0.02) r.push({ o: 'h', c: y, a: s0, b: s1 }); }
+  return r;
+}
+function interiorWalls(L) {
+  const out = [];
+  for (let i = 0; i < L.cells.length; i++) for (let j = i + 1; j < L.cells.length; j++) {
+    const A = L.cells[i], B = L.cells[j];
+    if (A.room === B.room || OPEN(A.zone, B.zone)) continue;
+    out.push(...shared(A, B));
+  }
+  return out;
+}
+function spanFor(L, o, c, at) {
+  const comps = components(edgesAt(L, o, c));
+  return comps.find(([a, b]) => at >= a - E && at <= b + E) || [at - 0.5, at + 0.5];
+}
+function clampOpenings(L) {
+  for (const d of L.doors) { const [a, b] = spanFor(L, d.o, d.c, d.p + d.w / 2); d.w = Math.min(d.w, b - a - 0.1); d.p = Math.min(Math.max(d.p, a + 0.05), b - d.w - 0.05); }
+  for (const w of L.windows) { const len = w.b - w.a; const [a, b] = spanFor(L, w.o, w.c, (w.a + w.b) / 2); const l2 = Math.min(len, b - a - 0.2); w.a = Math.min(Math.max(w.a, a + 0.1), b - l2 - 0.1); w.b = w.a + l2; }
+}
+const roomsOf = (L) => { const m = new Map(); for (const c of L.cells) { if (!m.has(c.room)) m.set(c.room, { room: c.room, zone: c.zone, cells: [] }); m.get(c.room).cells.push(c); } return [...m.values()]; };
+const areaOf = (r) => r.cells.reduce((s, c) => s + (c.x1 - c.x0) * (c.y1 - c.y0), 0);
+function glassFor(L, r) {
+  let g = 0;
+  for (const w of L.windows) {
+    const h = w.k === 'slider' ? 2.2 : w.k === 'high' ? 0.6 : 1.3;
+    for (const c of r.cells) {
+      const onEdge = w.o === 'v' ? (Math.abs(c.x0 - w.c) < E || Math.abs(c.x1 - w.c) < E) : (Math.abs(c.y0 - w.c) < E || Math.abs(c.y1 - w.c) < E);
+      if (!onEdge) continue;
+      const ov = w.o === 'v' ? Math.min(w.b, c.y1) - Math.max(w.a, c.y0) : Math.min(w.b, c.x1) - Math.max(w.a, c.x0);
+      if (ov > 0) g += ov * h;
+    }
+  }
+  return g;
+}
+
+/* ---------------- render ---------------- */
+const svg = $('plan');
+function L(x0, y0, x1, y1, cls, extra) { return `<line x1="${f1(px(x0))}" y1="${f1(py(y0))}" x2="${f1(px(x1))}" y2="${f1(py(y1))}" class="${cls}" ${extra || ''}/>`; }
+function R(x0, y0, x1, y1, cls, style) { return `<rect x="${f1(px(Math.min(x0, x1)))}" y="${f1(py(Math.max(y0, y1)))}" width="${f1(Math.abs(x1 - x0) * S)}" height="${f1(Math.abs(y1 - y0) * S)}" class="${cls}" ${style ? `style="${style}"` : ''}/>`; }
+function T(x, y, s, cls) { return `<text x="${f1(px(x))}" y="${f1(py(y))}" class="${cls}" text-anchor="middle">${s}</text>`; }
+function doorSVG(d, i, selected) {
+  let o = '';
+  const g = d.o === 'h' ? L(d.p, d.c, d.p + d.w, d.c, 'gap') : L(d.c, d.p, d.c, d.p + d.w, 'gap');
+  o += g;
+  if (d.k === 'garage') o += d.o === 'h' ? L(d.p, d.c, d.p + d.w, d.c, 'gdoor') : L(d.c, d.p, d.c, d.p + d.w, 'gdoor');
+  else if (d.k === 'slider') o += (d.o === 'h' ? L(d.p, d.c, d.p + d.w, d.c, 'glass') : L(d.c, d.p, d.c, d.p + d.w, 'glass'));
+  else {
+    const w = d.w;
+    if (d.o === 'h') { const lx = d.p, ly = d.c + d.s * w; o += L(d.p, d.c, lx, ly, 'leaf'); o += `<path d="M${f1(px(d.p + w))},${f1(py(d.c))} A${f1(w * S)},${f1(w * S)} 0 0 ${d.s > 0 ? 1 : 0} ${f1(px(lx))},${f1(py(ly))}" class="swing"/>`; }
+    else { const lx = d.c + d.s * w, ly = d.p; o += L(d.c, d.p, lx, ly, 'leaf'); o += `<path d="M${f1(px(d.c))},${f1(py(d.p + w))} A${f1(w * S)},${f1(w * S)} 0 0 ${d.s > 0 ? 0 : 1} ${f1(px(lx))},${f1(py(ly))}" class="swing"/>`; }
+  }
+  const hit = d.o === 'h' ? R(d.p, d.c - 0.25, d.p + d.w, d.c + 0.25, 'hit door' + (selected ? ' sel' : '')) : R(d.c - 0.25, d.p, d.c + 0.25, d.p + d.w, 'hit door' + (selected ? ' sel' : ''));
+  return `<g data-door="${i}">${o}${hit}</g>`;
+}
+function winSVG(w, i, selected) {
+  const g = w.o === 'h' ? L(w.a, w.c, w.b, w.c, 'gap') + L(w.a, w.c, w.b, w.c, w.k === 'high' ? 'glassh' : 'glass') : L(w.c, w.a, w.c, w.b, 'gap') + L(w.c, w.a, w.c, w.b, w.k === 'high' ? 'glassh' : 'glass');
+  const hit = w.o === 'h' ? R(w.a, w.c - 0.22, w.b, w.c + 0.22, 'hit win' + (selected ? ' sel' : '')) : R(w.c - 0.22, w.a, w.c + 0.22, w.b, 'hit win' + (selected ? ' sel' : ''));
+  return `<g data-win="${i}">${g}${hit}</g>`;
+}
+function chev(x, y) { return `<path d="M${f1(px(x - 0.2))},${f1(py(y - 0.28))} L${f1(px(x))},${f1(py(y))} L${f1(px(x + 0.2))},${f1(py(y - 0.28))}" class="sarrow"/>`; }
+function laneSVG(x0, x1, y0, y1, label, faint) {
+  let o = ''; for (let t = y0 + 0.27; t < y1 - 0.05; t += 0.27) o += L(x0, t, x1, t, faint ? 'tread faint' : 'tread');
+  const cx = (x0 + x1) / 2; o += L(cx, y0 + 0.25, cx, y1 - 0.15, 'sarrow') + chev(cx, y1 - 0.15);
+  o += `<text x="${f1(px(cx))}" y="${f1(py(y0 + 0.12))}" class="stxt" text-anchor="middle">${label}</text>`;
+  return o;
+}
+function stairSVG(c, lvl) {
+  if (c.kind === 'dual') { const m = (c.x0 + c.x1) / 2; return R(c.x0, c.y0, c.x1, c.y1, 'stairbg') + laneSVG(c.x0, m - 0.08, c.y0, c.y1, 'UP') + laneSVG(m + 0.08, c.x1, c.y0, c.y1, 'DOWN') + R(m - 0.08, c.y0 + 0.3, m + 0.08, c.y1, 'cwall') + L(c.x1, c.y0 + 0.3, c.x1, c.y1, 'rail'); }
+  if (c.kind === 'lane') return R(c.x0, c.y0, c.x1, c.y1, 'stairbg') + laneSVG(c.x0, c.x1, c.y0, c.y1, 'from street') + `<text x="${f1(px((c.x0 + c.x1) / 2))}" y="${f1(py(c.y1 + 0.5))}" class="stxt" text-anchor="middle">garden ↑</text>`;
+  if (c.kind === 'void') return R(c.x0, c.y0, c.x1, c.y1, 'stairbg') + laneSVG(c.x0, c.x1, c.y0, c.y1, 'UP', true) + L(c.x1, c.y0, c.x1, c.y1, 'rail') + `<text x="${f1(px((c.x0 + c.x1) / 2))}" y="${f1(py(c.y1 + 0.45))}" class="stxt" text-anchor="middle">arrive</text>`;
+  // U-stair open to the rear: you step on and off at the rear end, facing the garden; the landing is at the front end
+  let o = R(c.x0, c.y0, c.x1, c.y1, 'stairbg'); const mid = (c.x0 + c.x1) / 2, land = 1.1;
+  for (let t = c.y1 - 0.28; t > c.y0 + land + 0.01; t -= 0.28) { o += L(c.x0, t, mid - 0.05, t, 'tread') + L(mid + 0.05, t, c.x1, t, 'tread'); }
+  o += L(c.x0, c.y0 + land, c.x1, c.y0 + land, 'tread') + R(mid - 0.05, c.y0 + land, mid + 0.05, c.y1, 'cwall');
+  const ax = c.x0 + 0.6, bx = c.x1 - 0.6;
+  o += `<path d="M${f1(px(bx))},${f1(py(c.y1 - 0.2))} L${f1(px(bx))},${f1(py(c.y0 + 0.55))} L${f1(px(ax))},${f1(py(c.y0 + 0.55))} L${f1(px(ax))},${f1(py(c.y1 - 0.25))}" class="sarrow"/>`;
+  if (lvl === 'LL') o += `<text x="${f1(px((c.x0 + c.x1) / 2))}" y="${f1(py(c.y1 + 0.45))}" class="stxt" text-anchor="middle">to garden ↑</text>`;
+  return o;
+}
+function anchor(Lv, room, u, v) { const c = Lv.cells.find(x => x.room === room); if (!c) return null; return [c.x0 + (c.x1 - c.x0) * u, c.y0 + (c.y1 - c.y0) * v]; }
+function overlaySVG(Lv) {
+  let o = '';
+  const ov = OVER[level];
+  if (layers.plumb) {
+    const stacks = ov.plumb.filter(p => p[3] === 'stack' || p[3] === 'exit' || p[3] === 'lift').map(p => anchor(Lv, p[0], p[1], p[2])).filter(Boolean);
+    for (const p of ov.plumb) {
+      const a = anchor(Lv, p[0], p[1], p[2]); if (!a) continue;
+      if (!['stack', 'exit', 'lift', 'drain'].includes(p[3]) && stacks.length) {
+        const s = stacks.reduce((b, q) => Math.hypot(q[0] - a[0], q[1] - a[1]) < Math.hypot(b[0] - a[0], b[1] - a[1]) ? q : b, stacks[0]);
+        o += `<polyline points="${f1(px(a[0]))},${f1(py(a[1]))} ${f1(px(s[0]))},${f1(py(a[1]))} ${f1(px(s[0]))},${f1(py(s[1]))}" class="pipe"/>`;
+      }
+    }
+    if (level === 'SL') { const ex = anchor(Lv, 'Garage', 0.5, 0.02); for (const s of stacks) if (s !== ex && ex) o += `<polyline points="${f1(px(s[0]))},${f1(py(s[1]))} ${f1(px(s[0]))},${f1(py(2.6))} ${f1(px(ex[0]))},${f1(py(2.6))} ${f1(px(ex[0]))},${f1(py(ex[1]))}" class="pipe dash"/>`; }
+    if (level === 'LL') { const lift = anchor(Lv, 'WC', 0.85, 0.12), lau = anchor(Lv, 'Laundry', 0.5, 0.75); if (lift && lau) o += `<polyline points="${f1(px(lau[0]))},${f1(py(lau[1]))} ${f1(px(3.0))},${f1(py(lau[1]))} ${f1(px(3.0))},${f1(py(lift[1]))} ${f1(px(lift[0]))},${f1(py(lift[1]))}" class="pipe"/>`; }
+    for (const p of ov.plumb) {
+      const a = anchor(Lv, p[0], p[1], p[2]); if (!a) continue;
+      const lab = { wc: 'WC', sink: 'S', shower: 'SH', wm: 'W', tank: 'T', stack: 'TQ', exit: '→ street', lift: 'LIFT', drain: 'FD' }[p[3]];
+      o += `<circle cx="${f1(px(a[0]))}" cy="${f1(py(a[1]))}" r="${p[3] === 'stack' ? 7 : 6}" class="pl ${p[3]}"/><text x="${f1(px(a[0]))}" y="${f1(py(a[1]) - 9)}" class="ovt pt" text-anchor="middle">${lab}</text>`;
+    }
+  }
+  if (layers.elec) {
+    for (const r of roomsOf(Lv)) {
+      if (r.zone === 'stair') continue;
+      const c = r.cells.reduce((a, b) => (a.x1 - a.x0) * (a.y1 - a.y0) >= (b.x1 - b.x0) * (b.y1 - b.y0) ? a : b);
+      const cx = (c.x0 + c.x1) / 2, cy = (c.y0 + c.y1) / 2 - 0.9;
+      o += `<circle cx="${f1(px(cx))}" cy="${f1(py(cy))}" r="5" class="lamp"/><line x1="${f1(px(cx) - 4)}" y1="${f1(py(cy) - 4)}" x2="${f1(px(cx) + 4)}" y2="${f1(py(cy) + 4)}" class="lampx"/><line x1="${f1(px(cx) + 4)}" y1="${f1(py(cy) - 4)}" x2="${f1(px(cx) - 4)}" y2="${f1(py(cy) + 4)}" class="lampx"/>`;
+      const n = { social: 6, private: 4, wet: 2, work: 8, garage: 3, service: 3, circ: 1 }[r.zone] || 1;
+      o += `<text x="${f1(px(cx))}" y="${f1(py(cy) + 16)}" class="ovt et" text-anchor="middle">${n} outlets</text>`;
+    }
+    for (const p of OVER[level].elec) {
+      const a = anchor(Lv, p[0], p[1], p[2]); if (!a) continue;
+      const lab = p[4] || { ac: 'AC', hob: 'hob 7 kW' }[p[3]];
+      o += `<rect x="${f1(px(a[0]) - 6)}" y="${f1(py(a[1]) - 6)}" width="12" height="12" class="ebx ${p[3]}"/><text x="${f1(px(a[0]))}" y="${f1(py(a[1]) - 10)}" class="ovt et" text-anchor="middle">${lab}</text>`;
+    }
+  }
+  return o;
+}
+let handles = [];
+function render() {
+  const Lv = state[level];
+  const ol = Lv.outline, ex = (BASE[level] && BASE[level].extras) || [];
+  const by1 = Math.max(ol[3], ...ex.map(e => e.y1));
+  XMIN = ol[0] - 1.3; XMAX = ol[2] + 1.0; YMIN = ol[1] - 1.5; YMAX = by1 + 0.5;
+  svg.setAttribute('viewBox', `0 0 ${((XMAX - XMIN) * S).toFixed(0)} ${((YMAX - YMIN) * S).toFixed(0)}`);
+  handles = lineHandles(Lv);
+  let o = '';
+  const [ox0, oy0, ox1, oy1] = Lv.outline;
+  for (const e of ex) o += R(e.x0, e.y0, e.x1, e.y1, 'deck') + T((e.x0 + e.x1) / 2, (e.y0 + e.y1) / 2 - 0.05, e.label, 'deckt');
+  o += R(ox0, oy0, ox1, oy1, 'floor');
+  const rooms = roomsOf(Lv);
+  for (const c of Lv.cells) if (c.zone !== 'stair') o += R(c.x0, c.y0, c.x1, c.y1, 'cell', `fill:${ZONE_COL[c.zone]}`);
+  for (const c of Lv.cells) if (c.zone === 'stair') o += stairSVG(c, level);
+  for (const w of interiorWalls(Lv)) o += w.o === 'v' ? L(w.c, w.a, w.c, w.b, 'wall') : L(w.a, w.c, w.b, w.c, 'wall');
+  o += R(ox0, oy0, ox1, oy1, 'ext');
+  handles.forEach((h, i) => {
+    o += h.o === 'v' ? L(h.c, h.a + 0.15, h.c, h.b - 0.15, 'handle' + (h.locked ? ' locked' : ''), `data-h="${i}"`) : L(h.a + 0.15, h.c, h.b - 0.15, h.c, 'handle' + (h.locked ? ' locked' : ''), `data-h="${i}"`);
+  });
+  Lv.windows.forEach((w, i) => { o += winSVG(w, i, sel && sel.type === 'window' && sel.i === i); });
+  Lv.doors.forEach((d, i) => { o += doorSVG(d, i, sel && sel.type === 'door' && sel.i === i); });
+  // labels
+  for (const r of rooms) {
+    if (r.zone === 'stair') continue;
+    const c = r.cells.reduce((a, b) => (a.x1 - a.x0) * (a.y1 - a.y0) >= (b.x1 - b.x0) * (b.y1 - b.y0) ? a : b);
+    const a = areaOf(r), m = minArea(level, r.room, r.zone), bad = m && a < m - 0.005;
+    const cx = (c.x0 + c.x1) / 2, cy = (c.y0 + c.y1) / 2;
+    const small = (c.x1 - c.x0) < 2.2;
+    o += T(cx, cy + 0.1, r.room, small ? 'rn2' : 'rn') + `<text x="${f1(px(cx))}" y="${f1(py(cy) + 14)}" class="ra${bad ? ' bad' : ''}" text-anchor="middle">${a.toFixed(1)} m²${bad ? ' · min ' + m : ''}</text>`;
+  }
+  o += overlaySVG(Lv);
+  // dimension strings along the front and the south side (live)
+  const xs = [...new Set(Lv.cells.flatMap(c => [c.x0, c.x1]).map(v => +v.toFixed(2)))].sort((a, b) => a - b);
+  const ys = [...new Set(Lv.cells.flatMap(c => [c.y0, c.y1]).map(v => +v.toFixed(2)))].sort((a, b) => a - b);
+  const yd = oy0 - 0.75, xd = ox0 - 0.75;
+  o += L(xs[0], yd, xs[xs.length - 1], yd, 'dim');
+  for (let i = 0; i < xs.length; i++) { o += L(xs[i], yd - 0.12, xs[i], yd + 0.12, 'dim'); if (i) o += `<text x="${f1(px((xs[i] + xs[i - 1]) / 2))}" y="${f1(py(yd) - 4)}" class="dt" text-anchor="middle">${(xs[i] - xs[i - 1]).toFixed(2)}</text>`; }
+  o += L(xd, ys[0], xd, ys[ys.length - 1], 'dim');
+  for (let i = 0; i < ys.length; i++) { o += L(xd - 0.12, ys[i], xd + 0.12, ys[i], 'dim'); if (i && ys[i] - ys[i - 1] > 0.5) { const m = (ys[i] + ys[i - 1]) / 2; o += `<text x="${f1(px(xd) - 5)}" y="${f1(py(m))}" class="dt" text-anchor="middle" transform="rotate(-90 ${f1(px(xd) - 5)} ${f1(py(m))})">${(ys[i] - ys[i - 1]).toFixed(2)}</text>`; } }
+  o += `<text x="${f1(px(4.3))}" y="${f1(py(YMIN + 0.3))}" class="street" text-anchor="middle">STREET · EAST ↓ · NORTH →</text>`;
+  svg.innerHTML = o;
+  renderSide(Lv, rooms);
+  document.querySelectorAll('#levels button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.l === level)));
+  document.querySelectorAll('#versions button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === ver)));
+  $('verNote').textContent = VERS[ver].note;
+  $('layPlumb').checked = layers.plumb; $('layElec').checked = layers.elec;
+  $('selBar').hidden = !sel;
+  if (sel) $('selLabel').textContent = sel.type === 'door' ? `Door · ${state[level].doors[sel.i].w.toFixed(2)} m` : `Window · ${(state[level].windows[sel.i].b - state[level].windows[sel.i].a).toFixed(2)} m`;
+  $('flipBtn').hidden = !(sel && sel.type === 'door');
+}
+function renderSide(Lv, rooms) {
+  let rows = '', tot = 0, fails = 0;
+  for (const r of rooms) {
+    if (r.zone === 'stair') continue;
+    const a = areaOf(r), m = minArea(level, r.room, r.zone), g = glassFor(Lv, r);
+    const needLight = ['private', 'social', 'work'].includes(r.zone) && r.room !== 'Closet';
+    const okA = !m || a >= m - 0.005, okL = !needLight || g >= a / 8 - 0.005;
+    if (!okA || !okL) fails++;
+    tot += a;
+    rows += `<tr><td><i style="background:${ZONE_COL[r.zone]}"></i>${r.room}</td><td>${a.toFixed(1)}</td><td class="${okA ? 'ok' : 'bad'}">${m ? '≥ ' + m : '–'}</td><td class="${okL ? 'ok' : 'bad'}">${needLight ? (g > 0 ? '1/' + Math.max(1, Math.round(a / g)) : 'none') : '–'}</td></tr>`;
+  }
+  const [x0, y0, x1, y1] = Lv.outline;
+  $('roomTable').innerHTML = `<tr><th>Room</th><th>m²</th><th>Min</th><th>Window</th></tr>${rows}`;
+  $('levelSum').textContent = `${Lv.name} · ${((x1 - x0) * (y1 - y0)).toFixed(1)} m² gross`;
+  $('checkSum').innerHTML = fails ? `<span class="bad">${fails} room${fails > 1 ? 's' : ''} below the code minimum (area ≥ min, window ≥ 1/8)</span>` : '<span class="ok">Every room meets the code minimums on this floor.</span>';
+}
+
+/* ---------------- interaction ---------------- */
+function toPlan(ev) { const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY; const p = pt.matrixTransform(svg.getScreenCTM().inverse()); return [p.x / S + XMIN, YMAX - p.y / S]; }
+let drag = null;
+svg.addEventListener('pointerdown', (ev) => {
+  const t = ev.target; const Lv = state[level];
+  const [x, y] = toPlan(ev);
+  const dg = t.closest && t.closest('[data-door]'), wg = t.closest && t.closest('[data-win]');
+  if (dg) { const i = +dg.dataset.door; sel = { type: 'door', i }; snapshot(); const d = Lv.doors[i]; drag = { kind: 'door', i, off: (d.o === 'h' ? x : y) - d.p }; }
+  else if (wg) { const i = +wg.dataset.win; sel = { type: 'window', i }; snapshot(); const w = Lv.windows[i]; drag = { kind: 'win', i, off: (w.o === 'h' ? x : y) - w.a }; }
+  else if (t.dataset && t.dataset.h != null) {
+    const h = handles[+t.dataset.h]; sel = null;
+    if (h.locked) { flash('That wall belongs to the stair core, which stays fixed.'); render(); return; }
+    snapshot(); drag = { kind: 'wall', h, c0: h.c };
+  } else { sel = null; render(); return; }
+  svg.setPointerCapture(ev.pointerId); render(); ev.preventDefault();
+});
+svg.addEventListener('pointermove', (ev) => {
+  if (!drag) return;
+  const Lv = state[level]; const [x, y] = toPlan(ev);
+  if (drag.kind === 'wall') {
+    const h = drag.h; let nc = snap(h.o === 'v' ? x : y);
+    let lo = -1e9, hi = 1e9;
+    for (const c of h.cells) {
+      if (h.o === 'v') { if (Math.abs(c.x1 - drag.c0) < E || Math.abs(c.x1 - h.c) < E) lo = Math.max(lo, c.x0 + 0.8); if (Math.abs(c.x0 - drag.c0) < E || Math.abs(c.x0 - h.c) < E) hi = Math.min(hi, c.x1 - 0.8); }
+      else { if (Math.abs(c.y1 - drag.c0) < E || Math.abs(c.y1 - h.c) < E) lo = Math.max(lo, c.y0 + 0.8); if (Math.abs(c.y0 - drag.c0) < E || Math.abs(c.y0 - h.c) < E) hi = Math.min(hi, c.y1 - 0.8); }
+    }
+    nc = Math.min(Math.max(nc, lo), hi);
+    const old = h.c; if (Math.abs(nc - old) < E) return;
+    for (const c of h.cells) {
+      if (h.o === 'v') { if (Math.abs(c.x0 - old) < E) c.x0 = nc; if (Math.abs(c.x1 - old) < E) c.x1 = nc; }
+      else { if (Math.abs(c.y0 - old) < E) c.y0 = nc; if (Math.abs(c.y1 - old) < E) c.y1 = nc; }
+    }
+    for (const d of Lv.doors) if (d.o === h.o && Math.abs(d.c - old) < E && d.p >= h.a - E && d.p + d.w <= h.b + E) d.c = nc;
+    h.c = nc; clampOpenings(Lv);
+    $('dragInfo').textContent = `Wall at ${nc.toFixed(2)} m`;
+  } else if (drag.kind === 'door') {
+    const d = Lv.doors[drag.i]; const at = (d.o === 'h' ? x : y) - drag.off;
+    const [a, b] = spanFor(Lv, d.o, d.c, d.p + d.w / 2);
+    d.p = snap(Math.min(Math.max(at, a + 0.05), b - d.w - 0.05));
+  } else if (drag.kind === 'win') {
+    const w = Lv.windows[drag.i]; const len = w.b - w.a; const at = (w.o === 'h' ? x : y) - drag.off;
+    const [a, b] = spanFor(Lv, w.o, w.c, (w.a + w.b) / 2);
+    w.a = snap(Math.min(Math.max(at, a + 0.1), b - len - 0.1)); w.b = w.a + len;
+  }
+  render();
+});
+function endDrag() { if (drag) { drag = null; save(); $('dragInfo').textContent = ''; render(); } }
+svg.addEventListener('pointerup', endDrag); svg.addEventListener('pointercancel', endDrag);
+svg.addEventListener('dblclick', (ev) => {
+  const Lv = state[level]; const [x, y] = toPlan(ev);
+  const [x0, y0, x1, y1] = Lv.outline;
+  // nearest wall line (interior handle or outline edge)
+  const cands = handles.map(h => ({ o: h.o, c: h.c, a: h.a, b: h.b, ext: false }))
+    .concat([{ o: 'v', c: x0, a: y0, b: y1, ext: true }, { o: 'v', c: x1, a: y0, b: y1, ext: true }, { o: 'h', c: y0, a: x0, b: x1, ext: true }, { o: 'h', c: y1, a: x0, b: x1, ext: true }]);
+  let best = null, bd = 0.3;
+  for (const h of cands) { const along = h.o === 'v' ? y : x, dist = Math.abs((h.o === 'v' ? x : y) - h.c); if (along < h.a || along > h.b) continue; if (dist < bd) { bd = dist; best = h; } }
+  if (!best) return;
+  snapshot();
+  const along = best.o === 'v' ? y : x;
+  if (best.ext) { Lv.windows.push({ o: best.o, c: best.c, a: snap(along - 0.6), b: snap(along + 0.6), k: 'win' }); sel = { type: 'window', i: Lv.windows.length - 1 }; }
+  else { Lv.doors.push({ o: best.o, c: best.c, p: snap(along - 0.4), w: 0.8, s: 1 }); sel = { type: 'door', i: Lv.doors.length - 1 }; }
+  clampOpenings(Lv); save(); render();
+});
+function flash(msg) { $('dragInfo').textContent = msg; setTimeout(() => { if ($('dragInfo').textContent === msg) $('dragInfo').textContent = ''; }, 2600); }
+function resizeSel(dw) {
+  if (!sel) return; const Lv = state[level]; snapshot();
+  if (sel.type === 'door') { const d = Lv.doors[sel.i]; d.w = Math.min(Math.max(+(d.w + dw).toFixed(2), 0.6), d.k === 'garage' ? 6 : 2.4); }
+  else { const w = Lv.windows[sel.i]; w.b = +(w.b + dw).toFixed(2); if (w.b - w.a < 0.4) w.b = w.a + 0.4; }
+  clampOpenings(Lv); save(); render();
+}
+$('wMinus').addEventListener('click', () => resizeSel(-0.1)); $('wPlus').addEventListener('click', () => resizeSel(0.1));
+$('flipBtn').addEventListener('click', () => { if (!sel || sel.type !== 'door') return; snapshot(); state[level].doors[sel.i].s *= -1; save(); render(); });
+$('delBtn').addEventListener('click', () => { if (!sel) return; snapshot(); (sel.type === 'door' ? state[level].doors : state[level].windows).splice(sel.i, 1); sel = null; save(); render(); });
+document.addEventListener('keydown', (ev) => {
+  if ((ev.key === 'Delete' || ev.key === 'Backspace') && sel && document.activeElement.tagName !== 'TEXTAREA') { ev.preventDefault(); $('delBtn').click(); }
+  if ((ev.ctrlKey || ev.metaKey) && ev.key === 'z') { ev.preventDefault(); $('undoBtn').click(); }
+});
+$('undoBtn').addEventListener('click', () => { const s = undoStack.pop(); if (!s) return; state = JSON.parse(s); sel = null; save(); render(); });
+$('resetBtn').addEventListener('click', () => { snapshot(); state[level] = clone(BASE[level]); sel = null; save(); render(); flash(`This floor is back to the original ${VERS[ver].label}. Undo brings your edits back.`); });
+document.querySelectorAll('#versions button').forEach(b => b.addEventListener('click', () => { if (b.dataset.v === ver) return; loadVersion(b.dataset.v); render(); flash(`${VERS[ver].label} loaded. Your edits to each version are kept separately.`); }));
+document.querySelectorAll('#levels button').forEach(b => b.addEventListener('click', () => { level = b.dataset.l; sel = null; LS.set(KEY + '.level', level); render(); }));
+$('layPlumb').addEventListener('change', (e) => { layers.plumb = e.target.checked; LS.set(KEY + '.layers', layers); render(); });
+$('layElec').addEventListener('change', (e) => { layers.elec = e.target.checked; LS.set(KEY + '.layers', layers); render(); });
+$('exportBtn').addEventListener('click', () => { $('expText').value = JSON.stringify(state, null, 1); $('exp').hidden = false; $('expText').select(); });
+$('expCopy').addEventListener('click', () => { const t = $('expText').value; try { navigator.clipboard.writeText(t).then(() => flash('Copied'), () => $('expText').select()); } catch (e) { $('expText').select(); } });
+$('expClose').addEventListener('click', () => { $('exp').hidden = true; });
+
+/* ---------------- tabs + styles ---------------- */
+function setTab(t) { document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.t === t))); document.querySelectorAll('.pane').forEach(p => { p.hidden = p.id !== 'pane-' + t; }); LS.set('casa123.tab', t); }
+document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => setTab(b.dataset.t)));
+let chosen = LS.get('casa123.style', LS.get('casa123.plan.v6.style', null));
+function markStyle() { document.querySelectorAll('.stylecard').forEach(c => { const on = c.dataset.id === chosen; c.classList.toggle('chosen', on); c.querySelector('button').textContent = on ? 'Chosen' : 'Choose this style'; c.querySelector('button').setAttribute('aria-pressed', String(on)); }); }
+document.querySelectorAll('.stylecard button').forEach(b => b.addEventListener('click', () => { chosen = b.closest('.stylecard').dataset.id; LS.set('casa123.style', chosen); markStyle(); }));
+markStyle();
+setTab(LS.get('casa123.tab', 'plan'));
+render();
+})();
+</script>
