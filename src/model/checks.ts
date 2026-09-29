@@ -3,11 +3,13 @@ import {
   distSegSeg, getEl, glassArea, openingSegIn, pointInRect, spaceArea, spacesOn, toLot,
 } from './geometry';
 import { PLAN_LEVELS, type Project, type Space, type Stair } from './schema';
+import { EAVES_LIMIT_DEFAULT } from './site';
+import { checkSupport } from './support';
 
 export type CheckStatus = 'pass' | 'warn' | 'fail';
 export interface CheckResult {
   id: string;
-  group: 'Rooms' | 'Windows' | 'Circulation' | 'Stairs' | 'Site';
+  group: 'Rooms' | 'Windows' | 'Circulation' | 'Stairs' | 'Site' | 'Structure';
   title: string;
   status: CheckStatus;
   value: string;
@@ -225,8 +227,38 @@ function siteChecks(p: Project): CheckResult[] {
   return out;
 }
 
+function structureChecks(p: Project): CheckResult[] {
+  const out: CheckResult[] = [];
+  const s = checkSupport(p);
+  const n = p.elements.filter((e) => ['Footing', 'Column', 'Beam', 'Slab', 'Wall', 'Stair', 'Deck'].includes(e.type)).length;
+  out.push({
+    id: 'support:all', group: 'Structure', elementIds: s.unsupported.map((e) => e.id),
+    title: 'Nothing floats', status: s.unsupported.length ? 'fail' : 'pass',
+    value: s.unsupported.length ? `${s.unsupported.length} of ${n} elements have no support below` : `all ${n} elements rest on something`,
+    rule: 'Every element rests on a supported element, down to footings in the ground', source: 'Project rule (spec 02); NBR 8800 / NBR 6122 for the real design',
+  });
+  for (const e of s.unsupported) {
+    out.push({
+      id: `support:${e.id}`, group: 'Structure', level: e.level, elementIds: [e.id],
+      title: `${e.type} ${e.id} is not supported`, status: 'fail', value: s.reasons.get(e.id) ?? 'no support',
+      rule: 'Nothing may float', source: 'Project rule (spec 02)',
+    });
+  }
+  const limit = p.site.eavesLimit ?? EAVES_LIMIT_DEFAULT;
+  for (const e of p.elements) {
+    if (e.type !== 'Slab' || e.props.eaves === undefined) continue;
+    out.push({
+      id: `eaves:${e.id}`, group: 'Site', elementIds: [e.id], title: `${e.props.name} eaves`,
+      status: e.props.eaves <= limit + 1e-9 ? 'pass' : 'fail',
+      value: `${e.props.eaves.toFixed(2)} m (limit ${limit.toFixed(2)} m)`,
+      rule: `Eaves up to ${limit.toFixed(2)} m are not counted in site coverage`, source: 'Piracicaba LC 474/2025',
+    });
+  }
+  return out;
+}
+
 export function runChecks(p: Project): CheckResult[] {
-  return [...roomChecks(p), ...circulationChecks(p), ...stairChecks(p), ...siteChecks(p)];
+  return [...roomChecks(p), ...circulationChecks(p), ...stairChecks(p), ...siteChecks(p), ...structureChecks(p)];
 }
 
 export function summarize(results: CheckResult[]) {

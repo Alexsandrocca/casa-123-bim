@@ -22,7 +22,7 @@ const common = {
 const v2 = importPlan(v2src.plan, {
   versionId: 'v2', version: 'Version 2', note: V2_NOTE,
   source: 'docs/reference/plan-v2.json (Casa 123 studio export, 2026-09-29)',
-  gridX: v2src.meta.structure.steel_grid_x, gridY: [0, 5, 8.2, 8.5, 12.6, 15],
+  gridX: v2src.meta.structure.steel_grid_x, gridY: [0, 5, 8.5, 12.6, 15],
   stairs: V2_STAIRS, ...common,
 });
 out('casa-123.json', v2);
@@ -37,5 +37,5 @@ out('casa-123-v1.json', v1);
 
 for (const p of [v2, v1]) {
   const count = (t: string) => p.elements.filter((e) => e.type === t).length;
-  console.log(`${p.meta.version}: ${count('Space')} spaces, ${count('Wall')} walls, ${count('Opening')} openings, ${count('Slab')} slabs, ${count('Stair')} stairs, ${count('Deck')} decks`);
+  console.log(`${p.meta.version}: ${count('Space')} spaces, ${count('Wall')} walls, ${count('Opening')} openings, ${count('Slab')} slabs, ${count('Stair')} stairs, ${count('Deck')} decks, ${count('Column')} columns/piers, ${count('Beam')} beams, ${count('Footing')} footings`);
 }

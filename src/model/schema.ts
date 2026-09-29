@@ -91,6 +91,11 @@ export const Slab = z.object({
     voidSpaces: z.array(z.string()),
     topElevation: z.number(),
     thickness: z.number().positive(),
+    /** Resting on the ground (or compacted fill) instead of on beams. */
+    onGrade: z.boolean().optional(),
+    /** Roofs: parapet height above the top of the slab, and how far the slab overhangs the walls. */
+    parapet: z.number().min(0).optional(),
+    eaves: z.number().min(0).optional(),
   }),
 });
 export type Slab = z.infer<typeof Slab>;
@@ -98,13 +103,39 @@ export type Slab = z.infer<typeof Slab>;
 export const Column = z.object({
   ...base,
   type: z.literal('Column'),
-  props: z.object({ at: Point, profile: z.string(), baseElevation: z.number(), topElevation: z.number() }),
+  props: z.object({
+    at: Point,
+    /** Steel section or pier size, see profiles.ts. */
+    profile: z.string(),
+    /** column = steel frame column; pier = short support under the raised street-level floor. */
+    kind: z.enum(['column', 'pier']),
+    baseElevation: z.number(),
+    topElevation: z.number(),
+  }),
 });
+export type Column = z.infer<typeof Column>;
 export const Beam = z.object({
   ...base,
   type: z.literal('Beam'),
+  /** elevation = top of steel (underside of the slab it carries). */
   props: z.object({ start: Point, end: Point, profile: z.string(), elevation: z.number() }),
 });
+export type Beam = z.infer<typeof Beam>;
+
+/** Concrete footing: a pad under a column or pier, or a strip under a retaining wall. */
+export const Footing = z.object({
+  ...base,
+  type: z.literal('Footing'),
+  props: z.object({
+    kind: z.enum(['pad', 'strip']),
+    rect: Rect,
+    topElevation: z.number(),
+    depth: z.number().positive(),
+    /** What it carries (column, pier or wall id). */
+    carries: z.string().optional(),
+  }),
+});
+export type Footing = z.infer<typeof Footing>;
 
 export const Flight = z.object({
   x0: z.number(),
@@ -151,7 +182,7 @@ export const Plant = later('Plant');
 export const Material = later('Material');
 
 export const Element = z.discriminatedUnion('type', [
-  Space, Wall, Opening, Slab, Column, Beam, Stair, Deck,
+  Space, Wall, Opening, Slab, Column, Beam, Footing, Stair, Deck,
   Fixture, PipeSegment, Device, Circuit, Furniture, Plant, Material,
 ]);
 export type Element = z.infer<typeof Element>;
@@ -193,6 +224,10 @@ export const Project = z.object({
       retainingSouthToY: z.number(),
       retainingNorthToY: z.number(),
     }),
+    /** North side walking ramp from the street down to the garden. */
+    ramp: z.object({ width: z.number(), slope: z.number() }).optional(),
+    /** Eaves limit not counted in site coverage (Piracicaba LC 474/2025). */
+    eavesLimit: z.number().optional(),
     toConfirm: z.array(z.string()),
   }),
   structure: z.object({ floorToFloor: z.number(), clearHeight: z.number(), structureDepth: z.number() }),

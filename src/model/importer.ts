@@ -1,5 +1,7 @@
 // Converts the prototype's cell plans (plan-v2.json, BASE1) into the building model.
 import { WALL_THICKNESS, deriveInteriorSegs, eq, q, segToWallEnds, wallSeg, type Seg } from './geometry';
+import { DECK_SLAB } from './profiles';
+import { generateStructure } from './structure';
 import { parseProject, type Deck, type Element, type Opening, type Project, type Slab, type Space, type Stair, type Wall, type WallType, type Zone } from './schema';
 
 export interface SourceCell { room: string; zone: string; x0: number; y0: number; x1: number; y1: number; lock?: boolean; kind?: string }
@@ -44,6 +46,8 @@ export const SITE: Project['site'] = {
   fallStreetToRear: 2,
   setbacks: { front: 4, rear: 6, sides: 1.2 },
   cut: { lineY: 8.5, gardenLevel: -2.55, retainingSouthToY: 10.5, retainingNorthToY: 8.9 },
+  ramp: { width: 4, slope: 0.125 },
+  eavesLimit: 0.7,
   toConfirm: [
     'Topographic survey',
     'SPT soil borings',
@@ -169,19 +173,22 @@ export function importPlan(plan: SourcePlan, opt: ImportOptions): Project {
       props: {
         name: L === 'LL' ? 'Lower level ground slab' : `${src.name} floor`,
         rect: { x0, y0, x1, y1 }, voidSpaces: [...stairVoids, ...garage],
-        topElevation: LEVELS[L], thickness: L === 'LL' ? 0.15 : STRUCTURE.structureDepth,
+        topElevation: LEVELS[L], thickness: L === 'LL' ? 0.15 : DECK_SLAB, ...(L === 'LL' ? { onGrade: true } : {}),
       },
     });
     if (garage.length) {
       slabs.push({
         id: `${L}-slab-02`, type: 'Slab', level: L, tags: ['garage'],
-        props: { name: 'Garage slab on grade', spaces: garage, voidSpaces: [], topElevation: opt.levels.garage.floor, thickness: 0.15 },
+        props: { name: 'Garage slab on grade', spaces: garage, voidSpaces: [], topElevation: opt.levels.garage.floor, thickness: 0.15, onGrade: true },
       });
     }
     if (L === 'UF') {
       slabs.push({
         id: 'roof-slab-01', type: 'Slab', level: 'roof', tags: [],
-        props: { name: 'Flat roof', rect: { x0, y0, x1, y1 }, voidSpaces: [], topElevation: opt.levels.roof.top_of_slab, thickness: STRUCTURE.structureDepth },
+        props: {
+          name: 'Flat roof', rect: { x0, y0, x1, y1 }, voidSpaces: [], topElevation: opt.levels.roof.top_of_slab, thickness: DECK_SLAB,
+          parapet: q(opt.levels.roof.parapet_top - opt.levels.roof.top_of_slab), eaves: 0.4,
+        },
       });
     }
 
@@ -198,6 +205,30 @@ export function importPlan(plan: SourcePlan, opt: ImportOptions): Project {
     });
 
     elements.push(...spaces, ...walls, ...openings);
+  }
+
+  // Roof of the lower level where the street level does not cover it (the veranda in Version 2).
+  const [, , , llY1] = plan.LL.outline, [slX0, slY0, slX1, slY1] = plan.SL.outline, [, ufY0] = plan.UF.outline;
+  if (llY1 > slY1 + 1e-6) {
+    const veranda = decks.some((d) => d.level === 'SL');
+    slabs.push({
+      id: 'SL-slab-03', type: 'Slab', level: 'SL', tags: ['lower-roof'],
+      props: {
+        name: veranda ? 'Veranda slab (roof of the lower level)' : 'Roof of the lower level',
+        rect: { x0: slX0, y0: slY1, x1: slX1, y1: llY1 }, voidSpaces: [], topElevation: LEVELS.SL, thickness: DECK_SLAB,
+        ...(veranda ? {} : { parapet: 0.3 }),
+      },
+    });
+  }
+  // Roof over the front of the street level (garage and entry) where the upper floor does not reach.
+  if (ufY0 > slY0 + 1e-6) {
+    slabs.push({
+      id: 'UF-slab-02', type: 'Slab', level: 'UF', tags: ['garage-roof'],
+      props: {
+        name: 'Garage roof', rect: { x0: slX0, y0: slY0, x1: slX1, y1: ufY0 }, voidSpaces: [], topElevation: LEVELS.UF,
+        thickness: DECK_SLAB, parapet: 0.3, eaves: 0,
+      },
+    });
   }
 
   const stairs: Stair[] = opt.stairs.map((props, i) => ({
@@ -224,6 +255,7 @@ export function importPlan(plan: SourcePlan, opt: ImportOptions): Project {
     grid: { x: opt.gridX, y: opt.gridY },
     elements,
   };
+  project.elements.push(...generateStructure(project));
   return parseProject(project);
 }
 
@@ -243,16 +275,17 @@ export const V2_STAIRS: Stair['props'][] = [
   },
 ];
 
-/** Version 1: a U-stair in x 0–2.4, y 8.5–11.9 on every floor, landing at the front end. */
+/** Version 1: a U-stair in x 0–2.4 on every floor. You step on and off at the rear end (y 11.9); the landing is at the front. */
 function uStair(name: string, from: string, to: string): Stair['props'] {
-  const w = 1.15;
+  const w = 1.15, top = 11.9;
+  const turn = q(top - 7 * T); // second flight: 8 risers, 7 treads, arrives at the rear edge of the well
   return {
     name, fromLevel: from, toLevel: to, riser: R, tread: T, width: w,
     flights: [
-      { x0: q(2.4 - w), x1: 2.4, yBottom: 11.9, yTop: q(11.9 - 8 * T), risers: 9 },
-      { x0: 0, x1: w, yBottom: q(11.9 - 8 * T), yTop: q(11.9 - 8 * T + 7 * T), risers: 8 },
+      { x0: q(2.4 - w), x1: 2.4, yBottom: q(turn + 8 * T), yTop: turn, risers: 9 },
+      { x0: 0, x1: w, yBottom: turn, yTop: top, risers: 8 },
     ],
-    landings: [{ x0: 0, y0: 8.5, x1: 2.4, y1: q(11.9 - 8 * T) }],
+    landings: [{ x0: 0, y0: 8.5, x1: 2.4, y1: turn }],
   };
 }
 export const V1_STAIRS: Stair['props'][] = [uStair('U-stair LL → SL', 'LL', 'SL'), uStair('U-stair SL → UF', 'SL', 'UF')];
