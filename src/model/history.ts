@@ -1,44 +1,35 @@
-// Undo/redo history for one version of the project.
+// Undo/redo history for one version of the project. Immutable: every call returns a new history.
 import type { Command } from './commands';
 import type { Project } from './schema';
 
 export const HISTORY_LIMIT = 100;
 
+export interface Hist { present: Project; past: Project[]; future: Project[] }
+
+export const initHist = (present: Project): Hist => ({ present, past: [], future: [] });
+
+export const commit = (h: Hist, next: Project): Hist =>
+  next === h.present ? h : { present: next, past: [...h.past, h.present].slice(-HISTORY_LIMIT), future: [] };
+
+/** Apply a command. Throws CommandError when the command is refused. */
+export const runCmd = (h: Hist, cmd: Command): Hist => commit(h, cmd.apply(h.present));
+
+export function undo(h: Hist): Hist {
+  const prev = h.past[h.past.length - 1];
+  return prev ? { present: prev, past: h.past.slice(0, -1), future: [h.present, ...h.future] } : h;
+}
+
+export function redo(h: Hist): Hist {
+  const next = h.future[0];
+  return next ? { present: next, past: [...h.past, h.present], future: h.future.slice(1) } : h;
+}
+
+/** Small mutable wrapper, handy in tests. */
 export class History {
-  past: Project[] = [];
-  future: Project[] = [];
-  constructor(public present: Project) {}
-
-  /** Apply a command. Returns false when it changed nothing. Throws CommandError when refused. */
-  run(cmd: Command): boolean {
-    const next = cmd.apply(this.present);
-    if (next === this.present) return false;
-    this.commit(next);
-    return true;
-  }
-
-  /** Record a new state (used after a drag preview). */
-  commit(next: Project) {
-    this.past = [...this.past, this.present].slice(-HISTORY_LIMIT);
-    this.future = [];
-    this.present = next;
-  }
-
-  undo(): boolean {
-    const prev = this.past[this.past.length - 1];
-    if (!prev) return false;
-    this.past = this.past.slice(0, -1);
-    this.future = [this.present, ...this.future];
-    this.present = prev;
-    return true;
-  }
-
-  redo(): boolean {
-    const next = this.future[0];
-    if (!next) return false;
-    this.future = this.future.slice(1);
-    this.past = [...this.past, this.present];
-    this.present = next;
-    return true;
-  }
+  h: Hist;
+  constructor(p: Project) { this.h = initHist(p); }
+  get present() { return this.h.present; }
+  run(cmd: Command) { const before = this.h; this.h = runCmd(this.h, cmd); return this.h !== before; }
+  undo() { const b = this.h; this.h = undo(this.h); return this.h !== b; }
+  redo() { const b = this.h; this.h = redo(this.h); return this.h !== b; }
 }

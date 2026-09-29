@@ -1,0 +1,314 @@
+// The 2D plan: draws one floor of the model and turns pointer gestures into commands.
+import { useMemo, useRef, type PointerEvent as RPointerEvent, type ReactNode } from 'react';
+import { minArea } from '../model/checks';
+import { addOpening, moveOpening, moveWall, nextOpeningId, wallLimits } from '../model/commands';
+import {
+  byLevel, lineHandles, mainCell, openingSeg, snap, spaceArea, wallSeg, type Handle, type Seg,
+} from '../model/geometry';
+import type { Opening, Rect, Space, Wall } from '../model/schema';
+import { useApp, useProject } from '../store';
+
+const S = 40; // px per metre, same drawing scale as the prototype
+
+export const ZONE_COLOR: Record<string, string> = {
+  social: 'var(--soc)', private: 'var(--pri)', wet: 'var(--wet)', service: 'var(--svc)',
+  circ: 'var(--cir)', work: 'var(--wrk)', stair: 'var(--str)', garage: 'var(--gar)',
+};
+
+interface Frame { XMIN: number; XMAX: number; YMIN: number; YMAX: number }
+const f1 = (v: number) => +v.toFixed(1);
+
+type Drag =
+  | { kind: 'wall'; h: Handle; at: number; x0: number; y0: number; moved: boolean }
+  | { kind: 'opening'; id: string; o: 'v' | 'h'; off: number; x0: number; y0: number; moved: boolean };
+
+export function PlanView() {
+  const p = useProject();
+  const level = useApp((s) => s.level);
+  const selection = useApp((s) => s.selection);
+  const tool = useApp((s) => s.tool);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const drag = useRef<Drag | null>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
+
+  const lv = p.levels.find((l) => l.id === level)!;
+  const outline = lv.outline!;
+  const spaces = byLevel(p, level, 'Space');
+  const walls = byLevel(p, level, 'Wall');
+  const openings = byLevel(p, level, 'Opening');
+  const decks = byLevel(p, level, 'Deck');
+  const handles = useMemo(() => lineHandles(p, level), [p, level]);
+
+  // Each floor fills the view, as in the prototype.
+  const fr: Frame = {
+    XMIN: outline.x0 - 1.3, XMAX: outline.x1 + 1.0, YMIN: outline.y0 - 1.5,
+    YMAX: Math.max(outline.y1, ...decks.map((d) => d.props.rect.y1)) + 0.5,
+  };
+  const px = (x: number) => f1((x - fr.XMIN) * S);
+  const py = (y: number) => f1((fr.YMAX - y) * S);
+  const W = (fr.XMAX - fr.XMIN) * S, H = (fr.YMAX - fr.YMIN) * S;
+
+  const line = (x0: number, y0: number, x1: number, y1: number, cls: string, key?: string | number, extra: object = {}) =>
+    <line key={key} x1={px(x0)} y1={py(y0)} x2={px(x1)} y2={py(y1)} className={cls} {...extra} />;
+  const rect = (r: Rect, cls: string, key?: string | number, extra: object = {}) =>
+    <rect key={key} x={px(Math.min(r.x0, r.x1))} y={py(Math.max(r.y0, r.y1))} width={f1(Math.abs(r.x1 - r.x0) * S)} height={f1(Math.abs(r.y1 - r.y0) * S)} className={cls} {...extra} />;
+  const segLine = (s: Seg, cls: string, key?: string | number, extra: object = {}) =>
+    s.o === 'v' ? line(s.c, s.a, s.c, s.b, cls, key, extra) : line(s.a, s.c, s.b, s.c, cls, key, extra);
+
+  /* ---------- pointer → plan coordinates ---------- */
+  const toPlan = (ev: { clientX: number; clientY: number }): [number, number] => {
+    const svg = svgRef.current!;
+    const pt = svg.createSVGPoint();
+    pt.x = ev.clientX; pt.y = ev.clientY;
+    const q = pt.matrixTransform(svg.getScreenCTM()!.inverse());
+    return [q.x / S + fr.XMIN, fr.YMAX - q.y / S];
+  };
+
+  const nearestWall = (x: number, y: number, maxDist: number): Wall | undefined => {
+    let best: Wall | undefined, bd = maxDist;
+    for (const w of walls) {
+      const s = wallSeg(w);
+      const along = s.o === 'v' ? y : x, d = Math.abs((s.o === 'v' ? x : y) - s.c);
+      if (along < s.a || along > s.b) continue;
+      if (d < bd) { bd = d; best = w; }
+    }
+    return best;
+  };
+
+  const addAt = (x: number, y: number, want?: 'door' | 'window') => {
+    const st = useApp.getState();
+    const w = nearestWall(x, y, 0.4);
+    if (!w) { st.flash('Click on a wall to add a door or window.'); return; }
+    const exterior = w.props.wallType === 'exterior' || w.props.wallType === 'retaining';
+    const role = want ?? (exterior ? 'window' : 'door');
+    if (role === 'window' && !exterior) { st.flash('Windows go on outside walls. Use a door for an inside wall.'); return; }
+    if (w.props.wallType === 'retaining') { st.flash('That wall holds back the ground (retaining wall), so it cannot have openings.'); return; }
+    const s = wallSeg(w);
+    const id = nextOpeningId(st.versions[st.active].present, level, role);
+    if (st.run(addOpening(id, w.id, s.o === 'v' ? y : x, role))) st.select(id);
+  };
+
+  const onPointerDown = (ev: RPointerEvent<SVGSVGElement>) => {
+    if (ev.button !== 0) return;
+    const st = useApp.getState();
+    const [x, y] = toPlan(ev);
+    if (tool !== 'select') { addAt(x, y, tool); return; }
+    const t = ev.target as Element;
+    const og = t.closest('[data-opening]'), hg = t.closest('[data-handle]'), wg = t.closest('[data-wall]'), sg = t.closest('[data-space]');
+    if (og) {
+      const id = og.getAttribute('data-opening')!;
+      const op = openings.find((o) => o.id === id)!;
+      const host = walls.find((w) => w.id === op.props.host)!;
+      const s = openingSeg(op, host);
+      st.select(id);
+      drag.current = { kind: 'opening', id, o: s.o, off: (s.o === 'h' ? x : y) - s.a, x0: x, y0: y, moved: false };
+    } else if (hg) {
+      const h = handles[Number(hg.getAttribute('data-handle'))]!;
+      const at = h.o === 'v' ? y : x;
+      const w = nearestWall(x, y, 0.5);
+      st.select(w && wallSeg(w).o === h.o ? w.id : null);
+      if (h.locked) { st.flash('That wall belongs to the stair core, which stays fixed.'); return; }
+      drag.current = { kind: 'wall', h, at, x0: x, y0: y, moved: false };
+    } else if (wg) {
+      st.select(wg.getAttribute('data-wall'));
+      st.flash('The outer walls stay fixed. Drag an inside wall to resize rooms.');
+      return;
+    } else if (sg) {
+      st.select(sg.getAttribute('data-space'));
+      return;
+    } else { st.select(null); return; }
+    svgRef.current!.setPointerCapture(ev.pointerId);
+    ev.preventDefault();
+  };
+
+  const onPointerMove = (ev: RPointerEvent<SVGSVGElement>) => {
+    const d = drag.current;
+    if (!d) return;
+    const [x, y] = toPlan(ev);
+    if (!d.moved && Math.hypot(x - d.x0, y - d.y0) < 0.04) return;
+    d.moved = true;
+    const st = useApp.getState();
+    if (d.kind === 'wall') {
+      const to = d.h.o === 'v' ? x : y;
+      st.previewCmd(moveWall(level, d.h.o, d.h.c, d.at, to));
+      const lim = wallLimits(st.versions[st.active].present, level, d.h.o, d.h.c, d.at);
+      if (infoRef.current && lim) {
+        const at = Math.min(Math.max(snap(to), lim.lo), lim.hi);
+        const edge = at === lim.lo || at === lim.hi ? ' · rooms keep at least 0.80 m' : '';
+        infoRef.current.textContent = `Wall at ${at.toFixed(2)} m${edge}`;
+      }
+    } else {
+      st.previewCmd(moveOpening(d.id, (d.o === 'h' ? x : y) - d.off));
+    }
+  };
+
+  const endDrag = () => {
+    const d = drag.current;
+    drag.current = null;
+    if (infoRef.current) infoRef.current.textContent = '';
+    if (!d) return;
+    const st = useApp.getState();
+    if (d.moved) st.commitPreview(); else st.cancelPreview();
+  };
+
+  const onDoubleClick = (ev: React.MouseEvent<SVGSVGElement>) => {
+    if (tool !== 'select') return;
+    const [x, y] = toPlan(ev);
+    addAt(x, y);
+  };
+
+  /* ---------- drawing ---------- */
+  const out: ReactNode[] = [];
+  decks.forEach((d) => {
+    out.push(rect(d.props.rect, 'deck', d.id));
+    out.push(<text key={d.id + 't'} x={px((d.props.rect.x0 + d.props.rect.x1) / 2)} y={py((d.props.rect.y0 + d.props.rect.y1) / 2 - 0.05)} className="deckt" textAnchor="middle">{d.props.label}</text>);
+  });
+  out.push(rect(outline, 'floor', 'floor'));
+  for (const s of spaces) {
+    if (s.props.zone === 'stair') continue;
+    s.props.cells.forEach((c, i) => out.push(rect(c, 'cell', `${s.id}:${i}`, { style: { fill: ZONE_COLOR[s.props.zone] }, 'data-space': s.id })));
+  }
+  for (const s of spaces) if (s.props.zone === 'stair') out.push(<Stair key={s.id} s={s} level={level} rect={rect} line={line} px={px} py={py} />);
+  const sel = selection ? p.elements.find((e) => e.id === selection) : undefined;
+  if (sel?.type === 'Space' && sel.level === level) sel.props.cells.forEach((c, i) => out.push(rect(c, 'selcell', `sel${i}`)));
+
+  // Room boundaries without a wall (open plan) are shown faintly so they can be found and dragged.
+  handles.forEach((h, i) => out.push(segLine(h, 'bound', `b${i}`)));
+  for (const w of walls) {
+    const s = wallSeg(w);
+    const cls = w.props.wallType === 'retaining' ? 'retwall' : w.props.wallType === 'exterior' ? 'extwall' : w.props.wallType === 'wet' ? 'wall wet' : 'wall';
+    out.push(segLine(s, cls, w.id));
+  }
+  if (sel?.type === 'Wall' && sel.level === level) out.push(segLine(wallSeg(sel), 'selwall', 'selwall'));
+  // Hit areas: outer walls (select only), then inside-wall handles (drag).
+  for (const w of walls) {
+    if (w.props.wallType !== 'exterior' && w.props.wallType !== 'retaining') continue;
+    out.push(segLine(wallSeg(w), 'wallhit', `hit${w.id}`, { 'data-wall': w.id }));
+  }
+  handles.forEach((h, i) => {
+    const inset = Math.min(0.15, (h.b - h.a) / 4);
+    const s = { ...h, a: h.a + inset, b: h.b - inset };
+    out.push(segLine(s, 'handle' + (h.locked ? ' locked' : ''), `h${i}`, { 'data-handle': i, 'data-line': `${h.o}:${h.c.toFixed(2)}:${h.a.toFixed(2)}` }));
+  });
+  for (const op of openings) {
+    const host = walls.find((w) => w.id === op.props.host);
+    if (host) out.push(<OpeningGlyph key={op.id} op={op} s={openingSeg(op, host)} selected={selection === op.id} line={line} rect={rect} px={px} py={py} />);
+  }
+
+  // Room names and areas.
+  for (const s of spaces) {
+    if (s.props.zone === 'stair') continue;
+    const c = mainCell(s);
+    const a = spaceArea(s), m = minArea(s), bad = m > 0 && a < m - 0.005;
+    const cx = (c.x0 + c.x1) / 2, cy = (c.y0 + c.y1) / 2;
+    out.push(<text key={s.id + 'n'} x={px(cx)} y={py(cy + 0.1)} className={c.x1 - c.x0 < 2.2 ? 'rn2' : 'rn'} textAnchor="middle">{s.props.name}</text>);
+    out.push(<text key={s.id + 'a'} x={px(cx)} y={py(cy) + 14} className={'ra' + (bad ? ' bad' : '')} textAnchor="middle" data-room={s.props.name}>{`${a.toFixed(1)} m²${bad ? ' · min ' + m : ''}`}</text>);
+  }
+
+  // Live dimension strings along the front and the south side.
+  const xs = [...new Set(spaces.flatMap((s) => s.props.cells.flatMap((c) => [c.x0, c.x1])).map((v) => +v.toFixed(2)))].sort((a, b) => a - b);
+  const ys = [...new Set(spaces.flatMap((s) => s.props.cells.flatMap((c) => [c.y0, c.y1])).map((v) => +v.toFixed(2)))].sort((a, b) => a - b);
+  const yd = outline.y0 - 0.75, xd = outline.x0 - 0.75;
+  out.push(line(xs[0]!, yd, xs[xs.length - 1]!, yd, 'dim', 'dx'));
+  xs.forEach((v, i) => {
+    out.push(line(v, yd - 0.12, v, yd + 0.12, 'dim', `dx${i}`));
+    if (i) out.push(<text key={`dxt${i}`} x={px((v + xs[i - 1]!) / 2)} y={py(yd) - 4} className="dt" textAnchor="middle">{(v - xs[i - 1]!).toFixed(2)}</text>);
+  });
+  out.push(line(xd, ys[0]!, xd, ys[ys.length - 1]!, 'dim', 'dy'));
+  ys.forEach((v, i) => {
+    out.push(line(xd - 0.12, v, xd + 0.12, v, 'dim', `dy${i}`));
+    if (i && v - ys[i - 1]! > 0.5) {
+      const m = (v + ys[i - 1]!) / 2, tx = px(xd) - 5, ty = py(m);
+      out.push(<text key={`dyt${i}`} x={tx} y={ty} className="dt" textAnchor="middle" transform={`rotate(-90 ${tx} ${ty})`}>{(v - ys[i - 1]!).toFixed(2)}</text>);
+    }
+  });
+  out.push(<text key="street" x={px((outline.x0 + outline.x1) / 2)} y={py(outline.y0 - 1.25)} className="street" textAnchor="middle">STREET · EAST ↓ · NORTH →</text>);
+
+  return (
+    <div className="planwrap">
+      <svg
+        ref={svgRef} className={'plan tool-' + tool} viewBox={`0 0 ${W.toFixed(0)} ${H.toFixed(0)}`}
+        role="img" aria-label={`Editable floor plan, ${lv.name}`}
+        onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={endDrag} onPointerCancel={endDrag}
+        onDoubleClick={onDoubleClick}
+      >
+        {out}
+      </svg>
+      <div ref={infoRef} className="draginfo" aria-live="polite" />
+    </div>
+  );
+}
+
+/* ---------- glyphs ---------- */
+
+type LineFn = (x0: number, y0: number, x1: number, y1: number, cls: string, key?: string | number, extra?: object) => ReactNode;
+type RectFn = (r: Rect, cls: string, key?: string | number, extra?: object) => ReactNode;
+interface Draw { line: LineFn; rect: RectFn; px: (x: number) => number; py: (y: number) => number }
+
+function OpeningGlyph({ op, s, selected, line, rect, px, py }: { op: Opening; s: Seg; selected: boolean } & Draw) {
+  const parts: ReactNode[] = [];
+  const L = (cls: string, k: string) => (s.o === 'h' ? line(s.a, s.c, s.b, s.c, cls, k) : line(s.c, s.a, s.c, s.b, cls, k));
+  parts.push(L('gap', 'g'));
+  const { kind, role, swing } = op.props;
+  if (role === 'window') parts.push(L(op.props.high ? 'glassh' : 'glass', 'w'));
+  else if (kind === 'garage') parts.push(L('gdoor', 'gd'));
+  else if (kind === 'slider') parts.push(L('glass', 'sl'));
+  else {
+    const w = s.b - s.a;
+    if (s.o === 'h') {
+      const lx = s.a, ly = s.c + swing * w;
+      parts.push(line(s.a, s.c, lx, ly, 'leaf', 'leaf'));
+      parts.push(<path key="sw" d={`M${px(s.a + w)},${py(s.c)} A${w * 40},${w * 40} 0 0 ${swing > 0 ? 1 : 0} ${px(lx)},${py(ly)}`} className="swing" />);
+    } else {
+      const lx = s.c + swing * w, ly = s.a;
+      parts.push(line(s.c, s.a, lx, ly, 'leaf', 'leaf'));
+      parts.push(<path key="sw" d={`M${px(s.c)},${py(s.a + w)} A${w * 40},${w * 40} 0 0 ${swing > 0 ? 0 : 1} ${px(lx)},${py(ly)}`} className="swing" />);
+    }
+  }
+  const pad = role === 'door' ? 0.25 : 0.22;
+  const hit = s.o === 'h' ? { x0: s.a, y0: s.c - pad, x1: s.b, y1: s.c + pad } : { x0: s.c - pad, y0: s.a, x1: s.c + pad, y1: s.b };
+  parts.push(rect(hit, 'hit ' + (role === 'door' ? 'door' : 'win') + (selected ? ' sel' : ''), 'hit'));
+  return <g data-opening={op.id}>{parts}</g>;
+}
+
+function Stair({ s, level, rect, line, px, py }: { s: Space; level: string } & Draw) {
+  const c = s.props.cells[0]!;
+  const o: ReactNode[] = [rect(c, 'stairbg', 'bg', { 'data-space': s.id })];
+  const chev = (x: number, y: number, k: string) =>
+    <path key={k} d={`M${px(x - 0.2)},${py(y - 0.28)} L${px(x)},${py(y)} L${px(x + 0.2)},${py(y - 0.28)}`} className="sarrow" />;
+  const lane = (x0: number, x1: number, y0: number, y1: number, label: string, faint: boolean, k: string) => {
+    const r: ReactNode[] = [];
+    let i = 0;
+    for (let t = y0 + 0.27; t < y1 - 0.05; t += 0.27) r.push(line(x0, t, x1, t, faint ? 'tread faint' : 'tread', `${k}t${i++}`));
+    const cx = (x0 + x1) / 2;
+    r.push(line(cx, y0 + 0.25, cx, y1 - 0.15, 'sarrow', `${k}a`), chev(cx, y1 - 0.15, `${k}c`));
+    r.push(<text key={`${k}l`} x={px(cx)} y={py(y0 + 0.12)} className="stxt" textAnchor="middle">{label}</text>);
+    return r;
+  };
+  const note = (y: number, label: string) =>
+    <text key="note" x={px((c.x0 + c.x1) / 2)} y={py(y)} className="stxt" textAnchor="middle">{label}</text>;
+  const kind = s.props.stairKind;
+  if (kind === 'dual') {
+    const m = (c.x0 + c.x1) / 2;
+    o.push(...lane(c.x0, m - 0.08, c.y0, c.y1, 'UP', false, 'u'), ...lane(m + 0.08, c.x1, c.y0, c.y1, 'DOWN', false, 'd'));
+    o.push(rect({ x0: m - 0.08, y0: c.y0 + 0.3, x1: m + 0.08, y1: c.y1 }, 'cwall', 'cw'), line(c.x1, c.y0 + 0.3, c.x1, c.y1, 'rail', 'rail'));
+  } else if (kind === 'lane') {
+    o.push(...lane(c.x0, c.x1, c.y0, c.y1, 'from street', false, 'l'), note(c.y1 + 0.5, 'garden ↑'));
+  } else if (kind === 'void') {
+    o.push(...lane(c.x0, c.x1, c.y0, c.y1, 'UP', true, 'v'), line(c.x1, c.y0, c.x1, c.y1, 'rail', 'rail'), note(c.y1 + 0.45, 'arrive'));
+  } else {
+    // U-stair open to the rear; the landing is at the front end.
+    const mid = (c.x0 + c.x1) / 2, land = 1.1;
+    let i = 0;
+    for (let t = c.y1 - 0.28; t > c.y0 + land + 0.01; t -= 0.28) {
+      o.push(line(c.x0, t, mid - 0.05, t, 'tread', `ta${i}`), line(mid + 0.05, t, c.x1, t, 'tread', `tb${i}`));
+      i++;
+    }
+    o.push(line(c.x0, c.y0 + land, c.x1, c.y0 + land, 'tread', 'land'), rect({ x0: mid - 0.05, y0: c.y0 + land, x1: mid + 0.05, y1: c.y1 }, 'cwall', 'cw'));
+    const ax = c.x0 + 0.6, bx = c.x1 - 0.6;
+    o.push(<path key="arr" d={`M${px(bx)},${py(c.y1 - 0.2)} L${px(bx)},${py(c.y0 + 0.55)} L${px(ax)},${py(c.y0 + 0.55)} L${px(ax)},${py(c.y1 - 0.25)}`} className="sarrow" />);
+    if (level === 'LL') o.push(note(c.y1 + 0.45, 'to garden ↑'));
+  }
+  return <g>{o}</g>;
+}
+

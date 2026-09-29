@@ -140,7 +140,7 @@ export const Deck = z.object({
 export type Deck = z.infer<typeof Deck>;
 
 /** Placeholders for later specs (plumbing, electrical, furniture, garden, materials). */
-const later = (t: string) =>
+const later = <T extends string>(t: T) =>
   z.object({ ...base, type: z.literal(t), props: z.record(z.string(), z.unknown()) });
 export const Fixture = later('Fixture');
 export const PipeSegment = later('PipeSegment');
