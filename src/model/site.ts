@@ -58,9 +58,19 @@ export function groundZones(p: Project): GroundZone[] {
     ({ id, name, poly, y0: ys, z0: 0, dzdy: f.natural(ys + 1), surface });
   const flat = (id: string, name: string, poly: P2[], z: number, surface: GroundZone['surface']): GroundZone =>
     ({ id, name, poly, y0: 0, z0: z, dzdy: 0, surface });
+  const carport = p.elements.find((e) => e.type === 'Carport');
+  const front: GroundZone[] = carport?.type === 'Carport'
+    ? [
+      // Version 3: pedestrian path along the south side of the carport, carport pad falling 2 % to the street.
+      nat('front', 'Entry path', quad(h.x0, () => carport.props.rect.x0, ys, h.y0), 'paving'),
+      { id: 'carport', name: 'Carport paving', poly: quad(carport.props.rect.x0, () => h.x1, ys, h.y0), y0: ys, z0: 0, dzdy: 0.02, surface: 'paving' },
+    ]
+    : [
+      nat('front', 'Front garden and entry path', quad(h.x0, () => gx0, ys, h.y0), 'grass'),
+      { id: 'drive', name: 'Driveway', poly: quad(gx0, () => h.x1, ys, h.y0), y0: ys, z0: 0, dzdy: garageFloor / (h.y0 - ys), surface: 'paving' },
+    ];
   const zones: GroundZone[] = [
-    nat('front', 'Front garden and entry path', quad(h.x0, () => gx0, ys, h.y0), 'grass'),
-    { id: 'drive', name: 'Driveway', poly: quad(gx0, () => h.x1, ys, h.y0), y0: ys, z0: 0, dzdy: garageFloor / (h.y0 - ys), surface: 'paving' },
+    ...front,
     nat('crawl', 'Ground under the raised floor (crawlspace)', quad(h.x0, () => h.x1, h.y0, cutY), 'soil'),
     {
       id: 'passage', name: 'South side passage', poly: quad(xs, () => h.x0, ys, f.passageEndY),
@@ -74,8 +84,10 @@ export function groundZones(p: Project): GroundZone[] {
     flat('garden-s', 'Garden (south)', quad(xs, () => h.x0, f.passageEndY, yr), garden, 'grass'),
     flat('garden-n', 'Garden (north)', quad(h.x1, xn, f.rampEndY, yr), garden, 'grass'),
   ];
-  return zones;
+  return zones.filter((z) => polyArea(z.poly) > 1e-6);
 }
+
+const polyArea = (poly: P2[]) => Math.abs(poly.reduce((a, [x, y], i) => { const [u, v] = poly[(i + 1) % poly.length]!; return a + x * v - u * y; }, 0)) / 2;
 
 export const zoneZ = (z: GroundZone, y: number) => z.z0 + z.dzdy * (y - z.y0);
 

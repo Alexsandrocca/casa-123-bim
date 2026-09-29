@@ -2,21 +2,23 @@
 import { create } from 'zustand';
 import v1json from '../model/casa-123-v1.json';
 import v2json from '../model/casa-123.json';
+import v3json from '../model/casa-123-v3.json';
 import { CommandError, replaceProject, type Command } from './model/commands';
 import { migrate } from './model/migrate';
 import { commit, initHist, redo, runCmd, undo, type Hist } from './model/history';
 import { PLAN_LEVELS, parseProject, type PlanLevel, type Project } from './model/schema';
 
-export type VersionId = 'v1' | 'v2';
+export type VersionId = 'v1' | 'v2' | 'v3';
+export const VERSION_IDS: VersionId[] = ['v1', 'v2', 'v3'];
 export type Tool = 'select' | 'door' | 'window';
 export type ViewMode = '2d' | '3d' | 'split';
 export type CameraPreset = 'street' | 'garden' | 'ramp' | 'top';
 export interface Section { h: 'off' | 'LL' | 'SL' | 'UF'; v: 'off' | 'across' | 'along'; pos: number }
 export interface SunTime { month: number; day: number; hour: number }
 
-export const BASES: Record<VersionId, Project> = { v1: parseProject(v1json), v2: parseProject(v2json) };
+export const BASES: Record<VersionId, Project> = { v1: parseProject(v1json), v2: parseProject(v2json), v3: parseProject(v3json) };
 
-const KEY = { model: (v: VersionId) => `casa123bim.model.${v}`, ui: 'casa123bim.ui' };
+const KEY = { model: (v: VersionId) => `casa123bim.model.${v}`, ui: 'casa123bim.ui.3' };
 
 function readStored(v: VersionId): Project {
   try {
@@ -30,11 +32,11 @@ function readUi(): { active: VersionId; level: PlanLevel; view: ViewMode } {
   try {
     const ui = JSON.parse(localStorage.getItem(KEY.ui) ?? '{}') as { active?: string; level?: string; view?: string };
     return {
-      active: ui.active === 'v1' ? 'v1' : 'v2',
+      active: ui.active === 'v1' || ui.active === 'v2' ? ui.active : 'v3',
       level: (PLAN_LEVELS as readonly string[]).includes(ui.level ?? '') ? (ui.level as PlanLevel) : 'SL',
       view: ui.view === '3d' || ui.view === 'split' ? ui.view : '2d',
     };
-  } catch { return { active: 'v2', level: 'SL', view: '2d' }; }
+  } catch { return { active: 'v3', level: 'SL', view: '2d' }; }
 }
 
 export interface AppState {
@@ -92,7 +94,7 @@ export const useApp = create<AppState>((set, get) => {
   };
   const ui = readUi();
   return {
-    versions: { v1: initHist(readStored('v1')), v2: initHist(readStored('v2')) },
+    versions: { v1: initHist(readStored('v1')), v2: initHist(readStored('v2')), v3: initHist(readStored('v3')) },
     active: ui.active,
     level: ui.level,
     selection: null,
@@ -177,7 +179,7 @@ useApp.subscribe((s, prev) => {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
     try {
-      for (const v of ['v1', 'v2'] as const) {
+      for (const v of VERSION_IDS) {
         if (s.versions[v].present !== BASES[v] || localStorage.getItem(KEY.model(v))) {
           localStorage.setItem(KEY.model(v), JSON.stringify(s.versions[v].present));
         }

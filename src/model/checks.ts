@@ -6,7 +6,8 @@ import { PLAN_LEVELS, type Project, type Space, type Stair } from './schema';
 import { EAVES_LIMIT_DEFAULT } from './site';
 import { checkSupport } from './support';
 
-export type CheckStatus = 'pass' | 'warn' | 'fail';
+/** confirm = cannot be decided by the app; an authority must confirm it. Never counts as a pass. */
+export type CheckStatus = 'pass' | 'warn' | 'fail' | 'confirm';
 export interface CheckResult {
   id: string;
   group: 'Rooms' | 'Windows' | 'Circulation' | 'Stairs' | 'Site' | 'Structure';
@@ -221,6 +222,12 @@ function siteChecks(p: Project): CheckResult[] {
     source: 'Setbacks given by the owner (Piracicaba zoning to be confirmed)',
   });
   setback('front', 'Front', front, sb.front);
+  const carports = p.elements.filter((e) => e.type === 'Carport');
+  if (carports.length) {
+    const r = out[out.length - 1]!;
+    r.value += ` · house building line; not counting the carport (${carports.map((c) => c.id).join(', ')}), see its own check`;
+    r.elementIds = carports.map((c) => c.id);
+  }
   setback('rear', 'Rear', rear, sb.rear);
   setback('south', 'South side', south, sb.sides);
   setback('north', 'North side', north, sb.sides);
@@ -230,7 +237,7 @@ function siteChecks(p: Project): CheckResult[] {
 function structureChecks(p: Project): CheckResult[] {
   const out: CheckResult[] = [];
   const s = checkSupport(p);
-  const n = p.elements.filter((e) => ['Footing', 'Column', 'Beam', 'Slab', 'Wall', 'Stair', 'Deck'].includes(e.type)).length;
+  const n = p.elements.filter((e) => ['Footing', 'Column', 'Beam', 'Slab', 'Wall', 'Stair', 'Deck', 'Carport'].includes(e.type)).length;
   out.push({
     id: 'support:all', group: 'Structure', elementIds: s.unsupported.map((e) => e.id),
     title: 'Nothing floats', status: s.unsupported.length ? 'fail' : 'pass',
@@ -257,8 +264,48 @@ function structureChecks(p: Project): CheckResult[] {
   return out;
 }
 
+/** Parking bays: at least 2.50 × 5.00 m, not overlapping, inside the carport, with 0.60 m free on at least one side to open the doors. */
+function parkingChecks(p: Project): CheckResult[] {
+  const out: CheckResult[] = [];
+  for (const c of p.elements) {
+    if (c.type !== 'Carport') continue;
+    const bays = c.props.parking, r = c.props.rect;
+    const cols = p.elements.filter((e) => e.type === 'Column' && e.tags.includes('carport') && pointInRect(e.props.at[0], e.props.at[1], r));
+    const problems: string[] = [];
+    bays.forEach((b, i) => {
+      const w = Math.min(b.x1 - b.x0, b.y1 - b.y0), d = Math.max(b.x1 - b.x0, b.y1 - b.y0);
+      if (w < 2.5 - TOL || d < 5.0 - TOL) problems.push(`bay ${i + 1} is ${w.toFixed(2)} × ${d.toFixed(2)} m`);
+      if (b.x0 < r.x0 - TOL || b.x1 > r.x1 + TOL || b.y0 < r.y0 - TOL || b.y1 > r.y1 + TOL) problems.push(`bay ${i + 1} sticks out of the carport`);
+      // free strip beside the bay (x direction), not taken by another bay or a column
+      const free = (x0: number, x1: number) => x0 >= r.x0 - TOL && x1 <= r.x1 + TOL
+        && !bays.some((o, j) => j !== i && o.x1 > x0 + TOL && o.x0 < x1 - TOL)
+        && !cols.some((e) => e.type === 'Column' && e.props.at[0] > x0 && e.props.at[0] < x1 && e.props.at[1] > b.y0 + 0.5 && e.props.at[1] < b.y1 - 0.5);
+      // a strip between two bays may serve both
+      if (!free(b.x0 - 0.6, b.x0) && !free(b.x1, b.x1 + 0.6)) problems.push(`bay ${i + 1} has no 0.60 m to open a door`);
+    });
+    for (let i = 0; i < bays.length; i++) for (let j = i + 1; j < bays.length; j++) {
+      const a = bays[i]!, b = bays[j]!;
+      if (a.x1 > b.x0 + TOL && b.x1 > a.x0 + TOL && a.y1 > b.y0 + TOL && b.y1 > a.y0 + TOL) problems.push(`bays ${i + 1} and ${j + 1} overlap`);
+    }
+    out.push({
+      id: `parking:${c.id}`, group: 'Site', elementIds: [c.id], title: 'Parking',
+      status: bays.length >= 2 && !problems.length ? 'pass' : 'fail',
+      value: problems.length ? problems.join('; ') : `${bays.length} bays of 2.50 × 5.00 m with room to open the doors`,
+      rule: '2 parking bays of at least 2.50 × 5.00 m, with 0.60 m beside each to open the doors', source: 'Owner requirement (spec 02b)',
+    });
+    out.push({
+      id: `carport-setback:${c.id}`, group: 'Site', elementIds: [c.id], title: 'Carport in the front setback',
+      status: 'confirm',
+      value: 'TO CONFIRM with the Prefeitura',
+      rule: 'A covered carport in the 4 m front setback, and how much of it counts in site coverage',
+      source: 'Piracicaba LC 474/2025 and the Piracicaba building code (to confirm)',
+    });
+  }
+  return out;
+}
+
 export function runChecks(p: Project): CheckResult[] {
-  return [...roomChecks(p), ...circulationChecks(p), ...stairChecks(p), ...siteChecks(p), ...structureChecks(p)];
+  return [...roomChecks(p), ...circulationChecks(p), ...stairChecks(p), ...siteChecks(p), ...parkingChecks(p), ...structureChecks(p)];
 }
 
 export function summarize(results: CheckResult[]) {
@@ -266,5 +313,6 @@ export function summarize(results: CheckResult[]) {
     pass: results.filter((r) => r.status === 'pass').length,
     warn: results.filter((r) => r.status === 'warn').length,
     fail: results.filter((r) => r.status === 'fail').length,
+    confirm: results.filter((r) => r.status === 'confirm').length,
   };
 }

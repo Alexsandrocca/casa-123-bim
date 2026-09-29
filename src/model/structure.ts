@@ -54,6 +54,8 @@ function slabBeamLines(p: Project, s: Slab): Line[] {
   const voids = voidSpaces.flatMap((v) => v.props.cells);
   const stairVoids = voidSpaces.filter((v) => v.props.zone === 'stair').flatMap((v) => v.props.cells);
   const z = q(s.props.topElevation - s.props.thickness);
+  // A slab that follows its rooms (not a rectangle) changes coverage at room edges too.
+  const ownCells = s.props.spaces ? p.elements.flatMap((e) => (e.type === 'Space' && s.props.spaces!.includes(e.id) ? e.props.cells : [])) : [];
   const inX = (v: number) => v >= r.x0 - 1e-6 && v <= r.x1 + 1e-6;
   const inY = (v: number) => v >= r.y0 - 1e-6 && v <= r.y1 + 1e-6;
   const edge = (o: 'v' | 'h', c: number) => (o === 'v' ? eq(c, r.x0) || eq(c, r.x1) : eq(c, r.y0) || eq(c, r.y1));
@@ -61,7 +63,7 @@ function slabBeamLines(p: Project, s: Slab): Line[] {
   const cut = (o: 'v' | 'h', c: number, a: number, b: number) => {
     // Split at void boundaries; keep pieces with slab on at least one side.
     // Outline edges along a stair well are kept too: the outer wall above the well sits on them.
-    const stops = [a, b, ...voids.flatMap((v) => (o === 'v' ? [v.y0, v.y1] : [v.x0, v.x1])).filter((t) => t > a && t < b)].sort((u, v) => u - v);
+    const stops = [a, b, ...[...voids, ...ownCells].flatMap((v) => (o === 'v' ? [v.y0, v.y1] : [v.x0, v.x1])).filter((t) => t > a && t < b)].sort((u, v) => u - v);
     for (let i = 0; i + 1 < stops.length; i++) {
       const pa = stops[i]!, pb = stops[i + 1]!;
       if (pb - pa < 0.05) continue;
@@ -137,7 +139,7 @@ export function generateStructure(p: Project): Element[] {
   }
 
   // Piers under the raised street-level floor, half way between column rows over the crawlspace.
-  const sl = suspended.find((s) => s.level === 'SL' && s.props.rect && eq(s.props.topElevation, p.levels.find((l) => l.id === 'SL')!.elevation) && !s.tags.includes('lower-roof'));
+  const sl = suspended.find((s) => s.level === 'SL' && eq(s.props.topElevation, p.levels.find((l) => l.id === 'SL')!.elevation) && !s.tags.includes('lower-roof'));
   if (sl) {
     const rows = [...p.grid.y].sort((a, b) => a - b).filter((y) => y < p.site.cut.lineY + 1e-6);
     for (let i = 0; i + 1 < rows.length; i++) {

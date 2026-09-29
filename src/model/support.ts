@@ -1,7 +1,7 @@
 // "Nothing floats": every footing, column, beam, slab, wall, stair and deck must rest on something that is itself supported,
 // all the way down to the ground.
 import { eq, pointInRect, wallSeg } from './geometry';
-import type { Beam, Column, Deck, Element, Footing, Project, Slab, Stair, Wall } from './schema';
+import type { Beam, Carport, Column, Deck, Element, Footing, Project, Rect, Slab, Stair, Wall } from './schema';
 import { groundAt, groundZones } from './site';
 import { slabCovers, slabRect, slabVoids } from './structure';
 
@@ -28,6 +28,13 @@ function contactPoint(a: Beam, b: Beam): P | null {
   for (const p of [b0, b1]) if (onSegment(p, a0, a1)) return p;
   for (const p of [a0, a1]) if (onSegment(p, b0, b1)) return p;
   return null;
+}
+
+/** Length of a beam that runs under (or along the edge of) a rectangle. */
+function overlapIn(b: Beam, r: Rect): number {
+  const [sx, sy] = b.props.start, [ex, ey] = b.props.end;
+  if (eq(sx, ex)) return sx >= r.x0 - TOL && sx <= r.x1 + TOL ? Math.min(Math.max(sy, ey), r.y1) - Math.max(Math.min(sy, ey), r.y0) : 0;
+  return sy >= r.y0 - TOL && sy <= r.y1 + TOL ? Math.min(Math.max(sx, ex), r.x1) - Math.max(Math.min(sx, ex), r.x0) : 0;
 }
 
 export function checkSupport(p: Project): SupportResult {
@@ -86,8 +93,7 @@ export function checkSupport(p: Project): SupportResult {
       if (bottom <= g + 1.2 && s.props.topElevation >= g - 0.6) ok.add(s.id); else reasons.set(s.id, 'Slab on grade is not on the ground');
       continue;
     }
-    const under = beams.filter((b) => ok.has(b.id) && Math.abs(b.props.elevation - bottom) <= TOL
-      && pointInRect(b.props.start[0], b.props.start[1], r) && pointInRect(b.props.end[0], b.props.end[1], r));
+    const under = beams.filter((b) => ok.has(b.id) && Math.abs(b.props.elevation - bottom) <= TOL && overlapIn(b, r) >= 0.5);
     if (under.length >= 2) ok.add(s.id); else reasons.set(s.id, 'Slab not carried by beams');
   }
 
@@ -137,6 +143,15 @@ export function checkSupport(p: Project): SupportResult {
     if (bearing((r.x0 + r.x1) / 2, (r.y0 + r.y1) / 2, d.props.elevation)) ok.add(d.id); else reasons.set(d.id, 'Deck has nothing under it');
   }
 
-  const checked = [...footings, ...columns, ...beams, ...slabs, ...walls, ...stairs, ...decks];
+  // 8. Carports: the roof rests on at least two supported beams inside its footprint.
+  const carports = els.filter((e): e is Carport => e.type === 'Carport');
+  for (const c of carports) {
+    const r = c.props.rect;
+    const under = beams.filter((b) => ok.has(b.id) && pointInRect(b.props.start[0], b.props.start[1], r) && pointInRect(b.props.end[0], b.props.end[1], r)
+      && Math.abs(b.props.elevation - (c.props.roofFront + c.props.slope * (b.props.start[1] - r.y0) - 0.1)) <= 0.1);
+    if (under.length >= 2) ok.add(c.id); else reasons.set(c.id, 'Carport roof not carried by beams');
+  }
+
+  const checked = [...footings, ...columns, ...beams, ...slabs, ...walls, ...stairs, ...decks, ...carports];
   return { supported: ok, unsupported: checked.filter((e) => !ok.has(e.id)), reasons };
 }

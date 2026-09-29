@@ -2,7 +2,7 @@ import { Suspense, lazy, useEffect, useRef, type ReactNode } from 'react';
 import { deleteOpening, resetLevel } from '../model/commands';
 import { getEl } from '../model/geometry';
 import { PLAN_LEVELS } from '../model/schema';
-import { BASES, useApp, useProject, type Tool } from '../store';
+import { BASES, VERSION_IDS, useApp, useProject, type Tool } from '../store';
 import { AboutDialog, ChecksBar, PropertiesPanel } from './Panels';
 import { PlanView } from './PlanView';
 
@@ -81,7 +81,7 @@ export function App() {
           <h1>Casa 123 BIM</h1>
         </div>
         <div className="seg" role="group" aria-label="Version">
-          {(['v1', 'v2'] as const).map((v) => (
+          {VERSION_IDS.map((v) => (
             <button key={v} aria-pressed={active === v} onClick={() => st.setVersion(v)}>{BASES[v].meta.version}</button>
           ))}
         </div>

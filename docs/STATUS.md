@@ -78,3 +78,16 @@ See `docs/QUESTIONS.md` (lot shape, buried part of the lower-level side walls, s
 
 ### Next
 Spec 02 — 3D model (it is marked ready).
+
+## 2026-09-29 — Manager review of specs 01–02
+- Accepted. Q1–Q6 answered in QUESTIONS.md.
+- Specs 03 (plumbing) and 04 (electrical) are now **ready**. Spec 03 starts with three carry-over fixes: south passage 1.50 m, filled section cuts, and a note on the stair/retaining-wall crossing.
+- Specs 05–07 stay draft until the owner has reviewed plumbing and electrical.
+
+## 2026-09-29 — Manager: specs 03–04 on hold
+- The owner wants the garage out of the house and a covered carport in the front setback instead. That changes the street-level layout, so plumbing and electrical wait for the new layout (Version 3 spec coming).
+- `/next-spec` has nothing to build until then.
+
+## 2026-09-29 — Manager: Version 3 (carport) released
+- New spec **02b**: the garage leaves the house, and a covered carport for 2 cars goes in a 5 m front zone. The house front moves back 1 m and the street level shrinks by about 27 m².
+- Specs 03 and 04 are ready again and build on Version 3. `/next-spec` runs 02b first, then asks before 03.

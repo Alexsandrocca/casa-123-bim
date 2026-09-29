@@ -1,7 +1,7 @@
 // Regenerates model/casa-123.json (Version 2) and model/casa-123-v1.json (Version 1)
 // from docs/reference. Run with: npm run import-model
 import { readFileSync, writeFileSync } from 'node:fs';
-import { V1_NOTE, V1_STAIRS, V2_NOTE, V2_STAIRS, extractBase1, importPlan, type SourceLevels, type SourcePlan } from '../src/model/importer';
+import { V1_NOTE, V1_STAIRS, V2_NOTE, V2_STAIRS, V3_NOTE, addV3Front, deriveV3, extractBase1, importPlan, type SourceLevels, type SourcePlan } from '../src/model/importer';
 
 const ref = (f: string) => readFileSync(new URL(`../docs/reference/${f}`, import.meta.url), 'utf8');
 const out = (f: string, data: unknown) => writeFileSync(new URL(`../model/${f}`, import.meta.url), JSON.stringify(data, null, 1) + '\n');
@@ -35,7 +35,16 @@ const v1 = importPlan(extractBase1(ref('prototype-studio.html')), {
 });
 out('casa-123-v1.json', v1);
 
-for (const p of [v2, v1]) {
+// Version 3 (spec 02b): garage out, carport in front, south passage 1.50 m.
+const v3 = addV3Front(importPlan(deriveV3(v2src.plan), {
+  versionId: 'v3', version: 'Version 3', note: V3_NOTE,
+  source: 'Version 2 (docs/reference/plan-v2.json) with spec 02b: garage out, carport in front',
+  gridX: v2src.meta.structure.steel_grid_x, gridY: [1, 5, 8.5, 12.6, 15],
+  stairs: V2_STAIRS, houseOriginX: 1.5, ...common,
+}));
+out('casa-123-v3.json', v3);
+
+for (const p of [v2, v1, v3]) {
   const count = (t: string) => p.elements.filter((e) => e.type === t).length;
   console.log(`${p.meta.version}: ${count('Space')} spaces, ${count('Wall')} walls, ${count('Opening')} openings, ${count('Slab')} slabs, ${count('Stair')} stairs, ${count('Deck')} decks, ${count('Column')} columns/piers, ${count('Beam')} beams, ${count('Footing')} footings`);
 }

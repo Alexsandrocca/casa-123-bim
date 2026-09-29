@@ -18,7 +18,9 @@ export interface SourceLevel {
 export type SourcePlan = Record<'LL' | 'SL' | 'UF', SourceLevel>;
 
 export interface ImportOptions {
-  versionId: 'v1' | 'v2';
+  versionId: 'v1' | 'v2' | 'v3';
+  /** House origin x on the lot (distance of the south wall from the south boundary). */
+  houseOriginX?: number;
   version: string;
   source: string;
   note: string;
@@ -80,6 +82,40 @@ function exteriorSegs(level: 'LL' | 'SL' | 'UF', [x0, y0, x1, y1]: SourceLevel['
   return out;
 }
 
+const fillsOutline = (src: SourceLevel) => {
+  const [x0, y0, x1, y1] = src.outline;
+  return Math.abs(src.cells.reduce((a, c) => a + (c.x1 - c.x0) * (c.y1 - c.y0), 0) - (x1 - x0) * (y1 - y0)) < 1e-6;
+};
+
+/** Outer edges of a set of cells: every cell edge that no other cell touches from the other side, merged into runs. */
+export function boundarySegs(cells: { x0: number; y0: number; x1: number; y1: number }[]): Seg[] {
+  const raw: Seg[] = [];
+  const subtract = (iv: [number, number][], a: number, b: number) =>
+    iv.flatMap(([u, v]) => (b <= u || a >= v ? [[u, v]] : [...(a > u ? [[u, a]] : []), ...(b < v ? [[b, v]] : [])]) as [number, number][]);
+  for (const c of cells) {
+    const edges: [Seg['o'], number, number, number, 'lo' | 'hi'][] = [
+      ['h', c.y0, c.x0, c.x1, 'lo'], ['h', c.y1, c.x0, c.x1, 'hi'], ['v', c.x0, c.y0, c.y1, 'lo'], ['v', c.x1, c.y0, c.y1, 'hi'],
+    ];
+    for (const [o, at, a, b, side] of edges) {
+      let iv: [number, number][] = [[a, b]];
+      for (const d of cells) {
+        if (d === c) continue;
+        const touches = o === 'h' ? (side === 'lo' ? eq(d.y1, at) : eq(d.y0, at)) : (side === 'lo' ? eq(d.x1, at) : eq(d.x0, at));
+        if (touches) iv = subtract(iv, o === 'h' ? d.x0 : d.y0, o === 'h' ? d.x1 : d.y1);
+      }
+      for (const [u, v] of iv) if (v - u > 1e-4) raw.push({ o, c: at, a: u, b: v });
+    }
+  }
+  const sorted = raw.sort((u, v) => (u.o === v.o ? (u.c === v.c ? u.a - v.a : u.c - v.c) : u.o < v.o ? -1 : 1));
+  const out: Seg[] = [];
+  for (const x of sorted) {
+    const last = out[out.length - 1];
+    if (last && last.o === x.o && eq(last.c, x.c) && x.a <= last.b + 1e-4) last.b = Math.max(last.b, x.b);
+    else out.push({ ...x });
+  }
+  return out;
+}
+
 function findHost(walls: Wall[], o: 'h' | 'v', c: number, a: number, b: number): Wall {
   const onLine = walls.filter((w) => { const s = wallSeg(w); return s.o === o && eq(s.c, c); });
   const containing = onLine.find((w) => { const s = wallSeg(w); return a >= s.a - 1e-6 && b <= s.b + 1e-6; });
@@ -96,7 +132,9 @@ export function importPlan(plan: SourcePlan, opt: ImportOptions): Project {
   const site: Project['site'] = {
     ...SITE,
     cut: { ...SITE.cut, lineY: opt.levels.garden.from_house_y, gardenLevel: opt.levels.garden.level },
+    houseOrigin: { ...SITE.houseOrigin, x: opt.houseOriginX ?? SITE.houseOrigin.x },
   };
+  const hasGarage = Object.values(plan).some((l) => l.cells.some((c) => c.zone === 'garage'));
   const elements: Element[] = [];
   const slabs: Slab[] = [];
   const decks: Deck[] = [];
@@ -123,7 +161,9 @@ export function importPlan(plan: SourcePlan, opt: ImportOptions): Project {
 
     // Walls: exterior/retaining on the outline, interior where the prototype draws them.
     const walls: Wall[] = [];
-    const segs = [...exteriorSegs(L, src.outline, site.cut), ...deriveInteriorSegs(spaces)];
+    const filled = fillsOutline(src);
+    const outer = filled ? exteriorSegs(L, src.outline, site.cut) : boundarySegs(src.cells).map((x) => ({ ...x, wallType: 'exterior' as WallType }));
+    const segs = [...outer, ...deriveInteriorSegs(spaces)];
     for (const s of segs) {
       const exterior = s.wallType === 'exterior' || s.wallType === 'retaining';
       walls.push({
@@ -144,7 +184,7 @@ export function importPlan(plan: SourcePlan, opt: ImportOptions): Project {
       const host = findHost(walls, d.o, d.c, d.p, d.p + d.w);
       const kind = d.k === 'garage' ? 'garage' : d.k === 'slider' ? 'slider' : 'door';
       openings.push({
-        id: `${L}-door-${String(i + 1).padStart(2, '0')}`, type: 'Opening', level: L, tags: [],
+        id: `${L}-door-${String(i + 1).padStart(2, '0')}`, type: 'Opening', level: L, tags: d.k === 'glazed' ? ['glazed'] : [],
         props: {
           host: host.id, role: 'door', kind, offset: q(d.p - wallSeg(host).a), width: q(d.w),
           height: DOOR_HEIGHT[kind]!, sill: 0, swing: d.s < 0 ? -1 : 1,
@@ -172,7 +212,9 @@ export function importPlan(plan: SourcePlan, opt: ImportOptions): Project {
       id: `${L}-slab-01`, type: 'Slab', level: L, tags: [],
       props: {
         name: L === 'LL' ? 'Lower level ground slab' : `${src.name} floor`,
-        rect: { x0, y0, x1, y1 }, voidSpaces: [...stairVoids, ...garage],
+        // A floor that does not fill its outline (Version 3 street level) follows its rooms.
+        ...(filled ? { rect: { x0, y0, x1, y1 } } : { spaces: spaces.map((x) => x.id) }),
+        voidSpaces: [...stairVoids, ...garage],
         topElevation: LEVELS[L], thickness: L === 'LL' ? 0.15 : DECK_SLAB, ...(L === 'LL' ? { onGrade: true } : {}),
       },
     });
@@ -220,12 +262,14 @@ export function importPlan(plan: SourcePlan, opt: ImportOptions): Project {
       },
     });
   }
-  // Roof over the front of the street level (garage and entry) where the upper floor does not reach.
+  // Roof over the front of the street level where the upper floor does not reach (garage and entry; entry only in Version 3).
   if (ufY0 > slY0 + 1e-6) {
+    const front = plan.SL.cells.filter((c) => c.y0 < ufY0 - 1e-6).map((c) => ({ ...c, y1: Math.min(c.y1, ufY0) }));
+    const r = { x0: Math.min(...front.map((c) => c.x0)), y0: Math.min(...front.map((c) => c.y0)), x1: Math.max(...front.map((c) => c.x1)), y1: ufY0 };
     slabs.push({
       id: 'UF-slab-02', type: 'Slab', level: 'UF', tags: ['garage-roof'],
       props: {
-        name: 'Garage roof', rect: { x0: slX0, y0: slY0, x1: slX1, y1: ufY0 }, voidSpaces: [], topElevation: LEVELS.UF,
+        name: hasGarage ? 'Garage roof' : 'Entry roof', rect: r, voidSpaces: [], topElevation: LEVELS.UF,
         thickness: DECK_SLAB, parapet: 0.3, eaves: 0,
       },
     });
@@ -247,7 +291,7 @@ export function importPlan(plan: SourcePlan, opt: ImportOptions): Project {
     structure: STRUCTURE,
     levels: [
       { id: 'LL', name: plan.LL.name, shortName: `Lower ${fmtLevel(LEVELS.LL)}`, elevation: LEVELS.LL, plan: true, outline: outline('LL') },
-      { id: 'garage', name: `Garage ${fmtLevel(opt.levels.garage.floor)}`, shortName: 'Garage', elevation: opt.levels.garage.floor, plan: false },
+      ...(hasGarage ? [{ id: 'garage', name: `Garage ${fmtLevel(opt.levels.garage.floor)}`, shortName: 'Garage', elevation: opt.levels.garage.floor, plan: false }] : []),
       { id: 'SL', name: plan.SL.name, shortName: `Street ${fmtLevel(LEVELS.SL)}`, elevation: LEVELS.SL, plan: true, outline: outline('SL') },
       { id: 'UF', name: plan.UF.name, shortName: `Upper ${fmtLevel(LEVELS.UF)}`, elevation: LEVELS.UF, plan: true, outline: outline('UF') },
       { id: 'roof', name: `Roof ${fmtLevel(opt.levels.roof.top_of_slab)} (parapet ${fmtLevel(opt.levels.roof.parapet_top)})`, shortName: 'Roof', elevation: opt.levels.roof.top_of_slab, plan: false, outline: outline('UF') },
@@ -305,4 +349,106 @@ export function extractBase1(html: string): SourcePlan {
     ({ room, zone, x0, y0, x1, y1, lock: !!lock });
   // The prototype is our own reference file; evaluating its literal is the simplest faithful parser.
   return new Function('C', `return (${body});`)(C) as SourcePlan;
+}
+
+/* ---------- Version 3 (spec 02b): garage out, patio and carport in front ---------- */
+
+export const V3_NOTE =
+  'Version 3: Version 2 without the garage. The street level starts 1 m further back (5 m from the street), the old garage area is an open front patio at +0.60 in front of the kitchen, and two cars park under a light carport in the front setback. South side passage 1.50 m.';
+
+/** The street level of Version 3, derived from Version 2's plan. */
+export function deriveV3(v2: SourcePlan): SourcePlan {
+  const sl = v2.SL;
+  const C = (room: string, zone: string, x0: number, y0: number, x1: number, y1: number): SourceCell => ({ room, zone, x0, y0, x1, y1, lock: false });
+  const keep = sl.cells.filter((c) => ['Kitchen', 'Dining', 'Living', 'Stair'].includes(c.room));
+  const keepWin = sl.windows.filter((w) => !(w.o === 'h' && eq(w.c, 0)) && !(w.o === 'v' && eq(w.c, 0) && w.b < 7.5));
+  return {
+    ...v2,
+    SL: {
+      name: sl.name,
+      outline: [0, 1.0, 8.6, 12.6],
+      cells: [
+        C('Entry · hall', 'circ', 0, 1.0, 3.2, 2.6), C('Entry · hall', 'circ', 2.0, 2.6, 3.2, 7.0), C('Entry · hall', 'circ', 0, 7.0, 3.2, 8.2),
+        C('WC', 'wet', 0, 2.6, 2.0, 4.2), C('Storage', 'service', 0, 4.2, 2.0, 5.2), C('Pantry', 'service', 0, 5.2, 2.0, 7.0),
+        ...keep.filter((c) => c.room !== 'Stair'), ...keep.filter((c) => c.room === 'Stair'),
+      ],
+      doors: [
+        { o: 'h', c: 1.0, p: 0.9, w: 1.0, s: 1 }, // front door
+        { o: 'v', c: 2.0, p: 3.1, w: 0.7, s: -1 }, // WC
+        { o: 'v', c: 2.0, p: 4.3, w: 0.8, s: -1 }, // storage
+        { o: 'v', c: 2.0, p: 5.6, w: 0.8, s: -1 }, // pantry
+        { o: 'h', c: 5.0, p: 3.5, w: 0.9, s: 1, k: 'glazed' }, // kitchen service door onto the patio
+      ],
+      windows: [
+        { o: 'h', c: 1.0, a: 2.1, b: 2.9, k: 'win' }, // entry, front
+        { o: 'v', c: 0, a: 3.0, b: 4.0, k: 'high' }, // WC, south
+        { o: 'v', c: 0, a: 5.4, b: 6.6, k: 'high' }, // pantry, south
+        ...keepWin,
+        { o: 'h', c: 5.0, a: 5.6, b: 8.2, k: 'win' }, // kitchen onto the patio
+        { o: 'v', c: 3.2, a: 3.2, b: 4.4, k: 'win' }, // passage onto the patio
+      ],
+      extras: sl.extras,
+    },
+  };
+}
+
+export const V3_CARPORT = { x0: 2.6, y0: -4.0, x1: 8.6, y1: 1.0 };
+
+/** Patio, carport (with its own light frame and footings), EV charger and the main panel's new place. */
+export function addV3Front(p: Project): Project {
+  const sl = p.levels.find((l) => l.id === 'SL')!;
+  const r = V3_CARPORT;
+  const els: Element[] = [];
+  const patio = { x0: 3.2, y0: 1.0, x1: 8.6, y1: 5.0 };
+  els.push({
+    id: 'SL-slab-04', type: 'Slab', level: 'SL', tags: ['patio'],
+    props: { name: 'Front patio on compacted fill', rect: patio, voidSpaces: [], topElevation: sl.elevation, thickness: 1.2, onGrade: true },
+  });
+  els.push({
+    id: 'SL-deck-02', type: 'Deck', level: 'SL', tags: ['patio'],
+    props: {
+      name: 'Front patio', label: 'Front patio +0.60 · open, not a room', rect: patio, elevation: sl.elevation,
+      planter: { x0: 7.9, y0: 1.0, x1: 8.6, y1: 5.0 }, steps: { x0: 3.5, y0: 1.0, x1: 4.7, y1: 1.6 },
+    },
+  });
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const front = 2.7, slope = 0.05, colProfile = 'HSS 100×100×4', beamProfile = 'W150×13';
+  const roofAt = (y: number) => front + slope * (y - r.y0);
+  const sheet = 0.1; // insulated sandwich sheet
+  const colX = [r.x0 + 0.05, r.x1 - 0.05], colY = [r.y0 + 0.15, r.y1 - 0.15];
+  let n = 0;
+  for (const y of colY) {
+    const top = q(roofAt(y) - sheet);
+    els.push({
+      id: `carport-beam-${pad(colY.indexOf(y) + 1)}`, type: 'Beam', level: 'carport', tags: ['carport'],
+      props: { start: [q(r.x0), q(y)], end: [q(r.x1), q(y)], profile: beamProfile, elevation: top },
+    });
+    for (const x of colX) {
+      n++;
+      const base = -0.4;
+      const id = `carport-col-${pad(n)}`;
+      els.push({ id, type: 'Column', level: 'carport', tags: ['carport'], props: { at: [q(x), q(y)], profile: colProfile, kind: 'column', baseElevation: base, topElevation: top } });
+      els.push({
+        id: `carport-footing-${pad(n)}`, type: 'Footing', level: 'carport', tags: ['carport'],
+        props: { kind: 'pad', carries: id, depth: 0.4, topElevation: base, rect: { x0: q(x - 0.3), y0: q(y - 0.3), x1: q(x + 0.3), y1: q(y + 0.3) } },
+      });
+    }
+  }
+  els.push({
+    id: 'carport-01', type: 'Carport', level: 'carport', tags: [],
+    props: {
+      name: 'Carport', rect: r, roofFront: front, slope, solarModules: 6,
+      parking: [{ x0: 2.75, y0: r.y0, x1: 5.25, y1: r.y1 }, { x0: 5.85, y0: r.y0, x1: 8.35, y1: r.y1 }],
+    },
+  });
+  els.push({
+    id: 'dev-ev-01', type: 'Device', level: 'carport', tags: ['electrical'],
+    props: { kind: 'ev-charger', name: 'EV charger 7 kW', powerKw: 7, host: 'carport-col-04', at: [q(colX[1]! - 0.1), q(colY[1]!), 1.3], size: [0.08, 0.25, 0.35] },
+  });
+  const storage = p.elements.find((e) => e.type === 'Space' && e.level === 'SL' && e.props.name === 'Storage');
+  els.push({
+    id: 'dev-panel-01', type: 'Device', level: 'SL', tags: ['electrical'],
+    props: { kind: 'panel', name: 'Main electrical panel', space: storage?.id ?? '', at: [0.12, 4.7, sl.elevation + 1.5], size: [0.12, 0.5, 0.7] },
+  });
+  return parseProject({ ...p, elements: [...p.elements, ...els] });
 }

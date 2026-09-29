@@ -166,9 +166,33 @@ export type Stair = z.infer<typeof Stair>;
 export const Deck = z.object({
   ...base,
   type: z.literal('Deck'),
-  props: z.object({ name: z.string(), label: z.string(), rect: Rect, elevation: z.number() }),
+  props: z.object({
+    name: z.string(), label: z.string(), rect: Rect, elevation: z.number(),
+    /** A raised planter strip on the deck. */
+    planter: Rect.optional(),
+    /** Steps cut into the deck, going down towards its front edge (y0). */
+    steps: Rect.optional(),
+  }),
 });
 export type Deck = z.infer<typeof Deck>;
+
+/** Covered parking in the front setback, independent from the house. Its columns, beams and footings are separate elements tagged 'carport'. */
+export const Carport = z.object({
+  ...base,
+  type: z.literal('Carport'),
+  props: z.object({
+    name: z.string(),
+    rect: Rect,
+    /** Top of the roof sheet at the front (street) edge; it rises towards the house by `slope`. */
+    roofFront: z.number(),
+    slope: z.number().min(0),
+    /** Parking bays drawn on the paving. */
+    parking: z.array(Rect),
+    /** Solar modules reserved on the roof (shown as a ghost array). */
+    solarModules: z.number().int().min(0),
+  }),
+});
+export type Carport = z.infer<typeof Carport>;
 
 /** Placeholders for later specs (plumbing, electrical, furniture, garden, materials). */
 const later = <T extends string>(t: T) =>
@@ -182,7 +206,7 @@ export const Plant = later('Plant');
 export const Material = later('Material');
 
 export const Element = z.discriminatedUnion('type', [
-  Space, Wall, Opening, Slab, Column, Beam, Footing, Stair, Deck,
+  Space, Wall, Opening, Slab, Column, Beam, Footing, Stair, Deck, Carport,
   Fixture, PipeSegment, Device, Circuit, Furniture, Plant, Material,
 ]);
 export type Element = z.infer<typeof Element>;
@@ -204,7 +228,7 @@ export const Project = z.object({
   meta: z.object({
     project: z.string(),
     version: z.string(),
-    versionId: z.enum(['v1', 'v2']),
+    versionId: z.enum(['v1', 'v2', 'v3']),
     units: z.literal('m'),
     source: z.string(),
     note: z.string(),

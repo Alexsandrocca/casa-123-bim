@@ -104,12 +104,15 @@ button.small { font-size: 12.5px; min-height: 28px; padding: 3px 10px; }
 .checkhead { display: flex; align-items: center; gap: 8px; padding: 4px 12px; flex-wrap: wrap; }
 .pill { font-family: var(--mono); font-size: 12px; padding: 2px 8px; border-radius: 10px; border: 1px solid currentColor; }
 .pill.muted { color: var(--muted); }
+.pill.confirm { color: var(--warn); border-style: dashed; }
 .checklist { max-height: 30vh; overflow: auto; border-top: 1px solid var(--rule); }
 .checklist table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .checklist th { position: sticky; top: 0; background: var(--sheet); text-align: left; font-family: var(--display); font-weight: 600; letter-spacing: .05em; color: var(--muted); padding: 6px 8px; border-bottom: 1.5px solid var(--ink); }
 .checklist td { padding: 5px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
 .checklist tbody tr { cursor: pointer; } .checklist tbody tr:hover { background: var(--accent-w); }
 .checklist td.st { font-weight: 700; width: 24px; text-align: center; }
+.checklist td.st.confirm { color: var(--warn); }
+.checklist tr.confirm td:nth-child(3) { color: var(--warn); font-weight: 600; }
 .checklist td.st.pass { color: var(--ok); } .checklist td.st.warn { color: var(--warn); } .checklist td.st.fail { color: var(--bad); }
 .checklist tr.fail td:nth-child(2) { color: var(--bad); font-weight: 600; }
 .checklist td.mono { font-family: var(--mono); font-size: 12px; }

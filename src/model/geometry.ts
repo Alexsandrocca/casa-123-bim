@@ -155,12 +155,24 @@ export function lineHandles(p: Project, level: string): Handle[] {
       if (onOutline(lv.outline, o, v)) continue;
       const iv = cells.filter((x) => cellEdgeAt(x.c, o, v)).map((x) => (o === 'v' ? [x.c.y0, x.c.y1] : [x.c.x0, x.c.x1]) as [number, number]);
       for (const [a, b] of components(iv)) {
+        if (touchesOutside(cells.map((x) => x.c), o, v, a, b)) continue; // an outer wall: fixed
         const inside = cells.filter((x) => cellEdgeAt(x.c, o, v) && (o === 'v' ? x.c.y0 >= a - E && x.c.y1 <= b + E : x.c.x0 >= a - E && x.c.x1 <= b + E));
         out.push({ o, c: v, a, b, locked: inside.some((x) => x.s.props.lock), spaceIds: [...new Set(inside.map((x) => x.s.id))] });
       }
     }
   }
   return out;
+}
+
+/** Does any part of this run have rooms on one side only (the building's outer edge)? */
+function touchesOutside(cells: Rect[], o: Orient, v: number, a: number, b: number): boolean {
+  const cuts = [a, b, ...cells.flatMap((c) => (o === 'v' ? [c.y0, c.y1] : [c.x0, c.x1])).filter((t) => t > a && t < b)].sort((u, w) => u - w);
+  for (let i = 0; i + 1 < cuts.length; i++) {
+    const t = (cuts[i]! + cuts[i + 1]!) / 2;
+    const side = (d: number) => cells.some((c) => (o === 'v' ? pointInRect(v + d, t, c) : pointInRect(t, v + d, c)));
+    if (!side(0.01) || !side(-0.01)) return true;
+  }
+  return false;
 }
 
 export function findHandle(p: Project, level: string, o: Orient, c: number, at: number): Handle | undefined {

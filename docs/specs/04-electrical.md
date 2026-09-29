@@ -1,5 +1,7 @@
 # 04 — Electrical: panels, circuits, devices, solar, cameras
-Status: draft
+Status: ready
+
+> Manager note (2026-09-29): Build on **Version 3** (spec 02b). The main panel is in the street-level Storage room; the EV charger and the 6-module solar reserve are on the carport.
 
 ## Goal
 Electrical design as data: devices placed in 3D and 2D, grouped into circuits, with loads, cable sizes, breakers, RCDs, conduit routes and a single-line diagram, all checked against NBR 5410.

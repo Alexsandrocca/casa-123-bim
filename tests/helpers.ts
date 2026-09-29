@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { parseProject, type Project } from '../src/model/schema';
 
-export const load = (f: 'casa-123.json' | 'casa-123-v1.json'): Project =>
+export const load = (f: 'casa-123.json' | 'casa-123-v1.json' | 'casa-123-v3.json'): Project =>
   parseProject(JSON.parse(readFileSync(new URL(`../model/${f}`, import.meta.url), 'utf8')));
 
 export const ref = (f: string) => readFileSync(new URL(`../docs/reference/${f}`, import.meta.url), 'utf8');

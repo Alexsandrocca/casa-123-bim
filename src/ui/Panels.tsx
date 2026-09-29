@@ -321,7 +321,7 @@ function GenericProps({ el }: { el: Element }) {
 
 /* ---------- checks ---------- */
 
-const ICON = { pass: '✓', warn: '!', fail: '✕' } as const;
+const ICON = { pass: '✓', warn: '!', fail: '✕', confirm: '?' } as const;
 
 export function ChecksBar() {
   const p = useProject();
@@ -332,7 +332,7 @@ export function ChecksBar() {
   const all = useMemo(() => runChecks(p), [p]);
   const shown = scope === 'all' ? all : all.filter((c) => !c.level || c.level === level);
   const sum = summarize(shown);
-  const order = { fail: 0, warn: 1, pass: 2 };
+  const order = { fail: 0, confirm: 1, warn: 2, pass: 3 };
   const sorted = [...shown].sort((a, b) => order[a.status] - order[b.status]);
   const go = (c: CheckResult) => {
     if (c.level && c.level !== level && ['LL', 'SL', 'UF'].includes(c.level)) setLevel(c.level as PlanLevel);
@@ -346,6 +346,7 @@ export function ChecksBar() {
         </button>
         <span className="pill ok">{sum.pass} pass</span>
         {sum.warn > 0 && <span className="pill warn">{sum.warn} below target</span>}
+        {sum.confirm > 0 && <span className="pill confirm" data-testid="checks-confirm">{sum.confirm} to confirm</span>}
         <span className={'pill ' + (sum.fail ? 'bad' : 'muted')} data-testid="checks-fail">{sum.fail} fail</span>
         <span className="spacer" />
         <div className="seg small" role="group" aria-label="Which checks">
@@ -360,7 +361,7 @@ export function ChecksBar() {
             <tbody>
               {sorted.map((c) => (
                 <tr key={c.id} className={c.status} onClick={() => go(c)}>
-                  <td className={'st ' + c.status} aria-label={c.status}>{ICON[c.status]}</td>
+                  <td className={'st ' + c.status} aria-label={c.status === 'confirm' ? 'to confirm' : c.status}>{ICON[c.status]}</td>
                   <td>{c.title}{c.level && scope === 'all' ? <em> · {c.level}</em> : null}</td>
                   <td className="mono">{c.value}</td>
                   <td>{c.rule}</td>
