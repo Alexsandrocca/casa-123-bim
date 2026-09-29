@@ -2,6 +2,34 @@
 
 _Updated by Claude Code after every spec. The manager reads this file._
 
+## 2026-09-29 — Spec 02b done: Version 3, garage out, carport in front
+
+### What was built
+- **Version 3** is a new model (`model/casa-123-v3.json`), made from Version 2. The switch at the top shows Version 1 / 2 / 3, and **Version 3 opens by default**. Versions 1 and 2 are unchanged.
+- **Street level:** the garage and its doors are gone, and the building line is at y 1.0 (5.0 m from the street). The south band (entry, WC, storage, pantry, passage, stair hall) follows the spec. The kitchen front wall is now an outer wall with a window and a glazed service door onto the patio, and the passage has a window onto the patio. A flat entry roof at +3.70 with a 0.30 m parapet covers the south band. Kitchen, dining, living, stairs and veranda are unchanged. **Gross area 78.2 m²** (was 108.4).
+- **Front patio** at +0.60 in front of the kitchen: open, not a room, with a planter strip and steps down to the carport. It has a guard on the ramp side.
+- **Carport** (new element type) in the front setback, 6.0 × 5.0 m. It has 2 marked bays of 2.50 × 5.00 m, 4 slim steel columns on their own footings, 2 beams, and an insulated roof at +2.70 → +2.95 falling 5 % to the street with a gutter. There are 6 solar modules shown as a ghost array, and the 7 kW EV charger is on a column. The sidewalk has a curb cut, the entry path runs south of the carport, and the north ramp still starts at the street.
+- **Main electrical panel** is recorded in the street-level storage room (`dev-panel-01`) for spec 04.
+- **South passage 1.50 m** (spec 03 item 0.1, done here for Version 3). North ramp: **3.90 m at the street, 4.90 m at the rear**. The owner asked for 4 m, so it is **10 cm short at the street** (see Q7).
+- **Checks:** new "Parking" (passes) and "Carport in the front setback" (always **TO CONFIRM** with the Prefeitura). The front setback shows 5.00 m for the house and notes that the carport is not counted. Version 3: **60 pass, 0 fail, 1 to confirm**. "Nothing floats" passes, including the carport.
+
+### How to see it
+- Double-click **`Open Casa 123.command`**. The app opens on Version 3; click 3D → Street to see the carport.
+- Screenshots: `docs/screens/02b-street.png`, `docs/screens/02b-plan-SL.png`.
+
+### Tests
+- `npm test`: 58 unit tests (9 new for Version 3, including walking from the sidewalk past the carport to the garden).
+- `npm run e2e`: 16 browser tests (3 new: Version 3 opens by default with 78 m² and one "to confirm", clicking the carport in 2D and 3D, street screenshot).
+- `npm run build` passes.
+
+### Not done yet / known gaps
+- The carport sits right at the street line; whether that is allowed is the open "to confirm" item (Q9).
+- The patio steps land in front of car bay 1 (Q8).
+- Spec 03 carry-over items 0.2 (filled section cuts) and 0.3 (stair/retaining note) are still open; they belong to spec 03.
+
+### Next
+Spec 03 — plumbing (ready). Spec 04 — electrical (ready).
+
 ## 2026-09-29 — Spec 02 done: 3D model of site, cut, structure and shell
 
 ### What was built

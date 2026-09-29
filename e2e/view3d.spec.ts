@@ -1,5 +1,12 @@
 import { expect, test, type Page } from '@playwright/test';
 
+// These tests cover Version 2 (specs 01–02). Version 3 opens by default since spec 02b, so start on Version 2.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!localStorage.getItem('casa123bim.ui.3')) localStorage.setItem('casa123bim.ui.3', JSON.stringify({ active: 'v2', level: 'SL', view: '2d' }));
+  });
+});
+
 type Hook = { frames(): number; project(x: number, y: number, z: number): [number, number] };
 const ready = (page: Page) => page.waitForFunction(() => ((window as unknown as { __casa3d?: Hook }).__casa3d?.frames() ?? 0) > 10, null, { timeout: 30000 });
 const screen = (page: Page, x: number, y: number, z: number) =>

@@ -17,8 +17,9 @@ const COLORS: Record<Mat, string> = {
   slab: '#C9C6BE', roof: '#B7BBBD', steel: '#3E4A55', concrete: '#A8A49B', footing: '#8E8A82',
   glass: '#8FB8D2', frame: '#2E3A40', door: '#B08455', garageDoor: '#8D9499', tread: '#9A7650', guardGlass: '#BFD9E6', rail: '#2E3A40', deck: '#A27B55',
   grass: '#8DAA69', paving: '#CFC9BC', soil: '#9C8B73', ramp: '#C8BFAE', asphalt: '#55595B', sidewalk: '#C9C6BF', boundary: '#D6D0C4', setback: '#E07A2E',
+  marking: '#F6F6F2', solarGhost: '#23395B', device: '#2E3A40', planter: '#6F8F4E',
 };
-const TRANSPARENT: Partial<Record<Mat, number>> = { glass: 0.35, guardGlass: 0.25 };
+const TRANSPARENT: Partial<Record<Mat, number>> = { glass: 0.35, guardGlass: 0.25, solarGhost: 0.45 };
 
 const materials = new Map<string, THREE.MeshStandardMaterial>();
 function material(mat: Mat, selected: boolean): THREE.MeshStandardMaterial {

@@ -5,7 +5,7 @@ import { addOpening, moveOpening, moveWall, nextOpeningId, wallLimits } from '..
 import {
   byLevel, lineHandles, mainCell, openingSeg, snap, spaceArea, wallSeg, type Handle, type Seg,
 } from '../model/geometry';
-import type { Opening, Rect, Space, Wall } from '../model/schema';
+import type { Carport, Opening, Rect, Space, Wall } from '../model/schema';
 import { useApp, useProject } from '../store';
 
 const S = 40; // px per metre, same drawing scale as the prototype
@@ -40,8 +40,11 @@ export function PlanView() {
   const handles = useMemo(() => lineHandles(p, level), [p, level]);
 
   // Each floor fills the view, as in the prototype.
+  // The carport sits in front of the street level: draw it there.
+  const carports = level === 'SL' ? p.elements.filter((e): e is Carport => e.type === 'Carport') : [];
+  const front = Math.min(outline.y0, ...carports.map((c) => c.props.rect.y0));
   const fr: Frame = {
-    XMIN: outline.x0 - 1.3, XMAX: outline.x1 + 1.0, YMIN: outline.y0 - 1.5,
+    XMIN: outline.x0 - 1.3, XMAX: outline.x1 + 1.0, YMIN: front - 1.5,
     YMAX: Math.max(outline.y1, ...decks.map((d) => d.props.rect.y1)) + 0.5,
   };
   const px = (x: number) => f1((x - fr.XMIN) * S);
@@ -113,6 +116,9 @@ export function PlanView() {
       st.select(wg.getAttribute('data-wall'));
       st.flash('The outer walls stay fixed. Drag an inside wall to resize rooms.');
       return;
+    } else if (t.closest('[data-el]')) {
+      st.select(t.closest('[data-el]')!.getAttribute('data-el'));
+      return;
     } else if (sg) {
       st.select(sg.getAttribute('data-space'));
       return;
@@ -159,11 +165,39 @@ export function PlanView() {
 
   /* ---------- drawing ---------- */
   const out: ReactNode[] = [];
-  decks.forEach((d) => {
-    out.push(rect(d.props.rect, 'deck', d.id));
-    out.push(<text key={d.id + 't'} x={px((d.props.rect.x0 + d.props.rect.x1) / 2)} y={py((d.props.rect.y0 + d.props.rect.y1) / 2 - 0.05)} className="deckt" textAnchor="middle">{d.props.label}</text>);
-  });
   out.push(rect(outline, 'floor', 'floor'));
+  decks.forEach((d) => {
+    const r = d.props.rect;
+    out.push(rect(r, 'deck', d.id, { 'data-el': d.id }));
+    if (d.props.planter) out.push(rect(d.props.planter, 'planter', d.id + 'p'));
+    if (d.props.steps) {
+      const st = d.props.steps;
+      out.push(rect(st, 'stepsbg', d.id + 's'));
+      for (let y = st.y0 + 0.3; y < st.y1 - 0.01; y += 0.3) out.push(line(st.x0, y, st.x1, y, 'tread', `${d.id}st${y.toFixed(2)}`));
+      out.push(line((st.x0 + st.x1) / 2, st.y1 - 0.1, (st.x0 + st.x1) / 2, st.y0 + 0.1, 'sarrow', d.id + 'sa'));
+    }
+    out.push(<text key={d.id + 't'} x={px((r.x0 + r.x1) / 2)} y={py((r.y0 + r.y1) / 2 - 0.05)} className="deckt" textAnchor="middle">{d.props.label}</text>);
+  });
+  for (const c of carports) {
+    const r = c.props.rect;
+    out.push(rect(r, 'carport' + (selection === c.id ? ' sel' : ''), c.id, { 'data-el': c.id }));
+    c.props.parking.forEach((b, i) => {
+      out.push(rect(b, 'bay', `${c.id}b${i}`));
+      out.push(<text key={`${c.id}bt${i}`} x={px((b.x0 + b.x1) / 2)} y={py((b.y0 + b.y1) / 2)} className="deckt" textAnchor="middle">{`car ${i + 1} · 2.50 × 5.00`}</text>);
+    });
+    for (const col of p.elements) {
+      if (col.type !== 'Column' || !col.tags.includes('carport')) continue;
+      const [x, y] = col.props.at;
+      out.push(rect({ x0: x - 0.08, y0: y - 0.08, x1: x + 0.08, y1: y + 0.08 }, 'ccol', col.id, { 'data-el': col.id }));
+    }
+    for (const d of p.elements) {
+      if (d.type !== 'Device' || d.level !== 'carport') continue;
+      const at = d.props.at as number[];
+      out.push(rect({ x0: at[0]! - 0.12, y0: at[1]! - 0.12, x1: at[0]! + 0.12, y1: at[1]! + 0.12 }, 'ebx', d.id, { 'data-el': d.id }));
+      out.push(<text key={d.id + 't'} x={px(at[0]! - 0.3)} y={py(at[1]! + 0.25)} className="deckt" textAnchor="end">EV 7 kW</text>);
+    }
+    out.push(<text key={c.id + 't'} x={px((r.x0 + r.x1) / 2)} y={py(r.y0 + 0.35)} className="deckt strong" textAnchor="middle">{`${c.props.name} · roof +${c.props.roofFront.toFixed(2)} → +${(c.props.roofFront + c.props.slope * (r.y1 - r.y0)).toFixed(2)} · ${c.props.solarModules} solar modules`}</text>);
+  }
   for (const s of spaces) {
     if (s.props.zone === 'stair') continue;
     s.props.cells.forEach((c, i) => out.push(rect(c, 'cell', `${s.id}:${i}`, { style: { fill: ZONE_COLOR[s.props.zone] }, 'data-space': s.id })));
@@ -208,7 +242,7 @@ export function PlanView() {
   // Live dimension strings along the front and the south side.
   const xs = [...new Set(spaces.flatMap((s) => s.props.cells.flatMap((c) => [c.x0, c.x1])).map((v) => +v.toFixed(2)))].sort((a, b) => a - b);
   const ys = [...new Set(spaces.flatMap((s) => s.props.cells.flatMap((c) => [c.y0, c.y1])).map((v) => +v.toFixed(2)))].sort((a, b) => a - b);
-  const yd = outline.y0 - 0.75, xd = outline.x0 - 0.75;
+  const yd = front - 0.75, xd = outline.x0 - 0.75;
   out.push(line(xs[0]!, yd, xs[xs.length - 1]!, yd, 'dim', 'dx'));
   xs.forEach((v, i) => {
     out.push(line(v, yd - 0.12, v, yd + 0.12, 'dim', `dx${i}`));
@@ -222,7 +256,7 @@ export function PlanView() {
       out.push(<text key={`dyt${i}`} x={tx} y={ty} className="dt" textAnchor="middle" transform={`rotate(-90 ${tx} ${ty})`}>{(v - ys[i - 1]!).toFixed(2)}</text>);
     }
   });
-  out.push(<text key="street" x={px((outline.x0 + outline.x1) / 2)} y={py(outline.y0 - 1.25)} className="street" textAnchor="middle">STREET · EAST ↓ · NORTH →</text>);
+  out.push(<text key="street" x={px((outline.x0 + outline.x1) / 2)} y={py(front - 1.25)} className="street" textAnchor="middle">STREET · EAST ↓ · NORTH →</text>);
 
   return (
     <div className="planwrap">

@@ -147,6 +147,11 @@ button.small { font-size: 12.5px; min-height: 28px; padding: 3px 10px; }
 .dim { stroke: var(--muted); stroke-width: .8; } .dt { font-family: var(--mono); font-size: 10px; fill: var(--muted); }
 .street { font-family: var(--display); font-weight: 600; font-size: 12px; letter-spacing: .1em; fill: var(--muted); }
 .sarrow { fill: none; stroke: var(--accent); stroke-width: 1.3; pointer-events: none; } .stxt { font-family: var(--mono); font-size: 9px; fill: var(--accent); pointer-events: none; }
+.carport { fill: var(--gar); fill-opacity: .55; stroke: var(--ink); stroke-width: 1.2; stroke-dasharray: 8 4; cursor: pointer; } .carport.sel { stroke: var(--accent); stroke-width: 2.5; }
+.bay { fill: none; stroke: var(--muted); stroke-width: 1.2; pointer-events: none; }
+.ccol { fill: var(--ink); cursor: pointer; } .planter { fill: #8DAA69; fill-opacity: .7; stroke: var(--muted); stroke-width: .8; pointer-events: none; }
+.stepsbg { fill: var(--svc); pointer-events: none; } .deckt.strong { font-weight: 500; fill: var(--ink); }
+.ebx { fill: #C27A00; fill-opacity: .3; stroke: #C27A00; stroke-width: 1.4; cursor: pointer; }
 .deck { fill: var(--soc); fill-opacity: .35; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 5 3; } .deckt { font-family: var(--mono); font-size: 9.5px; fill: var(--muted); pointer-events: none; }
 
 /* ---------- tablet ---------- */

@@ -6,7 +6,7 @@ import {
 } from '../model/commands';
 import { BEAM_PROFILES, COLUMN_PROFILES, PIER_PROFILES, profile } from '../model/profiles';
 import { byLevel, getEl, glassArea, openingSegIn, spaceArea, wallLength, wallSeg } from '../model/geometry';
-import type { Beam, Column, Element, Footing, Opening, PlanLevel, Project, Slab, Space, Stair, Wall } from '../model/schema';
+import type { Beam, Carport, Column, Element, Footing, Opening, PlanLevel, Project, Slab, Space, Stair, Wall } from '../model/schema';
 import { useApp, useProject } from '../store';
 import { ZONE_COLOR } from './PlanView';
 
@@ -89,7 +89,8 @@ export function PropertiesPanel() {
       {el?.type === 'Slab' && <SlabProps s={el} />}
       {el?.type === 'Footing' && <FootingProps f={el} />}
       {el?.type === 'Stair' && <StairProps st={el} />}
-      {el && !['Space', 'Wall', 'Opening', 'Column', 'Beam', 'Slab', 'Footing', 'Stair'].includes(el.type) && <GenericProps el={el} />}
+      {el?.type === 'Carport' && <CarportProps c={el} />}
+      {el && !['Space', 'Wall', 'Opening', 'Column', 'Beam', 'Slab', 'Footing', 'Stair', 'Carport'].includes(el.type) && <GenericProps el={el} />}
     </aside>
   );
 }
@@ -106,12 +107,13 @@ function Header({ title, sub }: { title: string; sub: string }) {
 
 function LevelSummary({ p, level }: { p: Project; level: PlanLevel }) {
   const lv = p.levels.find((l) => l.id === level)!;
-  const o = lv.outline!;
   const select = useApp((s) => s.select);
   const rooms = byLevel(p, level, 'Space').filter((s) => s.props.zone !== 'stair');
+  // Gross floor area: all the rooms and the stair on this floor (the outline may include open patios).
+  const gross = byLevel(p, level, 'Space').reduce((sum, s) => sum + spaceArea(s), 0);
   return (
     <>
-      <div className="phead"><div><h3>{lv.name}</h3><div className="eyebrow">{p.meta.version} · {((o.x1 - o.x0) * (o.y1 - o.y0)).toFixed(1)} m² gross</div></div></div>
+      <div className="phead"><div><h3>{lv.name}</h3><div className="eyebrow" data-testid="gross">{p.meta.version} · {gross.toFixed(1)} m² gross</div></div></div>
       <p className="hint">{p.meta.note}</p>
       <table className="rooms">
         <thead><tr><th>Room</th><th>m²</th><th>Min</th><th>Window</th></tr></thead>
@@ -306,6 +308,25 @@ function StairProps({ st }: { st: Stair }) {
         <Row k="2h + b" v={`${(2 * riser + tread).toFixed(3)} m`} />
         <Row k="Flights" v={String(flights.length)} />
       </div>
+    </>
+  );
+}
+
+function CarportProps({ c }: { c: Carport }) {
+  const r = c.props.rect;
+  const rear = c.props.roofFront + c.props.slope * (r.y1 - r.y0);
+  return (
+    <>
+      <Header title={c.props.name} sub={`Carport · ${c.id} · independent light steel frame`} />
+      <div className="kvs">
+        <Row k="Footprint" v={`${m(r.x1 - r.x0)} × ${m(r.y1 - r.y0)} m`} />
+        <Row k="Parking" v={`${c.props.parking.length} bays of 2.50 × 5.00 m`} />
+        <Row k="Roof top" v={`${lvl(c.props.roofFront)} at the street → ${lvl(rear)} at the house`} />
+        <Row k="Roof slope" v={`${(c.props.slope * 100).toFixed(0)} % to the street, gutter at the front`} />
+        <Row k="Solar" v={`${c.props.solarModules} modules reserved (moved from the old garage roof)`} />
+        <Row k="EV charger" v="7 kW on a carport column" />
+      </div>
+      <p className="hint">A covered carport in the front setback must be confirmed with the Prefeitura (LC 474/2025 and the building code).</p>
     </>
   );
 }

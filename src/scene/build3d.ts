@@ -2,7 +2,7 @@
 // Pure: no three.js here, so it can be tested and reused (walk mode, checks, exports).
 import { eq, openingSeg, pointInRect, wallSeg, type Seg } from '../model/geometry';
 import { profile } from '../model/profiles';
-import type { Column, Element, Opening, Project, Rect, Slab, Space, Stair, Wall } from '../model/schema';
+import type { Carport, Column, Deck, Element, Opening, Project, Rect, Slab, Space, Stair, Wall } from '../model/schema';
 import { groundAt, groundZones, inPoly, siteFrame, zoneZ, type GroundZone } from '../model/site';
 import { slabRect, slabVoids } from '../model/structure';
 
@@ -11,7 +11,8 @@ export type Mat =
   | 'wallExt' | 'wallInt' | 'wallWet' | 'retaining' | 'plinth' | 'parapet'
   | 'slab' | 'roof' | 'steel' | 'concrete' | 'footing'
   | 'glass' | 'frame' | 'door' | 'garageDoor' | 'tread' | 'guardGlass' | 'rail' | 'deck'
-  | 'grass' | 'paving' | 'soil' | 'ramp' | 'asphalt' | 'sidewalk' | 'boundary' | 'setback';
+  | 'grass' | 'paving' | 'soil' | 'ramp' | 'asphalt' | 'sidewalk' | 'boundary' | 'setback'
+  | 'marking' | 'solarGhost' | 'device' | 'planter';
 
 /** A box: centre c, size s (along x, y, z), optional rotation about x (pitch) then z (yaw), in radians. */
 export interface BoxPart { kind: 'box'; id: string; mat: Mat; c: V3; s: V3; rx?: number; rz?: number; solid?: boolean }
@@ -163,14 +164,15 @@ function fittings(op: Opening, s: Seg, t: number, [z0, z1]: [number, number], op
   }
   // hinged door: leaf from the hinge at s.a
   const leafW = w - 2 * f, h = z1 - z0 - f;
+  const leaf: Mat = op.tags.includes('glazed') ? 'glass' : 'door';
   if (!opt.doorsOpen) {
-    out.push(along(id, 'door', s, s.a + f, s.b - f, 0.04, z0, z0 + h, false));
+    out.push(along(id, leaf, s, s.a + f, s.b - f, 0.04, z0, z0 + h, false));
   } else if (s.o === 'h') {
     const y0 = s.c, y1 = s.c + swing * leafW;
-    out.push(box(id, 'door', s.a + f, Math.min(y0, y1), z0, s.a + f + 0.04, Math.max(y0, y1), z0 + h, false));
+    out.push(box(id, leaf, s.a + f, Math.min(y0, y1), z0, s.a + f + 0.04, Math.max(y0, y1), z0 + h, false));
   } else {
     const x0 = s.c, x1 = s.c + swing * leafW;
-    out.push(box(id, 'door', Math.min(x0, x1), s.a + f, z0, Math.max(x0, x1), s.a + f + 0.04, z0 + h, false));
+    out.push(box(id, leaf, Math.min(x0, x1), s.a + f, z0, Math.max(x0, x1), s.a + f + 0.04, z0 + h, false));
   }
 }
 
@@ -184,7 +186,12 @@ function slabParts(p: Project, s: Slab, out: Part[], surfaces: Surface[]) {
   const e = s.props.eaves ?? 0;
   let rects: Rect[];
   if (s.props.spaces) {
-    rects = p.elements.flatMap((x) => (x.type === 'Space' && s.props.spaces!.includes(x.id) ? x.props.cells : []));
+    const voids = slabVoids(p, s);
+    rects = p.elements.flatMap((x) => (x.type === 'Space' && s.props.spaces!.includes(x.id) ? x.props.cells : [])).flatMap((c) => rectMinus(c, voids));
+  } else if (s.tags.includes('patio')) {
+    // steps cut into the patio
+    const steps = p.elements.flatMap((d) => (d.type === 'Deck' && d.props.steps ? [d.props.steps] : []));
+    rects = rectMinus(slabRect(p, s), steps);
   } else {
     const r = slabRect(p, s);
     rects = rectMinus({ x0: r.x0 - e, y0: r.y0 - e, x1: r.x1 + e, y1: r.y1 + e }, slabVoids(p, s));
@@ -268,7 +275,7 @@ export function floorAt(surfaces: Surface[], x: number, y: number, zMax: number)
 function guardParts(p: Project, surfaces: Surface[], wallBoxes: BoxPart[], out: Part[]) {
   const candidates: { id: string; r: Rect; z: number }[] = [];
   for (const e of p.elements) {
-    if (e.type === 'Slab' && !e.props.onGrade && !isRoof(e)) {
+    if (e.type === 'Slab' && (!e.props.onGrade || e.tags.includes('patio')) && !isRoof(e)) {
       for (const s of surfaces) if (s.id === e.id && s.rect) candidates.push({ id: e.id, r: s.rect, z: s.z0 });
     }
     if (e.type === 'Stair') {
@@ -330,7 +337,13 @@ function sitePartsAndSurfaces(p: Project, out: Part[], surfaces: Surface[]) {
   nb([[f.xSouth, f.yRear], [f.xNorth(f.yRear), f.yRear], [f.xNorth(f.yRear), far], [f.xSouth, far]]);
   // Street and sidewalk in front.
   const xs0 = f.xSouth - 12, xs1 = f.xNorth(f.yStreet) + 12;
-  out.push(box('site:sidewalk', 'sidewalk', xs0, f.yStreet - 2.5, -0.12, xs1, f.yStreet, 0));
+  const carport = p.elements.find((e): e is Carport => e.type === 'Carport');
+  if (carport) {
+    // curb cut in front of the carport
+    const cx0 = carport.props.rect.x0, cx1 = carport.props.rect.x1;
+    out.push(box('site:sidewalk', 'sidewalk', xs0, f.yStreet - 2.5, -0.12, cx0, f.yStreet, 0), box('site:sidewalk', 'sidewalk', cx1, f.yStreet - 2.5, -0.12, xs1, f.yStreet, 0));
+    out.push(box('site:sidewalk', 'paving', cx0, f.yStreet - 2.5, -0.14, cx1, f.yStreet, -0.04));
+  } else out.push(box('site:sidewalk', 'sidewalk', xs0, f.yStreet - 2.5, -0.12, xs1, f.yStreet, 0));
   out.push(box('site:street', 'asphalt', xs0, f.yStreet - 10.5, -0.3, xs1, f.yStreet - 2.5, -0.15));
   surfaces.push({ id: 'site:sidewalk', rect: { x0: xs0, y0: f.yStreet - 2.5, x1: xs1, y1: f.yStreet }, z0: 0, y0: 0, dzdy: 0 });
   surfaces.push({ id: 'site:street', rect: { x0: xs0, y0: f.yStreet - 10.5, x1: xs1, y1: f.yStreet - 2.5 }, z0: -0.15, y0: 0, dzdy: 0 });
@@ -416,6 +429,59 @@ function sitePartsAndSurfaces(p: Project, out: Part[], surfaces: Surface[]) {
   }
 }
 
+/* ---------------- decks, carport ---------------- */
+
+function deckParts(p: Project, d: Deck, out: Part[], surfaces: Surface[]) {
+  const r = d.props.rect, z = d.props.elevation;
+  const holes = d.props.steps ? [d.props.steps] : [];
+  for (const piece of rectMinus(r, holes)) {
+    out.push(box(d.id, 'deck', piece.x0, piece.y0, z - 0.04, piece.x1, piece.y1, z + 0.005, false));
+    surfaces.push({ id: d.id, rect: piece, z0: z, y0: 0, dzdy: 0 });
+  }
+  if (d.props.planter) {
+    const pl = d.props.planter, h = 0.45, t = 0.1;
+    out.push(box(d.id, 'planter', pl.x0, pl.y0, z, pl.x1, pl.y1, z + h - 0.08, false));
+    out.push(box(d.id, 'plinth', pl.x0, pl.y0, z, pl.x0 + t, pl.y1, z + h));
+    out.push(box(d.id, 'plinth', pl.x0, pl.y0, z, pl.x1, pl.y0 + t, z + h), box(d.id, 'plinth', pl.x0, pl.y1 - t, z, pl.x1, pl.y1, z + h));
+  }
+  if (d.props.steps) {
+    const st = d.props.steps;
+    const gz = groundAt(p, (st.x0 + st.x1) / 2, st.y0 - 0.1);
+    const n = Math.max(2, Math.ceil((z - gz) / 0.18)), rise = (z - gz) / n, depth = (st.y1 - st.y0) / (n - 1);
+    for (let i = 1; i < n; i++) {
+      const top = gz + i * rise, ya = st.y0 + (i - 1) * depth;
+      out.push(box(d.id, 'paving', st.x0, ya, gz - 0.2, st.x1, ya + depth, top));
+      surfaces.push({ id: `${d.id}:step${i}`, rect: { x0: st.x0, y0: ya, x1: st.x1, y1: ya + depth }, z0: top, y0: 0, dzdy: 0 });
+    }
+  }
+}
+
+function carportParts(p: Project, c: Carport, out: Part[]) {
+  const r = c.props.rect, over = 0.15;
+  const roofAt = (y: number) => c.props.roofFront + c.props.slope * (y - r.y0);
+  const pitch = Math.atan(c.props.slope);
+  const len = (r.y1 - r.y0 + 2 * over) / Math.cos(pitch);
+  const cy = (r.y0 + r.y1) / 2;
+  out.push({ kind: 'box', id: c.id, mat: 'roof', c: [(r.x0 + r.x1) / 2, cy, roofAt(cy) - 0.05], s: [r.x1 - r.x0 + 2 * over, len, 0.1], rx: pitch });
+  // gutter at the street edge
+  out.push(box(c.id, 'steel', r.x0 - over, r.y0 - over - 0.15, roofAt(r.y0 - over) - 0.25, r.x1 + over, r.y0 - over, roofAt(r.y0 - over) - 0.05));
+  // solar modules reserved on the roof (ghost array), 3 across and 2 up the slope
+  const mw = 1.13, ml = 2.28, gap = 0.05, cols = 3, rows = Math.ceil(c.props.solarModules / cols);
+  const x0 = (r.x0 + r.x1) / 2 - (cols * mw + (cols - 1) * gap) / 2, y0 = cy - (rows * ml + (rows - 1) * gap) / 2;
+  for (let k = 0; k < c.props.solarModules; k++) {
+    const i = k % cols, j = Math.floor(k / cols);
+    const mx = x0 + i * (mw + gap) + mw / 2, my = y0 + j * (ml + gap) + ml / 2;
+    out.push({ kind: 'box', id: c.id, mat: 'solarGhost', c: [mx, my, roofAt(my) + 0.08], s: [mw, ml, 0.04], rx: pitch });
+  }
+  // bay markings on the paving
+  for (const b of c.props.parking) {
+    const g = (x: number, y: number) => groundAt(p, x, y) + 0.004;
+    const w = 0.1, zb = g((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2);
+    out.push(box(c.id, 'marking', b.x0, b.y0, zb, b.x0 + w, b.y1, zb + 0.008, false), box(c.id, 'marking', b.x1 - w, b.y0, zb, b.x1, b.y1, zb + 0.008, false));
+    out.push(box(c.id, 'marking', b.x0, b.y1 - w, zb, b.x1, b.y1, zb + 0.008, false));
+  }
+}
+
 /* ---------------- everything ---------------- */
 
 export function buildScene(p: Project, opt: BuildOptions = { doorsOpen: false }): Scene3D {
@@ -441,10 +507,11 @@ export function buildScene(p: Project, opt: BuildOptions = { doorsOpen: false })
     parts.push(box(f.id, 'footing', r.x0, r.y0, f.props.topElevation - f.props.depth, r.x1, r.y1, f.props.topElevation));
   }
   for (const st of byType('Stair')) stairParts(p, st, parts, surfaces);
-  for (const d of byType('Deck')) {
-    const r = d.props.rect;
-    parts.push(box(d.id, 'deck', r.x0, r.y0, d.props.elevation - 0.04, r.x1, r.y1, d.props.elevation + 0.005, false));
-    surfaces.push({ id: d.id, rect: r, z0: d.props.elevation, y0: 0, dzdy: 0 });
+  for (const d of byType('Deck')) deckParts(p, d, parts, surfaces);
+  for (const c of byType('Carport')) carportParts(p, c, parts);
+  for (const d of byType('Device')) {
+    const at = d.props.at as V3 | undefined, sz = d.props.size as V3 | undefined;
+    if (at && sz) parts.push({ kind: 'box', id: d.id, mat: 'device', c: at, s: sz });
   }
   sitePartsAndSurfaces(p, parts, surfaces);
   const wallBoxes = parts.filter((x): x is BoxPart => x.kind === 'box' && ['wallExt', 'wallInt', 'wallWet', 'retaining', 'parapet'].includes(x.mat));

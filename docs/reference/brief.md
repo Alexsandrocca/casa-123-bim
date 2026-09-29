@@ -26,6 +26,14 @@
   - The up flight lands at the rear of the UF.
 - Walls: exterior 0.20 m (light steel frame or block, insulated), interior 0.12 m, wet-room walls 0.15 m. Cells in plan-v2.json are room areas. Build the walls on the cell edges.
 
+## Front arrangement (Version 3, spec 02b — current design)
+- No garage in the house. Two cars park under a light steel carport (6.0 × 5.0 m, roof about +2.80, 5 % to the street, 6 solar modules, EV charger 7 kW) in the front setback.
+- The street level starts 5.0 m from the street (y = 1.0); the lower level, stairs, veranda and upper floor do not move. Street level about 78 m² (was 108.4).
+- The old garage area is an open front patio at +0.60 in front of the kitchen, with a planter and steps down to the carport.
+- House 1.50 m from the south boundary (south passage 1.50 m). The north ramp is about 3.90 m wide at the street and 4.90 m at the rear.
+- Main electrical panel in the street-level storage room.
+- To confirm with the Prefeitura: whether a covered carport may sit in the front setback and how it counts in site coverage.
+
 ## Code rules used by the checks (from the project's rulebook)
 - SP sanitary code (Dec. 12.342/78):
   - ceilings 2.70 m in living rooms and bedrooms, 2.50 m elsewhere;

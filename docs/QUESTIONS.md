@@ -32,3 +32,12 @@ The front of the street level (garage and entry, y 0–5) has no floor above, so
 
 **Manager (2026-09-29):** Confirmed. The garage roof is flat at +3.70 with a 0.30 m parapet, reserved for 6 solar modules. Version 1's lower-level roof with a parapet is fine.
 
+
+## Q7 (2026-09-29, spec 02b) — North ramp is 3.90 m at the street, not 4.00 m
+With the house 1.50 m from the south boundary, the north strip is 3.90 m wide at the street and 4.90 m at the rear (4.66 m at the back of the house). The owner asked for 4 m. **Accept 3.90 m at the street, or narrow the house / widen the ramp only behind the carport?**
+
+## Q8 (2026-09-29, spec 02b) — Patio steps land in front of car 1
+The patio steps (x 3.5–4.7) come down at the house end of parking bay 1. When a car is parked nose-in, the steps are blocked; the grocery route then goes around the car. Options: move the steps to the 0.60 m gap between the bays (x 5.25–5.85, narrow), or park tail-in. **Which do you prefer?**
+
+## Q9 (2026-09-29, spec 02b) — Carport columns at the street line
+The front carport columns stand 0.15 m inside the street boundary, and the gutter overhangs to the boundary. If the Prefeitura requires the carport to stay back from the boundary, the bays get shorter than 5.00 m unless the house moves further back. Linked to the "to confirm" check.

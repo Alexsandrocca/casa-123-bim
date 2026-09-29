@@ -65,9 +65,10 @@ export function openingSegIn(p: Project, op: Opening): Seg | null {
 
 export const cellArea = (c: Rect) => (c.x1 - c.x0) * (c.y1 - c.y0);
 export const spaceArea = (s: Space) => s.props.cells.reduce((sum, c) => sum + cellArea(c), 0);
-/** The biggest cell carries the room label, like the prototype. */
+/** The cell that carries the room label: the biggest, favouring roomy cells over narrow strips. */
+const labelScore = (c: Rect) => cellArea(c) * Math.min(c.x1 - c.x0, c.y1 - c.y0);
 export const mainCell = (s: Space) =>
-  s.props.cells.reduce((a, b) => (cellArea(a) >= cellArea(b) ? a : b));
+  s.props.cells.reduce((a, b) => (labelScore(a) >= labelScore(b) ? a : b));
 
 /** Edges shared by two cells (overlap longer than 2 cm). */
 export function sharedEdges(a: Rect, b: Rect): Seg[] {

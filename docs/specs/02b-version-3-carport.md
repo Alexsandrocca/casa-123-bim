@@ -1,5 +1,5 @@
 # 02b — Version 3: garage out of the house, covered carport in the front
-Status: in progress
+Status: done (2026-09-29)
 
 ## Owner decisions (2026-09-29)
 - The garage leaves the house. Cars park under a covered carport in the front setback.
