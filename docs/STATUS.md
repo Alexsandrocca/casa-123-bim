@@ -2,6 +2,50 @@
 
 _Updated by Claude Code after every spec. The manager reads this file._
 
+## 2026-10-01 — Spec 03 done: plumbing (Version 3)
+
+### What was built
+- **Carry-overs:** section cuts are now filled in dark (walls and slabs read clearly). The note on the stair / retaining-wall crossing is on both elements and in the new `docs/HANDOFF.md`. (South passage 1.50 m was done in 02b.)
+- **Fixtures:** 41 fixtures and pieces of equipment from the overlays and the brief: toilets, basins, showers, kitchen sink, dishwasher, laundry tank, washer, floor drain, garden tap, grease trap, inspection boxes, lift station, backflow valve, water meter, 2 roof tanks, pressure pump, heat-pump water heater, roof drains, rain cistern, infiltration trench and sump pump. Each has its DN, fixture units and water weight.
+- **Networks,** about 180 pipes, each with DN, material (PVC, CPVC for hot), start and end, slope, flow and load:
+  - **Sewage:** branches → 2 soil stacks (with vents through the roof) → collector in the crawlspace → inspection boxes → street sewer. The kitchen goes through the grease trap. The lower level drains to the lift station, which pumps up through a backflow valve.
+  - **Water:** meter → roof tanks → riser → each floor; hot from the heat pump.
+  - **Rain:** roofs (154 m²) → cistern → overflow to the street gutter. The veranda drains to the garden trench, and the garden sump pump discharges to the street.
+- **Moving a fixture re-routes its pipes at once**, by dragging it on the plan (tick "Plumbing" above the plan) or typing x / y in its properties. A pipe's DN or material can be changed by hand and is kept.
+- **Checks (NBR 8160 / 5626 / 7198 / 10844):** slopes, DN by fixture units, vents, inspection boxes, grease trap, the street connection, water pressure at the worst fixture, water and rain pipe sizes, the overflow, and the design rainfall (TO CONFIRM).
+- **The lower-level problem, live:** at 3.00 m the lower level's gravity check **fails** (it would arrive at −3.04, the sewer needs ≥ −2.70), so the lift station is required and its check passes. Enter the sewer depth SEMAE gives (Plumbing → Sewer section or Street services). At 3.50 m it turns to pass.
+- **Views:**
+  - pipes in system colours (cold blue, hot red, sewage brown, vent grey, rain cyan);
+  - 3D **Systems x-ray** (building ghosted, camera moves to an overview);
+  - **2D overlay** per floor;
+  - a **Plumbing** window (toolbar) with an isometric **riser diagram**, the **sewer section** to the street with every invert, the **schedule** (metres per DN and material, elbows and tees, fixtures) with **CSV download**, and the **street services** (sewer depth, rainfall).
+
+### How to see it
+- Double-click **`Open Casa 123.command`**. On the plan, tick **Plumbing**; in 3D, click **Systems x-ray**; open **Plumbing** in the left toolbar.
+- Screenshots: `docs/screens/03.png` (plan with plumbing), `03-xray.png`, `03-sewer-section.png`.
+
+### Tests
+- `npm test`: 70 unit tests (12 new for plumbing, including both acceptance cases: moving the kitchen sink 1 m, and sewer depth 3.5 m).
+- `npm run e2e`: 20 browser tests (4 new: move the sink by typing and by dragging, sewer section and depth, CSV, x-ray).
+- `npm run build` passes.
+
+### Checks on Version 3 now
+- 1 fail, on purpose: the lower level cannot drain by gravity at 3.00 m. That is why the lift station is there, and that check passes.
+- 1 warning: rain pipes near the street are shallow (Q10).
+- 2 to confirm: the carport in the setback, and the design rainfall.
+
+### Not done yet / known gaps
+- Pipes can be re-sized and re-materialled by hand, but not re-drawn point by point. Geometry always comes from the router.
+- The pressure pump boosts the upper-floor showers in the pressure check, but it is not drawn as a separate pressurised branch.
+- Moving a wall does not re-route the pipes; moving any fixture does.
+- Versions 1 and 2 have no plumbing.
+
+### Open questions
+Q10 (shallow rain pipes near the street), Q11 (basins and dishwasher added), Q12 (heater on the entry roof). Q7–Q9 from 02b are still open.
+
+### Next
+Spec 04 — electrical (ready).
+
 ## 2026-09-29 — Spec 02b done: Version 3, garage out, carport in front
 
 ### What was built

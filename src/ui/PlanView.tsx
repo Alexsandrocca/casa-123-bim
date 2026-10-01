@@ -377,7 +377,7 @@ function PlumbingOverlay({ p, level, selection, line, rect, px, py }: { p: impor
   const elev = (l: string) => p.levels.find((x) => x.id === l)?.elevation ?? 0;
   const order = ['LL', 'SL', 'UF', 'roof'];
   const i = order.indexOf(level);
-  const lo = i <= 0 ? -Infinity : elev(level) - 0.7, hi = i + 1 < order.length ? elev(order[i + 1]!) - 0.1 : Infinity;
+  const lo = i <= 0 ? -Infinity : elev(level) - 0.7, hi = i + 1 < order.length ? elev(order[i + 1]!) - 0.5 : Infinity;
   const o: ReactNode[] = [];
   for (const e of p.elements) {
     if (e.type !== 'PipeSegment') continue;

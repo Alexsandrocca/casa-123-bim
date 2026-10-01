@@ -427,7 +427,7 @@ export function ChecksBar() {
           {open ? '▾' : '▸'} Checks
         </button>
         <span className="pill ok">{sum.pass} pass</span>
-        {sum.warn > 0 && <span className="pill warn">{sum.warn} below target</span>}
+        {sum.warn > 0 && <span className="pill warn">{sum.warn} warning{sum.warn > 1 ? 's' : ''}</span>}
         {sum.confirm > 0 && <span className="pill confirm" data-testid="checks-confirm">{sum.confirm} to confirm</span>}
         <span className={'pill ' + (sum.fail ? 'bad' : 'muted')} data-testid="checks-fail">{sum.fail} fail</span>
         <span className="spacer" />

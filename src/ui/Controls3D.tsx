@@ -66,7 +66,7 @@ export function Controls3D() {
         </div>
         <button className="small" aria-pressed={walk} onClick={() => set3d({ walk: !walk })} data-testid="walk">{walk ? 'Stop walking' : 'Walk'}</button>
         <button className="small" aria-pressed={doorsOpen} onClick={() => set3d({ doorsOpen: !doorsOpen })}>{doorsOpen ? 'Doors open' : 'Doors closed'}</button>
-        <button className="small" aria-pressed={xray} onClick={() => set3d({ xray: !xray })} data-testid="xray">Systems x-ray</button>
+        <button className="small" aria-pressed={xray} onClick={() => { set3d({ xray: !xray }); if (!xray) lookFrom([17, -9, 11], [4.3, 7.5, 0.5]); }} data-testid="xray">Systems x-ray</button>
         <button className="small ghost" onClick={() => setOpen(!open)} aria-expanded={open}>{open ? 'Less ▴' : 'Section & sun ▾'}</button>
       </div>
       {open && (

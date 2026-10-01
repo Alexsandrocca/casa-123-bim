@@ -3,14 +3,14 @@ import { expect, test, type Page } from '@playwright/test';
 type Hook = { frames(): number; project(x: number, y: number, z: number): [number, number] };
 const ready = (page: Page) => page.waitForFunction(() => ((window as unknown as { __casa3d?: Hook }).__casa3d?.frames() ?? 0) > 10, null, { timeout: 30000 });
 
-test('Version 3 opens by default: no garage, patio and carport, about 78 m², one check to confirm', async ({ page }) => {
+test('Version 3 opens by default: no garage, patio and carport, about 78 m², two checks to confirm', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('button', { name: 'Version 3' })).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('text[data-room="Garage"]')).toHaveCount(0);
   await expect(page.getByTestId('gross')).toHaveText(/Version 3 · 78\.\d m² gross/);
   await expect(page.locator('rect.carport')).toHaveCount(1);
   await expect(page.getByTestId('checks-fail')).toHaveText('0 fail');
-  await expect(page.getByTestId('checks-confirm')).toHaveText('1 to confirm');
+  await expect(page.getByTestId('checks-confirm')).toHaveText('2 to confirm'); // carport (02b) and design rainfall (03)
   await page.getByTestId('checks-toggle').click();
   await expect(page.getByRole('row', { name: /Carport in the front setback/ })).toContainText('TO CONFIRM');
   await page.getByTestId('checks-toggle').click();

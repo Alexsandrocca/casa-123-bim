@@ -41,3 +41,12 @@ The patio steps (x 3.5–4.7) come down at the house end of parking bay 1. When 
 
 ## Q9 (2026-09-29, spec 02b) — Carport columns at the street line
 The front carport columns stand 0.15 m inside the street boundary, and the gutter overhangs to the boundary. If the Prefeitura requires the carport to stay back from the boundary, the bays get shorter than 5.00 m unless the house moves further back. Linked to the "to confirm" check.
+
+## Q10 (2026-10-01, spec 03) — Rain overflow to the street is too shallow to bury
+The front yard is 0.1–0.4 m lower than the street, so for the cistern overflow to reach the street gutter by gravity, the rain collector between the house and the cistern runs only 0–0.1 m below the surface (the "Underground pipes are buried" check warns). Options: (a) raise the entry path about 0.3 m over the pipes, (b) pump the overflow, (c) overflow into an infiltration well on the lot instead of the street. **Which one?**
+
+## Q11 (2026-10-01, spec 03) — Fixtures added that were not in the overlay
+The prototype overlay has no basins in the three upper bathrooms and no dishwasher. I added them (basins at the wall next to the stack, dishwasher next to the sink). **Confirm, or say where they go.**
+
+## Q12 (2026-10-01, spec 03) — Heat-pump heater on the entry roof
+I put the 300 L heat-pump water heater on the entry roof (+3.70), outdoors and close to the bathrooms, fed by gravity from the roof tanks. The brief does not say where it goes. **Confirm the place.**
