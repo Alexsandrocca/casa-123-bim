@@ -7,7 +7,7 @@ Status: reference
 | 02 | 3D model of site, cut, structure, walls, slabs, stairs, openings, all edited together with 2D | done |
 | 02b | Version 3: garage out, covered carport in the front setback, house front moved back 1 m | done |
 | 03 | Plumbing: water, hot water, sewage, lift station, rainwater, with slopes and diameters in 3D and 2D, plus checks | done |
-| 04 | Electrical: panels, circuits, outlets, lights, solar, cameras, with loads and checks | ready |
+| 04 | Electrical: panels, circuits, outlets, lights, solar, cameras, with loads and checks | done |
 | 05 | Finishes, colours and style presets (facade and interior) | draft |
 | 06 | Furniture and garden library: drag, rotate, snap, clearance checks | draft |
 | 08 | Architectural features (brise, pergola, cobogó, skylight…) and engineering estimates: wall/roof assemblies with U-value and weight, loads, column/beam/footing pre-sizing, environmental checks, cost estimate | ready |

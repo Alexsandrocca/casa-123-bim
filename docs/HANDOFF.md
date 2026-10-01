@@ -14,3 +14,8 @@ _Items the app cannot decide. Each one is also a note on the element in the mode
 ## Site
 6. Carport in the front setback — to confirm with the Prefeitura (LC 474/2025). (Q9)
 7. Design rainfall 150 mm/h — to confirm from the local rainfall curve.
+
+## Electrical (spec 04)
+8. Circuit grouping, cable sections, breakers and RCDs in the app are a design pre-check (NBR 5410), not the executive project. The electrical engineer signs the project and confirms the CPFL supply (127/220 V assumed).
+9. Roof layout: 12 PV modules on the north part of the upper roof; tanks, pressure pump and vent terminals moved to the south parapet strip to keep it free (Q14).
+10. Solar energy is a PVGIS-like estimate; the installer confirms production and the inverter/battery choice.

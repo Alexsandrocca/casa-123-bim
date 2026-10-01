@@ -2,6 +2,67 @@
 
 _Updated by Claude Code after every spec. The manager reads this file._
 
+## 2026-10-01 — Spec 04 done: electrical, solar and cameras (Version 3)
+
+### What was built
+- **Devices:** 144 electrical points, placed automatically to the NBR 5410 minimums for every room, plus the brief's dedicated points:
+  - outlets (10 A and 20 A), smart switches, ceiling and wall lights, a LED strip;
+  - hob 7 kW, oven, dishwasher, washer/dryer, heat pump, 5 air conditioners (indoor and outdoor units), EV charger 7 kW, pressure, lift and sump pumps, rack;
+  - network outlets, smoke detectors, 16 cameras and the doorbell;
+  - main panel (street-level storage), lower-level sub-panel, hybrid inverter.
+
+  Each point has its height (Brazilian defaults: outlet 0.30, bench 1.10, switch 1.10), its power and its phase.
+- **Circuits (32):** grouped automatically and assigned to the main panel or the lower-level sub-panel. Each has:
+  - its length from routed conduits (floor screed, crawlspace, ceiling lining, underground outside);
+  - a cable section from load, length and voltage drop (all ≤ 4 %; highest 3.8 %);
+  - a breaker, and a 30 mA RCD where needed.
+
+  Three-phase balance: imbalance 2 % on the main panel and 9 % on the sub-panel.
+- **Panels:** board layout (main breaker, surge protection, RCD groups, breakers with an energy meter and app relay each) and a generated single-line diagram, including the PV, inverter and the optional battery with its essential-loads panel.
+- **Solar:**
+  - 12 × 550 W modules on the upper roof, 20° facing north, rows spaced for no winter shade;
+  - shading checked with the spec 02 sun model (0.5 % loss);
+  - about **805 kWh/month** (9,650 kWh/year, an estimate);
+  - 6 kW hybrid inverter, optional 10 kWh battery;
+  - the 6-module reserve stays as a ghost array on the carport.
+- **Cameras:**
+  - each has a direction, tilt and lens (properties), a view wedge in 2D and a cone in 3D;
+  - coverage map of the lot with blind spots: **98 % covered**;
+  - PoE budget 17 of 24 ports, 111 of 250 W;
+  - NVR about 23 days on 8 TB.
+- **Checks:** minimum points per room, breakers vs cables, voltage drop, minimum sections, RCDs, phase balance, every point on a circuit, solar fit / shade / inverter / energy, camera coverage, PoE and NVR. **All pass.**
+- **Views:**
+  - "Electrical" overlay on the plan (drag any point; an "Add outlet" tool in the toolbar);
+  - 3D devices, conduits in the x-ray, "Camera views" cones and the modules on the roof;
+  - an **Electrical** window with Circuits, Panels, Solar (roof layout + monthly chart), Cameras (coverage map) and Materials (cable metres by section, conduit, boxes, breakers, RCDs, devices) with **CSV export**.
+
+### How to see it
+- Double-click **`Open Casa 123.command`**. Tick **Electrical** above the plan; click **Electrical** in the left toolbar; in 3D try **Camera views** and **Top**.
+- Screenshots: `docs/screens/04.png` (upper floor with the electrical overlay), `04-circuits.png`, `04-solar.png`, `04-cameras.png`, `04-cameras-3d.png`.
+
+### Tests
+- `npm test`: 80 unit tests (10 new, including both acceptance cases: adding a bedroom outlet, and removing a kitchen outlet).
+- `npm run e2e`: 24 browser tests (4 new).
+- `npm run build` passes.
+
+### Checks on Version 3 now
+All electrical, solar and camera checks pass. Still, from earlier specs:
+- 1 fail on purpose: the lower level cannot drain by gravity at 3.00 m;
+- 1 warning: shallow rain pipes near the street (Q10);
+- 2 to confirm: the carport and the design rainfall.
+
+### Not done yet / known gaps
+- Conduits are routed automatically and cannot be redrawn by hand. A device can be moved, re-powered or put on another circuit by hand.
+- The essential-loads panel is shown and listed, but circuits are not yet moved onto it one by one.
+- Camera coverage is in plan (2D); camera height and tilt are shown in 3D but not used in the coverage map.
+- Versions 1 and 2 have no electrical design.
+
+### Open questions
+Q13 (4 or 5 air conditioners), Q14 (roof tanks and vents moved for the solar array), Q15 (CPFL supply 127/220 V). Q7–Q12 are still open.
+
+### Next
+Spec 08 — architectural features and engineering estimates (ready). Then 09 and 10.
+
 ## 2026-10-01 — Spec 03 done: plumbing (Version 3)
 
 ### What was built

@@ -2,13 +2,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { minArea, needsDaylight, runChecks, summarize, type CheckResult } from '../model/checks';
 import {
-  deleteOpening, doorMax, flipOpening, moveFixture, renameSpace, resizeOpening, setElementProps, setOpeningSize, setPipe, setWallThickness,
+  deleteDevice, deleteOpening, doorMax, flipOpening, moveDevice, moveFixture, setCircuitSection, setDevice, setSolar, renameSpace, resizeOpening, setElementProps, setOpeningSize, setPipe, setWallThickness,
 } from '../model/commands';
 import { networkLabel } from '../model/plumbing/checks';
 import { kindOf } from '../model/plumbing/library';
 import { BEAM_PROFILES, COLUMN_PROFILES, PIER_PROFILES, profile } from '../model/profiles';
 import { byLevel, getEl, glassArea, openingSegIn, spaceArea, wallLength, wallSeg } from '../model/geometry';
-import type { Beam, Carport, Column, Element, Fixture, PipeSegment, Footing, Opening, PlanLevel, Project, Slab, Space, Stair, Wall } from '../model/schema';
+import { cameraFov, cameraRange, deviceType } from '../model/electrical/library';
+import type { Beam, Carport, Circuit, Column, Device, Element, Fixture, PipeSegment, SolarArray, Footing, Opening, PlanLevel, Project, Slab, Space, Stair, Wall } from '../model/schema';
 import { useApp, useProject } from '../store';
 import { ZONE_COLOR } from './PlanView';
 
@@ -94,13 +95,16 @@ export function PropertiesPanel() {
       {el?.type === 'Carport' && <CarportProps c={el} />}
       {el?.type === 'Fixture' && <FixtureProps f={el} />}
       {el?.type === 'PipeSegment' && <PipeProps s={el} />}
+      {el?.type === 'Device' && <DeviceProps d={el} p={p} />}
+      {el?.type === 'Circuit' && <CircuitProps c={el} p={p} />}
+      {el?.type === 'SolarArray' && <SolarProps a={el} />}
       {el?.notes?.length ? (
         <div className="notes" data-testid="notes">
           <h4>Notes for the architect and engineers</h4>
           {el.notes.map((n, i) => <p key={i}>{n}</p>)}
         </div>
       ) : null}
-      {el && !['Space', 'Wall', 'Opening', 'Column', 'Beam', 'Slab', 'Footing', 'Stair', 'Carport', 'Fixture', 'PipeSegment'].includes(el.type) && <GenericProps el={el} />}
+      {el && !['Space', 'Wall', 'Opening', 'Column', 'Beam', 'Slab', 'Footing', 'Stair', 'Carport', 'Fixture', 'PipeSegment', 'Device', 'Circuit', 'SolarArray'].includes(el.type) && <GenericProps el={el} />}
     </aside>
   );
 }
@@ -388,6 +392,80 @@ function PipeProps({ s }: { s: PipeSegment }) {
         <Row k="Serves" v={`${s.props.serves.length} fixture${s.props.serves.length === 1 ? '' : 's'}`} />
       </div>
       <p className="hint">{s.props.manual ? 'Edited by hand: the router keeps this DN and material.' : 'Placed by the router. Changing DN or material keeps your choice when the pipes re-route.'}</p>
+    </>
+  );
+}
+
+function DeviceProps({ d, p }: { d: Device; p: Project }) {
+  const run = useApp((st) => st.run);
+  const select = useApp((st) => st.select);
+  const t = deviceType(d.props.kind);
+  const circuits = p.elements.filter((e): e is Circuit => e.type === 'Circuit' && e.props.purpose !== 'feeder');
+  const c = circuits.find((x) => x.id === d.props.circuit);
+  const cam = t.group === 'camera';
+  const floor = p.levels.find((l) => l.id === (d.level === 'roof' ? 'roof' : d.level))?.elevation ?? 0;
+  return (
+    <>
+      <Header title={t.label} sub={`${d.props.name} · ${d.id}`} />
+      <NumberField label="x (north)" value={d.props.at[0]} onCommit={(v) => run(moveDevice(d.id, v, d.props.at[1]))} testId="dev-x" />
+      <NumberField label="y (rear)" value={d.props.at[1]} onCommit={(v) => run(moveDevice(d.id, d.props.at[0], v))} testId="dev-y" />
+      {['outlet', 'light', 'dedicated'].includes(t.group) && (
+        <NumberField label={t.group === 'dedicated' ? 'Power' : 'Power (VA)'} unit={t.group === 'dedicated' ? 'W' : 'VA'} step={10} value={d.props.power} onCommit={(v) => run(setDevice(d.id, { power: v }))} testId="dev-power" />
+      )}
+      {cam && (
+        <>
+          <NumberField label="Bearing" unit="° (0 N, 90 street)" step={5} value={d.props.bearing ?? 0} onCommit={(v) => run(setDevice(d.id, { bearing: ((v % 360) + 360) % 360 }))} testId="cam-bearing" />
+          <NumberField label="Lens" unit="mm" step={0.1} value={d.props.lensMm ?? 2.8} onCommit={(v) => run(setDevice(d.id, { lensMm: v }))} testId="cam-lens" />
+          <NumberField label="Tilt down" unit="°" step={1} value={d.props.tilt ?? 15} onCommit={(v) => run(setDevice(d.id, { tilt: v }))} />
+        </>
+      )}
+      {circuits.length > 0 && ['outlet', 'light', 'dedicated'].includes(t.group) && (
+        <ProfileSelect label="Circuit" value={d.props.circuit ?? ''} options={circuits.map((x) => x.id)} onChange={(v) => run(setDevice(d.id, { circuit: v }))} />
+      )}
+      <div className="kvs">
+        <Row k="Height" v={`${m(d.props.z - floor)} m above the floor (${lvl(d.props.z)})`} />
+        {c && <Row k="On circuit" v={`${c.props.name} · ${c.props.breaker} A · ${c.props.section} mm²`} />}
+        {cam && <Row k="View" v={`${cameraFov(d.props.lensMm ?? 2.8).toFixed(0)}° wide, about ${cameraRange(d.props.lensMm ?? 2.8).toFixed(0)} m`} />}
+      </div>
+      <div className="btnrow">
+        {c && <button onClick={() => select(c.id)}>Show circuit</button>}
+        {!['panel', 'sub-panel'].includes(d.props.kind) && <button className="danger" onClick={() => { if (run(deleteDevice(d.id))) select(null); }}>Delete</button>}
+      </div>
+      <p className="hint">{d.props.manualCircuit ? 'Circuit chosen by hand.' : 'Turn on “Electrical” above the plan to drag it; the circuit, cable and schedule update.'}</p>
+    </>
+  );
+}
+
+function CircuitProps({ c, p }: { c: Circuit; p: Project }) {
+  const run = useApp((st) => st.run);
+  const devs = p.elements.filter((e): e is Device => e.type === 'Device' && e.props.circuit === c.id);
+  return (
+    <>
+      <Header title={c.props.name} sub={`Circuit · ${c.id}`} />
+      <ProfileSelect label="Cable mm²" value={String(c.props.section)} options={['1.5', '2.5', '4', '6', '10', '16', '25']} onChange={(v) => run(setCircuitSection(c.id, Number(v)))} />
+      <div className="kvs">
+        <Row k="Load" v={`${c.props.load} ${c.props.purpose === 'dedicated' ? 'W' : 'VA'} · ${c.props.current} A`} />
+        <Row k="Supply" v={`${c.props.voltage} V · phase ${c.props.phases.join('')}`} />
+        <Row k="Breaker" v={`${c.props.breaker} A${c.props.rcd ? ' · RCD 30 mA' : ''}`} />
+        <Row k="Length" v={`${m(c.props.length)} m to the farthest point`} />
+        <Row k="Voltage drop" v={`${c.props.drop.toFixed(2)} % (max 4 %)`} />
+        <Row k="Points" v={String(devs.length)} />
+      </div>
+      <p className="hint">{c.props.manualSection ? 'Section chosen by hand; the checks tell if it is enough.' : 'Sized from the load, the length and the voltage drop (NBR 5410).'}</p>
+    </>
+  );
+}
+
+function SolarProps({ a }: { a: SolarArray }) {
+  const run = useApp((st) => st.run);
+  return (
+    <>
+      <Header title={a.props.name} sub={`Solar array · ${a.id}`} />
+      <NumberField label="Modules" unit="" step={1} value={a.props.modules} onCommit={(v) => run(setSolar({ modules: Math.max(0, Math.round(v)) }))} />
+      <NumberField label="Tilt" unit="°" step={1} value={a.props.tilt} onCommit={(v) => run(setSolar({ tilt: v }))} />
+      <NumberField label="Inverter" unit="kW" step={0.5} value={a.props.inverterKw} onCommit={(v) => run(setSolar({ inverterKw: v }))} />
+      <NumberField label="Battery" unit="kWh" step={5} value={a.props.batteryKwh} onCommit={(v) => run(setSolar({ batteryKwh: Math.max(0, v) }))} />
+      <p className="hint">Facing north, {a.props.setback.toFixed(2)} m from the parapet. Open Electrical → Solar for the layout and the monthly estimate.</p>
     </>
   );
 }

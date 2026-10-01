@@ -1,7 +1,9 @@
 // The 2D plan: draws one floor of the model and turns pointer gestures into commands.
 import { useMemo, useRef, type PointerEvent as RPointerEvent, type ReactNode } from 'react';
 import { minArea } from '../model/checks';
-import { addOpening, moveFixture, moveOpening, moveWall, nextOpeningId, wallLimits } from '../model/commands';
+import { addDevice, addOpening, moveDevice, moveFixture, moveOpening, moveWall, nextDeviceId, nextOpeningId, wallLimits } from '../model/commands';
+import { cameraFov, cameraRange, deviceType } from '../model/electrical/library';
+import { nearestWallPoint } from '../model/electrical/place';
 import { kindOf } from '../model/plumbing/library';
 import {
   byLevel, lineHandles, mainCell, openingSeg, snap, spaceArea, wallSeg, type Handle, type Seg,
@@ -22,7 +24,8 @@ const f1 = (v: number) => +v.toFixed(1);
 type Drag =
   | { kind: 'wall'; h: Handle; at: number; x0: number; y0: number; moved: boolean }
   | { kind: 'opening'; id: string; o: 'v' | 'h'; off: number; x0: number; y0: number; moved: boolean }
-  | { kind: 'fixture'; id: string; dx: number; dy: number; x0: number; y0: number; moved: boolean };
+  | { kind: 'fixture'; id: string; dx: number; dy: number; x0: number; y0: number; moved: boolean }
+  | { kind: 'device'; id: string; dx: number; dy: number; x0: number; y0: number; moved: boolean };
 
 /** Fixtures and pipes shown on a floor plan: those of the floor, plus site items on the street level and roof items on the upper floor. */
 export const onPlan = (elLevel: string, level: string) => elLevel === level || (level === 'SL' && elLevel === 'site') || (level === 'UF' && elLevel === 'roof');
@@ -33,6 +36,7 @@ export function PlanView() {
   const selection = useApp((s) => s.selection);
   const tool = useApp((s) => s.tool);
   const plumbing2d = useApp((s) => s.plumbing2d);
+  const elec2d = useApp((s) => s.elec2d);
   const svgRef = useRef<SVGSVGElement>(null);
   const drag = useRef<Drag | null>(null);
   const infoRef = useRef<HTMLDivElement>(null);
@@ -101,8 +105,28 @@ export function PlanView() {
     if (ev.button !== 0) return;
     const st = useApp.getState();
     const [x, y] = toPlan(ev);
+    if (tool === 'outlet') {
+      const room = spaces.find((sp) => sp.props.cells.some((c) => x > c.x0 && x < c.x1 && y > c.y0 && y < c.y1));
+      if (!room) { st.flash('Click inside a room to add an outlet on its nearest wall.'); return; }
+      const at = nearestWallPoint(room, [x, y]);
+      const id = nextDeviceId(st.versions[st.active].present, 'outlet');
+      if (st.run(addDevice(id, 'outlet', level, at, `Outlet · ${room.props.name}`))) { st.select(id); st.flash(`Outlet added to ${room.props.name}; its circuit, cable and schedule are updated.`); }
+      return;
+    }
     if (tool !== 'select') { addAt(x, y, tool); return; }
     const t = ev.target as Element;
+    const dg = elec2d ? t.closest('[data-device]') : null;
+    if (dg) {
+      const id = dg.getAttribute('data-device')!;
+      const dv = p.elements.find((e) => e.id === id);
+      st.select(id);
+      if (dv?.type === 'Device') {
+        drag.current = { kind: 'device', id, dx: x - dv.props.at[0], dy: y - dv.props.at[1], x0: x, y0: y, moved: false };
+        svgRef.current!.setPointerCapture(ev.pointerId);
+        ev.preventDefault();
+      }
+      return;
+    }
     const fg = plumbing2d ? t.closest('[data-fixture]') : null;
     if (fg) {
       const id = fg.getAttribute('data-fixture')!;
@@ -161,6 +185,10 @@ export function PlanView() {
         const edge = at === lim.lo || at === lim.hi ? ' · rooms keep at least 0.80 m' : '';
         infoRef.current.textContent = `Wall at ${at.toFixed(2)} m${edge}`;
       }
+    } else if (d.kind === 'device') {
+      st.previewCmd(moveDevice(d.id, x - d.dx, y - d.dy));
+      const dv = useApp.getState().preview?.elements.find((e) => e.id === d.id);
+      if (infoRef.current && dv?.type === 'Device') infoRef.current.textContent = `${dv.props.name} at x ${dv.props.at[0].toFixed(2)}, y ${dv.props.at[1].toFixed(2)} · circuit re-routed`;
     } else if (d.kind === 'fixture') {
       st.previewCmd(moveFixture(d.id, x - d.dx, y - d.dy));
       const f = useApp.getState().preview?.elements.find((e) => e.id === d.id);
@@ -251,6 +279,7 @@ export function PlanView() {
     if (host) out.push(<OpeningGlyph key={op.id} op={op} s={openingSeg(op, host)} selected={selection === op.id} line={line} rect={rect} px={px} py={py} />);
   }
 
+  if (elec2d) out.push(<ElectricalOverlay key="elec" p={p} level={level} selection={selection} line={line} rect={rect} px={px} py={py} />);
   if (plumbing2d) out.push(<PlumbingOverlay key="plumbing" p={p} level={level} selection={selection} line={line} rect={rect} px={px} py={py} />);
 
   // Room names and areas.
@@ -408,4 +437,49 @@ function PlumbingOverlay({ p, level, selection, line, rect, px, py }: { p: impor
     );
   }
   return <g className="plumbing">{o}</g>;
+}
+
+/* ---------- electrical overlay (spec 04) ---------- */
+
+function ElectricalOverlay({ p, level, selection, line, rect, px, py }: { p: import('../model/schema').Project; level: string; selection: string | null } & Draw) {
+  const elev = (l: string) => p.levels.find((x) => x.id === l)?.elevation ?? 0;
+  const order = ['LL', 'SL', 'UF', 'roof'];
+  const i = order.indexOf(level);
+  const lo = i <= 0 ? -Infinity : elev(level) - 0.35, hi = i + 1 < order.length ? elev(order[i + 1]!) - 0.35 : Infinity;
+  const o: ReactNode[] = [];
+  const selCircuit = (() => { const e = selection ? p.elements.find((x) => x.id === selection) : undefined; return e?.type === 'Circuit' ? e.id : e?.type === 'Device' ? e.props.circuit : undefined; })();
+  for (const c of p.elements) {
+    if (c.type !== 'Conduit') continue;
+    const [a, b] = [c.props.start, c.props.end];
+    if (Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) < 0.01) continue;
+    const z = (a[2] + b[2]) / 2;
+    if (z < lo || z >= hi) continue;
+    o.push(line(a[0], a[1], b[0], b[1], 'conduit2d' + (selCircuit === c.props.circuit ? ' sel' : ''), c.id));
+  }
+  const devOn = (l: string) => l === level || (level === 'SL' && (l === 'site' || l === 'carport')) || (level === 'UF' && l === 'roof');
+  for (const d of p.elements) {
+    if (d.type !== 'Device' || !devOn(d.level)) continue;
+    const t = deviceType(d.props.kind);
+    const [x, y] = d.props.at;
+    const sel = selection === d.id || (selCircuit && d.props.circuit === selCircuit) ? ' sel' : '';
+    const parts: ReactNode[] = [];
+    if (t.group === 'camera') {
+      const b = ((d.props.bearing ?? 0) * Math.PI) / 180, half = ((cameraFov(d.props.lensMm ?? 2.8) / 2) * Math.PI) / 180, r = cameraRange(d.props.lensMm ?? 2.8);
+      const pt = (ang: number) => [x + Math.cos(ang) * r, y - Math.sin(ang) * r] as const;
+      const [ax, ay] = pt(b - half), [bx, by] = pt(b + half);
+      parts.push(<path key="fov" d={`M${px(x)},${py(y)} L${px(ax)},${py(ay)} A${r * 40},${r * 40} 0 0 0 ${px(bx)},${py(by)} Z`} className="fov2d" />);
+      parts.push(<circle key="c" cx={px(x)} cy={py(y)} r={5} className="cam2d" />);
+    } else if (t.group === 'light') {
+      parts.push(<circle key="c" cx={px(x)} cy={py(y)} r={6} className="lamp2d" />, <path key="x" d={`M${px(x) - 4},${py(y) - 4} L${px(x) + 4},${py(y) + 4} M${px(x) + 4},${py(y) - 4} L${px(x) - 4},${py(y) + 4}`} className="lampx2d" />);
+    } else if (t.group === 'outlet') {
+      parts.push(<path key="o" d={`M${px(x) - 5},${py(y)} A5,5 0 0 1 ${px(x) + 5},${py(y)} Z`} className={'out2d' + (d.props.kind === 'outlet-20' ? ' big' : '')} />);
+    } else if (t.group === 'panel' || t.group === 'solar') {
+      parts.push(rect({ x0: x - 0.2, y0: y - 0.12, x1: x + 0.2, y1: y + 0.12 }, 'panel2d', 'p'));
+    } else {
+      parts.push(rect({ x0: x - 0.1, y0: y - 0.1, x1: x + 0.1, y1: y + 0.1 }, t.group === 'dedicated' ? 'ded2d' : 'lv2d', 'b'));
+    }
+    parts.push(<rect key="hit" x={px(x) - 8} y={py(y) - 8} width={16} height={16} className="devhit" />);
+    o.push(<g key={d.id} data-device={d.id} className={'dev2d g-' + t.group + sel}><title>{d.props.name}</title>{parts}<text x={px(x)} y={py(y) - 9} className="devt" textAnchor="middle">{t.short}</text></g>);
+  }
+  return <g className="electrical">{o}</g>;
 }

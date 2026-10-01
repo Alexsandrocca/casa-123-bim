@@ -6,7 +6,8 @@ import type { Carport, Column, Deck, Device, Element, Opening, Project, Rect, Sl
 import { groundAt, groundZones, inPoly, siteFrame, zoneZ, type GroundZone } from '../model/site';
 import { slabRect, slabVoids } from '../model/structure';
 import { kindOf } from '../model/plumbing/library';
-import { deviceType } from '../model/electrical/library';
+import { cameraFov, cameraRange, deviceType } from '../model/electrical/library';
+import { layoutModules } from '../model/electrical/solar';
 
 export type V3 = [number, number, number];
 export type Mat =
@@ -25,13 +26,15 @@ export interface PolyPart { kind: 'poly'; id: string; mat: Mat; pts: V3[] }
 export interface LinePart { kind: 'line'; id: string; mat: Mat; pts: V3[] }
 /** A round pipe from a to b. */
 export interface PipePart { kind: 'pipe'; id: string; mat: Mat; a: V3; b: V3; r: number }
-export type Part = BoxPart | PolyPart | LinePart | PipePart;
+/** A viewing cone from an apex along a direction (camera field of view). */
+export interface ConePart { kind: 'cone'; id: string; mat: Mat; apex: V3; dir: V3; length: number; radius: number }
+export type Part = BoxPart | PolyPart | LinePart | PipePart | ConePart;
 
 export const PIPE_MAT: Record<string, Mat> = { cold: 'pCold', hot: 'pHot', sewage: 'pSewage', vent: 'pVent', rain: 'pRain' };
 /** Materials that are building fabric (ghosted in x-ray mode). */
 export const SERVICE_MATS = new Set<Mat>(['pCold', 'pHot', 'pSewage', 'pVent', 'pRain', 'fixture', 'equipment', 'tank', 'device', 'camera', 'conduit', 'pvModule', 'cone']);
 
-export interface BuildOptions { doorsOpen: boolean }
+export interface BuildOptions { doorsOpen: boolean; /** conduits (x-ray) */ conduits?: boolean; /** camera view cones */ cones?: boolean }
 
 /** A walkable surface: a rectangle or convex polygon whose height is z0 + dzdy·(y − y0). */
 export interface Surface { id: string; rect?: Rect; poly?: [number, number][]; holes?: Rect[]; z0: number; y0: number; dzdy: number }
@@ -563,7 +566,26 @@ export function buildScene(p: Project, opt: BuildOptions = { doorsOpen: false })
     const mat: Mat = t.group === 'fixture' ? 'fixture' : fx.props.kind === 'roof-tank' || fx.props.kind === 'rain-cistern' ? 'tank' : 'equipment';
     parts.push({ kind: 'box', id: fx.id, mat, c: [fx.props.at[0], fx.props.at[1], base + sz / 2], s: [sx, sy, sz], solid: false });
   }
-  for (const d of byType('Device')) devicePart(d, parts);
+  for (const d of byType('Device')) {
+    devicePart(d, parts);
+    if (opt.cones && (d.props.kind === 'camera' || d.props.kind === 'doorbell')) {
+      const lens = d.props.lensMm ?? 2.8, b = ((d.props.bearing ?? 0) * Math.PI) / 180, t = ((d.props.tilt ?? 15) * Math.PI) / 180;
+      const range = cameraRange(lens);
+      parts.push({ kind: 'cone', id: d.id, mat: 'cone', apex: [d.props.at[0], d.props.at[1], d.props.z], dir: [Math.cos(b) * Math.cos(t), -Math.sin(b) * Math.cos(t), -Math.sin(t)], length: range, radius: range * Math.tan(((cameraFov(lens) / 2) * Math.PI) / 180) });
+    }
+  }
+  if (opt.conduits) for (const c of byType('Conduit')) parts.push({ kind: 'pipe', id: c.id, mat: 'conduit', a: c.props.start, b: c.props.end, r: c.props.dn / 2000 });
+  for (const a of byType('SolarArray')) {
+    const t = (a.props.tilt * Math.PI) / 180;
+    for (const m of layoutModules(p, a)) {
+      const up = (m.x1 - m.x0) / Math.cos(t);
+      // tilted up towards the south (facing north): pitch about x, then turned 90° so the slope runs along −x
+      parts.push({ kind: 'box', id: a.id, mat: 'pvModule', c: [m.x, m.y, m.z], s: [m.y1 - m.y0, up, 0.04], rx: t, rz: Math.PI / 2, solid: false });
+      for (const [x, h] of [[m.x0 + 0.1, m.zTop - a.props.roofTop], [m.x1 - 0.1, m.z - (m.zTop - m.z) - a.props.roofTop]] as [number, number][]) {
+        parts.push({ kind: 'box', id: a.id, mat: 'steel', c: [x, m.y, a.props.roofTop + h / 2], s: [0.04, m.y1 - m.y0 - 0.2, Math.max(0.05, h)], solid: false });
+      }
+    }
+  }
   sitePartsAndSurfaces(p, parts, surfaces);
   const wallBoxes = parts.filter((x): x is BoxPart => x.kind === 'box' && ['wallExt', 'wallInt', 'wallWet', 'retaining', 'parapet'].includes(x.mat));
   guardParts(p, surfaces, wallBoxes, parts);

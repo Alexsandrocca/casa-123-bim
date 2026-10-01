@@ -1,5 +1,5 @@
 # 04 — Electrical: panels, circuits, devices, solar, cameras
-Status: in progress
+Status: done (2026-10-01)
 
 > Manager note (2026-09-29): Build on **Version 3** (spec 02b). The main panel is in the street-level Storage room; the EV charger and the 6-module solar reserve are on the carport.
 

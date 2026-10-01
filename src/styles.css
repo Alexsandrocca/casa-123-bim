@@ -195,3 +195,40 @@ button.small { font-size: 12.5px; min-height: 28px; padding: 3px 10px; }
 .services { display: grid; gap: 8px; max-width: 560px; }
 .field.small { grid-template-columns: 130px 1fr; }
 .notes { border-left: 3px solid var(--warn); padding-left: 10px; display: grid; gap: 4px; font-size: 13px; }
+
+/* ---------- electrical overlay (spec 04) ---------- */
+.conduit2d { stroke: #E07A2E; stroke-width: 1.2; stroke-dasharray: 4 3; fill: none; pointer-events: none; } .conduit2d.sel { stroke-width: 3; stroke-dasharray: none; }
+.dev2d { cursor: grab; } .devhit { fill: transparent; }
+.lamp2d { fill: var(--sheet); stroke: #C27A00; stroke-width: 1.4; } .lampx2d { stroke: #C27A00; stroke-width: 1.2; }
+.out2d { fill: #C27A00; } .out2d.big { fill: #8A4E00; }
+.ded2d { fill: #C27A00; fill-opacity: .3; stroke: #C27A00; stroke-width: 1.4; } .lv2d { fill: var(--sheet); stroke: var(--muted); stroke-width: 1; }
+.panel2d { fill: #FFF4E0; stroke: #C27A00; stroke-width: 1.6; }
+.cam2d { fill: #7A3FB0; } .fov2d { fill: #7A3FB0; fill-opacity: .08; stroke: #7A3FB0; stroke-opacity: .35; stroke-width: .8; pointer-events: none; }
+.devt { font-family: var(--mono); font-size: 8.5px; fill: var(--ink); pointer-events: none; paint-order: stroke; stroke: var(--sheet); stroke-width: 3px; }
+.dev2d.sel .lamp2d, .dev2d.sel .ded2d, .dev2d.sel .panel2d, .dev2d.sel .lv2d { stroke: var(--accent); stroke-width: 3; } .dev2d.sel .out2d, .dev2d.sel .cam2d { fill: var(--accent); }
+
+/* ---------- electrical window (spec 04) ---------- */
+.schedgrid.one { grid-template-columns: 1fr; }
+.rooms.circuits td, .rooms.circuits th { font-size: 12px; white-space: nowrap; }
+.rooms.circuits td.bad { color: var(--bad); }
+.boards { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; max-height: 40vh; overflow: auto; }
+.board { border: 1px solid var(--rule); padding: 8px; background: var(--paper); display: grid; gap: 6px; }
+.rail { display: flex; flex-wrap: wrap; gap: 3px; padding: 4px; background: #E3E6E3; border-radius: 3px; }
+.dmod { min-height: 52px; background: var(--sheet); border: 1px solid #B9C0BD; border-radius: 3px; font-size: 10.5px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2px; line-height: 1.15; }
+.dmod b { font-family: var(--mono); font-size: 11px; } .dmod span { color: var(--muted); } .dmod em { font-style: normal; font-size: 9px; color: #C27A00; }
+.dmod.main { background: #FFF4E0; } .dmod.dps { background: #F2ECF8; } .dmod.rcd { background: #E6F0E4; } .dmod.meter { background: #EAF3FB; }
+.singleline { max-height: 50vh; }
+.slbox { fill: var(--sheet); stroke: var(--ink); stroke-width: 1; } .slbox.pv { fill: #EAF3FB; stroke: #2B6389; } .slbox.ess { fill: #EEF6EC; stroke: #3F7A45; }
+.slw { stroke: var(--ink); stroke-width: 1.2; } .slw.dash { stroke-dasharray: 4 3; } .slbus { stroke: var(--ink); stroke-width: 4; }
+.sll { font-family: var(--mono); font-size: 11px; fill: var(--ink); } .sls { font-family: var(--mono); font-size: 10px; fill: var(--muted); } .slt { font-family: var(--display); font-weight: 600; font-size: 13px; fill: var(--ink); }
+.solar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 16px; align-items: start; }
+.solar figure { margin: 0; display: grid; gap: 6px; }
+.roofplan, .lotmap { width: 100%; height: auto; max-height: 52vh; background: var(--paper); border: 1px solid var(--rule); }
+.rp-roof { fill: #E7E9E6; stroke: var(--ink); stroke-width: 2; } .rp-setback { fill: none; stroke: var(--muted); stroke-dasharray: 4 3; }
+.rp-obs { fill: #B9BDBF; } .rp-mod { fill: #1F2E45; stroke: #8FA7C4; stroke-width: 1; }
+.chart { width: 100%; height: auto; } .chart .grid { stroke: var(--rule); stroke-width: 1; } .chart .axis { font-family: var(--mono); font-size: 10px; fill: var(--muted); }
+.chart .val { font-family: var(--mono); font-size: 10.5px; fill: var(--ink); } .chart .tip { fill: var(--sheet); stroke: var(--rule); } .chart .tipt { font-family: var(--body); font-size: 11px; fill: var(--muted); } .chart .tipv { font-family: var(--mono); font-size: 12px; fill: var(--ink); }
+.rooms.mini td { font-size: 10.5px; text-align: center !important; padding: 2px; }
+.lm-lot { fill: #EEF1EA; stroke: var(--ink); stroke-width: 1.2; stroke-dasharray: 6 3; } .lm-house { fill: #D6D8D4; stroke: none; }
+.lm-blind { fill: var(--bad); fill-opacity: .55; } .lm-fov { fill: #7A3FB0; fill-opacity: .1; stroke: #7A3FB0; stroke-opacity: .4; stroke-width: .8; } .lm-dot { fill: #7A3FB0; } .lm-cam { cursor: pointer; }
+@media (max-width: 900px) { .solar { grid-template-columns: 1fr; } }

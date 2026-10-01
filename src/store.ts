@@ -10,7 +10,7 @@ import { PLAN_LEVELS, parseProject, type PlanLevel, type Project } from './model
 
 export type VersionId = 'v1' | 'v2' | 'v3';
 export const VERSION_IDS: VersionId[] = ['v1', 'v2', 'v3'];
-export type Tool = 'select' | 'door' | 'window';
+export type Tool = 'select' | 'door' | 'window' | 'outlet';
 export type ViewMode = '2d' | '3d' | 'split';
 export type CameraPreset = 'street' | 'garden' | 'ramp' | 'top';
 export interface Section { h: 'off' | 'LL' | 'SL' | 'UF'; v: 'off' | 'across' | 'along'; pos: number }
@@ -58,6 +58,10 @@ export interface AppState {
   /** 2D: draw the plumbing on the plan. */
   plumbing2d: boolean;
   plumbingOpen: boolean;
+  /** 2D electrical overlay, 3D camera cones, electrical window. */
+  elec2d: boolean;
+  cones: boolean;
+  electricalOpen: boolean;
   walk: boolean;
   camera: { preset: CameraPreset; n: number; pos?: [number, number, number]; target?: [number, number, number] };
   section: Section;
@@ -79,7 +83,7 @@ export interface AppState {
   setChecksScope(s: 'level' | 'all'): void;
   setAbout(open: boolean): void;
   setView(v: ViewMode): void;
-  set3d(patch: Partial<Pick<AppState, 'doorsOpen' | 'walk' | 'section' | 'sun' | 'xray' | 'plumbing2d' | 'plumbingOpen'>>): void;
+  set3d(patch: Partial<Pick<AppState, 'doorsOpen' | 'walk' | 'section' | 'sun' | 'xray' | 'plumbing2d' | 'plumbingOpen' | 'elec2d' | 'cones' | 'electricalOpen'>>): void;
   goCamera(preset: CameraPreset): void;
   /** Point the camera from pos to target (house coordinates). */
   lookFrom(pos: [number, number, number], target: [number, number, number]): void;
@@ -114,6 +118,9 @@ export const useApp = create<AppState>((set, get) => {
     xray: false,
     plumbing2d: false,
     plumbingOpen: false,
+    elec2d: false,
+    cones: false,
+    electricalOpen: false,
     walk: false,
     camera: { preset: 'street', n: 0 },
     section: { h: 'off', v: 'off', pos: 6 },

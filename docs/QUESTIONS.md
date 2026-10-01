@@ -50,3 +50,12 @@ The prototype overlay has no basins in the three upper bathrooms and no dishwash
 
 ## Q12 (2026-10-01, spec 03) — Heat-pump heater on the entry roof
 I put the 300 L heat-pump water heater on the entry roof (+3.70), outdoors and close to the bathrooms, fed by gravity from the roof tanks. The brief does not say where it goes. **Confirm the place.**
+
+## Q13 (2026-10-01, spec 04) — Four or five air conditioners?
+The brief says 4 air conditioners; the prototype overlay places 5 (living, studio and the three bedrooms). I followed the overlay. **Is the studio getting one?** (Delete its two units in the Electrical overlay if not.)
+
+## Q14 (2026-10-01, spec 04) — Roof equipment moved for the solar array
+To fit all 12 modules facing north with no winter shade, I moved the two water tanks and the pressure pump to the south edge of the roof (still over the stair) and offset the two sewage vents to come out beside the south parapet. **Fine with the plumbing engineer?**
+
+## Q15 (2026-10-01, spec 04) — CPFL supply
+I assumed CPFL three-phase 127/220 V. If the supply is 220/380 V, the general circuits change to 220 V. **Please confirm with CPFL** (it is already in the "to confirm" list).

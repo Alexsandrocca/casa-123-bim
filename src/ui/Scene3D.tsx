@@ -3,7 +3,7 @@ import { Line, OrbitControls } from '@react-three/drei';
 import { Canvas, useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { SERVICE_MATS, buildScene, pocheCaps, type BoxPart, type Mat, type Part, type LinePart, type PipePart, type PolyPart, type V3 } from '../scene/build3d';
+import { SERVICE_MATS, buildScene, pocheCaps, type BoxPart, type Mat, type Part, type ConePart, type LinePart, type PipePart, type PolyPart, type V3 } from '../scene/build3d';
 import { sunPosition } from '../scene/sun';
 import { EYE, startAt, walkStep, walkWorld, type WalkState, type WalkWorld } from '../scene/walk';
 import { useApp, useProject, type CameraPreset } from '../store';
@@ -18,9 +18,10 @@ const COLORS: Record<Mat, string> = {
   glass: '#8FB8D2', frame: '#2E3A40', door: '#B08455', garageDoor: '#8D9499', tread: '#9A7650', guardGlass: '#BFD9E6', rail: '#2E3A40', deck: '#A27B55',
   grass: '#8DAA69', paving: '#CFC9BC', soil: '#9C8B73', ramp: '#C8BFAE', asphalt: '#55595B', sidewalk: '#C9C6BF', boundary: '#D6D0C4', setback: '#E07A2E',
   marking: '#F6F6F2', solarGhost: '#23395B', device: '#2E3A40', planter: '#6F8F4E',
+  camera: '#7A3FB0', conduit: '#E07A2E', cone: '#9B6BD0', pvModule: '#1F2E45',
   pCold: '#2F7FB5', pHot: '#C8412E', pSewage: '#8A5A2B', pVent: '#8C9399', pRain: '#25A3A3', fixture: '#F4F4F2', equipment: '#6E7B85', tank: '#4F7FA6',
 };
-const TRANSPARENT: Partial<Record<Mat, number>> = { glass: 0.35, guardGlass: 0.25, solarGhost: 0.45 };
+const TRANSPARENT: Partial<Record<Mat, number>> = { glass: 0.35, guardGlass: 0.25, solarGhost: 0.45, cone: 0.07 };
 
 const materials = new Map<string, THREE.MeshStandardMaterial>();
 function material(mat: Mat, selected: boolean, ghost = false): THREE.MeshStandardMaterial {
@@ -30,7 +31,7 @@ function material(mat: Mat, selected: boolean, ghost = false): THREE.MeshStandar
     const op = ghost ? 0.07 : TRANSPARENT[mat];
     m = new THREE.MeshStandardMaterial({
       color: COLORS[mat], roughness: mat === 'glass' || mat === 'guardGlass' ? 0.1 : 0.85, metalness: mat === 'steel' || mat === 'rail' ? 0.4 : 0,
-      transparent: op !== undefined, opacity: op ?? 1, depthWrite: op === undefined, side: THREE.DoubleSide,
+      transparent: op !== undefined, opacity: op ?? 1, depthWrite: op === undefined, side: mat === 'cone' ? THREE.FrontSide : THREE.DoubleSide,
       ...(selected ? { emissive: new THREE.Color('#2B6389'), emissiveIntensity: 0.55 } : {}),
     });
     materials.set(key, m);
@@ -46,7 +47,7 @@ function Box({ b, selected, ghost }: { b: BoxPart; selected: boolean; ghost: boo
   return (
     <mesh
       geometry={unitBox} material={material(b.mat, selected, ghost)}
-      position={T(b.c)} scale={[b.s[0], b.s[2], b.s[1]]} rotation={[b.rx ?? 0, b.rz ?? 0, 0]}
+      position={T(b.c)} scale={[b.s[0], b.s[2], b.s[1]]} rotation={[b.rx ?? 0, b.rz ?? 0, 0, 'YXZ']}
       castShadow={!glassy} receiveShadow
     />
   );
@@ -62,6 +63,18 @@ function Pipe({ part, selected }: { part: PipePart; selected: boolean }) {
     return { pos: a.clone().add(b).multiplyScalar(0.5), quat: new THREE.Quaternion().setFromUnitVectors(Y, d.clone().normalize()), len: d.length() };
   }, [part]);
   return <mesh geometry={unitCylinder} material={material(part.mat, selected)} position={pos} quaternion={quat} scale={[part.r, len, part.r]} />;
+}
+
+const unitCone = new THREE.ConeGeometry(1, 1, 24, 1, true);
+const NEG_Y = new THREE.Vector3(0, -1, 0);
+
+function Cone({ part }: { part: ConePart }) {
+  const { pos, quat } = useMemo(() => {
+    const apex = new THREE.Vector3(...T(part.apex)), d = new THREE.Vector3(...T(part.dir)).normalize();
+    // the cone's apex is at +y: point its base (−y) along the view direction
+    return { pos: apex.clone().add(d.clone().multiplyScalar(part.length / 2)), quat: new THREE.Quaternion().setFromUnitVectors(NEG_Y, d) };
+  }, [part]);
+  return <mesh geometry={unitCone} material={material(part.mat, false)} position={pos} quaternion={quat} scale={[part.radius, part.length, part.radius]} raycast={() => null} />;
 }
 
 function Poly({ part, ghost }: { part: PolyPart; ghost: boolean }) {
@@ -93,6 +106,7 @@ const Group = memo(function Group({ id, parts, selected, pickable, xray }: { id:
         if (p.kind === 'box') return pickable ? <Box key={i} b={p} selected={selected} ghost={ghost} /> : <mesh key={i} geometry={unitBox} material={material(p.mat, false, ghost)} position={T(p.c)} scale={[p.s[0], p.s[2], p.s[1]]} castShadow={!ghost} receiveShadow raycast={() => null} />;
         if (p.kind === 'poly') return <Poly key={i} part={p} ghost={ghost} />;
         if (p.kind === 'pipe') return <Pipe key={i} part={p} selected={selected} />;
+        if (p.kind === 'cone') return <Cone key={i} part={p} />;
         return <Line key={i} points={(p as LinePart).pts.map(T)} color={COLORS[p.mat]} lineWidth={2} dashed dashSize={0.6} gapSize={0.3} raycast={() => null} />;
       })}
     </group>
@@ -320,7 +334,9 @@ function Content() {
   const walking = useApp((s) => s.walk);
   const cutting = useApp((s) => s.section.v !== 'off' || s.section.h !== 'off');
   const xray = useApp((s) => s.xray);
-  const scene = useMemo(() => buildScene(p, { doorsOpen }), [p, doorsOpen]);
+  const xrayOn = useApp((s) => s.xray);
+  const cones = useApp((s) => s.cones);
+  const scene = useMemo(() => buildScene(p, { doorsOpen, conduits: xrayOn, cones }), [p, doorsOpen, xrayOn, cones]);
   const groups = useMemo(() => {
     const m = new Map<string, Part[]>();
     for (const part of scene.parts) m.set(part.id, [...(m.get(part.id) ?? []), part]);

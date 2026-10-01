@@ -80,7 +80,7 @@ export function withElectrical(p: Project): Project {
   const conduits: Conduit[] = [];
   const lengths = new Map<string, number>();
   const zoneZ = (L: string, purpose: string) => {
-    if (purpose === 'lighting') return elev(p, L) + p.structure.clearHeight + 0.1; // in the slab or lining above
+    if (purpose === 'lighting') return elev(p, L) + p.structure.clearHeight - 0.05; // in the ceiling lining
     if (L === 'SL') return elev(p, 'SL') - 0.3; // crawlspace
     return elev(p, L) + 0.03; // in the floor screed
   };

@@ -52,7 +52,7 @@ export function pointsOnWalls(p: Project, s: Space, n: number): P2[] {
 }
 
 /** Nearest point 6 cm inside the room from its walls, for a position (e.g. near a basin). */
-function nearestWallPoint(s: Space, at: P2): P2 {
+export function nearestWallPoint(s: Space, at: P2): P2 {
   let best: P2 = at, bd = Infinity;
   for (const g of boundarySegs(s.props.cells)) {
     const t = Math.min(g.b, Math.max(g.a, g.o === 'v' ? at[1] : at[0]));
