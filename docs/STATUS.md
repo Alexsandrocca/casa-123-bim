@@ -314,3 +314,11 @@ Spec 02 — 3D model (it is marked ready).
 - The owner likes plumbing and electrical, but they float and pass through the wrong places: L-shaped routing without obstacles, items without hosts, the pump in the hall, condensers hanging on the facade.
 - New spec **04b** (ready) fixes this before anything else. Order: **04b → 08 → 09 → 10**.
 - GitHub setup (request above) is still to do. Do it first, before 04b.
+
+## 2026-10-01 — Manager review of 04b: accepted
+- 0 floating runs, 0 forbidden crossings, 0 clashes. Q7–Q18 answered in QUESTIONS.md.
+- Small follow-ups go at the start of spec 08:
+  - Q16 (move the Bath 3 shower to the far corner);
+  - Q8 (move the patio steps).
+- GitHub works (origin is in sync). Keep pushing after every spec.
+- Next: **08**.

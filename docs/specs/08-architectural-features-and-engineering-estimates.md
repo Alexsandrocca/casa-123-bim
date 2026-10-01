@@ -19,6 +19,11 @@ The owner can also place common architectural features (brise-soleil, pergola, c
 
 ## Requirements
 
+### 0. Carry-overs from the 04b review
+- Q16 (a): move the Bath 3 shower to the far corner, so its outlet gets a legal place.
+- Q8: move the patio steps to the north end of the patio.
+- Q12: check the roof load of the heat pump and tanks with the new load model.
+
 ### A. Assemblies library (walls, slabs, roofs)
 1. An `Assembly` type: an ordered list of layers. Each layer has material, thickness, density, conductivity λ, specific heat and cost/m².
    Computed per assembly:
