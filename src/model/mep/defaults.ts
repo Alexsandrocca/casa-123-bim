@@ -81,8 +81,13 @@ function clipToSlab(ctx: ReturnType<typeof mepContext>, level: string, c: Rect):
 }
 
 /** First hosting of Version 3: lights with no slab above them (rooms under the stair) become wall lights; then every item is hosted. */
+/** Spec 08 corrected the door-swing rule (a leaf no longer reaches through a wall into the next room). These points aim
+ *  at the places accepted in the 04b review, so the plumbing around them does not shift with the correction. */
+const ACCEPTED_04B: Record<string, [number, number]> = { 'dev-switch-07': [1.14, 4.115], 'dev-inverter-01': [1.28, 5.13] };
+
 export function hostV3(p: Project): Project {
   const elements = p.elements.map((e) => {
+    if (e.type === 'Device' && ACCEPTED_04B[e.id]) return { ...e, props: { ...e.props, at: ACCEPTED_04B[e.id]! } };
     if (e.type !== 'Device' || e.props.kind !== 'ceiling-light' || !['LL', 'SL', 'UF'].includes(e.level)) return e;
     if (ceilingHost(p, e.level, e.props.at)) return e;
     return { ...e, props: { ...e.props, kind: 'wall-light', name: e.props.name.replace('Ceiling light', 'Wall light'), z: q(mepContext(p).elev(e.level) + 2.2) } };

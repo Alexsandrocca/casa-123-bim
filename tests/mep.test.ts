@@ -24,8 +24,11 @@ const withPipe = (p: Project, id: string, system: PipeSegment['props']['system']
 });
 
 describe('spec 04b: MEP physics on Version 3', () => {
-  it('passes the MEP physics checks except the one outlet that has no legal place (listed in STATUS)', () => {
-    expect(fail(v3).map((c) => c.id).sort()).toEqual(['mep:unhosted:dev-outlet-26', 'noroute:ckt-out-UF-wet-1:dev-outlet-26']);
+  it('passes every MEP physics check (spec 08: the Bath 3 basin outlet now has its place, Q16)', () => {
+    expect(fail(v3).map((c) => c.id)).toEqual([]);
+    const bath3 = byId<Device>(v3, 'dev-outlet-26');
+    expect(bath3.props.hostWallId).toBe('UF-wall-13');
+    expect(bath3.props.at[1]).toBeCloseTo(7.8, 2);
     const rep = mepReport(v3);
     expect([...rep.segs.values()].filter((s) => s.exposed > 0.03)).toEqual([]);
     expect(rep.clashes).toEqual([]);

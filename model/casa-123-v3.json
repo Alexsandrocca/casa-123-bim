@@ -3661,9 +3661,9 @@
      "y1": 5
     },
     "steps": {
-     "x0": 3.5,
+     "x0": 5.1,
      "y0": 1,
-     "x1": 4.7,
+     "x1": 5.9,
      "y1": 1.6
     }
    }
@@ -3877,15 +3877,15 @@
     "slope": 0.05,
     "parking": [
      {
-      "x0": 2.75,
+      "x0": 2.6,
       "y0": -4,
-      "x1": 5.25,
+      "x1": 5.1,
       "y1": 1
      },
      {
-      "x0": 5.85,
+      "x0": 5.9,
       "y0": -4,
-      "x1": 8.35,
+      "x1": 8.4,
       "y1": 1
      }
     ],
@@ -6364,11 +6364,15 @@
     "kind": "outlet",
     "name": "Outlet · Bath 3 (basin)",
     "at": [
-     3.26,
-     7.4
+     3.285,
+     7.8
     ],
     "z": 4.8,
     "power": 600,
+    "hostWallId": "UF-wall-13",
+    "face": 1,
+    "offset": 2.8,
+    "height": 1.1,
     "circuit": "ckt-out-UF-wet-1"
    }
   },
@@ -13504,9 +13508,9 @@
     "pressure": false,
     "network": "rain-cistern",
     "start": [
-     2.55,
+     3.05,
      -0.9,
-     -1.605
+     -1.6
     ],
     "end": [
      0.7,
@@ -13533,14 +13537,14 @@
     "pressure": false,
     "network": "rain-cistern",
     "start": [
-     2.6,
-     -0.9,
-     -1.6
+     3.05,
+     -4,
+     -1.565
     ],
     "end": [
-     2.55,
+     3.05,
      -0.9,
-     -1.605
+     -1.6
     ],
     "load": 33.39,
     "serves": [
@@ -13562,14 +13566,14 @@
     "pressure": false,
     "network": "rain-cistern",
     "start": [
-     2.7,
-     -0.9,
-     -1.595
+     3.05,
+     -4.05,
+     -1.56
     ],
     "end": [
-     2.6,
-     -0.9,
-     -1.6
+     3.05,
+     -4,
+     -1.565
     ],
     "load": 33.39,
     "serves": [
@@ -13591,14 +13595,14 @@
     "pressure": false,
     "network": "rain-cistern",
     "start": [
-     2.75,
-     -0.9,
-     -1.59
+     3.95,
+     -4.05,
+     -1.55
     ],
     "end": [
-     2.7,
-     -0.9,
-     -1.595
+     3.05,
+     -4.05,
+     -1.56
     ],
     "load": 33.39,
     "serves": [
@@ -13620,14 +13624,14 @@
     "pressure": false,
     "network": "rain-cistern",
     "start": [
-     3.05,
-     -0.9,
-     -1.585
+     3.95,
+     -4,
+     -1.545
     ],
     "end": [
-     2.75,
-     -0.9,
-     -1.59
+     3.95,
+     -4.05,
+     -1.55
     ],
     "load": 33.39,
     "serves": [
@@ -13649,14 +13653,14 @@
     "pressure": false,
     "network": "rain-cistern",
     "start": [
-     3.05,
-     -4,
-     -1.55
+     3.95,
+     -3.45,
+     -1.535
     ],
     "end": [
-     3.05,
-     -0.9,
-     -1.585
+     3.95,
+     -4,
+     -1.545
     ],
     "load": 33.39,
     "serves": [
@@ -13678,14 +13682,14 @@
     "pressure": false,
     "network": "rain-cistern",
     "start": [
-     3.05,
-     -4.05,
-     -1.545
+     5.1,
+     -3.45,
+     -1.52
     ],
     "end": [
-     3.05,
-     -4,
-     -1.55
+     3.95,
+     -3.45,
+     -1.535
     ],
     "load": 33.39,
     "serves": [
@@ -13707,14 +13711,14 @@
     "pressure": false,
     "network": "rain-cistern",
     "start": [
-     3.95,
-     -4.05,
-     -1.535
+     5.15,
+     -3.45,
+     -1.515
     ],
     "end": [
-     3.05,
-     -4.05,
-     -1.545
+     5.1,
+     -3.45,
+     -1.52
     ],
     "load": 33.39,
     "serves": [
@@ -13736,14 +13740,14 @@
     "pressure": false,
     "network": "rain-cistern",
     "start": [
-     3.95,
-     -4,
-     -1.53
+     5.85,
+     -3.45,
+     -1.505
     ],
     "end": [
-     3.95,
-     -4.05,
-     -1.535
+     5.15,
+     -3.45,
+     -1.515
     ],
     "load": 33.39,
     "serves": [
@@ -13765,14 +13769,14 @@
     "pressure": false,
     "network": "rain-cistern",
     "start": [
-     3.95,
+     5.9,
      -3.45,
-     -1.52
+     -1.5
     ],
     "end": [
-     3.95,
-     -4,
-     -1.53
+     5.85,
+     -3.45,
+     -1.505
     ],
     "load": 33.39,
     "serves": [
@@ -13794,14 +13798,14 @@
     "pressure": false,
     "network": "rain-cistern",
     "start": [
-     5.25,
+     8.4,
      -3.45,
-     -1.505
+     -1.475
     ],
     "end": [
-     3.95,
+     5.9,
      -3.45,
-     -1.52
+     -1.5
     ],
     "load": 33.39,
     "serves": [
@@ -13823,14 +13827,14 @@
     "pressure": false,
     "network": "rain-cistern",
     "start": [
-     5.3,
+     8.45,
      -3.45,
-     -1.5
+     -1.47
     ],
     "end": [
-     5.25,
+     8.4,
      -3.45,
-     -1.505
+     -1.475
     ],
     "load": 33.39,
     "serves": [
@@ -13852,14 +13856,14 @@
     "pressure": false,
     "network": "rain-cistern",
     "start": [
-     5.8,
+     8.55,
      -3.45,
-     -1.495
+     -1.465
     ],
     "end": [
-     5.3,
+     8.45,
      -3.45,
-     -1.5
+     -1.47
     ],
     "load": 33.39,
     "serves": [
@@ -13869,122 +13873,6 @@
   },
   {
    "id": "rain-cistern-038",
-   "type": "PipeSegment",
-   "level": "site",
-   "tags": [
-    "auto"
-   ],
-   "props": {
-    "system": "rain",
-    "dn": 100,
-    "material": "PVC",
-    "pressure": false,
-    "network": "rain-cistern",
-    "start": [
-     5.85,
-     -3.45,
-     -1.49
-    ],
-    "end": [
-     5.8,
-     -3.45,
-     -1.495
-    ],
-    "load": 33.39,
-    "serves": [
-     "fx-roof-drain-04"
-    ]
-   }
-  },
-  {
-   "id": "rain-cistern-039",
-   "type": "PipeSegment",
-   "level": "site",
-   "tags": [
-    "auto"
-   ],
-   "props": {
-    "system": "rain",
-    "dn": 100,
-    "material": "PVC",
-    "pressure": false,
-    "network": "rain-cistern",
-    "start": [
-     8.35,
-     -3.45,
-     -1.465
-    ],
-    "end": [
-     5.85,
-     -3.45,
-     -1.49
-    ],
-    "load": 33.39,
-    "serves": [
-     "fx-roof-drain-04"
-    ]
-   }
-  },
-  {
-   "id": "rain-cistern-040",
-   "type": "PipeSegment",
-   "level": "site",
-   "tags": [
-    "auto"
-   ],
-   "props": {
-    "system": "rain",
-    "dn": 100,
-    "material": "PVC",
-    "pressure": false,
-    "network": "rain-cistern",
-    "start": [
-     8.4,
-     -3.45,
-     -1.46
-    ],
-    "end": [
-     8.35,
-     -3.45,
-     -1.465
-    ],
-    "load": 33.39,
-    "serves": [
-     "fx-roof-drain-04"
-    ]
-   }
-  },
-  {
-   "id": "rain-cistern-041",
-   "type": "PipeSegment",
-   "level": "site",
-   "tags": [
-    "auto"
-   ],
-   "props": {
-    "system": "rain",
-    "dn": 100,
-    "material": "PVC",
-    "pressure": false,
-    "network": "rain-cistern",
-    "start": [
-     8.55,
-     -3.45,
-     -1.455
-    ],
-    "end": [
-     8.4,
-     -3.45,
-     -1.46
-    ],
-    "load": 33.39,
-    "serves": [
-     "fx-roof-drain-04"
-    ]
-   }
-  },
-  {
-   "id": "rain-cistern-042",
    "type": "PipeSegment",
    "level": "roof",
    "tags": [
@@ -14013,7 +13901,7 @@
    }
   },
   {
-   "id": "rain-cistern-043",
+   "id": "rain-cistern-039",
    "type": "PipeSegment",
    "level": "roof",
    "tags": [
@@ -14042,7 +13930,7 @@
    }
   },
   {
-   "id": "rain-cistern-044",
+   "id": "rain-cistern-040",
    "type": "PipeSegment",
    "level": "roof",
    "tags": [
@@ -14071,7 +13959,7 @@
    }
   },
   {
-   "id": "rain-cistern-045",
+   "id": "rain-cistern-041",
    "type": "PipeSegment",
    "level": "roof",
    "tags": [
@@ -14100,7 +13988,7 @@
    }
   },
   {
-   "id": "rain-cistern-046",
+   "id": "rain-cistern-042",
    "type": "PipeSegment",
    "level": "roof",
    "tags": [
@@ -14129,7 +14017,7 @@
    }
   },
   {
-   "id": "rain-cistern-047",
+   "id": "rain-cistern-043",
    "type": "PipeSegment",
    "level": "site",
    "tags": [
@@ -14158,7 +14046,7 @@
    }
   },
   {
-   "id": "rain-cistern-048",
+   "id": "rain-cistern-044",
    "type": "PipeSegment",
    "level": "site",
    "tags": [
@@ -14187,7 +14075,7 @@
    }
   },
   {
-   "id": "rain-cistern-049",
+   "id": "rain-cistern-045",
    "type": "PipeSegment",
    "level": "site",
    "tags": [
@@ -14207,7 +14095,7 @@
     "end": [
      8.55,
      -3.45,
-     -1.455
+     -1.465
     ],
     "load": 33.39,
     "serves": [
@@ -35310,6 +35198,72 @@
    "props": {
     "circuit": "ckt-out-UF-wet-1",
     "start": [
+     0.25,
+     5.25,
+     3.675
+    ],
+    "end": [
+     0.05,
+     5.25,
+     3.675
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-wet-1-023",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-wet-1",
+    "start": [
+     0.05,
+     5.25,
+     3.675
+    ],
+    "end": [
+     0.05,
+     7.8,
+     3.675
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-wet-1-024",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-wet-1",
+    "start": [
+     0.05,
+     7.8,
+     3.675
+    ],
+    "end": [
+     3.2,
+     7.8,
+     3.675
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-wet-1-025",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-wet-1",
+    "start": [
      3.91,
      5,
      3.675
@@ -35317,6 +35271,28 @@
     "end": [
      3.91,
      5,
+     4.8
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-wet-1-026",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-wet-1",
+    "start": [
+     3.2,
+     7.8,
+     3.675
+    ],
+    "end": [
+     3.2,
+     7.8,
      4.8
     ],
     "dn": 20
@@ -41264,14 +41240,7 @@
   }
  ],
  "mep": {
-  "noRoute": [
-   {
-    "system": "electrical",
-    "network": "ckt-out-UF-wet-1",
-    "item": "dev-outlet-26",
-    "reason": "not placed on a wall face (no legal position in its room)"
-   }
-  ],
+  "noRoute": [],
   "notes": []
  }
 }

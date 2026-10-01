@@ -91,7 +91,13 @@ export function inDoorSwing(p: Project, level: string, x: number, y: number): Op
     const hx = s.o === 'v' ? s.c : s.a, hy = s.o === 'v' ? s.a : s.c;
     const perp = s.o === 'v' ? (x - s.c) * side : (y - s.c) * side;
     if (perp < 0.02) continue;
-    if (Math.hypot(x - hx, y - hy) < op.props.width + 0.05) return op;
+    if (Math.hypot(x - hx, y - hy) >= op.props.width + 0.05) continue;
+    // spec 08: the leaf stays in the room it opens into; it cannot reach through a wall into the next room
+    const mid = (s.a + s.b) / 2, d = 0.1;
+    const into: P2 = s.o === 'v' ? [s.c + side * d, mid] : [mid, s.c + side * d];
+    const room = p.elements.find((r): r is Space => r.type === 'Space' && r.level === level && r.props.cells.some((c) => strictly(into[0], into[1], c)));
+    if (room && !room.props.cells.some((c) => strictly(x, y, c, -0.02))) continue;
+    return op;
   }
   return undefined;
 }

@@ -409,7 +409,9 @@ export function addV3Front(p: Project): Project {
     id: 'SL-deck-02', type: 'Deck', level: 'SL', tags: ['patio'],
     props: {
       name: 'Front patio', label: 'Front patio +0.60 · open, not a room', rect: patio, elevation: sl.elevation,
-      planter: { x0: 7.9, y0: 1.0, x1: 8.6, y1: 5.0 }, steps: { x0: 3.5, y0: 1.0, x1: 4.7, y1: 1.6 },
+      // spec 08 (Q8): the steps come down into the 0.80 m gap between the bays, so a parked car never blocks them
+      // (the north end of the patio is about 1.25 m above the ramp there, so it cannot take the steps)
+      planter: { x0: 7.9, y0: 1.0, x1: 8.6, y1: 5.0 }, steps: { x0: 5.1, y0: 1.0, x1: 5.9, y1: 1.6 },
     },
   });
   const pad = (n: number) => String(n).padStart(2, '0');
@@ -439,7 +441,7 @@ export function addV3Front(p: Project): Project {
     id: 'carport-01', type: 'Carport', level: 'carport', tags: [],
     props: {
       name: 'Carport', rect: r, roofFront: front, slope, solarModules: 6,
-      parking: [{ x0: 2.75, y0: r.y0, x1: 5.25, y1: r.y1 }, { x0: 5.85, y0: r.y0, x1: 8.35, y1: r.y1 }],
+      parking: [{ x0: 2.6, y0: r.y0, x1: 5.1, y1: r.y1 }, { x0: 5.9, y0: r.y0, x1: 8.4, y1: r.y1 }],
     },
   });
   els.push({

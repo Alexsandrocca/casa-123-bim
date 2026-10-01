@@ -1,5 +1,5 @@
 # 08 — Architectural features and engineering estimates
-Status: ready
+Status: in progress
 
 ## Goal
 Every element shows a reasonable **estimate** of what it really is and needs: wall build-up, column and beam sizes, footing size, loads, thermal and acoustic values, weight and cost. These are not engineering calculations. They are the "rules of thumb" an experienced architect or engineer uses before the real design, so the family can compare options with realistic numbers.
