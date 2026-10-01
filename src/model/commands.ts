@@ -3,9 +3,11 @@
 import {
   E, MIN_ROOM_WIDTH, eq, findHandle, getEl, q, snap, spacesOn, wallSeg, type Orient,
 } from './geometry';
-import { Element as ElementSchema, type Element, type Opening, type Project, type Rect, type Wall } from './schema';
+import { Element as ElementSchema, type Device, type Element, type Opening, type Project, type Rect, type SolarArray, type Wall } from './schema';
 import { clampToHost, nextId, rebuildLevel } from './walls';
 import { UTILITIES_DEFAULT, withPlumbing } from './plumbing/route';
+import { withElectrical } from './electrical/design';
+import { deviceType } from './electrical/library';
 
 export interface Command {
   label: string;
@@ -269,6 +271,110 @@ export function setUtilities(patch: Partial<NonNullable<Project['site']['utiliti
       if (u.sewerDepth < 0.5 || u.sewerDepth > 8) throw new CommandError('The sewer depth should be between 0.5 and 8 m.');
       if (u.rainIntensity < 50 || u.rainIntensity > 400) throw new CommandError('Rainfall intensity should be between 50 and 400 mm/h.');
       return withPlumbing({ ...p, site: { ...p.site, utilities: u } });
+    },
+  };
+}
+
+/* ---------- electrical (spec 04) ---------- */
+
+/** The id the next device of a kind will get. */
+export const nextDeviceId = (p: Project, kind: string) => nextId(p, `dev-${kind}`);
+
+/** Add an electrical device at a plan point on a floor; circuits, conduits and sizes update. */
+export function addDevice(id: string, kind: string, level: string, at: [number, number], name?: string): Command {
+  return {
+    label: 'Add electrical point',
+    apply(p) {
+      if (getEl(p, id)) throw new CommandError(`${id} already exists`);
+      const t = deviceType(kind);
+      const floor = p.levels.find((l) => l.id === level)?.elevation ?? 0;
+      const room = spacesOn(p, level).find((s) => s.props.cells.some((c) => at[0] >= c.x0 && at[0] <= c.x1 && at[1] >= c.y0 && at[1] <= c.y1));
+      if (!room && ['LL', 'SL', 'UF'].includes(level)) throw new CommandError('Put the point inside a room.');
+      const d: Device = {
+        id, type: 'Device', level, tags: [],
+        props: { kind, name: name ?? `${t.label} · ${room?.props.name ?? level}`, at: [snap(at[0]), snap(at[1])], z: q(floor + t.height), power: t.power },
+      };
+      return withElectrical({ ...p, elements: [...p.elements, d] });
+    },
+  };
+}
+
+export function moveDevice(id: string, x: number, y: number): Command {
+  return {
+    label: 'Move electrical point',
+    apply(p) {
+      const d = getEl(p, id);
+      if (!d || d.type !== 'Device') throw new CommandError(`No device ${id}`);
+      const at: [number, number] = [eq(x, d.props.at[0]) ? d.props.at[0] : snap(x), eq(y, d.props.at[1]) ? d.props.at[1] : snap(y)];
+      if (eq(at[0], d.props.at[0]) && eq(at[1], d.props.at[1])) return p;
+      return withElectrical(replace(p, { ...d, props: { ...d.props, at } }));
+    },
+  };
+}
+
+export function deleteDevice(id: string): Command {
+  return {
+    label: 'Delete electrical point',
+    apply(p) {
+      const d = getEl(p, id);
+      if (!d || d.type !== 'Device') throw new CommandError(`No device ${id}`);
+      if (['panel', 'sub-panel'].includes(d.props.kind)) throw new CommandError('Panels cannot be deleted.');
+      return withElectrical({ ...p, elements: p.elements.filter((e) => e.id !== id) });
+    },
+  };
+}
+
+/** Change a device's properties (power, camera bearing and lens, or its circuit by hand). */
+export function setDevice(id: string, patch: Partial<Device['props']>): Command {
+  return {
+    label: 'Change electrical point',
+    apply(p) {
+      const d = getEl(p, id);
+      if (!d || d.type !== 'Device') throw new CommandError(`No device ${id}`);
+      const next = { ...d.props, ...patch };
+      if (patch.circuit !== undefined) next.manualCircuit = true;
+      if (next.power < 0) throw new CommandError('Power cannot be negative.');
+      if (next.lensMm !== undefined && (next.lensMm < 1.5 || next.lensMm > 12)) throw new CommandError('Lens between 1.5 and 12 mm.');
+      return withElectrical(replace(p, { ...d, props: next }));
+    },
+  };
+}
+
+/** Choose a cable section by hand (the checks then tell if it is enough). */
+export function setCircuitSection(id: string, section: number): Command {
+  return {
+    label: 'Change cable section',
+    apply(p) {
+      const c = getEl(p, id);
+      if (!c || c.type !== 'Circuit') throw new CommandError(`No circuit ${id}`);
+      return withElectrical(replace(p, { ...c, props: { ...c.props, manualSection: section } }));
+    },
+  };
+}
+
+/** Solar options: battery (adds the battery and the essential-loads panel), inverter size, module count, tilt. */
+export function setSolar(patch: Partial<Pick<SolarArray['props'], 'batteryKwh' | 'inverterKw' | 'modules' | 'tilt' | 'setback'>>): Command {
+  return {
+    label: 'Change solar',
+    apply(p) {
+      const a = p.elements.find((e): e is SolarArray => e.type === 'SolarArray');
+      if (!a) throw new CommandError('This version has no solar array.');
+      let next: Project = replace(p, { ...a, props: { ...a.props, ...patch } });
+      const hasBattery = (patch.batteryKwh ?? a.props.batteryKwh) > 0;
+      next = { ...next, elements: next.elements.filter((e) => !(e.type === 'Device' && ['battery', 'essential-panel'].includes(e.props.kind))) };
+      if (hasBattery) {
+        const sub = next.elements.find((e): e is Device => e.type === 'Device' && e.props.kind === 'sub-panel');
+        const at: [number, number] = sub ? [sub.props.at[0], sub.props.at[1] - 0.6] : [0.12, 9.0];
+        const level = sub?.level ?? 'LL';
+        const floor = next.levels.find((l) => l.id === level)?.elevation ?? 0;
+        next = {
+          ...next,
+          elements: [...next.elements,
+            { id: 'dev-battery-01', type: 'Device', level, tags: [], props: { kind: 'battery', name: `Battery ${patch.batteryKwh ?? a.props.batteryKwh} kWh LFP`, at: [at[0] + 0.15, at[1] - 0.6], z: floor + 0.5, power: 0 } },
+            { id: 'dev-essential-panel-01', type: 'Device', level, tags: [], props: { kind: 'essential-panel', name: 'Essential-loads panel', at, z: floor + 1.5, power: 0 } }],
+        };
+      }
+      return withElectrical(next);
     },
   };
 }

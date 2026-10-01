@@ -58,7 +58,7 @@ export function coverage(p: Project, cell = 0.5): Coverage {
 export function poeBudget(p: Project) {
   const n = cameras(p).length;
   const watts = n * CAMERA_POE_W;
-  return { ports: n, watts, ok: n <= POE_SWITCH.ports && watts <= POE_SWITCH.budgetW, ...POE_SWITCH };
+  return { used: n, ports: POE_SWITCH.ports, watts, budgetW: POE_SWITCH.budgetW, ok: n <= POE_SWITCH.ports && watts <= POE_SWITCH.budgetW };
 }
 
 /** Days of continuous recording the NVR holds at 4 MP H.265. */
