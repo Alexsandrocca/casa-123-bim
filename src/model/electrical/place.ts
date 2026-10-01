@@ -138,12 +138,16 @@ export function placeV3Electrical(p: Project, overlays: Record<string, { elec: (
   for (const [room, u, v, kind] of ov('LL')) {
     const at = anchor('LL', room, u, v);
     if (!at) continue;
-    if (kind === 'panel') add('sub-panel', 'LL', [0.12, at[1]], elev(p, 'LL') + 1.5, { power: 0 }, 'Lower-level sub-panel');
+    // spec 04b: on the studio side of the studio/WC wall (no beam above it, a slab above for its ceiling conduits)
+    if (kind === 'panel') add('sub-panel', 'LL', [4.2, 13.2], elev(p, 'LL') + 1.5, { power: 0 }, 'Lower-level sub-panel');
     if (kind === 'rack') add('rack', 'LL', at, elev(p, 'LL') + 0.6);
   }
   add('inverter', 'SL', [1.88, 4.7], elev(p, 'SL') + 1.4);
 
-  // Air conditioners from the overlay: indoor unit on the nearest wall, outdoor unit outside the nearest outer wall.
+  // Air conditioners from the overlay: indoor unit on the nearest wall of the room; outdoor units (spec 04b) on the roof
+  // zones: two in the main roof's equipment band, three on the entry roof, each with its service space and a roof drain.
+  const condensers: [string, [number, number]][] = [['roof-tech', [1.1, 5.85]], ['roof-tech', [1.1, 7.0]], ['roof-entry', [0.65, 4.35]], ['roof-entry', [1.8, 4.35]], ['roof-entry', [2.45, 1.75]]];
+  let ci = 0;
   for (const L of ['LL', 'SL', 'UF'] as const) {
     for (const [room, u, v, kind] of ov(L)) {
       if (kind !== 'ac') continue;
@@ -152,10 +156,10 @@ export function placeV3Electrical(p: Project, overlays: Record<string, { elec: (
       if (!at || !s) continue;
       const wall = nearestWallPoint(s, at);
       add('ac-indoor', L, wall, elev(p, L) + 2.3, {}, `AC indoor · ${room}`);
-      const lv = p.levels.find((l) => l.id === L)!.outline!;
-      const sides: [number, P2][] = [[Math.abs(wall[0] - lv.x0), [lv.x0 - 0.45, wall[1]]], [Math.abs(lv.x1 - wall[0]), [lv.x1 + 0.45, wall[1]]], [Math.abs(wall[1] - lv.y0), [wall[0], lv.y0 - 0.45]], [Math.abs(lv.y1 - wall[1]), [wall[0], lv.y1 + 0.45]]];
-      const outdoor = sides.sort((a, b) => a[0] - b[0])[0]![1];
-      add('ac-outdoor', L, outdoor, elev(p, L) + 0.4, {}, `AC outdoor · ${room}`);
+      const [zoneId, xy] = condensers[ci++ % condensers.length]!;
+      const zone = p.elements.find((e) => e.id === zoneId);
+      const top = zone?.type === 'ServiceSpace' ? zone.props.z0 ?? elev(p, 'roof') : elev(p, 'roof');
+      add('ac-outdoor', 'roof', xy, top + 0.3, { hostId: zoneId }, `AC outdoor · ${room}`);
     }
   }
 
@@ -165,21 +169,25 @@ export function placeV3Electrical(p: Project, overlays: Record<string, { elec: (
   if (oven) add('oven', 'SL', oven, elev(p, 'SL') + 0.6);
   const dw = fixture('dishwasher'); if (dw) add('dishwasher', 'SL', dw.props.at, elev(p, 'SL') + 0.3);
   const wm = fixture('washer'); if (wm) add('washer-dryer', wm.level, wm.props.at, elev(p, wm.level) + 1.1);
-  const hp = fixture('water-heater'); if (hp) add('heat-pump', hp.level, [hp.props.at[0] + 0.45, hp.props.at[1]], hp.props.z + 1.2);
-  const pp = fixture('pressure-pump'); if (pp) add('pump-pressure', pp.level, [pp.props.at[0] + 0.3, pp.props.at[1]], pp.props.z + 0.3);
+  // equipment points stand beside their equipment on the roof zones
+  const hp = fixture('water-heater'); if (hp) add('heat-pump', hp.level, [hp.props.at[0], hp.props.at[1] - 0.45], hp.props.z + 0.5);
+  const pp = fixture('pressure-pump'); if (pp) add('pump-pressure', pp.level, [pp.props.at[0] + 0.35, pp.props.at[1]], pp.props.z + 0.3);
   const ls = fixture('lift-station'); if (ls) add('pump-lift', 'LL', [ls.props.at[0] + 0.5, ls.props.at[1]], elev(p, 'LL') + 0.6);
   const sp = fixture('sump-pump'); if (sp) add('pump-sump', 'LL', [sp.props.at[0], sp.props.at[1] - 0.5], sp.props.z + 0.6);
 
   // Exterior lighting and a LED strip in the living room.
   const SL = elev(p, 'SL'), LL = elev(p, 'LL');
   const slo = p.levels.find((l) => l.id === 'SL')!.outline!;
-  add('wall-light', 'site', [1.4, slo.y0 - 0.08], SL + 2.2, {}, 'Wall light · front door');
+  // (above the door head and its frame)
+  add('wall-light', 'site', [1.4, slo.y0 - 0.08], SL + 2.4, {}, 'Wall light · front door');
   const carport = p.elements.find((e) => e.type === 'Carport');
   if (carport?.type === 'Carport') {
     const r = carport.props.rect;
     for (const x of [r.x0 + (r.x1 - r.x0) / 4, r.x0 + 3 * (r.x1 - r.x0) / 4]) add('ceiling-light', 'site', [x, (r.y0 + r.y1) / 2], carport.props.roofFront - 0.25, { power: 60 }, 'Light · carport');
   }
-  for (const x of [2.0, 6.5]) add('wall-light', 'SL', [x, slo.y1 + 0.08], SL + 2.2, {}, 'Wall light · veranda');
+  // veranda: one light on the wall over the south window, one on the soffit of the upper floor (the slider is below)
+  add('wall-light', 'SL', [2.0, slo.y1 + 0.08], SL + 2.4, {}, 'Wall light · veranda');
+  add('ceiling-light', 'SL', [6.5, slo.y1 + 0.5], elev(p, 'UF') - 0.17, { power: 60 }, 'Light · veranda');
   add('wall-light', 'LL', [5.0, 15.08], LL + 2.2, {}, 'Wall light · garden');
   for (const y of [3, 10]) add('wall-light', 'SL', [slo.x1 + 0.08, y], SL + 1.0, {}, 'Wall light · north ramp');
   const living = anchor('SL', 'Living', 0.5, 0.05);
@@ -209,11 +217,14 @@ export function placeV3Electrical(p: Project, overlays: Record<string, { elec: (
 export function addSolar(p: Project): Project {
   const roof = p.elements.find((e) => e.id === 'roof-slab-01');
   if (roof?.type !== 'Slab' || !roof.props.rect) return p;
+  // spec 04b: the array keeps the roof's north zone; tanks and equipment have the south band
+  const zone = p.elements.find((e) => e.type === 'ServiceSpace' && e.props.kind === 'roof-zone' && e.props.purpose === 'pv');
+  const area = zone?.type === 'ServiceSpace' ? zone.props.rect : roof.props.rect;
   const arr: Element = {
     id: 'pv-01', type: 'SolarArray', level: 'roof', tags: [],
     props: {
       name: 'PV array 12 × 550 W', modules: 12, moduleW: 550, moduleSize: [2.28, 1.13], tilt: 20, bearing: 0,
-      area: roof.props.rect, setback: 0.5, roofTop: roof.props.topElevation, inverterKw: 6, batteryKwh: 0,
+      area, setback: zone ? 0.3 : 0.5, roofTop: roof.props.topElevation, inverterKw: 6, batteryKwh: 0,
     },
   };
   return { ...p, elements: [...p.elements, arr] };

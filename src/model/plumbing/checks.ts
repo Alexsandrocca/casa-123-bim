@@ -5,8 +5,9 @@ import type { Fixture, PipeSegment, Project } from '../schema';
 import { groundAt, groundZones, siteFrame } from '../site';
 import { kindOf, minSewageSlope, rainCapacity, rainFlow, sewageDnFor, waterDnFor } from './library';
 import { insideHouse, utilities } from './route';
+import { mepReport } from '../mep/analysis';
 
-const horiz = (s: PipeSegment) => Math.abs(s.props.start[0] - s.props.end[0]) + Math.abs(s.props.start[1] - s.props.end[1]);
+const horiz = (s: PipeSegment) => Math.hypot(s.props.start[0] - s.props.end[0], s.props.start[1] - s.props.end[1]);
 const slopeOf = (s: PipeSegment) => (s.props.start[2] - s.props.end[2]) / Math.max(horiz(s), 1e-9);
 /** Short pieces are fittings, not runs: their slope is not checked. */
 const RUN = 0.25;
@@ -218,7 +219,9 @@ export function plumbingChecks(p: Project): CheckResult[] {
       for (const e of p.elements) if (e.type === 'Slab' && e.props.onGrade && e.tags.includes('patio') && e.props.rect && pointInRect(x, y, e.props.rect)) z = Math.max(z, e.props.topElevation);
       return z;
     };
-    const shallow = pipes.filter((x) => x.level === 'site' && !insideHouse(p, [(x.props.start[0] + x.props.end[0]) / 2, (x.props.start[1] + x.props.end[1]) / 2]) && horiz(x) >= RUN
+    // only runs that are actually buried (not downpipes on a post or a facade)
+    const rep = mepReport(p);
+    const shallow = pipes.filter((x) => x.level === 'site' && rep.segs.get(x.id)?.host === 'underground' && !insideHouse(p, [(x.props.start[0] + x.props.end[0]) / 2, (x.props.start[1] + x.props.end[1]) / 2]) && horiz(x) >= RUN
       && [x.props.start, x.props.end].some((pt) => surf(pt[0], pt[1]) - pt[2] < 0.3));
     out.push({
       id: 'site:cover', group: 'Plumbing', elementIds: shallow.map((x) => x.id), title: 'Underground pipes are buried',
@@ -226,13 +229,17 @@ export function plumbingChecks(p: Project): CheckResult[] {
       value: shallow.length ? `${shallow.length} run${shallow.length > 1 ? 's' : ''} with less than 0.30 m of cover (e.g. ${shallow[0]!.id}, ${networkLabel(shallow[0]!.props.network)})` : 'all underground runs have at least 0.30 m of cover',
       rule: 'At least 0.30 m of soil or paving over underground pipes', source: 'NBR 8160 / NBR 10844 (good practice)',
     });
-    const ov = byNet('rain-overflow')[0];
-    if (ov) {
+    const ovs = byNet('rain-overflow');
+    if (ovs.length) {
+      const first = ovs[0]!, last = ovs[ovs.length - 1]!;
+      const trench = fixtures.find((f) => f.props.kind === 'infiltration-trench');
+      const flat = ovs.filter((x) => horiz(x) >= RUN && slopeOf(x) < 0.005 - 1e-4);
+      const reaches = !!trench && Math.hypot(last.props.end[0] - trench.props.at[0], last.props.end[1] - trench.props.at[1]) < 0.6;
       out.push({
-        id: 'rain:overflow', group: 'Plumbing', elementIds: [ov.id], title: 'Cistern overflow to the street gutter',
-        status: slopeOf(ov) >= 0.005 && ov.props.end[2] >= -0.15 - 1e-9 ? 'pass' : 'fail',
-        value: `leaves the cistern at ${ov.props.start[2].toFixed(2)}, reaches the curb at ${ov.props.end[2].toFixed(2)} (${(slopeOf(ov) * 100).toFixed(1)} %)`,
-        rule: 'The overflow runs by gravity to the street gutter, above the road surface', source: S10844,
+        id: 'rain:overflow', group: 'Plumbing', elementIds: [first.id], title: 'Cistern overflow to the garden infiltration trench',
+        status: !flat.length && reaches ? 'pass' : 'fail',
+        value: `leaves the cistern at ${first.props.start[2].toFixed(2)}, reaches the trench at ${last.props.end[2].toFixed(2)}${flat.length ? `; ${flat.length} piece too flat` : ''}`,
+        rule: 'The overflow runs by gravity (≥ 0.5 %) to an infiltration point on the lot (Q10, option c)', source: S10844,
       });
     }
   }

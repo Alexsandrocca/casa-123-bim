@@ -1,18 +1,15 @@
 // Electrical design: groups devices into circuits, balances the phases, routes conduits and sizes cables and breakers.
 // Pure and repeatable: the same devices always give the same circuits.
 import { q } from '../geometry';
-import { growTree } from '../plumbing/route';
-import type { Circuit, Conduit, Device, Element, Project } from '../schema';
-import { groundAt, groundZones } from '../site';
+import { routeConduits } from './conduits';
+import type { Circuit, Device, Element, Project } from '../schema';
 import { conduitFor, deviceType, dropPct, sectionFor } from './library';
 
-type P3 = [number, number, number];
 type Phase = 'A' | 'B' | 'C';
 const PHASES: Phase[] = ['A', 'B', 'C'];
 /** Most a general circuit carries: 127 V × 10 A. */
 const MAX_GENERAL_VA = 1270;
 
-const elev = (p: Project, l: string) => p.levels.find((x) => x.id === l)?.elevation ?? 0;
 const floorOf = (d: Device) => (d.level === 'roof' ? 'UF' : d.level === 'site' || d.level === 'carport' ? 'SL' : d.level);
 
 export const panels = (p: Project) => p.elements.filter((e): e is Device => e.type === 'Device' && deviceType(e.props.kind).group === 'panel' && e.props.kind !== 'essential-panel');
@@ -75,74 +72,24 @@ export function withElectrical(p: Project): Project {
     if (circuits.some((c) => c.id === cid)) { const c = circuits.find((x) => x.id === cid)!; const d = devices.find((x) => x.id === devId)!; if (!c.devs.includes(d)) c.devs.push(d); }
   }
 
-  // 2. conduits and lengths
-  const zones = groundZones(p);
-  const conduits: Conduit[] = [];
-  const lengths = new Map<string, number>();
-  const zoneZ = (L: string, purpose: string) => {
-    if (purpose === 'lighting') return elev(p, L) + p.structure.clearHeight - 0.05; // in the ceiling lining
-    if (L === 'SL') return elev(p, 'SL') - 0.3; // crawlspace
-    return elev(p, L) + 0.03; // in the floor screed
+  // 2. conduits and lengths (spec 04b: through the floor screed, the crawlspace, the ceiling plenum or the slab above,
+  // the ground and the roof zones; between floors in the electrical shaft; up or down the walls to each point)
+  const routed = routeConduits(p, circuits.map((c) => ({ id: c.id, panel: devices.find((d) => d.id === c.panel)!, devs: c.devs })));
+  const conduits = routed.conduits;
+  const lengths = routed.lengths;
+  const route = (cid: string, from: Device, devs: Device[]) => {
+    const r = routeConduits(p, [{ id: cid, panel: from, devs }], conduits);
+    conduits.push(...r.conduits);
+    for (const [k, v] of r.lengths) lengths.set(k, v);
+    routed.noRoute.push(...r.noRoute);
   };
-  const route = (cid: string, from: Device, devs: Device[], purpose: string) => {
-    let n = 0;
-    const seg = (a: P3, b: P3, dn: number) => {
-      if (Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]) < 0.005) return;
-      conduits.push({ id: `cnd-${cid.slice(4)}-${String(++n).padStart(3, '0')}`, type: 'Conduit', level: from.level, tags: ['auto'], props: { circuit: cid, start: a.map(q) as P3, end: b.map(q) as P3, dn } });
-    };
-    let worst = 0;
-    // group the devices by the floor they are on; each floor is a tree from a riser at the panel
-    const byFloor = new Map<string, Device[]>();
-    for (const d of devs) {
-      const outdoor = d.level === 'site' || d.level === 'carport';
-      const k = outdoor ? 'site' : floorOf(d);
-      byFloor.set(k, [...(byFloor.get(k) ?? []), d]);
-    }
-    for (const [L, ds] of byFloor) {
-      const z = L === 'site' ? null : zoneZ(L, purpose);
-      const pz = from.props.z;
-      const rootXY: [number, number] = from.props.at;
-      let base = 0;
-      if (z !== null) {
-        seg([rootXY[0], rootXY[1], pz], [rootXY[0], rootXY[1], z], 20);
-        base = Math.abs(pz - z);
-      } else {
-        // outdoor: down into the crawlspace, out under the front, then underground
-        const zc = zoneZ('SL', 'outlets');
-        seg([rootXY[0], rootXY[1], pz], [rootXY[0], rootXY[1], zc], 20);
-        base = Math.abs(pz - zc);
-      }
-      const zz = z ?? zoneZ('SL', 'outlets');
-      const nodes = growTree(rootXY, ds.map((d) => ({ id: d.id, at: d.props.at })));
-      const dist: number[] = nodes.map(() => 0);
-      const depth = (i: number): number => (nodes[i]!.parent < 0 ? 0 : 1 + depth(nodes[i]!.parent));
-      [...nodes.keys()].sort((a, b) => depth(a) - depth(b)).forEach((i) => {
-        const nd = nodes[i]!;
-        if (nd.parent < 0) return;
-        const pa = nodes[nd.parent]!;
-        dist[i] = dist[nd.parent]! + Math.abs(nd.x - pa.x) + Math.abs(nd.y - pa.y);
-        const za = L === 'site' ? Math.min(zz, groundAt(p, pa.x, pa.y, zones) - 0.4) : zz;
-        const zb = L === 'site' ? Math.min(zz, groundAt(p, nd.x, nd.y, zones) - 0.4) : zz;
-        seg([pa.x, pa.y, za], [nd.x, nd.y, zb], 20);
-      });
-      nodes.forEach((nd, i) => {
-        if (!nd.target) return;
-        const d = ds.find((x) => x.id === nd.target)!;
-        const zb = L === 'site' ? Math.min(zz, groundAt(p, nd.x, nd.y, zones) - 0.4) : zz;
-        seg([nd.x, nd.y, zb], [nd.x, nd.y, d.props.z], 20);
-        worst = Math.max(worst, base + dist[i]! + Math.abs(d.props.z - zb));
-      });
-    }
-    lengths.set(cid, q(worst));
-  };
-  for (const c of circuits) route(c.id, devices.find((d) => d.id === c.panel)!, c.devs, c.purpose);
 
   // 3. feeder to the sub-panel
   const sub = subPanel(p);
   const all: { id: string; name: string; purpose: Circuit['props']['purpose']; voltage: 127 | 220; panel: string; devs: Device[] }[] = [...circuits];
   if (sub) {
     all.push({ id: 'ckt-feeder-LL', name: 'Feeder to the lower-level sub-panel', purpose: 'feeder', voltage: 220, panel: main.id, devs: [] });
-    route('ckt-feeder-LL', main, [sub], 'outlets');
+    route('ckt-feeder-LL', main, [sub]);
   }
 
   // 4. loads, phases, sizes
@@ -186,10 +133,11 @@ export function withElectrical(p: Project): Project {
   const sectionOf = new Map(result.map((c) => [c.id, c.props.section]));
   for (const c of conduits) c.props.dn = conduitFor(sectionOf.get(c.props.circuit) ?? 2.5);
 
+  const mep = { noRoute: [...(p.mep?.noRoute ?? []).filter((n) => n.system !== 'electrical'), ...routed.noRoute], notes: [...(p.mep?.notes ?? []).filter((n) => !n.startsWith('Electrical')), ...routed.notes] };
   const elements: Element[] = p.elements
     .filter((e) => e.type !== 'Circuit' && e.type !== 'Conduit')
     .map((e) => (e.type === 'Device' && assign.has(e.id) && e.props.circuit !== assign.get(e.id) ? { ...e, props: { ...e.props, circuit: assign.get(e.id) } } : e));
-  return { ...p, elements: [...elements, ...result, ...conduits] };
+  return { ...p, mep, elements: [...elements, ...result, ...conduits] };
 }
 
 /** Phase loads of a panel and the imbalance between the most and least loaded phase, %. */

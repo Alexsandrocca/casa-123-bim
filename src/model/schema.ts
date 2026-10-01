@@ -214,6 +214,15 @@ export const Fixture = z.object({
     z: z.number(),
     /** Roof drains: the roof area they collect, m². */
     area: z.number().optional(),
+    /** Spec 04b hosting: the wall it is fixed to, which side (+1 towards +x/+y), distance from the wall start, height above the floor. */
+    hostWallId: z.string().optional(),
+    face: z.union([z.literal(1), z.literal(-1)]).optional(),
+    offset: z.number().optional(),
+    height: z.number().optional(),
+    /** Ceiling, floor and equipment items: the slab, service space, carport or 'ground' they stand on or hang from. */
+    hostId: z.string().optional(),
+    /** Distance of the item centre from the wall face (fixtures stand out from the wall). */
+    standoff: z.number().optional(),
   }),
 });
 export type Fixture = z.infer<typeof Fixture>;
@@ -267,6 +276,15 @@ export const Device = z.object({
     /** On the essential-loads panel when the battery is installed. */
     essential: z.boolean().optional(),
     size: V3pt.optional(),
+    /** Spec 04b hosting: the wall it is fixed to, which side (+1 towards +x/+y), distance from the wall start, height above the floor. */
+    hostWallId: z.string().optional(),
+    face: z.union([z.literal(1), z.literal(-1)]).optional(),
+    offset: z.number().optional(),
+    height: z.number().optional(),
+    /** Ceiling, floor and equipment items: the slab, service space, carport or 'ground' they stand on or hang from. */
+    hostId: z.string().optional(),
+    /** Distance of the item centre from the wall face (fixtures stand out from the wall). */
+    standoff: z.number().optional(),
   }),
 });
 export type Device = z.infer<typeof Device>;
@@ -324,13 +342,35 @@ export const SolarArray = z.object({
   }),
 });
 export type SolarArray = z.infer<typeof SolarArray>;
+/** Spec 04b: a space that can carry pipes and conduits (shaft, ceiling plenum) or hold equipment (roof zone).
+ * Wall cavities, floor screed, the crawlspace and the ground are derived from the walls, slabs and site (mep/spaces.ts). */
+export const ServiceSpace = z.object({
+  ...base,
+  type: z.literal('ServiceSpace'),
+  props: z.object({
+    kind: z.enum(['shaft', 'plenum', 'roof-zone']),
+    name: z.string(),
+    rect: Rect,
+    /** Shafts: bottom and top elevation. Roof zones: the surface the equipment stands on. */
+    z0: z.number().optional(),
+    z1: z.number().optional(),
+    /** Plenums: depth of the lowered ceiling below the slab soffit (reduces the clear height). */
+    depth: z.number().positive().optional(),
+    /** Shafts: the face with the access panel. */
+    accessFace: z.enum(['N', 'S', 'E', 'W']).optional(),
+    /** Roof zones: how people reach it for maintenance, and what it is for. */
+    access: z.string().optional(),
+    purpose: z.enum(['tanks', 'equipment', 'pv']).optional(),
+  }),
+});
+export type ServiceSpace = z.infer<typeof ServiceSpace>;
 export const Furniture = later('Furniture');
 export const Plant = later('Plant');
 export const Material = later('Material');
 
 export const Element = z.discriminatedUnion('type', [
   Space, Wall, Opening, Slab, Column, Beam, Footing, Stair, Deck, Carport, Conduit, SolarArray,
-  Fixture, PipeSegment, Device, Circuit, Furniture, Plant, Material,
+  Fixture, PipeSegment, Device, Circuit, ServiceSpace, Furniture, Plant, Material,
 ]);
 export type Element = z.infer<typeof Element>;
 export type ElementType = Element['type'];
@@ -390,6 +430,11 @@ export const Project = z.object({
   structure: z.object({ floorToFloor: z.number(), clearHeight: z.number(), structureDepth: z.number() }),
   levels: z.array(Level).min(1),
   grid: z.object({ x: z.array(z.number()), y: z.array(z.number()) }),
+  /** Spec 04b: what the routers could not place, and what they changed on their own (e.g. a shaft made larger). */
+  mep: z.object({
+    noRoute: z.array(z.object({ system: z.string(), network: z.string(), item: z.string(), reason: z.string() })),
+    notes: z.array(z.string()),
+  }).optional(),
   elements: z.array(Element),
 });
 export type Project = z.infer<typeof Project>;

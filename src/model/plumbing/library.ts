@@ -40,7 +40,7 @@ export const LIBRARY: Record<string, FixtureType> = {
   'pressure-pump': { label: 'Pressure pump (upper-floor showers)', short: 'PUMP', group: 'water', size: [0.45, 0.3, 0.35] },
   'water-heater': { label: 'Heat-pump water heater 300 L', short: 'HP', group: 'water', size: [0.65, 0.65, 1.8] },
   'roof-drain': { label: 'Roof drain', short: 'RD', group: 'rain', size: [0.2, 0.2, 0.05] },
-  'rain-cistern': { label: 'Rain reuse cistern 5,000 L', short: 'CIST', group: 'rain', size: [2.2, 2.4, 1.0], zOffset: -1.1 },
+  'rain-cistern': { label: 'Rain reuse cistern 5,000 L (long, buried)', short: 'CIST', group: 'rain', size: [1.3, 3.2, 1.2], zOffset: -1.25 },
   'infiltration-trench': { label: 'Infiltration trench', short: 'TR', group: 'rain', size: [6.0, 0.8, 0.6], zOffset: -0.6 },
   'sump-pump': { label: 'Garden sump pump', short: 'SP', group: 'rain', size: [0.5, 0.5, 0.8], zOffset: -0.8 },
 };
