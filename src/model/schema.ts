@@ -244,14 +244,92 @@ export const PipeSegment = z.object({
   }),
 });
 export type PipeSegment = z.infer<typeof PipeSegment>;
-export const Device = later('Device');
-export const Circuit = later('Circuit');
+/** Electrical device (spec 04). Its kind is a key of electrical/library.ts. */
+export const Device = z.object({
+  ...base,
+  type: z.literal('Device'),
+  props: z.object({
+    kind: z.string().min(1),
+    name: z.string(),
+    at: Point,
+    /** Height of the device centre (absolute elevation). */
+    z: z.number(),
+    /** Design power: VA for outlets and lights, W for appliances. */
+    power: z.number().min(0),
+    /** Circuit it is on (none for low-voltage devices: network, cameras, sensors). */
+    circuit: z.string().optional(),
+    /** Chosen by hand: the automatic circuit grouping leaves it alone. */
+    manualCircuit: z.boolean().optional(),
+    /** Cameras: compass bearing (0 north, 90 east = street), downward tilt, lens. */
+    bearing: z.number().optional(),
+    tilt: z.number().optional(),
+    lensMm: z.number().optional(),
+    /** On the essential-loads panel when the battery is installed. */
+    essential: z.boolean().optional(),
+    size: V3pt.optional(),
+  }),
+});
+export type Device = z.infer<typeof Device>;
+
+/** A circuit and its design results (recomputed by the electrical designer). */
+export const Circuit = z.object({
+  ...base,
+  type: z.literal('Circuit'),
+  props: z.object({
+    name: z.string(),
+    panel: z.string(),
+    purpose: z.enum(['lighting', 'outlets', 'dedicated', 'feeder']),
+    voltage: z.union([z.literal(127), z.literal(220)]),
+    phases: z.array(z.enum(['A', 'B', 'C'])),
+    load: z.number(),
+    current: z.number(),
+    section: z.number(),
+    breaker: z.number(),
+    rcd: z.boolean(),
+    length: z.number(),
+    drop: z.number(),
+    /** Section chosen by hand (kept when the circuit is resized). */
+    manualSection: z.number().optional(),
+  }),
+});
+export type Circuit = z.infer<typeof Circuit>;
+
+/** Electrical conduit run, generated from the circuits. */
+export const Conduit = z.object({
+  ...base,
+  type: z.literal('Conduit'),
+  props: z.object({ circuit: z.string(), start: V3pt, end: V3pt, dn: z.number() }),
+});
+export type Conduit = z.infer<typeof Conduit>;
+
+/** Photovoltaic array (spec 04). */
+export const SolarArray = z.object({
+  ...base,
+  type: z.literal('SolarArray'),
+  props: z.object({
+    name: z.string(),
+    modules: z.number().int().min(0),
+    moduleW: z.number(),
+    /** Module size (long × short side), m. */
+    moduleSize: z.tuple([z.number(), z.number()]),
+    tilt: z.number(),
+    /** Compass bearing the modules face (0 = north). */
+    bearing: z.number(),
+    /** Roof area it is laid out on, and the setback from the parapet. */
+    area: Rect,
+    setback: z.number(),
+    roofTop: z.number(),
+    inverterKw: z.number(),
+    batteryKwh: z.number(),
+  }),
+});
+export type SolarArray = z.infer<typeof SolarArray>;
 export const Furniture = later('Furniture');
 export const Plant = later('Plant');
 export const Material = later('Material');
 
 export const Element = z.discriminatedUnion('type', [
-  Space, Wall, Opening, Slab, Column, Beam, Footing, Stair, Deck, Carport,
+  Space, Wall, Opening, Slab, Column, Beam, Footing, Stair, Deck, Carport, Conduit, SolarArray,
   Fixture, PipeSegment, Device, Circuit, Furniture, Plant, Material,
 ]);
 export type Element = z.infer<typeof Element>;

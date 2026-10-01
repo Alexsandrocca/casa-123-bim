@@ -4,7 +4,7 @@ import v1json from '../model/casa-123-v1.json';
 import v2json from '../model/casa-123.json';
 import v3json from '../model/casa-123-v3.json';
 import { CommandError, replaceProject, type Command } from './model/commands';
-import { migrate } from './model/migrate';
+import { migrate, upgradeRaw } from './model/migrate';
 import { commit, initHist, redo, runCmd, undo, type Hist } from './model/history';
 import { PLAN_LEVELS, parseProject, type PlanLevel, type Project } from './model/schema';
 
@@ -23,7 +23,7 @@ const KEY = { model: (v: VersionId) => `casa123bim.model.${v}`, ui: 'casa123bim.
 function readStored(v: VersionId): Project {
   try {
     const raw = localStorage.getItem(KEY.model(v));
-    if (raw) return migrate(parseProject(JSON.parse(raw)), BASES[v]);
+    if (raw) return migrate(parseProject(upgradeRaw(JSON.parse(raw))), BASES[v]);
   } catch { /* fall back to the committed model */ }
   return BASES[v];
 }
@@ -152,7 +152,7 @@ export const useApp = create<AppState>((set, get) => {
     },
     openModel(data) {
       let p: Project;
-      try { p = parseProject(data); p = migrate(p, BASES[p.meta.versionId]); } catch {
+      try { p = parseProject(upgradeRaw(data)); p = migrate(p, BASES[p.meta.versionId]); } catch {
         get().flash('That file is not a Casa 123 model. Nothing was changed.');
         return;
       }

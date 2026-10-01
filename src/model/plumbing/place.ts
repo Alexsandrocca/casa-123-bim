@@ -43,9 +43,10 @@ export function placeV3Plumbing(p: Project, overlays: Record<string, { plumb: [s
   add('backflow-valve', 'LL', [0.32, 12.75], elev('LL'));
   // Water: meter in the front boundary wall, two tanks over the stair, pressure pump, heat-pump water heater on the entry roof
   add('water-meter', 'site', [1.2, -3.85], 0.3);
-  add('roof-tank', 'roof', [0.85, 10.3], elev('roof'));
-  add('roof-tank', 'roof', [2.15, 10.3], elev('roof'));
-  add('pressure-pump', 'roof', [2.9, 9.2], elev('roof'));
+  // tanks side by side along the south parapet over the stair, pump beside them: the north of the roof stays free for the solar array
+  add('roof-tank', 'roof', [0.75, 9.6], elev('roof'));
+  add('roof-tank', 'roof', [0.75, 10.9], elev('roof'));
+  add('pressure-pump', 'roof', [1.5, 9.1], elev('roof'));
   add('water-heater', 'roof', [1.6, 3.0], elev('UF'));
   add('garden-tap', 'LL', [6.0, 15.2], p.site.cut.gardenLevel);
   // Rain: roof drains with their areas, cistern under the entry path, garden trench and sump pump

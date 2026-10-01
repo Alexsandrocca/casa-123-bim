@@ -3902,18 +3902,13 @@
    "props": {
     "kind": "ev-charger",
     "name": "EV charger 7 kW",
-    "powerKw": 7,
-    "host": "carport-col-04",
     "at": [
      8.45,
-     0.85,
-     1.3
+     0.85
     ],
-    "size": [
-     0.08,
-     0.25,
-     0.35
-    ]
+    "z": 1.3,
+    "power": 7000,
+    "circuit": "ckt-ded-dev-ev-01"
    }
   },
   {
@@ -3926,17 +3921,12 @@
    "props": {
     "kind": "panel",
     "name": "Main electrical panel",
-    "space": "SL-space-03",
     "at": [
      0.12,
-     4.7,
-     2.1
+     4.7
     ],
-    "size": [
-     0.12,
-     0.5,
-     0.7
-    ]
+    "z": 2.1,
+    "power": 0
    }
   },
   {
@@ -4323,8 +4313,8 @@
     "kind": "roof-tank",
     "name": "Roof water tank 1,000 L",
     "at": [
-     0.85,
-     10.3
+     0.75,
+     9.6
     ],
     "z": 6.8
    }
@@ -4338,8 +4328,8 @@
     "kind": "roof-tank",
     "name": "Roof water tank 1,000 L",
     "at": [
-     2.15,
-     10.3
+     0.75,
+     10.9
     ],
     "z": 6.8
    }
@@ -4353,8 +4343,8 @@
     "kind": "pressure-pump",
     "name": "Pressure pump (upper-floor showers)",
     "at": [
-     2.9,
-     9.2
+     1.5,
+     9.1
     ],
     "z": 6.8
    }
@@ -6344,7 +6334,7 @@
   {
    "id": "vent-fx-stack-01-001",
    "type": "PipeSegment",
-   "level": "roof",
+   "level": "UF",
    "tags": [
     "auto"
    ],
@@ -6361,6 +6351,78 @@
     ],
     "end": [
      3.29,
+     6.52,
+     6.5
+    ],
+    "load": 0,
+    "serves": [
+     "fx-toilet-03",
+     "fx-shower-02",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-toilet-02",
+     "fx-basin-02"
+    ]
+   }
+  },
+  {
+   "id": "vent-fx-stack-01-002",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "vent",
+    "dn": 75,
+    "material": "PVC",
+    "pressure": false,
+    "network": "vent-fx-stack-01",
+    "start": [
+     3.29,
+     6.52,
+     6.5
+    ],
+    "end": [
+     0.25,
+     6.52,
+     6.5
+    ],
+    "load": 0,
+    "serves": [
+     "fx-toilet-03",
+     "fx-shower-02",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-toilet-02",
+     "fx-basin-02"
+    ]
+   }
+  },
+  {
+   "id": "vent-fx-stack-01-003",
+   "type": "PipeSegment",
+   "level": "roof",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "vent",
+    "dn": 75,
+    "material": "PVC",
+    "pressure": false,
+    "network": "vent-fx-stack-01",
+    "start": [
+     0.25,
+     6.52,
+     6.5
+    ],
+    "end": [
+     0.25,
      6.52,
      7.4
     ],
@@ -6411,7 +6473,7 @@
   {
    "id": "vent-fx-stack-02-001",
    "type": "PipeSegment",
-   "level": "roof",
+   "level": "UF",
    "tags": [
     "auto"
    ],
@@ -6428,6 +6490,68 @@
     ],
     "end": [
      3.29,
+     10.99,
+     6.5
+    ],
+    "load": 0,
+    "serves": [
+     "fx-toilet-05",
+     "fx-shower-04",
+     "fx-basin-05"
+    ]
+   }
+  },
+  {
+   "id": "vent-fx-stack-02-002",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "vent",
+    "dn": 75,
+    "material": "PVC",
+    "pressure": false,
+    "network": "vent-fx-stack-02",
+    "start": [
+     3.29,
+     10.99,
+     6.5
+    ],
+    "end": [
+     0.25,
+     10.99,
+     6.5
+    ],
+    "load": 0,
+    "serves": [
+     "fx-toilet-05",
+     "fx-shower-04",
+     "fx-basin-05"
+    ]
+   }
+  },
+  {
+   "id": "vent-fx-stack-02-003",
+   "type": "PipeSegment",
+   "level": "roof",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "vent",
+    "dn": 75,
+    "material": "PVC",
+    "pressure": false,
+    "network": "vent-fx-stack-02",
+    "start": [
+     0.25,
+     10.99,
+     6.5
+    ],
+    "end": [
+     0.25,
      10.99,
      7.4
     ],
@@ -8191,13 +8315,13 @@
     "pressure": true,
     "network": "cold-riser",
     "start": [
-     0.85,
-     10.3,
+     0.75,
+     9.6,
      6.85
     ],
     "end": [
      0.2,
-     10.3,
+     9.6,
      6.85
     ],
     "load": 12.9,
@@ -8240,7 +8364,7 @@
     "network": "cold-riser",
     "start": [
      0.2,
-     10.3,
+     9.6,
      6.85
     ],
     "end": [
@@ -8287,13 +8411,13 @@
     "pressure": true,
     "network": "cold-riser",
     "start": [
-     2.15,
-     10.3,
+     0.75,
+     10.9,
      6.85
     ],
     "end": [
-     0.85,
-     10.3,
+     0.75,
+     9.6,
      6.85
     ],
     "load": 0,
@@ -9580,7 +9704,7 @@
      7.9
     ],
     "end": [
-     0.85,
+     0.75,
      8.35,
      7.9
     ],
@@ -9605,13 +9729,13 @@
     "pressure": true,
     "network": "cold-feed",
     "start": [
-     0.85,
+     0.75,
      8.35,
      7.9
     ],
     "end": [
-     0.85,
-     10.3,
+     0.75,
+     9.6,
      7.9
     ],
     "load": 0,
@@ -10166,6 +10290,9587 @@
      -3.7
     ],
     "z": 0.005
+   }
+  },
+  {
+   "id": "dev-ceiling-light-01",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Stair",
+    "at": [
+     2.4,
+     10.5
+    ],
+    "z": 0.15,
+    "power": 100,
+    "circuit": "ckt-light-LL"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-02",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Storage",
+    "at": [
+     0.8,
+     9.5
+    ],
+    "z": 0.15,
+    "power": 100,
+    "circuit": "ckt-light-LL"
+   }
+  },
+  {
+   "id": "dev-switch-01",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Storage",
+    "at": [
+     1.25,
+     10.44
+    ],
+    "z": -1.4,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-01",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Storage",
+    "at": [
+     0.06,
+     8.9
+    ],
+    "z": -2.2,
+    "power": 100,
+    "circuit": "ckt-out-LL-general-1"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-03",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Laundry",
+    "at": [
+     0.8,
+     11.5
+    ],
+    "z": 0.15,
+    "power": 100,
+    "circuit": "ckt-light-LL"
+   }
+  },
+  {
+   "id": "dev-switch-02",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Laundry",
+    "at": [
+     1.35,
+     12.44
+    ],
+    "z": -1.4,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-20-01",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "outlet-20",
+    "name": "Outlet · Laundry",
+    "at": [
+     0.2,
+     12.44
+    ],
+    "z": -1.4,
+    "power": 600,
+    "circuit": "ckt-out-LL-laundry-2"
+   }
+  },
+  {
+   "id": "dev-outlet-20-02",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "outlet-20",
+    "name": "Outlet · Laundry",
+    "at": [
+     0.06,
+     10.9
+    ],
+    "z": -1.4,
+    "power": 600,
+    "circuit": "ckt-out-LL-laundry-1"
+   }
+  },
+  {
+   "id": "dev-outlet-20-03",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "outlet-20",
+    "name": "Outlet · Laundry",
+    "at": [
+     1.54,
+     11.3
+    ],
+    "z": -1.4,
+    "power": 600,
+    "circuit": "ckt-out-LL-laundry-1"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-04",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Hall",
+    "at": [
+     1.6,
+     13.75
+    ],
+    "z": 0.15,
+    "power": 100,
+    "circuit": "ckt-light-LL"
+   }
+  },
+  {
+   "id": "dev-switch-03",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Hall",
+    "at": [
+     1.35,
+     12.56
+    ],
+    "z": -1.4,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-02",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Hall",
+    "at": [
+     3.1,
+     14.94
+    ],
+    "z": -2.2,
+    "power": 100,
+    "circuit": "ckt-out-LL-general-1"
+   }
+  },
+  {
+   "id": "dev-smoke-detector-01",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "smoke-detector",
+    "name": "Smoke detector · Hall",
+    "at": [
+     1.6,
+     14.05
+    ],
+    "z": 0.15,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ceiling-light-05",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · WC",
+    "at": [
+     4,
+     14.15
+    ],
+    "z": 0.15,
+    "power": 100,
+    "circuit": "ckt-light-LL"
+   }
+  },
+  {
+   "id": "dev-switch-04",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · WC",
+    "at": [
+     3.26,
+     14.5
+    ],
+    "z": -1.4,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-03",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · WC (basin)",
+    "at": [
+     3.26,
+     13.64
+    ],
+    "z": -1.4,
+    "power": 600,
+    "circuit": "ckt-out-LL-wet-1"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-06",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Studio · office",
+    "at": [
+     6.7,
+     10.665
+    ],
+    "z": 0.15,
+    "power": 230,
+    "circuit": "ckt-light-LL"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-07",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Studio · office",
+    "at": [
+     6.7,
+     12.835
+    ],
+    "z": 0.15,
+    "power": 230,
+    "circuit": "ckt-light-LL"
+   }
+  },
+  {
+   "id": "dev-switch-05",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Studio · office",
+    "at": [
+     4.86,
+     13.4
+    ],
+    "z": -1.4,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-04",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Studio · office",
+    "at": [
+     5.58,
+     8.56
+    ],
+    "z": -2.2,
+    "power": 100,
+    "circuit": "ckt-out-LL-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-05",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Studio · office",
+    "at": [
+     4.94,
+     14.94
+    ],
+    "z": -2.2,
+    "power": 100,
+    "circuit": "ckt-out-LL-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-06",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Studio · office",
+    "at": [
+     3.26,
+     9.6
+    ],
+    "z": -2.2,
+    "power": 100,
+    "circuit": "ckt-out-LL-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-07",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Studio · office",
+    "at": [
+     4.86,
+     14.36
+    ],
+    "z": -2.2,
+    "power": 100,
+    "circuit": "ckt-out-LL-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-08",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Studio · office",
+    "at": [
+     8.54,
+     12.62
+    ],
+    "z": -2.2,
+    "power": 100,
+    "circuit": "ckt-out-LL-general-1"
+   }
+  },
+  {
+   "id": "dev-network-outlet-01",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "network-outlet",
+    "name": "Network · Studio · office",
+    "at": [
+     8.54,
+     9.05
+    ],
+    "z": -2.2,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ceiling-light-08",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Entry · hall",
+    "at": [
+     1.6,
+     1.8
+    ],
+    "z": 3.25,
+    "power": 220,
+    "circuit": "ckt-light-SL"
+   }
+  },
+  {
+   "id": "dev-switch-06",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Entry · hall",
+    "at": [
+     2.05,
+     1.06
+    ],
+    "z": 1.7,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-09",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Entry · hall",
+    "at": [
+     0.06,
+     7.4
+    ],
+    "z": 0.9,
+    "power": 100,
+    "circuit": "ckt-out-SL-general-1"
+   }
+  },
+  {
+   "id": "dev-smoke-detector-02",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "smoke-detector",
+    "name": "Smoke detector · Entry · hall",
+    "at": [
+     1.6,
+     2.1
+    ],
+    "z": 3.25,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ceiling-light-09",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · WC",
+    "at": [
+     1,
+     3.4
+    ],
+    "z": 3.25,
+    "power": 100,
+    "circuit": "ckt-light-SL"
+   }
+  },
+  {
+   "id": "dev-switch-07",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · WC",
+    "at": [
+     1.94,
+     3.95
+    ],
+    "z": 1.7,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-10",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · WC (basin)",
+    "at": [
+     1.6,
+     2.66
+    ],
+    "z": 1.7,
+    "power": 600,
+    "circuit": "ckt-out-SL-wet-1"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-10",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Storage",
+    "at": [
+     1,
+     4.7
+    ],
+    "z": 3.25,
+    "power": 100,
+    "circuit": "ckt-light-SL"
+   }
+  },
+  {
+   "id": "dev-switch-08",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Storage",
+    "at": [
+     2,
+     5.25
+    ],
+    "z": 1.7,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-11",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Storage",
+    "at": [
+     1,
+     5.14
+    ],
+    "z": 0.9,
+    "power": 100,
+    "circuit": "ckt-out-SL-general-1"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-11",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Pantry",
+    "at": [
+     1,
+     6.1
+    ],
+    "z": 3.25,
+    "power": 100,
+    "circuit": "ckt-light-SL"
+   }
+  },
+  {
+   "id": "dev-switch-09",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Pantry",
+    "at": [
+     1.94,
+     6.55
+    ],
+    "z": 1.7,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-12",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Pantry",
+    "at": [
+     1.8,
+     6.94
+    ],
+    "z": 0.9,
+    "power": 100,
+    "circuit": "ckt-out-SL-general-1"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-12",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Kitchen",
+    "at": [
+     5.9,
+     6.3
+    ],
+    "z": 3.25,
+    "power": 220,
+    "circuit": "ckt-light-SL"
+   }
+  },
+  {
+   "id": "dev-switch-10",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Kitchen",
+    "at": [
+     4.55,
+     5.06
+    ],
+    "z": 1.7,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-20-04",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet-20",
+    "name": "Outlet · Kitchen",
+    "at": [
+     4.8,
+     5.06
+    ],
+    "z": 1.7,
+    "power": 600,
+    "circuit": "ckt-out-SL-kitchen-1"
+   }
+  },
+  {
+   "id": "dev-outlet-20-05",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet-20",
+    "name": "Outlet · Kitchen",
+    "at": [
+     8,
+     5.06
+    ],
+    "z": 1.7,
+    "power": 600,
+    "circuit": "ckt-out-SL-kitchen-1"
+   }
+  },
+  {
+   "id": "dev-outlet-20-06",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet-20",
+    "name": "Outlet · Kitchen",
+    "at": [
+     5.8,
+     7.54
+    ],
+    "z": 1.7,
+    "power": 600,
+    "circuit": "ckt-out-SL-kitchen-2"
+   }
+  },
+  {
+   "id": "dev-outlet-13",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Kitchen",
+    "at": [
+     3.26,
+     5.4
+    ],
+    "z": 0.9,
+    "power": 100,
+    "circuit": "ckt-out-SL-kitchen-2"
+   }
+  },
+  {
+   "id": "dev-outlet-14",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Kitchen",
+    "at": [
+     8.54,
+     6
+    ],
+    "z": 0.9,
+    "power": 100,
+    "circuit": "ckt-out-SL-kitchen-2"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-13",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Dining",
+    "at": [
+     5.9,
+     8.6
+    ],
+    "z": 3.25,
+    "power": 160,
+    "circuit": "ckt-light-SL"
+   }
+  },
+  {
+   "id": "dev-switch-11",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Dining",
+    "at": [
+     5.2,
+     9.54
+    ],
+    "z": 1.7,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-15",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Dining",
+    "at": [
+     5.665,
+     7.66
+    ],
+    "z": 0.9,
+    "power": 100,
+    "circuit": "ckt-out-SL-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-16",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Dining",
+    "at": [
+     5.2,
+     9.54
+    ],
+    "z": 0.9,
+    "power": 100,
+    "circuit": "ckt-out-SL-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-17",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Dining",
+    "at": [
+     3.26,
+     9.135
+    ],
+    "z": 0.9,
+    "power": 100,
+    "circuit": "ckt-out-SL-general-1"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-14",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Living",
+    "at": [
+     5.9,
+     11.1
+    ],
+    "z": 3.25,
+    "power": 220,
+    "circuit": "ckt-light-SL"
+   }
+  },
+  {
+   "id": "dev-switch-12",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Living",
+    "at": [
+     6.2,
+     12.54
+    ],
+    "z": 1.7,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-18",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Living",
+    "at": [
+     5.3,
+     9.66
+    ],
+    "z": 0.9,
+    "power": 100,
+    "circuit": "ckt-out-SL-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-19",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Living",
+    "at": [
+     4.1,
+     12.54
+    ],
+    "z": 0.9,
+    "power": 100,
+    "circuit": "ckt-out-SL-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-20",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Living",
+    "at": [
+     8.3,
+     12.54
+    ],
+    "z": 0.9,
+    "power": 100,
+    "circuit": "ckt-out-SL-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-21",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Living",
+    "at": [
+     8.54,
+     10.5
+    ],
+    "z": 0.9,
+    "power": 100,
+    "circuit": "ckt-out-SL-general-1"
+   }
+  },
+  {
+   "id": "dev-network-outlet-02",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "network-outlet",
+    "name": "Network · Living",
+    "at": [
+     3.26,
+     11.4
+    ],
+    "z": 0.9,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ceiling-light-15",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Stair",
+    "at": [
+     1.6,
+     10.4
+    ],
+    "z": 3.25,
+    "power": 100,
+    "circuit": "ckt-light-SL"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-16",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Bedroom 2",
+    "at": [
+     1.6,
+     6.6
+    ],
+    "z": 6.35,
+    "power": 160,
+    "circuit": "ckt-light-UF"
+   }
+  },
+  {
+   "id": "dev-switch-13",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Bedroom 2",
+    "at": [
+     2.85,
+     8.14
+    ],
+    "z": 4.8,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-22",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bedroom 2",
+    "at": [
+     2.135,
+     5.06
+    ],
+    "z": 4,
+    "power": 100,
+    "circuit": "ckt-out-UF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-23",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bedroom 2",
+    "at": [
+     3.2,
+     8.14
+    ],
+    "z": 4,
+    "power": 100,
+    "circuit": "ckt-out-UF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-24",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bedroom 2",
+    "at": [
+     3.14,
+     6.665
+    ],
+    "z": 4,
+    "power": 100,
+    "circuit": "ckt-out-UF-general-1"
+   }
+  },
+  {
+   "id": "dev-network-outlet-03",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "network-outlet",
+    "name": "Network · Bedroom 2",
+    "at": [
+     3.14,
+     6.8
+    ],
+    "z": 4,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ceiling-light-17",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Bath 2",
+    "at": [
+     4.1,
+     5.8
+    ],
+    "z": 6.35,
+    "power": 100,
+    "circuit": "ckt-light-UF"
+   }
+  },
+  {
+   "id": "dev-switch-14",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Bath 2",
+    "at": [
+     3.26,
+     6.35
+    ],
+    "z": 4.8,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-25",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bath 2 (basin)",
+    "at": [
+     3.26,
+     5.8
+    ],
+    "z": 4.8,
+    "power": 600,
+    "circuit": "ckt-out-UF-wet-1"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-18",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Bath 3",
+    "at": [
+     4.1,
+     7.4
+    ],
+    "z": 6.35,
+    "power": 100,
+    "circuit": "ckt-light-UF"
+   }
+  },
+  {
+   "id": "dev-switch-15",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Bath 3",
+    "at": [
+     4.94,
+     8.05
+    ],
+    "z": 4.8,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-26",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bath 3 (basin)",
+    "at": [
+     3.26,
+     7.4
+    ],
+    "z": 4.8,
+    "power": 600,
+    "circuit": "ckt-out-UF-wet-1"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-19",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Bedroom 3",
+    "at": [
+     6.8,
+     7
+    ],
+    "z": 6.35,
+    "power": 220,
+    "circuit": "ckt-light-UF"
+   }
+  },
+  {
+   "id": "dev-switch-16",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Bedroom 3",
+    "at": [
+     5.06,
+     8.05
+    ],
+    "z": 4.8,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-27",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bedroom 3",
+    "at": [
+     7.35,
+     5.06
+    ],
+    "z": 4,
+    "power": 100,
+    "circuit": "ckt-out-UF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-28",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bedroom 3",
+    "at": [
+     4.85,
+     8.94
+    ],
+    "z": 4,
+    "power": 100,
+    "circuit": "ckt-out-UF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-29",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bedroom 3",
+    "at": [
+     5.06,
+     5.15
+    ],
+    "z": 4,
+    "power": 100,
+    "circuit": "ckt-out-UF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-30",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bedroom 3",
+    "at": [
+     8.54,
+     6.65
+    ],
+    "z": 4,
+    "power": 100,
+    "circuit": "ckt-out-UF-general-1"
+   }
+  },
+  {
+   "id": "dev-network-outlet-04",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "network-outlet",
+    "name": "Network · Bedroom 3",
+    "at": [
+     5.06,
+     8.1
+    ],
+    "z": 4,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ceiling-light-20",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Master bedroom",
+    "at": [
+     6.8,
+     11.3
+    ],
+    "z": 6.35,
+    "power": 280,
+    "circuit": "ckt-light-UF"
+   }
+  },
+  {
+   "id": "dev-switch-17",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Master bedroom",
+    "at": [
+     5.06,
+     10.05
+    ],
+    "z": 4.8,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-31",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Master bedroom",
+    "at": [
+     5.7,
+     9.06
+    ],
+    "z": 4,
+    "power": 100,
+    "circuit": "ckt-out-UF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-32",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Master bedroom",
+    "at": [
+     5.3,
+     13.54
+    ],
+    "z": 4,
+    "power": 100,
+    "circuit": "ckt-out-UF-general-2"
+   }
+  },
+  {
+   "id": "dev-outlet-33",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Master bedroom",
+    "at": [
+     5.06,
+     11.3
+    ],
+    "z": 4,
+    "power": 100,
+    "circuit": "ckt-out-UF-general-2"
+   }
+  },
+  {
+   "id": "dev-outlet-34",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Master bedroom",
+    "at": [
+     8.54,
+     11.1
+    ],
+    "z": 4,
+    "power": 100,
+    "circuit": "ckt-out-UF-general-2"
+   }
+  },
+  {
+   "id": "dev-network-outlet-05",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "network-outlet",
+    "name": "Network · Master bedroom",
+    "at": [
+     8.54,
+     9.2
+    ],
+    "z": 4,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ceiling-light-21",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Master bath",
+    "at": [
+     4.1,
+     11.1
+    ],
+    "z": 6.35,
+    "power": 100,
+    "circuit": "ckt-light-UF"
+   }
+  },
+  {
+   "id": "dev-switch-18",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Master bath",
+    "at": [
+     4.94,
+     11.25
+    ],
+    "z": 4.8,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-35",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Master bath (basin)",
+    "at": [
+     3.26,
+     11.1
+    ],
+    "z": 4.8,
+    "power": 600,
+    "circuit": "ckt-out-UF-general-2"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-22",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Closet",
+    "at": [
+     4.1,
+     12.9
+    ],
+    "z": 6.35,
+    "power": 100,
+    "circuit": "ckt-light-UF"
+   }
+  },
+  {
+   "id": "dev-switch-19",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Closet",
+    "at": [
+     4.94,
+     13.35
+    ],
+    "z": 4.8,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-36",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Closet",
+    "at": [
+     4.6,
+     13.54
+    ],
+    "z": 4,
+    "power": 100,
+    "circuit": "ckt-out-UF-general-2"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-23",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Hall",
+    "at": [
+     2.4,
+     10.35
+    ],
+    "z": 6.35,
+    "power": 160,
+    "circuit": "ckt-light-UF"
+   }
+  },
+  {
+   "id": "dev-switch-20",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Hall",
+    "at": [
+     2.85,
+     8.26
+    ],
+    "z": 4.8,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-outlet-37",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Hall",
+    "at": [
+     1.66,
+     9.3
+    ],
+    "z": 4,
+    "power": 100,
+    "circuit": "ckt-out-UF-general-1"
+   }
+  },
+  {
+   "id": "dev-smoke-detector-03",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "smoke-detector",
+    "name": "Smoke detector · Hall",
+    "at": [
+     2.4,
+     10.65
+    ],
+    "z": 6.35,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ceiling-light-24",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Stair",
+    "at": [
+     0.8,
+     10.35
+    ],
+    "z": 6.35,
+    "power": 100,
+    "circuit": "ckt-light-UF"
+   }
+  },
+  {
+   "id": "dev-sub-panel-01",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "sub-panel",
+    "name": "Lower-level sub-panel",
+    "at": [
+     0.12,
+     9.5
+    ],
+    "z": -1,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-rack-01",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "rack",
+    "name": "Rack: NVR, PoE switch, UPS 1.5 kVA",
+    "at": [
+     6.7,
+     9.15
+    ],
+    "z": -1.9,
+    "power": 900,
+    "circuit": "ckt-ded-dev-rack-01"
+   }
+  },
+  {
+   "id": "dev-inverter-01",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "inverter",
+    "name": "Hybrid inverter 6 kW",
+    "at": [
+     1.88,
+     4.7
+    ],
+    "z": 2,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ac-indoor-01",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "ac-indoor",
+    "name": "AC indoor · Studio · office",
+    "at": [
+     6.7,
+     14.94
+    ],
+    "z": -0.2,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ac-outdoor-01",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "ac-outdoor",
+    "name": "AC outdoor · Studio · office",
+    "at": [
+     6.7,
+     15.45
+    ],
+    "z": -2.1,
+    "power": 1200,
+    "circuit": "ckt-ded-dev-ac-outdoor-01"
+   }
+  },
+  {
+   "id": "dev-ac-indoor-02",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "ac-indoor",
+    "name": "AC indoor · Living",
+    "at": [
+     8.54,
+     11.1
+    ],
+    "z": 2.9,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ac-outdoor-02",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "ac-outdoor",
+    "name": "AC outdoor · Living",
+    "at": [
+     9.05,
+     11.1
+    ],
+    "z": 1,
+    "power": 1200,
+    "circuit": "ckt-ded-dev-ac-outdoor-02"
+   }
+  },
+  {
+   "id": "dev-ac-indoor-03",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ac-indoor",
+    "name": "AC indoor · Bedroom 2",
+    "at": [
+     1.6,
+     5.06
+    ],
+    "z": 6,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ac-outdoor-03",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ac-outdoor",
+    "name": "AC outdoor · Bedroom 2",
+    "at": [
+     1.6,
+     4.55
+    ],
+    "z": 4.1,
+    "power": 1200,
+    "circuit": "ckt-ded-dev-ac-outdoor-03"
+   }
+  },
+  {
+   "id": "dev-ac-indoor-04",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ac-indoor",
+    "name": "AC indoor · Bedroom 3",
+    "at": [
+     6.8,
+     5.06
+    ],
+    "z": 6,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ac-outdoor-04",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ac-outdoor",
+    "name": "AC outdoor · Bedroom 3",
+    "at": [
+     6.8,
+     4.55
+    ],
+    "z": 4.1,
+    "power": 1200,
+    "circuit": "ckt-ded-dev-ac-outdoor-04"
+   }
+  },
+  {
+   "id": "dev-ac-indoor-05",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ac-indoor",
+    "name": "AC indoor · Master bedroom",
+    "at": [
+     6.8,
+     13.54
+    ],
+    "z": 6,
+    "power": 0
+   }
+  },
+  {
+   "id": "dev-ac-outdoor-05",
+   "type": "Device",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "ac-outdoor",
+    "name": "AC outdoor · Master bedroom",
+    "at": [
+     6.8,
+     14.05
+    ],
+    "z": 4.1,
+    "power": 1200,
+    "circuit": "ckt-ded-dev-ac-outdoor-05"
+   }
+  },
+  {
+   "id": "dev-hob-01",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "hob",
+    "name": "Induction hob 7 kW",
+    "at": [
+     5.9,
+     5.26
+    ],
+    "z": 1.5,
+    "power": 7000,
+    "circuit": "ckt-ded-dev-hob-01"
+   }
+  },
+  {
+   "id": "dev-oven-01",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "oven",
+    "name": "Oven",
+    "at": [
+     4.55,
+     5.26
+    ],
+    "z": 1.2,
+    "power": 2500,
+    "circuit": "ckt-ded-dev-oven-01"
+   }
+  },
+  {
+   "id": "dev-dishwasher-01",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "dishwasher",
+    "name": "Dishwasher point",
+    "at": [
+     8.33,
+     5.39
+    ],
+    "z": 0.9,
+    "power": 1500,
+    "circuit": "ckt-ded-dev-dishwasher-01"
+   }
+  },
+  {
+   "id": "dev-washer-dryer-01",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "washer-dryer",
+    "name": "Washer/dryer point",
+    "at": [
+     0.48,
+     11.5
+    ],
+    "z": -1.4,
+    "power": 2500,
+    "circuit": "ckt-ded-dev-washer-dryer-01"
+   }
+  },
+  {
+   "id": "dev-heat-pump-01",
+   "type": "Device",
+   "level": "roof",
+   "tags": [],
+   "props": {
+    "kind": "heat-pump",
+    "name": "Heat-pump water heater",
+    "at": [
+     2.05,
+     3
+    ],
+    "z": 4.9,
+    "power": 1500,
+    "circuit": "ckt-ded-dev-heat-pump-01"
+   }
+  },
+  {
+   "id": "dev-pump-pressure-01",
+   "type": "Device",
+   "level": "roof",
+   "tags": [],
+   "props": {
+    "kind": "pump-pressure",
+    "name": "Pressure pump",
+    "at": [
+     1.8,
+     9.1
+    ],
+    "z": 7.1,
+    "power": 750,
+    "circuit": "ckt-ded-dev-pump-pressure-01"
+   }
+  },
+  {
+   "id": "dev-pump-lift-01",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "pump-lift",
+    "name": "Lift-station pump",
+    "at": [
+     0.82,
+     13.125
+    ],
+    "z": -1.9,
+    "power": 1100,
+    "circuit": "ckt-ded-dev-pump-lift-01"
+   }
+  },
+  {
+   "id": "dev-pump-sump-01",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "pump-sump",
+    "name": "Garden sump pump",
+    "at": [
+     8,
+     16.1
+    ],
+    "z": -1.95,
+    "power": 750,
+    "circuit": "ckt-ded-dev-pump-sump-01"
+   }
+  },
+  {
+   "id": "dev-wall-light-01",
+   "type": "Device",
+   "level": "site",
+   "tags": [],
+   "props": {
+    "kind": "wall-light",
+    "name": "Wall light · front door",
+    "at": [
+     1.4,
+     0.92
+    ],
+    "z": 2.8,
+    "power": 60,
+    "circuit": "ckt-light-ext"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-25",
+   "type": "Device",
+   "level": "site",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Light · carport",
+    "at": [
+     4.1,
+     -1.5
+    ],
+    "z": 2.45,
+    "power": 60,
+    "circuit": "ckt-light-ext"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-26",
+   "type": "Device",
+   "level": "site",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Light · carport",
+    "at": [
+     7.1,
+     -1.5
+    ],
+    "z": 2.45,
+    "power": 60,
+    "circuit": "ckt-light-ext"
+   }
+  },
+  {
+   "id": "dev-wall-light-02",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "wall-light",
+    "name": "Wall light · veranda",
+    "at": [
+     2,
+     12.68
+    ],
+    "z": 2.8,
+    "power": 60,
+    "circuit": "ckt-light-ext"
+   }
+  },
+  {
+   "id": "dev-wall-light-03",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "wall-light",
+    "name": "Wall light · veranda",
+    "at": [
+     6.5,
+     12.68
+    ],
+    "z": 2.8,
+    "power": 60,
+    "circuit": "ckt-light-ext"
+   }
+  },
+  {
+   "id": "dev-wall-light-04",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "wall-light",
+    "name": "Wall light · garden",
+    "at": [
+     5,
+     15.08
+    ],
+    "z": -0.3,
+    "power": 60,
+    "circuit": "ckt-light-ext-LL"
+   }
+  },
+  {
+   "id": "dev-wall-light-05",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "wall-light",
+    "name": "Wall light · north ramp",
+    "at": [
+     8.68,
+     3
+    ],
+    "z": 1.6,
+    "power": 60,
+    "circuit": "ckt-light-ext"
+   }
+  },
+  {
+   "id": "dev-wall-light-06",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "wall-light",
+    "name": "Wall light · north ramp",
+    "at": [
+     8.68,
+     10
+    ],
+    "z": 1.6,
+    "power": 60,
+    "circuit": "ckt-light-ext"
+   }
+  },
+  {
+   "id": "dev-led-strip-01",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "led-strip",
+    "name": "LED strip · living",
+    "at": [
+     5.9,
+     9.75
+    ],
+    "z": 3.2,
+    "power": 60,
+    "circuit": "ckt-light-SL"
+   }
+  },
+  {
+   "id": "dev-camera-01",
+   "type": "Device",
+   "level": "site",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Street, south corner",
+    "at": [
+     -1.3,
+     -3.85
+    ],
+    "z": 2.6,
+    "power": 0,
+    "bearing": 45,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-02",
+   "type": "Device",
+   "level": "site",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Street, north corner",
+    "at": [
+     11.9,
+     -3.85
+    ],
+    "z": 2.6,
+    "power": 0,
+    "bearing": 135,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-03",
+   "type": "Device",
+   "level": "site",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Carport and patio",
+    "at": [
+     8.55,
+     -3.85
+    ],
+    "z": 2.4,
+    "power": 0,
+    "bearing": 235,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-04",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Ramp, front",
+    "at": [
+     8.75,
+     2
+    ],
+    "z": 3,
+    "power": 0,
+    "bearing": 280,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-05",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Ramp, middle",
+    "at": [
+     8.75,
+     8
+    ],
+    "z": 3,
+    "power": 0,
+    "bearing": 100,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-06",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Ramp, garden end",
+    "at": [
+     8.75,
+     14.8
+    ],
+    "z": -0.1,
+    "power": 0,
+    "bearing": 300,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-07",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · South passage, front",
+    "at": [
+     -0.15,
+     1.5
+    ],
+    "z": 3,
+    "power": 0,
+    "bearing": 260,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-08",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · South passage, rear",
+    "at": [
+     -0.15,
+     12
+    ],
+    "z": 0.1,
+    "power": 0,
+    "bearing": 80,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-09",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Garden, south",
+    "at": [
+     0.3,
+     15.12
+    ],
+    "z": 0,
+    "power": 0,
+    "bearing": 240,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-10",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Garden, centre",
+    "at": [
+     4.3,
+     15.12
+    ],
+    "z": 0,
+    "power": 0,
+    "bearing": 270,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-11",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Garden, north",
+    "at": [
+     8.3,
+     15.12
+    ],
+    "z": 0,
+    "power": 0,
+    "bearing": 300,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-12",
+   "type": "Device",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Veranda",
+    "at": [
+     4.3,
+     13.5
+    ],
+    "z": 3.55,
+    "power": 0,
+    "bearing": 270,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-13",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Lower-level garden door",
+    "at": [
+     3,
+     15.12
+    ],
+    "z": -0.2,
+    "power": 0,
+    "bearing": 230,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-14",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Rear corner, south",
+    "at": [
+     -1.3,
+     20.8
+    ],
+    "z": -1,
+    "power": 0,
+    "bearing": 40,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-15",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Rear corner, north",
+    "at": [
+     12.9,
+     20.8
+    ],
+    "z": -1,
+    "power": 0,
+    "bearing": 140,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-camera-16",
+   "type": "Device",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "camera",
+    "name": "Camera · Lower-level hall",
+    "at": [
+     3,
+     14.8
+    ],
+    "z": 0,
+    "power": 0,
+    "bearing": 200,
+    "tilt": 20,
+    "lensMm": 2.8
+   }
+  },
+  {
+   "id": "dev-doorbell-01",
+   "type": "Device",
+   "level": "site",
+   "tags": [],
+   "props": {
+    "kind": "doorbell",
+    "name": "Video doorbell · front door",
+    "at": [
+     2.1,
+     0.94
+    ],
+    "z": 2.1,
+    "power": 0,
+    "bearing": 90,
+    "tilt": 5,
+    "lensMm": 2.1
+   }
+  },
+  {
+   "id": "pv-01",
+   "type": "SolarArray",
+   "level": "roof",
+   "tags": [],
+   "props": {
+    "name": "PV array 12 × 550 W",
+    "modules": 12,
+    "moduleW": 550,
+    "moduleSize": [
+     2.28,
+     1.13
+    ],
+    "tilt": 20,
+    "bearing": 0,
+    "area": {
+     "x0": 0,
+     "y0": 5,
+     "x1": 8.6,
+     "y1": 13.6
+    },
+    "setback": 0.5,
+    "roofTop": 6.8,
+    "inverterKw": 6,
+    "batteryKwh": 0
+   }
+  },
+  {
+   "id": "ckt-ded-dev-ac-outdoor-01",
+   "type": "Circuit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "AC outdoor · Studio · office",
+    "panel": "dev-sub-panel-01",
+    "purpose": "dedicated",
+    "voltage": 220,
+    "phases": [
+     "B",
+     "C"
+    ],
+    "load": 1200,
+    "current": 5.5,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": false,
+    "length": 14.37,
+    "drop": 0.51
+   }
+  },
+  {
+   "id": "ckt-ded-dev-ac-outdoor-02",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "AC outdoor · Living",
+    "panel": "dev-panel-01",
+    "purpose": "dedicated",
+    "voltage": 220,
+    "phases": [
+     "A",
+     "B"
+    ],
+    "load": 1200,
+    "current": 5.5,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": false,
+    "length": 17.83,
+    "drop": 0.63
+   }
+  },
+  {
+   "id": "ckt-ded-dev-ac-outdoor-03",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "AC outdoor · Bedroom 2",
+    "panel": "dev-panel-01",
+    "purpose": "dedicated",
+    "voltage": 220,
+    "phases": [
+     "A",
+     "B"
+    ],
+    "load": 1200,
+    "current": 5.5,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": false,
+    "length": 3.63,
+    "drop": 0.13
+   }
+  },
+  {
+   "id": "ckt-ded-dev-ac-outdoor-04",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "AC outdoor · Bedroom 3",
+    "panel": "dev-panel-01",
+    "purpose": "dedicated",
+    "voltage": 220,
+    "phases": [
+     "B",
+     "C"
+    ],
+    "load": 1200,
+    "current": 5.5,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": false,
+    "length": 8.83,
+    "drop": 0.31
+   }
+  },
+  {
+   "id": "ckt-ded-dev-ac-outdoor-05",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "AC outdoor · Master bedroom",
+    "panel": "dev-panel-01",
+    "purpose": "dedicated",
+    "voltage": 220,
+    "phases": [
+     "A",
+     "C"
+    ],
+    "load": 1200,
+    "current": 5.5,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": false,
+    "length": 18.03,
+    "drop": 0.64
+   }
+  },
+  {
+   "id": "ckt-ded-dev-dishwasher-01",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Dishwasher point",
+    "panel": "dev-panel-01",
+    "purpose": "dedicated",
+    "voltage": 127,
+    "phases": [
+     "A"
+    ],
+    "load": 1500,
+    "current": 11.8,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 11.3,
+    "drop": 1.5
+   }
+  },
+  {
+   "id": "ckt-ded-dev-ev-01",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "EV charger 7 kW",
+    "panel": "dev-panel-01",
+    "purpose": "dedicated",
+    "voltage": 220,
+    "phases": [
+     "A",
+     "B"
+    ],
+    "load": 7000,
+    "current": 31.8,
+    "section": 4,
+    "breaker": 32,
+    "rcd": true,
+    "length": 15.585,
+    "drop": 2.01
+   }
+  },
+  {
+   "id": "ckt-ded-dev-heat-pump-01",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Heat-pump water heater",
+    "panel": "dev-panel-01",
+    "purpose": "dedicated",
+    "voltage": 220,
+    "phases": [
+     "A",
+     "C"
+    ],
+    "load": 1500,
+    "current": 6.8,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 6.43,
+    "drop": 0.28
+   }
+  },
+  {
+   "id": "ckt-ded-dev-hob-01",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Induction hob 7 kW",
+    "panel": "dev-panel-01",
+    "purpose": "dedicated",
+    "voltage": 220,
+    "phases": [
+     "B",
+     "C"
+    ],
+    "load": 7000,
+    "current": 31.8,
+    "section": 4,
+    "breaker": 32,
+    "rcd": false,
+    "length": 9.34,
+    "drop": 1.2
+   }
+  },
+  {
+   "id": "ckt-ded-dev-oven-01",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Oven",
+    "panel": "dev-panel-01",
+    "purpose": "dedicated",
+    "voltage": 220,
+    "phases": [
+     "A",
+     "C"
+    ],
+    "load": 2500,
+    "current": 11.4,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": false,
+    "length": 7.69,
+    "drop": 0.57
+   }
+  },
+  {
+   "id": "ckt-ded-dev-pump-lift-01",
+   "type": "Circuit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Lift-station pump",
+    "panel": "dev-sub-panel-01",
+    "purpose": "dedicated",
+    "voltage": 220,
+    "phases": [
+     "A",
+     "C"
+    ],
+    "load": 1100,
+    "current": 5,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 6.365,
+    "drop": 0.21
+   }
+  },
+  {
+   "id": "ckt-ded-dev-pump-pressure-01",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Pressure pump",
+    "panel": "dev-panel-01",
+    "purpose": "dedicated",
+    "voltage": 220,
+    "phases": [
+     "A",
+     "B"
+    ],
+    "load": 750,
+    "current": 3.4,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 11.08,
+    "drop": 0.24
+   }
+  },
+  {
+   "id": "ckt-ded-dev-pump-sump-01",
+   "type": "Circuit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Garden sump pump",
+    "panel": "dev-sub-panel-01",
+    "purpose": "dedicated",
+    "voltage": 220,
+    "phases": [
+     "B",
+     "C"
+    ],
+    "load": 750,
+    "current": 3.4,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 16.47,
+    "drop": 0.36
+   }
+  },
+  {
+   "id": "ckt-ded-dev-rack-01",
+   "type": "Circuit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Rack: NVR, PoE switch, UPS 1.5 kVA",
+    "panel": "dev-sub-panel-01",
+    "purpose": "dedicated",
+    "voltage": 127,
+    "phases": [
+     "B"
+    ],
+    "load": 900,
+    "current": 7.1,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": false,
+    "length": 8.97,
+    "drop": 0.71
+   }
+  },
+  {
+   "id": "ckt-ded-dev-washer-dryer-01",
+   "type": "Circuit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Washer/dryer point",
+    "panel": "dev-sub-panel-01",
+    "purpose": "dedicated",
+    "voltage": 220,
+    "phases": [
+     "A",
+     "B"
+    ],
+    "load": 2500,
+    "current": 11.4,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 4.9,
+    "drop": 0.36
+   }
+  },
+  {
+   "id": "ckt-feeder-LL",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Feeder to the lower-level sub-panel",
+    "panel": "dev-panel-01",
+    "purpose": "feeder",
+    "voltage": 220,
+    "phases": [
+     "A",
+     "B",
+     "C"
+    ],
+    "load": 8456,
+    "current": 22.2,
+    "section": 4,
+    "breaker": 25,
+    "rcd": false,
+    "length": 10.84,
+    "drop": 0.84
+   }
+  },
+  {
+   "id": "ckt-light-ext",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Exterior lighting",
+    "panel": "dev-panel-01",
+    "purpose": "lighting",
+    "voltage": 127,
+    "phases": [
+     "B"
+    ],
+    "load": 420,
+    "current": 3.3,
+    "section": 1.5,
+    "breaker": 10,
+    "rcd": true,
+    "length": 17.78,
+    "drop": 1.1
+   }
+  },
+  {
+   "id": "ckt-light-ext-LL",
+   "type": "Circuit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Exterior lighting, garden",
+    "panel": "dev-sub-panel-01",
+    "purpose": "lighting",
+    "voltage": 127,
+    "phases": [
+     "A"
+    ],
+    "load": 60,
+    "current": 0.5,
+    "section": 1.5,
+    "breaker": 10,
+    "rcd": true,
+    "length": 12.36,
+    "drop": 0.11
+   }
+  },
+  {
+   "id": "ckt-light-LL",
+   "type": "Circuit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Lighting LL",
+    "panel": "dev-sub-panel-01",
+    "purpose": "lighting",
+    "voltage": 127,
+    "phases": [
+     "A"
+    ],
+    "load": 960,
+    "current": 7.6,
+    "section": 1.5,
+    "breaker": 10,
+    "rcd": true,
+    "length": 11.365,
+    "drop": 1.61
+   }
+  },
+  {
+   "id": "ckt-light-SL",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Lighting SL",
+    "panel": "dev-panel-01",
+    "purpose": "lighting",
+    "voltage": 127,
+    "phases": [
+     "C"
+    ],
+    "load": 1280,
+    "current": 10.1,
+    "section": 1.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 13.63,
+    "drop": 2.57
+   }
+  },
+  {
+   "id": "ckt-light-UF",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Lighting UF",
+    "panel": "dev-panel-01",
+    "purpose": "lighting",
+    "voltage": 127,
+    "phases": [
+     "C"
+    ],
+    "load": 1320,
+    "current": 10.4,
+    "section": 1.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 19.43,
+    "drop": 3.77
+   }
+  },
+  {
+   "id": "ckt-out-LL-general-1",
+   "type": "Circuit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Outlets LL general",
+    "panel": "dev-sub-panel-01",
+    "purpose": "outlets",
+    "voltage": 127,
+    "phases": [
+     "C"
+    ],
+    "load": 700,
+    "current": 5.5,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 16.76,
+    "drop": 1.04
+   }
+  },
+  {
+   "id": "ckt-out-LL-laundry-1",
+   "type": "Circuit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Outlets LL laundry 1",
+    "panel": "dev-sub-panel-01",
+    "purpose": "outlets",
+    "voltage": 127,
+    "phases": [
+     "C"
+    ],
+    "load": 1200,
+    "current": 9.4,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 5.88,
+    "drop": 0.62
+   }
+  },
+  {
+   "id": "ckt-out-LL-laundry-2",
+   "type": "Circuit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Outlets LL laundry 2",
+    "panel": "dev-sub-panel-01",
+    "purpose": "outlets",
+    "voltage": 127,
+    "phases": [
+     "A"
+    ],
+    "load": 600,
+    "current": 4.7,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 5.56,
+    "drop": 0.29
+   }
+  },
+  {
+   "id": "ckt-out-LL-wet-1",
+   "type": "Circuit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Outlets LL wet",
+    "panel": "dev-sub-panel-01",
+    "purpose": "outlets",
+    "voltage": 127,
+    "phases": [
+     "B"
+    ],
+    "load": 600,
+    "current": 4.7,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 9.82,
+    "drop": 0.52
+   }
+  },
+  {
+   "id": "ckt-out-SL-general-1",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Outlets SL general",
+    "panel": "dev-panel-01",
+    "purpose": "outlets",
+    "voltage": 127,
+    "phases": [
+     "C"
+    ],
+    "load": 1000,
+    "current": 7.9,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 19.02,
+    "drop": 1.68
+   }
+  },
+  {
+   "id": "ckt-out-SL-kitchen-1",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Outlets SL kitchen 1",
+    "panel": "dev-panel-01",
+    "purpose": "outlets",
+    "voltage": 127,
+    "phases": [
+     "A"
+    ],
+    "load": 1200,
+    "current": 9.4,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 11.44,
+    "drop": 1.21
+   }
+  },
+  {
+   "id": "ckt-out-SL-kitchen-2",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Outlets SL kitchen 2",
+    "panel": "dev-panel-01",
+    "purpose": "outlets",
+    "voltage": 127,
+    "phases": [
+     "C"
+    ],
+    "load": 800,
+    "current": 6.3,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 12.12,
+    "drop": 0.86
+   }
+  },
+  {
+   "id": "ckt-out-SL-wet-1",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Outlets SL wet",
+    "panel": "dev-panel-01",
+    "purpose": "outlets",
+    "voltage": 127,
+    "phases": [
+     "C"
+    ],
+    "load": 600,
+    "current": 4.7,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 6.72,
+    "drop": 0.36
+   }
+  },
+  {
+   "id": "ckt-out-UF-general-1",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Outlets UF general 1",
+    "panel": "dev-panel-01",
+    "purpose": "outlets",
+    "voltage": 127,
+    "phases": [
+     "B"
+    ],
+    "load": 900,
+    "current": 7.1,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 12.27,
+    "drop": 0.97
+   }
+  },
+  {
+   "id": "ckt-out-UF-general-2",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Outlets UF general 2",
+    "panel": "dev-panel-01",
+    "purpose": "outlets",
+    "voltage": 127,
+    "phases": [
+     "A"
+    ],
+    "load": 1000,
+    "current": 7.9,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 16.72,
+    "drop": 1.48
+   }
+  },
+  {
+   "id": "ckt-out-UF-wet-1",
+   "type": "Circuit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Outlets UF wet",
+    "panel": "dev-panel-01",
+    "purpose": "outlets",
+    "voltage": 127,
+    "phases": [
+     "B"
+    ],
+    "load": 1200,
+    "current": 9.4,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 8.54,
+    "drop": 0.9
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ev-01-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ev-01",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "dn": 25
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ev-01-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ev-01",
+    "start": [
+     0.12,
+     4.7,
+     -1.095
+    ],
+    "end": [
+     8.45,
+     4.7,
+     -1.095
+    ],
+    "dn": 25
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ev-01-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ev-01",
+    "start": [
+     8.45,
+     4.7,
+     -1.095
+    ],
+    "end": [
+     8.45,
+     0.85,
+     -0.305
+    ],
+    "dn": 25
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ev-01-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ev-01",
+    "start": [
+     8.45,
+     0.85,
+     -0.305
+    ],
+    "end": [
+     8.45,
+     0.85,
+     1.3
+    ],
+    "dn": 25
+   }
+  },
+  {
+   "id": "cnd-light-LL-001",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     0.12,
+     9.5,
+     -1
+    ],
+    "end": [
+     0.12,
+     9.5,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-002",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     0.12,
+     9.5,
+     0.3
+    ],
+    "end": [
+     0.8,
+     9.5,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-003",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     0.8,
+     9.5,
+     0.3
+    ],
+    "end": [
+     0.8,
+     10.5,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-004",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     0.8,
+     10.5,
+     0.3
+    ],
+    "end": [
+     0.8,
+     11.5,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-005",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     0.8,
+     10.5,
+     0.3
+    ],
+    "end": [
+     2.4,
+     10.5,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-006",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     0.8,
+     11.5,
+     0.3
+    ],
+    "end": [
+     1.6,
+     11.5,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-007",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     2.4,
+     10.5,
+     0.3
+    ],
+    "end": [
+     6.7,
+     10.5,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-008",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     1.6,
+     11.5,
+     0.3
+    ],
+    "end": [
+     1.6,
+     13.75,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-009",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     6.7,
+     10.5,
+     0.3
+    ],
+    "end": [
+     6.7,
+     10.665,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-010",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     1.6,
+     13.75,
+     0.3
+    ],
+    "end": [
+     4,
+     13.75,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-011",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     6.7,
+     10.665,
+     0.3
+    ],
+    "end": [
+     6.7,
+     12.835,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-012",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     4,
+     13.75,
+     0.3
+    ],
+    "end": [
+     4,
+     14.15,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-013",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     0.8,
+     9.5,
+     0.3
+    ],
+    "end": [
+     0.8,
+     9.5,
+     0.15
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-014",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     0.8,
+     11.5,
+     0.3
+    ],
+    "end": [
+     0.8,
+     11.5,
+     0.15
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-015",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     2.4,
+     10.5,
+     0.3
+    ],
+    "end": [
+     2.4,
+     10.5,
+     0.15
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-016",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     1.6,
+     13.75,
+     0.3
+    ],
+    "end": [
+     1.6,
+     13.75,
+     0.15
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-017",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     6.7,
+     10.665,
+     0.3
+    ],
+    "end": [
+     6.7,
+     10.665,
+     0.15
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-018",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     4,
+     14.15,
+     0.3
+    ],
+    "end": [
+     4,
+     14.15,
+     0.15
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-LL-019",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-LL",
+    "start": [
+     6.7,
+     12.835,
+     0.3
+    ],
+    "end": [
+     6.7,
+     12.835,
+     0.15
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-001",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     0.12,
+     9.5,
+     -1
+    ],
+    "end": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-002",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     0.06,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-003",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     3.1,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-004",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     0.06,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     0.06,
+     8.9,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-005",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     3.1,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     3.26,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-006",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     3.1,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     3.1,
+     14.36,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-007",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     3.26,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     3.26,
+     9.6,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-008",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     3.26,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     5.58,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-009",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     3.1,
+     14.36,
+     -2.47
+    ],
+    "end": [
+     3.1,
+     14.94,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-010",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     3.1,
+     14.36,
+     -2.47
+    ],
+    "end": [
+     4.86,
+     14.36,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-011",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     5.58,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     5.58,
+     8.56,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-012",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     4.86,
+     14.36,
+     -2.47
+    ],
+    "end": [
+     4.94,
+     14.36,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-013",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     4.94,
+     14.36,
+     -2.47
+    ],
+    "end": [
+     4.94,
+     14.94,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-014",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     4.94,
+     14.36,
+     -2.47
+    ],
+    "end": [
+     8.54,
+     14.36,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-015",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     8.54,
+     14.36,
+     -2.47
+    ],
+    "end": [
+     8.54,
+     12.62,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-016",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     0.06,
+     8.9,
+     -2.47
+    ],
+    "end": [
+     0.06,
+     8.9,
+     -2.2
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-017",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     3.26,
+     9.6,
+     -2.47
+    ],
+    "end": [
+     3.26,
+     9.6,
+     -2.2
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-018",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     5.58,
+     8.56,
+     -2.47
+    ],
+    "end": [
+     5.58,
+     8.56,
+     -2.2
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-019",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     3.1,
+     14.94,
+     -2.47
+    ],
+    "end": [
+     3.1,
+     14.94,
+     -2.2
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-020",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     4.86,
+     14.36,
+     -2.47
+    ],
+    "end": [
+     4.86,
+     14.36,
+     -2.2
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-021",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     4.94,
+     14.94,
+     -2.47
+    ],
+    "end": [
+     4.94,
+     14.94,
+     -2.2
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-general-1-022",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-general-1",
+    "start": [
+     8.54,
+     12.62,
+     -2.47
+    ],
+    "end": [
+     8.54,
+     12.62,
+     -2.2
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-laundry-1-001",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-laundry-1",
+    "start": [
+     0.12,
+     9.5,
+     -1
+    ],
+    "end": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-laundry-1-002",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-laundry-1",
+    "start": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     0.06,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-laundry-1-003",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-laundry-1",
+    "start": [
+     0.06,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     0.06,
+     10.9,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-laundry-1-004",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-laundry-1",
+    "start": [
+     0.06,
+     10.9,
+     -2.47
+    ],
+    "end": [
+     1.54,
+     10.9,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-laundry-1-005",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-laundry-1",
+    "start": [
+     1.54,
+     10.9,
+     -2.47
+    ],
+    "end": [
+     1.54,
+     11.3,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-laundry-1-006",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-laundry-1",
+    "start": [
+     0.06,
+     10.9,
+     -2.47
+    ],
+    "end": [
+     0.06,
+     10.9,
+     -1.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-laundry-1-007",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-laundry-1",
+    "start": [
+     1.54,
+     11.3,
+     -2.47
+    ],
+    "end": [
+     1.54,
+     11.3,
+     -1.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-laundry-2-001",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-laundry-2",
+    "start": [
+     0.12,
+     9.5,
+     -1
+    ],
+    "end": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-laundry-2-002",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-laundry-2",
+    "start": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     0.2,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-laundry-2-003",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-laundry-2",
+    "start": [
+     0.2,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     0.2,
+     12.44,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-laundry-2-004",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-laundry-2",
+    "start": [
+     0.2,
+     12.44,
+     -2.47
+    ],
+    "end": [
+     0.2,
+     12.44,
+     -1.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-wet-1-001",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-wet-1",
+    "start": [
+     0.12,
+     9.5,
+     -1
+    ],
+    "end": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-wet-1-002",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-wet-1",
+    "start": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     3.26,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-wet-1-003",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-wet-1",
+    "start": [
+     3.26,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     3.26,
+     13.64,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-LL-wet-1-004",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-LL-wet-1",
+    "start": [
+     3.26,
+     13.64,
+     -2.47
+    ],
+    "end": [
+     3.26,
+     13.64,
+     -1.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     0.12,
+     4.7,
+     3.4
+    ],
+    "end": [
+     1,
+     4.7,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     1,
+     4.7,
+     3.4
+    ],
+    "end": [
+     1,
+     3.4,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     1,
+     4.7,
+     3.4
+    ],
+    "end": [
+     1,
+     6.1,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-005",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     1,
+     3.4,
+     3.4
+    ],
+    "end": [
+     1.6,
+     3.4,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-006",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     1,
+     6.1,
+     3.4
+    ],
+    "end": [
+     1.6,
+     6.1,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-007",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     1.6,
+     3.4,
+     3.4
+    ],
+    "end": [
+     1.6,
+     1.8,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-008",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     1.6,
+     6.1,
+     3.4
+    ],
+    "end": [
+     1.6,
+     6.3,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-009",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     1.6,
+     6.3,
+     3.4
+    ],
+    "end": [
+     1.6,
+     10.4,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-010",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     1.6,
+     6.3,
+     3.4
+    ],
+    "end": [
+     5.9,
+     6.3,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-011",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     5.9,
+     6.3,
+     3.4
+    ],
+    "end": [
+     5.9,
+     8.6,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-012",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     5.9,
+     8.6,
+     3.4
+    ],
+    "end": [
+     5.9,
+     9.75,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-013",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     5.9,
+     9.75,
+     3.4
+    ],
+    "end": [
+     5.9,
+     11.1,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-014",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     1,
+     4.7,
+     3.4
+    ],
+    "end": [
+     1,
+     4.7,
+     3.25
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-015",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     1,
+     3.4,
+     3.4
+    ],
+    "end": [
+     1,
+     3.4,
+     3.25
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-016",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     1,
+     6.1,
+     3.4
+    ],
+    "end": [
+     1,
+     6.1,
+     3.25
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-017",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     1.6,
+     1.8,
+     3.4
+    ],
+    "end": [
+     1.6,
+     1.8,
+     3.25
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-018",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     1.6,
+     10.4,
+     3.4
+    ],
+    "end": [
+     1.6,
+     10.4,
+     3.25
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-019",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     5.9,
+     6.3,
+     3.4
+    ],
+    "end": [
+     5.9,
+     6.3,
+     3.25
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-020",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     5.9,
+     8.6,
+     3.4
+    ],
+    "end": [
+     5.9,
+     8.6,
+     3.25
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-021",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     5.9,
+     9.75,
+     3.4
+    ],
+    "end": [
+     5.9,
+     9.75,
+     3.2
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-SL-022",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-SL",
+    "start": [
+     5.9,
+     11.1,
+     3.4
+    ],
+    "end": [
+     5.9,
+     11.1,
+     3.25
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "end": [
+     1,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "end": [
+     0.06,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     1,
+     4.7,
+     0.3
+    ],
+    "end": [
+     1,
+     5.14,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-005",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     0.06,
+     4.7,
+     0.3
+    ],
+    "end": [
+     0.06,
+     6.94,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-006",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     0.06,
+     6.94,
+     0.3
+    ],
+    "end": [
+     0.06,
+     7.4,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-007",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     0.06,
+     6.94,
+     0.3
+    ],
+    "end": [
+     1.8,
+     6.94,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-008",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     1.8,
+     6.94,
+     0.3
+    ],
+    "end": [
+     3.26,
+     6.94,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-009",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     3.26,
+     6.94,
+     0.3
+    ],
+    "end": [
+     3.26,
+     7.66,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-010",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     3.26,
+     7.66,
+     0.3
+    ],
+    "end": [
+     3.26,
+     9.135,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-011",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     3.26,
+     7.66,
+     0.3
+    ],
+    "end": [
+     5.2,
+     7.66,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-012",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     5.2,
+     7.66,
+     0.3
+    ],
+    "end": [
+     5.665,
+     7.66,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-013",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     5.2,
+     7.66,
+     0.3
+    ],
+    "end": [
+     5.2,
+     9.54,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-014",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     5.2,
+     9.54,
+     0.3
+    ],
+    "end": [
+     5.3,
+     9.54,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-015",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     5.3,
+     9.54,
+     0.3
+    ],
+    "end": [
+     5.3,
+     9.66,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-016",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     5.3,
+     9.66,
+     0.3
+    ],
+    "end": [
+     4.1,
+     9.66,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-017",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     5.3,
+     9.66,
+     0.3
+    ],
+    "end": [
+     8.54,
+     9.66,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-018",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     4.1,
+     9.66,
+     0.3
+    ],
+    "end": [
+     4.1,
+     12.54,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-019",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     8.54,
+     9.66,
+     0.3
+    ],
+    "end": [
+     8.54,
+     10.5,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-020",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     8.54,
+     10.5,
+     0.3
+    ],
+    "end": [
+     8.3,
+     10.5,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-021",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     8.3,
+     10.5,
+     0.3
+    ],
+    "end": [
+     8.3,
+     12.54,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-022",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     1,
+     5.14,
+     0.3
+    ],
+    "end": [
+     1,
+     5.14,
+     0.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-023",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     0.06,
+     7.4,
+     0.3
+    ],
+    "end": [
+     0.06,
+     7.4,
+     0.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-024",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     1.8,
+     6.94,
+     0.3
+    ],
+    "end": [
+     1.8,
+     6.94,
+     0.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-025",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     3.26,
+     9.135,
+     0.3
+    ],
+    "end": [
+     3.26,
+     9.135,
+     0.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-026",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     5.665,
+     7.66,
+     0.3
+    ],
+    "end": [
+     5.665,
+     7.66,
+     0.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-027",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     5.2,
+     9.54,
+     0.3
+    ],
+    "end": [
+     5.2,
+     9.54,
+     0.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-028",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     5.3,
+     9.66,
+     0.3
+    ],
+    "end": [
+     5.3,
+     9.66,
+     0.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-029",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     4.1,
+     12.54,
+     0.3
+    ],
+    "end": [
+     4.1,
+     12.54,
+     0.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-030",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     8.54,
+     10.5,
+     0.3
+    ],
+    "end": [
+     8.54,
+     10.5,
+     0.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-general-1-031",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-general-1",
+    "start": [
+     8.3,
+     12.54,
+     0.3
+    ],
+    "end": [
+     8.3,
+     12.54,
+     0.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-wet-1-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-wet-1",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-wet-1-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-wet-1",
+    "start": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "end": [
+     1.6,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-wet-1-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-wet-1",
+    "start": [
+     1.6,
+     4.7,
+     0.3
+    ],
+    "end": [
+     1.6,
+     2.66,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-wet-1-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-wet-1",
+    "start": [
+     1.6,
+     2.66,
+     0.3
+    ],
+    "end": [
+     1.6,
+     2.66,
+     1.7
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-1-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-1",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-1-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-1",
+    "start": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "end": [
+     4.8,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-1-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-1",
+    "start": [
+     4.8,
+     4.7,
+     0.3
+    ],
+    "end": [
+     4.8,
+     5.06,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-1-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-1",
+    "start": [
+     4.8,
+     5.06,
+     0.3
+    ],
+    "end": [
+     8,
+     5.06,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-1-005",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-1",
+    "start": [
+     4.8,
+     5.06,
+     0.3
+    ],
+    "end": [
+     4.8,
+     5.06,
+     1.7
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-1-006",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-1",
+    "start": [
+     8,
+     5.06,
+     0.3
+    ],
+    "end": [
+     8,
+     5.06,
+     1.7
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-2-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-2",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-2-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-2",
+    "start": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "end": [
+     3.26,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-2-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-2",
+    "start": [
+     3.26,
+     4.7,
+     0.3
+    ],
+    "end": [
+     3.26,
+     5.4,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-2-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-2",
+    "start": [
+     3.26,
+     5.4,
+     0.3
+    ],
+    "end": [
+     5.8,
+     5.4,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-2-005",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-2",
+    "start": [
+     5.8,
+     5.4,
+     0.3
+    ],
+    "end": [
+     5.8,
+     6,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-2-006",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-2",
+    "start": [
+     5.8,
+     6,
+     0.3
+    ],
+    "end": [
+     5.8,
+     7.54,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-2-007",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-2",
+    "start": [
+     5.8,
+     6,
+     0.3
+    ],
+    "end": [
+     8.54,
+     6,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-2-008",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-2",
+    "start": [
+     3.26,
+     5.4,
+     0.3
+    ],
+    "end": [
+     3.26,
+     5.4,
+     0.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-2-009",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-2",
+    "start": [
+     5.8,
+     7.54,
+     0.3
+    ],
+    "end": [
+     5.8,
+     7.54,
+     1.7
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-SL-kitchen-2-010",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-SL-kitchen-2",
+    "start": [
+     8.54,
+     6,
+     0.3
+    ],
+    "end": [
+     8.54,
+     6,
+     0.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     0.12,
+     4.7,
+     6.5
+    ],
+    "end": [
+     1.6,
+     4.7,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     1.6,
+     4.7,
+     6.5
+    ],
+    "end": [
+     1.6,
+     5.8,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     1.6,
+     5.8,
+     6.5
+    ],
+    "end": [
+     1.6,
+     6.6,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-005",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     1.6,
+     5.8,
+     6.5
+    ],
+    "end": [
+     4.1,
+     5.8,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-006",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     1.6,
+     6.6,
+     6.5
+    ],
+    "end": [
+     0.8,
+     6.6,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-007",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     4.1,
+     5.8,
+     6.5
+    ],
+    "end": [
+     4.1,
+     7,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-008",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     0.8,
+     6.6,
+     6.5
+    ],
+    "end": [
+     0.8,
+     10.35,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-009",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     4.1,
+     7,
+     6.5
+    ],
+    "end": [
+     4.1,
+     7.4,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-010",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     4.1,
+     7,
+     6.5
+    ],
+    "end": [
+     6.8,
+     7,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-011",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     0.8,
+     10.35,
+     6.5
+    ],
+    "end": [
+     2.4,
+     10.35,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-012",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     2.4,
+     10.35,
+     6.5
+    ],
+    "end": [
+     4.1,
+     10.35,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-013",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     4.1,
+     10.35,
+     6.5
+    ],
+    "end": [
+     4.1,
+     11.1,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-014",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     4.1,
+     11.1,
+     6.5
+    ],
+    "end": [
+     4.1,
+     11.3,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-015",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     4.1,
+     11.3,
+     6.5
+    ],
+    "end": [
+     4.1,
+     12.9,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-016",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     4.1,
+     11.3,
+     6.5
+    ],
+    "end": [
+     6.8,
+     11.3,
+     6.5
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-017",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     1.6,
+     6.6,
+     6.5
+    ],
+    "end": [
+     1.6,
+     6.6,
+     6.35
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-018",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     4.1,
+     5.8,
+     6.5
+    ],
+    "end": [
+     4.1,
+     5.8,
+     6.35
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-019",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     0.8,
+     10.35,
+     6.5
+    ],
+    "end": [
+     0.8,
+     10.35,
+     6.35
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-020",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     4.1,
+     7.4,
+     6.5
+    ],
+    "end": [
+     4.1,
+     7.4,
+     6.35
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-021",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     2.4,
+     10.35,
+     6.5
+    ],
+    "end": [
+     2.4,
+     10.35,
+     6.35
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-022",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     6.8,
+     7,
+     6.5
+    ],
+    "end": [
+     6.8,
+     7,
+     6.35
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-023",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     4.1,
+     11.1,
+     6.5
+    ],
+    "end": [
+     4.1,
+     11.1,
+     6.35
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-024",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     4.1,
+     12.9,
+     6.5
+    ],
+    "end": [
+     4.1,
+     12.9,
+     6.35
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-UF-025",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-UF",
+    "start": [
+     6.8,
+     11.3,
+     6.5
+    ],
+    "end": [
+     6.8,
+     11.3,
+     6.35
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "end": [
+     2.135,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     2.135,
+     4.7,
+     3.73
+    ],
+    "end": [
+     2.135,
+     5.06,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     2.135,
+     5.06,
+     3.73
+    ],
+    "end": [
+     3.14,
+     5.06,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-005",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     3.14,
+     5.06,
+     3.73
+    ],
+    "end": [
+     3.14,
+     5.15,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-006",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     3.14,
+     5.15,
+     3.73
+    ],
+    "end": [
+     3.14,
+     6.665,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-007",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     3.14,
+     5.15,
+     3.73
+    ],
+    "end": [
+     5.06,
+     5.15,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-008",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     3.14,
+     6.665,
+     3.73
+    ],
+    "end": [
+     1.66,
+     6.665,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-009",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     3.14,
+     6.665,
+     3.73
+    ],
+    "end": [
+     3.2,
+     6.665,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-010",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     5.06,
+     5.15,
+     3.73
+    ],
+    "end": [
+     7.35,
+     5.15,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-011",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     1.66,
+     6.665,
+     3.73
+    ],
+    "end": [
+     1.66,
+     9.3,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-012",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     3.2,
+     6.665,
+     3.73
+    ],
+    "end": [
+     3.2,
+     8.14,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-013",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     7.35,
+     5.15,
+     3.73
+    ],
+    "end": [
+     7.35,
+     5.06,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-014",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     7.35,
+     5.15,
+     3.73
+    ],
+    "end": [
+     8.54,
+     5.15,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-015",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     3.2,
+     8.14,
+     3.73
+    ],
+    "end": [
+     4.85,
+     8.14,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-016",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     8.54,
+     5.15,
+     3.73
+    ],
+    "end": [
+     8.54,
+     6.65,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-017",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     4.85,
+     8.14,
+     3.73
+    ],
+    "end": [
+     4.85,
+     8.94,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-018",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     4.85,
+     8.94,
+     3.73
+    ],
+    "end": [
+     5.7,
+     8.94,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-019",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     5.7,
+     8.94,
+     3.73
+    ],
+    "end": [
+     5.7,
+     9.06,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-020",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     2.135,
+     5.06,
+     3.73
+    ],
+    "end": [
+     2.135,
+     5.06,
+     4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-021",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     3.14,
+     6.665,
+     3.73
+    ],
+    "end": [
+     3.14,
+     6.665,
+     4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-022",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     5.06,
+     5.15,
+     3.73
+    ],
+    "end": [
+     5.06,
+     5.15,
+     4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-023",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     1.66,
+     9.3,
+     3.73
+    ],
+    "end": [
+     1.66,
+     9.3,
+     4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-024",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     3.2,
+     8.14,
+     3.73
+    ],
+    "end": [
+     3.2,
+     8.14,
+     4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-025",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     7.35,
+     5.06,
+     3.73
+    ],
+    "end": [
+     7.35,
+     5.06,
+     4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-026",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     4.85,
+     8.94,
+     3.73
+    ],
+    "end": [
+     4.85,
+     8.94,
+     4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-027",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     5.7,
+     9.06,
+     3.73
+    ],
+    "end": [
+     5.7,
+     9.06,
+     4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-1-028",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-1",
+    "start": [
+     8.54,
+     6.65,
+     3.73
+    ],
+    "end": [
+     8.54,
+     6.65,
+     4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "end": [
+     3.26,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     3.26,
+     4.7,
+     3.73
+    ],
+    "end": [
+     3.26,
+     11.1,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     3.26,
+     11.1,
+     3.73
+    ],
+    "end": [
+     4.6,
+     11.1,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-005",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     4.6,
+     11.1,
+     3.73
+    ],
+    "end": [
+     5.06,
+     11.1,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-006",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     4.6,
+     11.1,
+     3.73
+    ],
+    "end": [
+     4.6,
+     13.54,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-007",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     5.06,
+     11.1,
+     3.73
+    ],
+    "end": [
+     5.06,
+     11.3,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-008",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     4.6,
+     13.54,
+     3.73
+    ],
+    "end": [
+     5.3,
+     13.54,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-009",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     5.06,
+     11.1,
+     3.73
+    ],
+    "end": [
+     8.54,
+     11.1,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-010",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     3.26,
+     11.1,
+     3.73
+    ],
+    "end": [
+     3.26,
+     11.1,
+     4.8
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-011",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     5.06,
+     11.3,
+     3.73
+    ],
+    "end": [
+     5.06,
+     11.3,
+     4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-012",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     4.6,
+     13.54,
+     3.73
+    ],
+    "end": [
+     4.6,
+     13.54,
+     4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-013",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     5.3,
+     13.54,
+     3.73
+    ],
+    "end": [
+     5.3,
+     13.54,
+     4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-general-2-014",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-general-2",
+    "start": [
+     8.54,
+     11.1,
+     3.73
+    ],
+    "end": [
+     8.54,
+     11.1,
+     4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-wet-1-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-wet-1",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-wet-1-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-wet-1",
+    "start": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "end": [
+     3.26,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-wet-1-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-wet-1",
+    "start": [
+     3.26,
+     4.7,
+     3.73
+    ],
+    "end": [
+     3.26,
+     5.8,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-wet-1-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-wet-1",
+    "start": [
+     3.26,
+     5.8,
+     3.73
+    ],
+    "end": [
+     3.26,
+     7.4,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-wet-1-005",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-wet-1",
+    "start": [
+     3.26,
+     5.8,
+     3.73
+    ],
+    "end": [
+     3.26,
+     5.8,
+     4.8
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-UF-wet-1-006",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-UF-wet-1",
+    "start": [
+     3.26,
+     7.4,
+     3.73
+    ],
+    "end": [
+     3.26,
+     7.4,
+     4.8
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-rack-01-001",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-rack-01",
+    "start": [
+     0.12,
+     9.5,
+     -1
+    ],
+    "end": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-rack-01-002",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-rack-01",
+    "start": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     6.7,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-rack-01-003",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-rack-01",
+    "start": [
+     6.7,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     6.7,
+     9.15,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-rack-01-004",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-rack-01",
+    "start": [
+     6.7,
+     9.15,
+     -2.47
+    ],
+    "end": [
+     6.7,
+     9.15,
+     -1.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-01-001",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-01",
+    "start": [
+     0.12,
+     9.5,
+     -1
+    ],
+    "end": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-01-002",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-01",
+    "start": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     6.7,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-01-003",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-01",
+    "start": [
+     6.7,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     6.7,
+     15.45,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-01-004",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-01",
+    "start": [
+     6.7,
+     15.45,
+     -2.47
+    ],
+    "end": [
+     6.7,
+     15.45,
+     -2.1
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-02-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-02",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-02-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-02",
+    "start": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "end": [
+     9.05,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-02-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-02",
+    "start": [
+     9.05,
+     4.7,
+     0.3
+    ],
+    "end": [
+     9.05,
+     11.1,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-02-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-02",
+    "start": [
+     9.05,
+     11.1,
+     0.3
+    ],
+    "end": [
+     9.05,
+     11.1,
+     1
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-03-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-03",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-03-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-03",
+    "start": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "end": [
+     1.6,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-03-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-03",
+    "start": [
+     1.6,
+     4.7,
+     3.73
+    ],
+    "end": [
+     1.6,
+     4.55,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-03-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-03",
+    "start": [
+     1.6,
+     4.55,
+     3.73
+    ],
+    "end": [
+     1.6,
+     4.55,
+     4.1
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-04-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-04",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-04-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-04",
+    "start": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "end": [
+     6.8,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-04-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-04",
+    "start": [
+     6.8,
+     4.7,
+     3.73
+    ],
+    "end": [
+     6.8,
+     4.55,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-04-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-04",
+    "start": [
+     6.8,
+     4.55,
+     3.73
+    ],
+    "end": [
+     6.8,
+     4.55,
+     4.1
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-05-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-05",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-05-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-05",
+    "start": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "end": [
+     6.8,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-05-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-05",
+    "start": [
+     6.8,
+     4.7,
+     3.73
+    ],
+    "end": [
+     6.8,
+     14.05,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-ac-outdoor-05-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-ac-outdoor-05",
+    "start": [
+     6.8,
+     14.05,
+     3.73
+    ],
+    "end": [
+     6.8,
+     14.05,
+     4.1
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-hob-01-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-hob-01",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "dn": 25
+   }
+  },
+  {
+   "id": "cnd-ded-dev-hob-01-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-hob-01",
+    "start": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "end": [
+     5.9,
+     4.7,
+     0.3
+    ],
+    "dn": 25
+   }
+  },
+  {
+   "id": "cnd-ded-dev-hob-01-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-hob-01",
+    "start": [
+     5.9,
+     4.7,
+     0.3
+    ],
+    "end": [
+     5.9,
+     5.26,
+     0.3
+    ],
+    "dn": 25
+   }
+  },
+  {
+   "id": "cnd-ded-dev-hob-01-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-hob-01",
+    "start": [
+     5.9,
+     5.26,
+     0.3
+    ],
+    "end": [
+     5.9,
+     5.26,
+     1.5
+    ],
+    "dn": 25
+   }
+  },
+  {
+   "id": "cnd-ded-dev-oven-01-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-oven-01",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-oven-01-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-oven-01",
+    "start": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "end": [
+     4.55,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-oven-01-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-oven-01",
+    "start": [
+     4.55,
+     4.7,
+     0.3
+    ],
+    "end": [
+     4.55,
+     5.26,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-oven-01-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-oven-01",
+    "start": [
+     4.55,
+     5.26,
+     0.3
+    ],
+    "end": [
+     4.55,
+     5.26,
+     1.2
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-dishwasher-01-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-dishwasher-01",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-dishwasher-01-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-dishwasher-01",
+    "start": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "end": [
+     8.33,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-dishwasher-01-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-dishwasher-01",
+    "start": [
+     8.33,
+     4.7,
+     0.3
+    ],
+    "end": [
+     8.33,
+     5.39,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-dishwasher-01-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-dishwasher-01",
+    "start": [
+     8.33,
+     5.39,
+     0.3
+    ],
+    "end": [
+     8.33,
+     5.39,
+     0.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-washer-dryer-01-001",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-washer-dryer-01",
+    "start": [
+     0.12,
+     9.5,
+     -1
+    ],
+    "end": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-washer-dryer-01-002",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-washer-dryer-01",
+    "start": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     0.48,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-washer-dryer-01-003",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-washer-dryer-01",
+    "start": [
+     0.48,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     0.48,
+     11.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-washer-dryer-01-004",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-washer-dryer-01",
+    "start": [
+     0.48,
+     11.5,
+     -2.47
+    ],
+    "end": [
+     0.48,
+     11.5,
+     -1.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-heat-pump-01-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-heat-pump-01",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-heat-pump-01-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-heat-pump-01",
+    "start": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "end": [
+     2.05,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-heat-pump-01-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-heat-pump-01",
+    "start": [
+     2.05,
+     4.7,
+     3.73
+    ],
+    "end": [
+     2.05,
+     3,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-heat-pump-01-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-heat-pump-01",
+    "start": [
+     2.05,
+     3,
+     3.73
+    ],
+    "end": [
+     2.05,
+     3,
+     4.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-pump-pressure-01-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-pump-pressure-01",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-pump-pressure-01-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-pump-pressure-01",
+    "start": [
+     0.12,
+     4.7,
+     3.73
+    ],
+    "end": [
+     1.8,
+     4.7,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-pump-pressure-01-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-pump-pressure-01",
+    "start": [
+     1.8,
+     4.7,
+     3.73
+    ],
+    "end": [
+     1.8,
+     9.1,
+     3.73
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-pump-pressure-01-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-pump-pressure-01",
+    "start": [
+     1.8,
+     9.1,
+     3.73
+    ],
+    "end": [
+     1.8,
+     9.1,
+     7.1
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-pump-lift-01-001",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-pump-lift-01",
+    "start": [
+     0.12,
+     9.5,
+     -1
+    ],
+    "end": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-pump-lift-01-002",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-pump-lift-01",
+    "start": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     0.82,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-pump-lift-01-003",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-pump-lift-01",
+    "start": [
+     0.82,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     0.82,
+     13.125,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-pump-lift-01-004",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-pump-lift-01",
+    "start": [
+     0.82,
+     13.125,
+     -2.47
+    ],
+    "end": [
+     0.82,
+     13.125,
+     -1.9
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-pump-sump-01-001",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-pump-sump-01",
+    "start": [
+     0.12,
+     9.5,
+     -1
+    ],
+    "end": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-pump-sump-01-002",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-pump-sump-01",
+    "start": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     8,
+     9.5,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-pump-sump-01-003",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-pump-sump-01",
+    "start": [
+     8,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     8,
+     16.1,
+     -2.47
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-ded-dev-pump-sump-01-004",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-ded-dev-pump-sump-01",
+    "start": [
+     8,
+     16.1,
+     -2.47
+    ],
+    "end": [
+     8,
+     16.1,
+     -1.95
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     0.12,
+     4.7,
+     -1.095
+    ],
+    "end": [
+     1.4,
+     4.7,
+     -1.095
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     1.4,
+     4.7,
+     -1.095
+    ],
+    "end": [
+     1.4,
+     0.92,
+     -0.795
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-004",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     1.4,
+     0.92,
+     -0.795
+    ],
+    "end": [
+     4.1,
+     0.92,
+     -0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-005",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     4.1,
+     0.92,
+     -0.3
+    ],
+    "end": [
+     4.1,
+     -1.5,
+     -0.35
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-006",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     4.1,
+     -1.5,
+     -0.35
+    ],
+    "end": [
+     7.1,
+     -1.5,
+     -0.35
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-007",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     1.4,
+     0.92,
+     -0.795
+    ],
+    "end": [
+     1.4,
+     0.92,
+     2.8
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-008",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     4.1,
+     -1.5,
+     -0.35
+    ],
+    "end": [
+     4.1,
+     -1.5,
+     2.45
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-009",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     7.1,
+     -1.5,
+     -0.35
+    ],
+    "end": [
+     7.1,
+     -1.5,
+     2.45
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-010",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-011",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     0.12,
+     4.7,
+     3.4
+    ],
+    "end": [
+     2,
+     4.7,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-012",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     2,
+     4.7,
+     3.4
+    ],
+    "end": [
+     2,
+     12.68,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-013",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     2,
+     4.7,
+     3.4
+    ],
+    "end": [
+     8.68,
+     4.7,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-014",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     8.68,
+     4.7,
+     3.4
+    ],
+    "end": [
+     8.68,
+     3,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-015",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     8.68,
+     4.7,
+     3.4
+    ],
+    "end": [
+     8.68,
+     10,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-016",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     2,
+     12.68,
+     3.4
+    ],
+    "end": [
+     6.5,
+     12.68,
+     3.4
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-017",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     2,
+     12.68,
+     3.4
+    ],
+    "end": [
+     2,
+     12.68,
+     2.8
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-018",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     8.68,
+     3,
+     3.4
+    ],
+    "end": [
+     8.68,
+     3,
+     1.6
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-019",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     8.68,
+     10,
+     3.4
+    ],
+    "end": [
+     8.68,
+     10,
+     1.6
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-020",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext",
+    "start": [
+     6.5,
+     12.68,
+     3.4
+    ],
+    "end": [
+     6.5,
+     12.68,
+     2.8
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-LL-001",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext-LL",
+    "start": [
+     0.12,
+     9.5,
+     -1
+    ],
+    "end": [
+     0.12,
+     9.5,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-LL-002",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext-LL",
+    "start": [
+     0.12,
+     9.5,
+     0.3
+    ],
+    "end": [
+     5,
+     9.5,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-LL-003",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext-LL",
+    "start": [
+     5,
+     9.5,
+     0.3
+    ],
+    "end": [
+     5,
+     15.08,
+     0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-ext-LL-004",
+   "type": "Conduit",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-ext-LL",
+    "start": [
+     5,
+     15.08,
+     0.3
+    ],
+    "end": [
+     5,
+     15.08,
+     -0.3
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-feeder-LL-001",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-feeder-LL",
+    "start": [
+     0.12,
+     4.7,
+     2.1
+    ],
+    "end": [
+     0.12,
+     4.7,
+     -2.47
+    ],
+    "dn": 25
+   }
+  },
+  {
+   "id": "cnd-feeder-LL-002",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-feeder-LL",
+    "start": [
+     0.12,
+     4.7,
+     -2.47
+    ],
+    "end": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "dn": 25
+   }
+  },
+  {
+   "id": "cnd-feeder-LL-003",
+   "type": "Conduit",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-feeder-LL",
+    "start": [
+     0.12,
+     9.5,
+     -2.47
+    ],
+    "end": [
+     0.12,
+     9.5,
+     -1
+    ],
+    "dn": 25
    }
   }
  ]

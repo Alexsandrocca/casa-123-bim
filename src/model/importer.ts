@@ -444,12 +444,11 @@ export function addV3Front(p: Project): Project {
   });
   els.push({
     id: 'dev-ev-01', type: 'Device', level: 'carport', tags: ['electrical'],
-    props: { kind: 'ev-charger', name: 'EV charger 7 kW', powerKw: 7, host: 'carport-col-04', at: [q(colX[1]! - 0.1), q(colY[1]!), 1.3], size: [0.08, 0.25, 0.35] },
+    props: { kind: 'ev-charger', name: 'EV charger 7 kW', power: 7000, at: [q(colX[1]! - 0.1), q(colY[1]!)], z: 1.3 },
   });
-  const storage = p.elements.find((e) => e.type === 'Space' && e.level === 'SL' && e.props.name === 'Storage');
   els.push({
     id: 'dev-panel-01', type: 'Device', level: 'SL', tags: ['electrical'],
-    props: { kind: 'panel', name: 'Main electrical panel', space: storage?.id ?? '', at: [0.12, 4.7, sl.elevation + 1.5], size: [0.12, 0.5, 0.7] },
+    props: { kind: 'panel', name: 'Main electrical panel', at: [0.12, 4.7], z: sl.elevation + 1.5, power: 0 },
   });
   return parseProject({ ...p, elements: [...p.elements, ...els] });
 }

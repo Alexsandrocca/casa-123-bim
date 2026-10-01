@@ -81,9 +81,10 @@ export function plumbingChecks(p: Project): CheckResult[] {
 
   /* vents */
   for (const st of fixtures.filter((f) => f.props.kind === 'stack')) {
-    const vent = pipes.find((x) => x.props.network === `vent-${st.id}`);
+    const vents = pipes.filter((x) => x.props.network === `vent-${st.id}`);
+    const vent = vents[0];
     const roof = p.levels.find((l) => l.id === 'roof')?.elevation ?? 0;
-    const top = vent ? Math.max(vent.props.start[2], vent.props.end[2]) : -Infinity;
+    const top = vents.length ? Math.max(...vents.flatMap((x) => [x.props.start[2], x.props.end[2]])) : -Infinity;
     out.push({
       id: `vent:${st.id}`, group: 'Plumbing', elementIds: [st.id], level: st.level, title: `Vent on stack ${st.id}`,
       status: top >= roof + 0.3 ? 'pass' : 'fail', value: vent ? `DN ${vent.props.dn} to ${top.toFixed(2)} (roof ${roof.toFixed(2)})` : 'no vent',

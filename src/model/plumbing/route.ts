@@ -253,7 +253,10 @@ export function routePlumbing(p: Project): { pipes: PipeSegment[]; auto: Fixture
         out.pipe(`stack-${st.id}`, j.level, 'sewage', sewageDnFor(uhc(carried), hasWc(carried)), [st.props.at[0], st.props.at[1], j.z], [st.props.at[0], st.props.at[1], below], { load: uhc(carried), serves: carried });
         zTop = Math.max(zTop, j.z);
       });
-      out.pipe(`vent-${st.id}`, 'roof', 'vent', 75, [st.props.at[0], st.props.at[1], zTop], [st.props.at[0], st.props.at[1], ROOF + 0.6], { serves: ids });
+      // the vent is offset in the upper-floor ceiling to come out beside the south parapet, keeping the roof free for solar modules
+      const vx = 0.25, zc = ROOF - 0.3;
+      const vpts: P3[] = [[st.props.at[0], st.props.at[1], zTop], [st.props.at[0], st.props.at[1], zc], [vx, st.props.at[1], zc], [vx, st.props.at[1], ROOF + 0.6]];
+      for (let k = 1; k < vpts.length; k++) out.pipe(`vent-${st.id}`, k === 3 ? 'roof' : 'UF', 'vent', 75, vpts[k - 1]!, vpts[k]!, { serves: ids });
     }
     // kitchen line from the grease trap to the collector
     if (gt && gtIn !== null && gtJoin) {

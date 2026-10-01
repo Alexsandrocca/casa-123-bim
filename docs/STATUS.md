@@ -163,3 +163,16 @@ Spec 02 — 3D model (it is marked ready).
 ## 2026-09-29 — Manager: Version 3 (carport) released
 - New spec **02b**: the garage leaves the house, and a covered carport for 2 cars goes in a 5 m front zone. The house front moves back 1 m and the street level shrinks by about 27 m².
 - Specs 03 and 04 are ready again and build on Version 3. `/next-spec` runs 02b first, then asks before 03.
+
+## 2026-10-01 — Manager: specs 08 and 09 released
+- **08:** architectural features + engineering estimates (assemblies, loads, pre-sizing, environmental checks, cost).
+- **09:** reference images board with AI analysis and model proposals.
+- Order of work: 04 → 08 → 09. Specs 05–07 stay draft. When 05 is written, it builds on the colour/material hooks from 08 and 09.
+
+## 2026-10-01 — Manager: spec 10 released
+- **10:** generate a complete new design version from reference photos and prompts, with self-repair against the checks and options compared side by side. It runs after 09. Order: 04 → 08 → 09 → 10.
+
+## 2026-10-01 — Manager request: GitHub (do this right after the current spec is committed)
+- Create a **private** GitHub repository `casa-123-bim` under the owner's account (`Alexsandrocca`), add it as `origin`, commit any uncommitted docs/specs (08, 09, 10, roadmap), and push all branches.
+- If the `gh` CLI or GitHub login is missing on this Mac, guide the owner step by step (`gh auth login` in the browser) and wait for them.
+- Keep `.env.local` out of git. From now on, push after every finished spec (the next-spec skill already says so).

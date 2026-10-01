@@ -2,10 +2,11 @@
 // Pure: no three.js here, so it can be tested and reused (walk mode, checks, exports).
 import { eq, openingSeg, pointInRect, wallSeg, type Seg } from '../model/geometry';
 import { profile } from '../model/profiles';
-import type { Carport, Column, Deck, Element, Opening, Project, Rect, Slab, Space, Stair, Wall } from '../model/schema';
+import type { Carport, Column, Deck, Device, Element, Opening, Project, Rect, Slab, Space, Stair, Wall } from '../model/schema';
 import { groundAt, groundZones, inPoly, siteFrame, zoneZ, type GroundZone } from '../model/site';
 import { slabRect, slabVoids } from '../model/structure';
 import { kindOf } from '../model/plumbing/library';
+import { deviceType } from '../model/electrical/library';
 
 export type V3 = [number, number, number];
 export type Mat =
@@ -14,7 +15,8 @@ export type Mat =
   | 'glass' | 'frame' | 'door' | 'garageDoor' | 'tread' | 'guardGlass' | 'rail' | 'deck'
   | 'grass' | 'paving' | 'soil' | 'ramp' | 'asphalt' | 'sidewalk' | 'boundary' | 'setback'
   | 'marking' | 'solarGhost' | 'device' | 'planter'
-  | 'pCold' | 'pHot' | 'pSewage' | 'pVent' | 'pRain' | 'fixture' | 'equipment' | 'tank';
+  | 'pCold' | 'pHot' | 'pSewage' | 'pVent' | 'pRain' | 'fixture' | 'equipment' | 'tank'
+  | 'camera' | 'conduit' | 'pvModule' | 'cone';
 
 /** A box: centre c, size s (along x, y, z), optional rotation about x (pitch) then z (yaw), in radians. */
 export interface BoxPart { kind: 'box'; id: string; mat: Mat; c: V3; s: V3; rx?: number; rz?: number; solid?: boolean }
@@ -27,7 +29,7 @@ export type Part = BoxPart | PolyPart | LinePart | PipePart;
 
 export const PIPE_MAT: Record<string, Mat> = { cold: 'pCold', hot: 'pHot', sewage: 'pSewage', vent: 'pVent', rain: 'pRain' };
 /** Materials that are building fabric (ghosted in x-ray mode). */
-export const SERVICE_MATS = new Set<Mat>(['pCold', 'pHot', 'pSewage', 'pVent', 'pRain', 'fixture', 'equipment', 'tank']);
+export const SERVICE_MATS = new Set<Mat>(['pCold', 'pHot', 'pSewage', 'pVent', 'pRain', 'fixture', 'equipment', 'tank', 'device', 'camera', 'conduit', 'pvModule', 'cone']);
 
 export interface BuildOptions { doorsOpen: boolean }
 
@@ -490,6 +492,14 @@ function carportParts(p: Project, c: Carport, out: Part[]) {
   }
 }
 
+/* ---------------- electrical devices ---------------- */
+
+function devicePart(d: Device, out: Part[]) {
+  const t = deviceType(d.props.kind);
+  const [sx, sy, sz] = d.props.size ?? t.size;
+  out.push({ kind: 'box', id: d.id, mat: t.group === 'camera' ? 'camera' : 'device', c: [d.props.at[0], d.props.at[1], d.props.z], s: [sx, sy, sz], solid: false });
+}
+
 /* ---------------- section cut faces ---------------- */
 
 const POCHE_MATS = new Set<Mat>(['wallExt', 'wallInt', 'wallWet', 'retaining', 'plinth', 'parapet', 'slab', 'roof', 'steel', 'concrete', 'footing']);
@@ -553,10 +563,7 @@ export function buildScene(p: Project, opt: BuildOptions = { doorsOpen: false })
     const mat: Mat = t.group === 'fixture' ? 'fixture' : fx.props.kind === 'roof-tank' || fx.props.kind === 'rain-cistern' ? 'tank' : 'equipment';
     parts.push({ kind: 'box', id: fx.id, mat, c: [fx.props.at[0], fx.props.at[1], base + sz / 2], s: [sx, sy, sz], solid: false });
   }
-  for (const d of byType('Device')) {
-    const at = d.props.at as V3 | undefined, sz = d.props.size as V3 | undefined;
-    if (at && sz) parts.push({ kind: 'box', id: d.id, mat: 'device', c: at, s: sz });
-  }
+  for (const d of byType('Device')) devicePart(d, parts);
   sitePartsAndSurfaces(p, parts, surfaces);
   const wallBoxes = parts.filter((x): x is BoxPart => x.kind === 'box' && ['wallExt', 'wallInt', 'wallWet', 'retaining', 'parapet'].includes(x.mat));
   guardParts(p, surfaces, wallBoxes, parts);
