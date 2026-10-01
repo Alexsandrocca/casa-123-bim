@@ -270,6 +270,9 @@
    "id": "LL-wall-01",
    "level": "LL",
    "tags": [],
+   "notes": [
+    "Stair and retaining wall: the down flight LL → SL passes over the cut line (y 8.50), x 1.70–3.20. The ground there is at about -1.00, so the retained soil stays well below the flight (tread about +0.23 at y 8.50). Under the stair opening the lower-level front wall stops under the flight soffit, with a lintel beam over it. To be detailed by the structural engineer."
+   ],
    "type": "Wall",
    "props": {
     "start": [
@@ -2234,6 +2237,9 @@
    "id": "stair-02",
    "level": "LL",
    "tags": [],
+   "notes": [
+    "Stair and retaining wall: the down flight LL → SL passes over the cut line (y 8.50), x 1.70–3.20. The ground there is at about -1.00, so the retained soil stays well below the flight (tread about +0.23 at y 8.50). Under the stair opening the lower-level front wall stops under the flight soffit, with a lintel beam over it. To be detailed by the structural engineer."
+   ],
    "type": "Stair",
    "props": {
     "name": "Down flight LL → SL",

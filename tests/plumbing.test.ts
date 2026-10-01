@@ -101,3 +101,39 @@ describe('plumbing model (Version 3)', () => {
     expect(routePlumbing(load('casa-123.json')).pipes).toHaveLength(0); // Version 2 has no plumbing
   });
 });
+
+describe('plumbing schedules', () => {
+  it('lists metres per DN and material, fittings and fixtures, and exports CSV', async () => {
+    const { schedule, scheduleCsv } = await import('../src/model/plumbing/schedule');
+    const s = schedule(v3);
+    expect(s.pipeRows.some((r) => r.system === 'sewage' && r.dn === 100 && r.material === 'PVC' && r.metres > 20)).toBe(true);
+    expect(s.pipeRows.some((r) => r.system === 'hot' && r.material === 'CPVC')).toBe(true);
+    expect(s.fittingRows.reduce((a, r) => a + r.elbows + r.tees, 0)).toBeGreaterThan(20);
+    expect(s.fixtureRows.find((r) => r.kind === 'toilet' && r.level === 'UF')!.count).toBe(3);
+    const csv = scheduleCsv(v3);
+    expect(csv.split('\n')[0]).toBe('Pipes');
+    expect(csv).toContain('System,DN,Material,Metres');
+    expect(csv).toContain('Toilet (WC),UF,3');
+  });
+});
+
+describe('spec 03 carry-overs', () => {
+  it('fills the cut faces of walls and slabs in a section (poché)', async () => {
+    const { buildScene, pocheCaps } = await import('../src/scene/build3d');
+    const parts = buildScene(v3).parts;
+    const caps = pocheCaps(parts, [{ axis: 'x', at: 2.45, keep: -1 }]);
+    expect(caps.length).toBeGreaterThan(5);
+    for (const c of caps) expect(Math.abs(c.c[0] - 2.45)).toBeLessThan(0.01);
+    expect(caps.some((c) => c.id === 'SL-slab-01')).toBe(true);
+    const both = pocheCaps(parts, [{ axis: 'x', at: 2.45, keep: -1 }, { axis: 'z', at: 1.8, keep: -1 }]);
+    for (const c of both) expect(c.c[2] - c.s[2] / 2).toBeLessThanOrEqual(1.8 + 1e-6);
+  });
+
+  it('notes the stair / retaining-wall crossing on both elements', () => {
+    for (const id of ['LL-wall-01', 'stair-02']) {
+      const e = v3.elements.find((x) => x.id === id)!;
+      expect(e.notes?.[0]).toContain('lintel beam');
+    }
+    expect(v3.elements.find((x) => x.id === 'stair-01')!.notes).toBeUndefined();
+  });
+});

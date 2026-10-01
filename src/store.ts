@@ -53,6 +53,11 @@ export interface AppState {
   aboutOpen: boolean;
   view: ViewMode;
   doorsOpen: boolean;
+  /** 3D: building ghosted so the pipes show. */
+  xray: boolean;
+  /** 2D: draw the plumbing on the plan. */
+  plumbing2d: boolean;
+  plumbingOpen: boolean;
   walk: boolean;
   camera: { preset: CameraPreset; n: number; pos?: [number, number, number]; target?: [number, number, number] };
   section: Section;
@@ -74,7 +79,7 @@ export interface AppState {
   setChecksScope(s: 'level' | 'all'): void;
   setAbout(open: boolean): void;
   setView(v: ViewMode): void;
-  set3d(patch: Partial<Pick<AppState, 'doorsOpen' | 'walk' | 'section' | 'sun'>>): void;
+  set3d(patch: Partial<Pick<AppState, 'doorsOpen' | 'walk' | 'section' | 'sun' | 'xray' | 'plumbing2d' | 'plumbingOpen'>>): void;
   goCamera(preset: CameraPreset): void;
   /** Point the camera from pos to target (house coordinates). */
   lookFrom(pos: [number, number, number], target: [number, number, number]): void;
@@ -106,6 +111,9 @@ export const useApp = create<AppState>((set, get) => {
     aboutOpen: false,
     view: ui.view,
     doorsOpen: false,
+    xray: false,
+    plumbing2d: false,
+    plumbingOpen: false,
     walk: false,
     camera: { preset: 'street', n: 0 },
     section: { h: 'off', v: 'off', pos: 6 },

@@ -5,6 +5,7 @@ import { profile } from '../model/profiles';
 import type { Carport, Column, Deck, Element, Opening, Project, Rect, Slab, Space, Stair, Wall } from '../model/schema';
 import { groundAt, groundZones, inPoly, siteFrame, zoneZ, type GroundZone } from '../model/site';
 import { slabRect, slabVoids } from '../model/structure';
+import { kindOf } from '../model/plumbing/library';
 
 export type V3 = [number, number, number];
 export type Mat =
@@ -12,14 +13,21 @@ export type Mat =
   | 'slab' | 'roof' | 'steel' | 'concrete' | 'footing'
   | 'glass' | 'frame' | 'door' | 'garageDoor' | 'tread' | 'guardGlass' | 'rail' | 'deck'
   | 'grass' | 'paving' | 'soil' | 'ramp' | 'asphalt' | 'sidewalk' | 'boundary' | 'setback'
-  | 'marking' | 'solarGhost' | 'device' | 'planter';
+  | 'marking' | 'solarGhost' | 'device' | 'planter'
+  | 'pCold' | 'pHot' | 'pSewage' | 'pVent' | 'pRain' | 'fixture' | 'equipment' | 'tank';
 
 /** A box: centre c, size s (along x, y, z), optional rotation about x (pitch) then z (yaw), in radians. */
 export interface BoxPart { kind: 'box'; id: string; mat: Mat; c: V3; s: V3; rx?: number; rz?: number; solid?: boolean }
 /** A flat convex polygon (ground). */
 export interface PolyPart { kind: 'poly'; id: string; mat: Mat; pts: V3[] }
 export interface LinePart { kind: 'line'; id: string; mat: Mat; pts: V3[] }
-export type Part = BoxPart | PolyPart | LinePart;
+/** A round pipe from a to b. */
+export interface PipePart { kind: 'pipe'; id: string; mat: Mat; a: V3; b: V3; r: number }
+export type Part = BoxPart | PolyPart | LinePart | PipePart;
+
+export const PIPE_MAT: Record<string, Mat> = { cold: 'pCold', hot: 'pHot', sewage: 'pSewage', vent: 'pVent', rain: 'pRain' };
+/** Materials that are building fabric (ghosted in x-ray mode). */
+export const SERVICE_MATS = new Set<Mat>(['pCold', 'pHot', 'pSewage', 'pVent', 'pRain', 'fixture', 'equipment', 'tank']);
 
 export interface BuildOptions { doorsOpen: boolean }
 
@@ -482,6 +490,31 @@ function carportParts(p: Project, c: Carport, out: Part[]) {
   }
 }
 
+/* ---------------- section cut faces ---------------- */
+
+const POCHE_MATS = new Set<Mat>(['wallExt', 'wallInt', 'wallWet', 'retaining', 'plinth', 'parapet', 'slab', 'roof', 'steel', 'concrete', 'footing']);
+
+/** Filled cut faces (poché): where a cut plane passes through a solid box, a thin cap closes it. */
+export function pocheCaps(parts: Part[], cuts: { axis: 'x' | 'y' | 'z'; at: number; keep: 1 | -1 }[]): BoxPart[] {
+  const out: BoxPart[] = [];
+  const t = 0.004;
+  for (const b of parts) {
+    if (b.kind !== 'box' || b.rx || b.rz || b.solid === false || !POCHE_MATS.has(b.mat)) continue;
+    const lo = b.c.map((c, i) => c - b.s[i]! / 2), hi = b.c.map((c, i) => c + b.s[i]! / 2);
+    for (const cut of cuts) {
+      const i = cut.axis === 'x' ? 0 : cut.axis === 'y' ? 1 : 2;
+      if (!(cut.at > lo[i]! + 1e-6 && cut.at < hi[i]! - 1e-6)) continue;
+      // the cap must itself survive the other cuts
+      const c = [...b.c] as V3, s = [...b.s] as V3;
+      c[i] = cut.at + cut.keep * t / 2; s[i] = t;
+      const survives = cuts.every((o) => o === cut || (() => { const j = o.axis === 'x' ? 0 : o.axis === 'y' ? 1 : 2; return o.keep > 0 ? c[j]! + s[j]! / 2 > o.at : c[j]! - s[j]! / 2 < o.at; })());
+      if (survives) out.push({ kind: 'box', id: b.id, mat: b.mat, c, s });
+    }
+  }
+  return out;
+}
+
+
 /* ---------------- everything ---------------- */
 
 export function buildScene(p: Project, opt: BuildOptions = { doorsOpen: false }): Scene3D {
@@ -509,6 +542,17 @@ export function buildScene(p: Project, opt: BuildOptions = { doorsOpen: false })
   for (const st of byType('Stair')) stairParts(p, st, parts, surfaces);
   for (const d of byType('Deck')) deckParts(p, d, parts, surfaces);
   for (const c of byType('Carport')) carportParts(p, c, parts);
+  for (const x of byType('PipeSegment')) {
+    parts.push({ kind: 'pipe', id: x.id, mat: PIPE_MAT[x.props.system]!, a: x.props.start, b: x.props.end, r: Math.max(0.012, x.props.dn / 2000) });
+  }
+  for (const fx of byType('Fixture')) {
+    const t = kindOf(fx.props.kind);
+    if (fx.props.kind === 'stack') continue; // the stack is its pipes
+    const [sx, sy, sz] = t.size;
+    const base = fx.props.z + (t.zOffset ?? 0);
+    const mat: Mat = t.group === 'fixture' ? 'fixture' : fx.props.kind === 'roof-tank' || fx.props.kind === 'rain-cistern' ? 'tank' : 'equipment';
+    parts.push({ kind: 'box', id: fx.id, mat, c: [fx.props.at[0], fx.props.at[1], base + sz / 2], s: [sx, sy, sz], solid: false });
+  }
   for (const d of byType('Device')) {
     const at = d.props.at as V3 | undefined, sz = d.props.size as V3 | undefined;
     if (at && sz) parts.push({ kind: 'box', id: d.id, mat: 'device', c: at, s: sz });

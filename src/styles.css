@@ -152,6 +152,13 @@ button.small { font-size: 12.5px; min-height: 28px; padding: 3px 10px; }
 .ccol { fill: var(--ink); cursor: pointer; } .planter { fill: #8DAA69; fill-opacity: .7; stroke: var(--muted); stroke-width: .8; pointer-events: none; }
 .stepsbg { fill: var(--svc); pointer-events: none; } .deckt.strong { font-weight: 500; fill: var(--ink); }
 .ebx { fill: #C27A00; fill-opacity: .3; stroke: #C27A00; stroke-width: 1.4; cursor: pointer; }
+.pipe2d { stroke-width: 2.2; fill: none; cursor: pointer; } .pipe2d.below { stroke-dasharray: 6 3; }
+.pipe2d.s-cold { stroke: #2F7FB5; } .pipe2d.s-hot { stroke: #C8412E; } .pipe2d.s-sewage { stroke: #8A5A2B; } .pipe2d.s-vent { stroke: #8C9399; } .pipe2d.s-rain { stroke: #25A3A3; }
+.pipe2d.riser { fill: var(--sheet); stroke-width: 1.6; } .pipe2d.sel { stroke-width: 4.5; }
+.fx2d { cursor: grab; } .fx2d.auto { cursor: pointer; }
+.fxdot { fill: var(--sheet); stroke: #2F7FB5; stroke-width: 1.8; } .fx2d.g-sewage .fxbox { fill: #EADBC8; stroke: #8A5A2B; } .fx2d.g-water .fxbox { fill: #D6E8F4; stroke: #2F7FB5; } .fx2d.g-rain .fxbox { fill: #D3EEEE; stroke: #25A3A3; }
+.fxbox { stroke-width: 1.4; } .fx2d.sel .fxdot, .fx2d.sel .fxbox { stroke: var(--accent); stroke-width: 3; }
+.fxt { font-family: var(--mono); font-size: 9px; fill: var(--ink); pointer-events: none; paint-order: stroke; stroke: var(--sheet); stroke-width: 3px; }
 .deck { fill: var(--soc); fill-opacity: .35; stroke: var(--muted); stroke-width: 1; stroke-dasharray: 5 3; } .deckt { font-family: var(--mono); font-size: 9.5px; fill: var(--muted); pointer-events: none; }
 
 /* ---------- tablet ---------- */
@@ -165,3 +172,26 @@ button.small { font-size: 12.5px; min-height: 28px; padding: 3px 10px; }
   .app { height: auto; min-height: 100%; grid-template-columns: 64px minmax(0, 1fr); grid-template-rows: auto 70vh auto auto; grid-template-areas: "top top" "tools center" "props props" "checks checks"; }
   .props { border-left: 0; border-top: 1px solid var(--rule); }
 }
+
+.check { display: inline-flex; gap: 6px; align-items: center; font-size: 13.5px; cursor: pointer; }
+
+/* ---------- plumbing window (spec 03) ---------- */
+.modal .box.wide { width: min(1100px, 100%); }
+.pl-tab { display: grid; gap: 8px; }
+.iso, .sec { width: 100%; height: auto; max-height: 62vh; background: var(--paper); border: 1px solid var(--rule); }
+.isofloor { fill: var(--sheet); fill-opacity: .6; stroke: var(--rule); stroke-width: 1; }
+.isolab, .isot, .seclab { font-family: var(--mono); font-size: 10px; fill: var(--muted); }
+.isofx { fill: var(--ink); }
+.swatch { display: inline-block; width: 14px; height: 4px; vertical-align: middle; }
+.secground { fill: none; stroke: #7A6A55; stroke-width: 2; }
+.secgrid { stroke: var(--rule); stroke-width: .6; }
+.secpipe { stroke: #8A5A2B; stroke-width: 4; stroke-linecap: round; }
+.secnode { fill: #8A5A2B; } .secbox { fill: #EADBC8; stroke: #8A5A2B; stroke-width: 1; }
+.secsewer { fill: #8A5A2B; fill-opacity: .25; stroke: #8A5A2B; stroke-width: 1.5; }
+.secneed { stroke: var(--bad); stroke-width: 1.5; stroke-dasharray: 5 3; }
+.secll { stroke: var(--bad); stroke-width: 2; stroke-dasharray: 8 4; } .secll.ok { stroke: var(--ok); }
+.seclab.bad { fill: var(--bad); } .seclab.ok { fill: var(--ok); }
+.schedgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; align-items: start; max-height: 55vh; overflow: auto; }
+.services { display: grid; gap: 8px; max-width: 560px; }
+.field.small { grid-template-columns: 130px 1fr; }
+.notes { border-left: 3px solid var(--warn); padding-left: 10px; display: grid; gap: 4px; font-size: 13px; }

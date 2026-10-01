@@ -300,6 +300,7 @@ export function importPlan(plan: SourcePlan, opt: ImportOptions): Project {
     elements,
   };
   project.elements.push(...generateStructure(project));
+  addCrossingNotes(project);
   return parseProject(project);
 }
 
@@ -451,4 +452,31 @@ export function addV3Front(p: Project): Project {
     props: { kind: 'panel', name: 'Main electrical panel', space: storage?.id ?? '', at: [0.12, 4.7, sl.elevation + 1.5], size: [0.12, 0.5, 0.7] },
   });
   return parseProject({ ...p, elements: [...p.elements, ...els] });
+}
+
+/** Where a stair flight passes over the cut line, note how the retaining wall is handled (manager's answer to Q4). */
+function addCrossingNotes(p: Project) {
+  const cut = p.site.cut.lineY;
+  const wall = p.elements.find((e): e is Wall => e.type === 'Wall' && e.props.wallType === 'retaining' && eq(e.props.start[1], cut) && eq(e.props.end[1], cut));
+  for (const st of p.elements) {
+    if (st.type !== 'Stair' || !wall) continue;
+    let z = p.levels.find((l) => l.id === st.props.fromLevel)?.elevation ?? 0;
+    for (const f of st.props.flights) {
+      const lo = Math.min(f.yBottom, f.yTop), hi = Math.max(f.yBottom, f.yTop);
+      if (cut > lo && cut < hi) {
+        const dir = Math.sign(f.yTop - f.yBottom) || 1;
+        const tread = z + (Math.floor(((cut - f.yBottom) * dir) / st.props.tread) + 1) * st.props.riser;
+        const wallTop = (p.levels.find((l) => l.id === wall.level)?.elevation ?? 0) + wall.props.height;
+        if (tread >= wallTop) { z += f.risers * st.props.riser; continue; } // the flight is above the wall there
+        const ground = -p.site.fallStreetToRear * (cut + p.site.houseOrigin.y) / Math.max(...p.site.lotPolygon.map((c) => c[1]));
+        const name = st.props.name.charAt(0).toLowerCase() + st.props.name.slice(1);
+        const note = `Stair and retaining wall: the ${name} passes over the cut line (y ${cut.toFixed(2)}), x ${f.x0.toFixed(2)}–${f.x1.toFixed(2)}. `
+          + `The ground there is at about ${ground.toFixed(2)}, so the retained soil stays well below the flight (tread about ${tread >= 0 ? '+' : ''}${tread.toFixed(2)} at y ${cut.toFixed(2)}). `
+          + 'Under the stair opening the lower-level front wall stops under the flight soffit, with a lintel beam over it. To be detailed by the structural engineer.';
+        wall.notes = [...(wall.notes ?? []), note];
+        st.notes = [...(st.notes ?? []), note];
+      }
+      z += f.risers * st.props.riser;
+    }
+  }
 }

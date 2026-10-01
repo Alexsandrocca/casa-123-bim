@@ -1,7 +1,8 @@
 // The 2D plan: draws one floor of the model and turns pointer gestures into commands.
 import { useMemo, useRef, type PointerEvent as RPointerEvent, type ReactNode } from 'react';
 import { minArea } from '../model/checks';
-import { addOpening, moveOpening, moveWall, nextOpeningId, wallLimits } from '../model/commands';
+import { addOpening, moveFixture, moveOpening, moveWall, nextOpeningId, wallLimits } from '../model/commands';
+import { kindOf } from '../model/plumbing/library';
 import {
   byLevel, lineHandles, mainCell, openingSeg, snap, spaceArea, wallSeg, type Handle, type Seg,
 } from '../model/geometry';
@@ -20,13 +21,18 @@ const f1 = (v: number) => +v.toFixed(1);
 
 type Drag =
   | { kind: 'wall'; h: Handle; at: number; x0: number; y0: number; moved: boolean }
-  | { kind: 'opening'; id: string; o: 'v' | 'h'; off: number; x0: number; y0: number; moved: boolean };
+  | { kind: 'opening'; id: string; o: 'v' | 'h'; off: number; x0: number; y0: number; moved: boolean }
+  | { kind: 'fixture'; id: string; dx: number; dy: number; x0: number; y0: number; moved: boolean };
+
+/** Fixtures and pipes shown on a floor plan: those of the floor, plus site items on the street level and roof items on the upper floor. */
+export const onPlan = (elLevel: string, level: string) => elLevel === level || (level === 'SL' && elLevel === 'site') || (level === 'UF' && elLevel === 'roof');
 
 export function PlanView() {
   const p = useProject();
   const level = useApp((s) => s.level);
   const selection = useApp((s) => s.selection);
   const tool = useApp((s) => s.tool);
+  const plumbing2d = useApp((s) => s.plumbing2d);
   const svgRef = useRef<SVGSVGElement>(null);
   const drag = useRef<Drag | null>(null);
   const infoRef = useRef<HTMLDivElement>(null);
@@ -45,7 +51,7 @@ export function PlanView() {
   const front = Math.min(outline.y0, ...carports.map((c) => c.props.rect.y0));
   const fr: Frame = {
     XMIN: outline.x0 - 1.3, XMAX: outline.x1 + 1.0, YMIN: front - 1.5,
-    YMAX: Math.max(outline.y1, ...decks.map((d) => d.props.rect.y1)) + 0.5,
+    YMAX: Math.max(outline.y1, ...decks.map((d) => d.props.rect.y1), ...(plumbing2d ? p.elements.flatMap((e) => (e.type === 'Fixture' && onPlan(e.level, level) ? [e.props.at[1] + 0.6] : [])) : [])) + 0.5,
   };
   const px = (x: number) => f1((x - fr.XMIN) * S);
   const py = (y: number) => f1((fr.YMAX - y) * S);
@@ -97,6 +103,18 @@ export function PlanView() {
     const [x, y] = toPlan(ev);
     if (tool !== 'select') { addAt(x, y, tool); return; }
     const t = ev.target as Element;
+    const fg = plumbing2d ? t.closest('[data-fixture]') : null;
+    if (fg) {
+      const id = fg.getAttribute('data-fixture')!;
+      const fx = p.elements.find((e) => e.id === id);
+      st.select(id);
+      if (fx?.type === 'Fixture' && !fx.tags.includes('auto')) {
+        drag.current = { kind: 'fixture', id, dx: x - fx.props.at[0], dy: y - fx.props.at[1], x0: x, y0: y, moved: false };
+        svgRef.current!.setPointerCapture(ev.pointerId);
+        ev.preventDefault();
+      }
+      return;
+    }
     const og = t.closest('[data-opening]'), hg = t.closest('[data-handle]'), wg = t.closest('[data-wall]'), sg = t.closest('[data-space]');
     if (og) {
       const id = og.getAttribute('data-opening')!;
@@ -143,6 +161,10 @@ export function PlanView() {
         const edge = at === lim.lo || at === lim.hi ? ' · rooms keep at least 0.80 m' : '';
         infoRef.current.textContent = `Wall at ${at.toFixed(2)} m${edge}`;
       }
+    } else if (d.kind === 'fixture') {
+      st.previewCmd(moveFixture(d.id, x - d.dx, y - d.dy));
+      const f = useApp.getState().preview?.elements.find((e) => e.id === d.id);
+      if (infoRef.current && f?.type === 'Fixture') infoRef.current.textContent = `${f.props.name} at x ${f.props.at[0].toFixed(2)}, y ${f.props.at[1].toFixed(2)} · pipes re-routed`;
     } else {
       st.previewCmd(moveOpening(d.id, (d.o === 'h' ? x : y) - d.off));
     }
@@ -228,6 +250,8 @@ export function PlanView() {
     const host = walls.find((w) => w.id === op.props.host);
     if (host) out.push(<OpeningGlyph key={op.id} op={op} s={openingSeg(op, host)} selected={selection === op.id} line={line} rect={rect} px={px} py={py} />);
   }
+
+  if (plumbing2d) out.push(<PlumbingOverlay key="plumbing" p={p} level={level} selection={selection} line={line} rect={rect} px={px} py={py} />);
 
   // Room names and areas.
   for (const s of spaces) {
@@ -346,3 +370,42 @@ function Stair({ s, level, rect, line, px, py }: { s: Space; level: string } & D
   return <g>{o}</g>;
 }
 
+
+/* ---------- plumbing overlay (spec 03) ---------- */
+
+function PlumbingOverlay({ p, level, selection, line, rect, px, py }: { p: import('../model/schema').Project; level: string; selection: string | null } & Draw) {
+  const elev = (l: string) => p.levels.find((x) => x.id === l)?.elevation ?? 0;
+  const order = ['LL', 'SL', 'UF', 'roof'];
+  const i = order.indexOf(level);
+  const lo = i <= 0 ? -Infinity : elev(level) - 0.7, hi = i + 1 < order.length ? elev(order[i + 1]!) - 0.1 : Infinity;
+  const o: ReactNode[] = [];
+  for (const e of p.elements) {
+    if (e.type !== 'PipeSegment') continue;
+    const [a, b] = [e.props.start, e.props.end];
+    const vertical = Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) < 0.01;
+    const sel = selection === e.id ? ' sel' : '';
+    const gravity = !e.props.pressure && (e.props.system === 'sewage' || e.props.system === 'rain');
+    if (vertical) {
+      const z0 = Math.min(a[2], b[2]), z1 = Math.max(a[2], b[2]);
+      if (z1 < lo || z0 > hi) continue;
+      o.push(<circle key={e.id} cx={px(a[0])} cy={py(a[1])} r={3.2} className={`pipe2d riser s-${e.props.system}${sel}`} data-el={e.id} />);
+    } else if (onPlan(e.level, level)) {
+      o.push(line(a[0], a[1], b[0], b[1], `pipe2d s-${e.props.system}${gravity ? ' below' : ''}${sel}`, e.id, { 'data-el': e.id }));
+    }
+  }
+  for (const e of p.elements) {
+    if (e.type !== 'Fixture' || !onPlan(e.level, level)) continue;
+    const t = kindOf(e.props.kind);
+    const [x, y] = e.props.at;
+    const sel = selection === e.id ? ' sel' : '';
+    const big = t.group !== 'fixture';
+    o.push(
+      <g key={e.id} data-fixture={e.id} className={`fx2d g-${t.group}${sel}${e.tags.includes('auto') ? ' auto' : ''}`}>
+        {big ? rect({ x0: x - Math.max(0.18, t.size[0] / 2), y0: y - Math.max(0.18, t.size[1] / 2), x1: x + Math.max(0.18, t.size[0] / 2), y1: y + Math.max(0.18, t.size[1] / 2) }, 'fxbox', 'b')
+          : <circle cx={px(x)} cy={py(y)} r={7} className="fxdot" />}
+        <text x={px(x)} y={py(y) - 10} className="fxt" textAnchor="middle">{t.short}</text>
+      </g>,
+    );
+  }
+  return <g className="plumbing">{o}</g>;
+}

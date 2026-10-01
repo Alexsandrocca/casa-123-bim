@@ -2,11 +2,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { minArea, needsDaylight, runChecks, summarize, type CheckResult } from '../model/checks';
 import {
-  deleteOpening, doorMax, flipOpening, renameSpace, resizeOpening, setElementProps, setOpeningSize, setWallThickness,
+  deleteOpening, doorMax, flipOpening, moveFixture, renameSpace, resizeOpening, setElementProps, setOpeningSize, setPipe, setWallThickness,
 } from '../model/commands';
+import { networkLabel } from '../model/plumbing/checks';
+import { kindOf } from '../model/plumbing/library';
 import { BEAM_PROFILES, COLUMN_PROFILES, PIER_PROFILES, profile } from '../model/profiles';
 import { byLevel, getEl, glassArea, openingSegIn, spaceArea, wallLength, wallSeg } from '../model/geometry';
-import type { Beam, Carport, Column, Element, Footing, Opening, PlanLevel, Project, Slab, Space, Stair, Wall } from '../model/schema';
+import type { Beam, Carport, Column, Element, Fixture, PipeSegment, Footing, Opening, PlanLevel, Project, Slab, Space, Stair, Wall } from '../model/schema';
 import { useApp, useProject } from '../store';
 import { ZONE_COLOR } from './PlanView';
 
@@ -90,7 +92,15 @@ export function PropertiesPanel() {
       {el?.type === 'Footing' && <FootingProps f={el} />}
       {el?.type === 'Stair' && <StairProps st={el} />}
       {el?.type === 'Carport' && <CarportProps c={el} />}
-      {el && !['Space', 'Wall', 'Opening', 'Column', 'Beam', 'Slab', 'Footing', 'Stair', 'Carport'].includes(el.type) && <GenericProps el={el} />}
+      {el?.type === 'Fixture' && <FixtureProps f={el} />}
+      {el?.type === 'PipeSegment' && <PipeProps s={el} />}
+      {el?.notes?.length ? (
+        <div className="notes" data-testid="notes">
+          <h4>Notes for the architect and engineers</h4>
+          {el.notes.map((n, i) => <p key={i}>{n}</p>)}
+        </div>
+      ) : null}
+      {el && !['Space', 'Wall', 'Opening', 'Column', 'Beam', 'Slab', 'Footing', 'Stair', 'Carport', 'Fixture', 'PipeSegment'].includes(el.type) && <GenericProps el={el} />}
     </aside>
   );
 }
@@ -327,6 +337,57 @@ function CarportProps({ c }: { c: Carport }) {
         <Row k="EV charger" v="7 kW on a carport column" />
       </div>
       <p className="hint">A covered carport in the front setback must be confirmed with the Prefeitura (LC 474/2025 and the building code).</p>
+    </>
+  );
+}
+
+function FixtureProps({ f }: { f: Fixture }) {
+  const run = useApp((st) => st.run);
+  const t = kindOf(f.props.kind);
+  const auto = f.tags.includes('auto');
+  return (
+    <>
+      <Header title={t.label} sub={`Fixture · ${f.id} · ${f.level}`} />
+      {auto ? <p className="hint">Placed by the router where an outside sewage pipe turns or joins.</p> : (
+        <>
+          <NumberField label="x (north)" value={f.props.at[0]} onCommit={(v) => run(moveFixture(f.id, v, f.props.at[1]))} testId="fx-x" />
+          <NumberField label="y (rear)" value={f.props.at[1]} onCommit={(v) => run(moveFixture(f.id, f.props.at[0], v))} testId="fx-y" />
+        </>
+      )}
+      <div className="kvs">
+        <Row k="Stands at" v={lvl(f.props.z)} />
+        {t.drainDn && <Row k="Drain" v={`DN ${t.drainDn} · ${t.uhc} fixture units`} />}
+        {t.weight && <Row k="Water" v={`weight ${t.weight}${t.hot ? ' · cold and hot' : ' · cold'}`} />}
+        {f.props.area !== undefined && <Row k="Roof area" v={`${f.props.area.toFixed(1)} m²`} />}
+      </div>
+      {!auto && <p className="hint">Turn on “Plumbing” above the plan and drag the fixture; the pipes re-route and the checks update.</p>}
+    </>
+  );
+}
+
+function PipeProps({ s }: { s: PipeSegment }) {
+  const run = useApp((st) => st.run);
+  const [a, b] = [s.props.start, s.props.end];
+  const h = Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
+  const len = Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]);
+  const slope = h > 0.01 ? ((a[2] - b[2]) / h) * 100 : null;
+  const unit = s.props.system === 'sewage' ? 'fixture units' : s.props.system === 'rain' ? 'm² of roof' : 'ΣP';
+  const DNS = [20, 25, 32, 40, 50, 75, 100, 150];
+  return (
+    <>
+      <Header title={`Pipe · ${s.props.system}`} sub={`${s.id} · ${networkLabel(s.props.network)}`} />
+      <ProfileSelect label="DN" value={String(s.props.dn)} options={DNS.map(String)} onChange={(v) => run(setPipe(s.id, { dn: Number(v) }))} />
+      <ProfileSelect label="Material" value={s.props.material} options={['PVC', 'PPR', 'CPVC']} onChange={(v) => run(setPipe(s.id, { material: v as 'PVC' | 'PPR' | 'CPVC' }))} />
+      <div className="kvs">
+        <Row k="Length" v={`${m(len)} m`} />
+        <Row k={slope === null ? 'Vertical' : 'Slope'} v={slope === null ? `${lvl(Math.max(a[2], b[2]))} → ${lvl(Math.min(a[2], b[2]))}` : `${slope.toFixed(1)} %`} />
+        <Row k="From" v={`(${m(a[0])}, ${m(a[1])}) at ${lvl(a[2])}`} />
+        <Row k="To" v={`(${m(b[0])}, ${m(b[1])}) at ${lvl(b[2])}`} />
+        <Row k="Flow" v={s.props.pressure ? 'under pressure' : 'by gravity, from → to'} />
+        <Row k="Load" v={`${s.props.load} ${unit}`} />
+        <Row k="Serves" v={`${s.props.serves.length} fixture${s.props.serves.length === 1 ? '' : 's'}`} />
+      </div>
+      <p className="hint">{s.props.manual ? 'Edited by hand: the router keeps this DN and material.' : 'Placed by the router. Changing DN or material keeps your choice when the pipes re-route.'}</p>
     </>
   );
 }

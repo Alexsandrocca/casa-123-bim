@@ -27,6 +27,7 @@ function HoldButton({ k, label, children }: { k: K; label: string; children: str
 export function Controls3D() {
   const walk = useApp((s) => s.walk);
   const doorsOpen = useApp((s) => s.doorsOpen);
+  const xray = useApp((s) => s.xray);
   const section = useApp((s) => s.section);
   const sun = useApp((s) => s.sun);
   const { set3d, goCamera, lookFrom } = useApp.getState();
@@ -65,6 +66,7 @@ export function Controls3D() {
         </div>
         <button className="small" aria-pressed={walk} onClick={() => set3d({ walk: !walk })} data-testid="walk">{walk ? 'Stop walking' : 'Walk'}</button>
         <button className="small" aria-pressed={doorsOpen} onClick={() => set3d({ doorsOpen: !doorsOpen })}>{doorsOpen ? 'Doors open' : 'Doors closed'}</button>
+        <button className="small" aria-pressed={xray} onClick={() => set3d({ xray: !xray })} data-testid="xray">Systems x-ray</button>
         <button className="small ghost" onClick={() => setOpen(!open)} aria-expanded={open}>{open ? 'Less ▴' : 'Section & sun ▾'}</button>
       </div>
       {open && (

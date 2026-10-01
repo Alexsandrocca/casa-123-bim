@@ -3,7 +3,7 @@ import { Line, OrbitControls } from '@react-three/drei';
 import { Canvas, useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { buildScene, type BoxPart, type Mat, type Part, type PolyPart, type V3 } from '../scene/build3d';
+import { SERVICE_MATS, buildScene, pocheCaps, type BoxPart, type Mat, type Part, type LinePart, type PipePart, type PolyPart, type V3 } from '../scene/build3d';
 import { sunPosition } from '../scene/sun';
 import { EYE, startAt, walkStep, walkWorld, type WalkState, type WalkWorld } from '../scene/walk';
 import { useApp, useProject, type CameraPreset } from '../store';
@@ -18,15 +18,16 @@ const COLORS: Record<Mat, string> = {
   glass: '#8FB8D2', frame: '#2E3A40', door: '#B08455', garageDoor: '#8D9499', tread: '#9A7650', guardGlass: '#BFD9E6', rail: '#2E3A40', deck: '#A27B55',
   grass: '#8DAA69', paving: '#CFC9BC', soil: '#9C8B73', ramp: '#C8BFAE', asphalt: '#55595B', sidewalk: '#C9C6BF', boundary: '#D6D0C4', setback: '#E07A2E',
   marking: '#F6F6F2', solarGhost: '#23395B', device: '#2E3A40', planter: '#6F8F4E',
+  pCold: '#2F7FB5', pHot: '#C8412E', pSewage: '#8A5A2B', pVent: '#8C9399', pRain: '#25A3A3', fixture: '#F4F4F2', equipment: '#6E7B85', tank: '#4F7FA6',
 };
 const TRANSPARENT: Partial<Record<Mat, number>> = { glass: 0.35, guardGlass: 0.25, solarGhost: 0.45 };
 
 const materials = new Map<string, THREE.MeshStandardMaterial>();
-function material(mat: Mat, selected: boolean): THREE.MeshStandardMaterial {
-  const key = mat + (selected ? ':sel' : '');
+function material(mat: Mat, selected: boolean, ghost = false): THREE.MeshStandardMaterial {
+  const key = mat + (selected ? ':sel' : '') + (ghost ? ':ghost' : '');
   let m = materials.get(key);
   if (!m) {
-    const op = TRANSPARENT[mat];
+    const op = ghost ? 0.07 : TRANSPARENT[mat];
     m = new THREE.MeshStandardMaterial({
       color: COLORS[mat], roughness: mat === 'glass' || mat === 'guardGlass' ? 0.1 : 0.85, metalness: mat === 'steel' || mat === 'rail' ? 0.4 : 0,
       transparent: op !== undefined, opacity: op ?? 1, depthWrite: op === undefined, side: THREE.DoubleSide,
@@ -40,18 +41,30 @@ const allMaterials = () => [...materials.values()];
 
 const unitBox = new THREE.BoxGeometry(1, 1, 1);
 
-function Box({ b, selected }: { b: BoxPart; selected: boolean }) {
-  const glassy = b.mat === 'glass' || b.mat === 'guardGlass';
+function Box({ b, selected, ghost }: { b: BoxPart; selected: boolean; ghost: boolean }) {
+  const glassy = b.mat === 'glass' || b.mat === 'guardGlass' || ghost;
   return (
     <mesh
-      geometry={unitBox} material={material(b.mat, selected)}
+      geometry={unitBox} material={material(b.mat, selected, ghost)}
       position={T(b.c)} scale={[b.s[0], b.s[2], b.s[1]]} rotation={[b.rx ?? 0, b.rz ?? 0, 0]}
       castShadow={!glassy} receiveShadow
     />
   );
 }
 
-function Poly({ part }: { part: PolyPart }) {
+const unitCylinder = new THREE.CylinderGeometry(1, 1, 1, 12);
+const Y = new THREE.Vector3(0, 1, 0);
+
+function Pipe({ part, selected }: { part: PipePart; selected: boolean }) {
+  const { pos, quat, len } = useMemo(() => {
+    const a = new THREE.Vector3(...T(part.a)), b = new THREE.Vector3(...T(part.b));
+    const d = b.clone().sub(a);
+    return { pos: a.clone().add(b).multiplyScalar(0.5), quat: new THREE.Quaternion().setFromUnitVectors(Y, d.clone().normalize()), len: d.length() };
+  }, [part]);
+  return <mesh geometry={unitCylinder} material={material(part.mat, selected)} position={pos} quaternion={quat} scale={[part.r, len, part.r]} />;
+}
+
+function Poly({ part, ghost }: { part: PolyPart; ghost: boolean }) {
   const geo = useMemo(() => {
     const g = new THREE.BufferGeometry();
     const v = part.pts.map(T);
@@ -63,10 +76,10 @@ function Poly({ part }: { part: PolyPart }) {
     return g;
   }, [part]);
   useEffect(() => () => geo.dispose(), [geo]);
-  return <mesh geometry={geo} material={material(part.mat, false)} receiveShadow raycast={() => null} />;
+  return <mesh geometry={geo} material={material(part.mat, false, ghost)} receiveShadow raycast={() => null} />;
 }
 
-const Group = memo(function Group({ id, parts, selected, pickable }: { id: string; parts: Part[]; selected: boolean; pickable: boolean; sig: string }) {
+const Group = memo(function Group({ id, parts, selected, pickable, xray }: { id: string; parts: Part[]; selected: boolean; pickable: boolean; sig: string; xray: boolean }) {
   const pick = useApp((s) => s.pick);
   const onClick = (e: ThreeEvent<MouseEvent>) => {
     if (e.delta > 5) return;
@@ -76,13 +89,15 @@ const Group = memo(function Group({ id, parts, selected, pickable }: { id: strin
   return (
     <group onClick={pickable ? onClick : undefined} raycast={pickable ? undefined : () => null} name={id}>
       {parts.map((p, i) => {
-        if (p.kind === 'box') return pickable ? <Box key={i} b={p} selected={selected} /> : <mesh key={i} geometry={unitBox} material={material(p.mat, false)} position={T(p.c)} scale={[p.s[0], p.s[2], p.s[1]]} castShadow receiveShadow raycast={() => null} />;
-        if (p.kind === 'poly') return <Poly key={i} part={p} />;
-        return <Line key={i} points={p.pts.map(T)} color={COLORS[p.mat]} lineWidth={2} dashed dashSize={0.6} gapSize={0.3} raycast={() => null} />;
+        const ghost = xray && !SERVICE_MATS.has(p.mat);
+        if (p.kind === 'box') return pickable ? <Box key={i} b={p} selected={selected} ghost={ghost} /> : <mesh key={i} geometry={unitBox} material={material(p.mat, false, ghost)} position={T(p.c)} scale={[p.s[0], p.s[2], p.s[1]]} castShadow={!ghost} receiveShadow raycast={() => null} />;
+        if (p.kind === 'poly') return <Poly key={i} part={p} ghost={ghost} />;
+        if (p.kind === 'pipe') return <Pipe key={i} part={p} selected={selected} />;
+        return <Line key={i} points={(p as LinePart).pts.map(T)} color={COLORS[p.mat]} lineWidth={2} dashed dashSize={0.6} gapSize={0.3} raycast={() => null} />;
       })}
     </group>
   );
-}, (a, b) => a.sig === b.sig && a.selected === b.selected && a.id === b.id);
+}, (a, b) => a.sig === b.sig && a.selected === b.selected && a.id === b.id && a.xray === b.xray);
 
 /* ---------- camera presets ---------- */
 
@@ -207,8 +222,32 @@ function SectionClip() {
       m.clippingPlanes = planes;
     }
   });
-  if (section.v === 'off') return null;
-  return <SectionHandle />;
+  return (
+    <>
+      <Poche />
+      {section.v !== 'off' && <SectionHandle />}
+    </>
+  );
+}
+
+/* Filled cut faces ("poché"): where a cut plane passes through a solid box, a dark cap closes it. */
+const pocheMat = new THREE.MeshBasicMaterial({ color: '#2B3136', side: THREE.DoubleSide });
+function Poche() {
+  const section = useApp((s) => s.section);
+  const p = useProject();
+  const doorsOpen = useApp((s) => s.doorsOpen);
+  const caps = useMemo(() => {
+    const cuts: { axis: 'x' | 'y' | 'z'; at: number; keep: 1 | -1 }[] = [];
+    if (section.h !== 'off') cuts.push({ axis: 'z', at: (p.levels.find((l) => l.id === section.h)?.elevation ?? 0) + 1.2, keep: -1 });
+    if (section.v === 'across') cuts.push({ axis: 'y', at: section.pos, keep: 1 });
+    if (section.v === 'along') cuts.push({ axis: 'x', at: section.pos, keep: -1 });
+    return cuts.length ? pocheCaps(buildScene(p, { doorsOpen }).parts, cuts) : [];
+  }, [section, p, doorsOpen]);
+  return (
+    <group raycast={() => null}>
+      {caps.map((b, i) => <mesh key={i} geometry={unitBox} material={pocheMat} position={T(b.c)} scale={[b.s[0], b.s[2], b.s[1]]} raycast={() => null} />)}
+    </group>
+  );
 }
 
 const HANDLE_Z = 8;
@@ -224,8 +263,8 @@ function SectionHandle() {
     ? [T([-3, section.pos, -4]), T([13, section.pos, -4]), T([13, section.pos, HANDLE_Z]), T([-3, section.pos, HANDLE_Z]), T([-3, section.pos, -4])]
     : [T([section.pos, -5, -4]), T([section.pos, 22, -4]), T([section.pos, 22, HANDLE_Z]), T([section.pos, -5, HANDLE_Z]), T([section.pos, -5, -4])];
   const bar: BoxPart = across
-    ? { kind: 'box', id: 'handle', mat: 'rail', c: [5, section.pos, HANDLE_Z], s: [16, 0.35, 0.35] }
-    : { kind: 'box', id: 'handle', mat: 'rail', c: [section.pos, 8.5, HANDLE_Z], s: [0.35, 27, 0.35] };
+    ? { kind: 'box', id: 'handle', mat: 'rail', c: [5, section.pos, HANDLE_Z], s: [16, 0.2, 0.2] }
+    : { kind: 'box', id: 'handle', mat: 'rail', c: [section.pos, 8.5, HANDLE_Z], s: [0.2, 27, 0.2] };
   const onMove = (e: ThreeEvent<PointerEvent>) => {
     if (!drag.current) return;
     e.stopPropagation();
@@ -280,6 +319,7 @@ function Content() {
   const selection = useApp((s) => s.selection);
   const walking = useApp((s) => s.walk);
   const cutting = useApp((s) => s.section.v !== 'off' || s.section.h !== 'off');
+  const xray = useApp((s) => s.xray);
   const scene = useMemo(() => buildScene(p, { doorsOpen }), [p, doorsOpen]);
   const groups = useMemo(() => {
     const m = new Map<string, Part[]>();
@@ -295,7 +335,7 @@ function Content() {
       <Sun />
       <SectionClip />
       <group onPointerMissed={() => pick(null)}>
-        {groups.filter((g) => !(cutting && g.id === 'site:setback')).map((g) => <Group key={g.id} id={g.id} parts={g.parts} sig={g.sig} selected={g.id === selection} pickable={!g.id.startsWith('site:')} />)}
+        {groups.filter((g) => !(cutting && g.id === 'site:setback')).map((g) => <Group key={g.id} id={g.id} parts={g.parts} sig={g.sig} selected={g.id === selection} pickable={!g.id.startsWith('site:')} xray={xray} />)}
       </group>
       <CameraRig />
       {walking && <Walker world={world} />}
