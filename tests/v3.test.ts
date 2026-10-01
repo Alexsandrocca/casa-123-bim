@@ -46,7 +46,8 @@ describe('Version 3 (spec 02b)', () => {
   });
 
   it('passes every non-plumbing check except the carport in the front setback, which stays TO CONFIRM', () => {
-    const r = runChecks(v3).filter((c) => c.group !== 'Plumbing'); // plumbing has its own tests (spec 03)
+    // plumbing has its own tests (spec 03), MEP physics too (spec 04b)
+    const r = runChecks(v3).filter((c) => c.group !== 'Plumbing' && c.group !== 'MEP physics');
     const s = summarize(r);
     expect(s.fail).toBe(0);
     expect(s.confirm).toBe(1);

@@ -162,6 +162,15 @@ export interface SearchOpts {
  * Cheapest path from a start cell to any goal cell. Returns cells from start to the goal reached, or null.
  * The heuristic is the plan distance to the nearest goal segment (admissible: every step costs at least its length).
  */
+// search scratch, reused between searches (a stamp marks which entries belong to the current search)
+let G = new Float64Array(0), FROM = new Int32Array(0), STAMP = new Uint32Array(0);
+let stampNow = 0;
+function scratch(n: number) {
+  if (G.length < n) { G = new Float64Array(n); FROM = new Int32Array(n); STAMP = new Uint32Array(n); stampNow = 0; }
+  stampNow++;
+  if (stampNow > 4e9) { STAMP.fill(0); stampNow = 1; }
+}
+
 export function search(L: Layer, start: number, isGoal: (k: number) => boolean, goalSegs: [P2, P2][], o: SearchOpts = {}): number[] | null {
   const dirs = L.diagonal ? DIRS8 : DIRS4, D = dirs.length;
   const bend = o.bend ?? 0.25, hc = o.hostChange ?? 0.4;
@@ -171,7 +180,12 @@ export function search(L: Layer, start: number, isGoal: (k: number) => boolean, 
   for (const [a, b] of goalSegs) { wx0 = Math.min(wx0, a[0], b[0]); wx1 = Math.max(wx1, a[0], b[0]); wy0 = Math.min(wy0, a[1], b[1]); wy1 = Math.max(wy1, a[1], b[1]); }
   const m = o.margin ?? 3;
   const i0 = Math.max(0, L.ix(wx0 - m)), i1 = Math.min(L.nx - 1, L.ix(wx1 + m)), j0 = Math.max(0, L.iy(wy0 - m)), j1 = Math.min(L.ny - 1, L.iy(wy1 + m));
+  // heuristic: the distance to the box around the goal segments (a lower bound, cheap), or to the segments when few
+  let gx0 = Infinity, gx1 = -Infinity, gy0 = Infinity, gy1 = -Infinity;
+  for (const [a, b] of goalSegs) { gx0 = Math.min(gx0, a[0], b[0]); gx1 = Math.max(gx1, a[0], b[0]); gy0 = Math.min(gy0, a[1], b[1]); gy1 = Math.max(gy1, a[1], b[1]); }
+  const few = goalSegs.length <= 8;
   const h = (x: number, y: number) => {
+    if (!few) return Math.hypot(Math.max(gx0 - x, 0, x - gx1), Math.max(gy0 - y, 0, y - gy1));
     let best = Infinity;
     for (const [a, b] of goalSegs) {
       const dx = b[0] - a[0], dy = b[1] - a[1], l2 = dx * dx + dy * dy;
@@ -180,25 +194,34 @@ export function search(L: Layer, start: number, isGoal: (k: number) => boolean, 
     }
     return best;
   };
-  const g = new Map<number, number>();
-  const from = new Map<number, number>();
+  const S = D + 1;
+  scratch(L.n * L.sheets * S);
+  const st0 = stampNow;
+  const getG = (s: number) => (STAMP[s] === st0 ? G[s]! : Infinity);
+  const setG = (s: number, v: number, f: number) => { STAMP[s] = st0; G[s] = v; FROM[s] = f; };
   const heap = new Heap();
   // start: any direction, no bend cost
-  const s0 = start * (D + 1) + D;
-  g.set(s0, 0);
+  const s0 = start * S + D;
+  setG(s0, 0, -1);
   heap.push(s0, h(sx, sy));
   let steps = 0;
+  const push = (ns: number, ng: number, from: number, nk: number) => {
+    if (ng < getG(ns) - 1e-9) {
+      setG(ns, ng, from);
+      const [nx, ny] = L.xy(nk);
+      heap.push(ns, ng + h(nx, ny));
+    }
+  };
   while (heap.size) {
     const st = heap.pop();
-    const cell = Math.floor(st / (D + 1)), dir = st % (D + 1);
-    const gc = g.get(st)!;
-    if (isGoal(cell) && cell !== start) {
+    const cell = Math.floor(st / S), dir = st % S;
+    const gc = getG(st);
+    if (isGoal(cell)) {
       const path = [cell];
       let cur = st;
-      while (from.has(cur)) { cur = from.get(cur)!; path.push(Math.floor(cur / (D + 1))); }
+      while (FROM[cur]! >= 0 && STAMP[cur] === st0) { cur = FROM[cur]!; path.push(Math.floor(cur / S)); }
       return path.reverse().filter((c, i, a) => i === 0 || c !== a[i - 1]);
     }
-    if (isGoal(cell) && cell === start) return [cell];
     if (++steps > 400000) return null;
     const sh = Math.floor(cell / L.n), pk = cell % L.n, ci = pk % L.nx, cj = (pk - ci) / L.nx;
     // between sheets: straight up or down through the slab, not through a beam
@@ -208,14 +231,7 @@ export function search(L: Layer, start: number, isGoal: (k: number) => boolean, 
       if (!L.passable(nk)) continue;
       const lo = Math.min(L.z[nk]!, L.z[cell]!), hi = Math.max(L.z[nk]!, L.z[cell]!);
       if (!Number.isNaN(L.beamZ0[nk]!) && hi > L.beamZ0[nk]! && lo < L.beamZ1[nk]!) continue;
-      const ns = nk * (D + 1) + (dir < D ? dir : D);
-      const ng = gc + (hi - lo) + hc + 0.2;
-      if (ng < (g.get(ns) ?? Infinity) - 1e-9) {
-        g.set(ns, ng);
-        from.set(ns, st);
-        const [nx, ny] = L.xy(nk);
-        heap.push(ns, ng + h(nx, ny));
-      }
+      push(nk * S + (dir < D ? dir : D), gc + (hi - lo) + hc + 0.2, st, nk);
     }
     for (let d = 0; d < D; d++) {
       const ni = ci + dirs[d]![0], nj = cj + dirs[d]![1];
@@ -244,16 +260,9 @@ export function search(L: Layer, start: number, isGoal: (k: number) => boolean, 
         if (steps45 > 2) continue; // never turn back on itself or by 135°
         turn = steps45 * bend;
       }
-      const len = (dirs[d]![0] && dirs[d]![1] ? Math.SQRT2 : 1) * L.res;
+      const len = (dx && dy ? Math.SQRT2 : 1) * L.res;
       const change = L.host[nk] !== L.host[cell] ? hc : 0;
-      const ng = gc + len * Math.max(c, L.cost[cell]!) + turn + change;
-      const ns = nk * (D + 1) + d;
-      if (ng < (g.get(ns) ?? Infinity) - 1e-9) {
-        g.set(ns, ng);
-        from.set(ns, st);
-        const [nx, ny] = L.xy(nk);
-        heap.push(ns, ng + h(nx, ny));
-      }
+      push(nk * S + d, gc + len * Math.max(c, L.cost[cell]!) + turn + change, st, nk);
     }
   }
   return null;

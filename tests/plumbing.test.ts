@@ -3,7 +3,8 @@ import { runChecks } from '../src/model/checks';
 import { moveFixture, setPipe, setUtilities } from '../src/model/commands';
 import { migrate } from '../src/model/migrate';
 import { kindOf, sewageDnFor } from '../src/model/plumbing/library';
-import { growTree, routePlumbing } from '../src/model/plumbing/route';
+import { routePlumbing } from '../src/model/plumbing/route';
+import { Layer, growTree } from '../src/model/mep/grid';
 import type { Fixture, PipeSegment, Project } from '../src/model/schema';
 import { load } from './helpers';
 
@@ -18,7 +19,9 @@ describe('plumbing model (Version 3)', () => {
     const kinds = new Set(fixtures(v3).map((f) => f.props.kind));
     for (const k of ['toilet', 'basin', 'shower', 'kitchen-sink', 'laundry-tank', 'washer', 'dishwasher', 'floor-drain', 'garden-tap', 'grease-trap', 'inspection-box',
       'lift-station', 'backflow-valve', 'water-meter', 'roof-tank', 'pressure-pump', 'water-heater', 'rain-cistern', 'sump-pump']) expect(kinds.has(k), k).toBe(true);
-    expect(sink.props.at).toEqual([8.33, 6.3]); // V2 position kept
+    // V2 position along the wall kept; spec 04b snaps it to the wall face (centre 0.275 m off the face)
+    expect(sink.props.at).toEqual([8.225, 6.3]);
+    expect(sink.props.hostWallId).toBe('SL-wall-06');
     expect(fixtures(v3).filter((f) => f.props.kind === 'roof-tank')).toHaveLength(2);
   });
 
@@ -45,17 +48,18 @@ describe('plumbing model (Version 3)', () => {
 
   it('acceptance: moving the kitchen sink 1 m re-routes its branch, and the slope and DN checks update', () => {
     const before = pipes(v3).filter((x) => x.props.network === 'sew-kitchen').map((x) => JSON.stringify(x.props.start));
+    // (the kitchen ends at y 7.6: a 0.9 m sink moved 1 m stops 0.15 m from the corner)
     const p = moveFixture(sink.id, sink.props.at[0], sink.props.at[1] + 1).apply(v3);
     const moved = fixtures(p).find((f) => f.id === sink.id)!;
-    expect(moved.props.at).toEqual([8.33, 7.3]);
+    expect(moved.props.at).toEqual([8.225, 7.0]);
     const drop = pipes(p).find((x) => x.props.network === 'sew-kitchen' && x.props.serves.length === 1 && x.props.serves[0] === sink.id && x.props.start[0] === x.props.end[0] && x.props.start[1] === x.props.end[1])!;
-    expect([drop.props.start[0], drop.props.start[1]]).toEqual([8.33, 7.3]);
+    expect([drop.props.start[0], drop.props.start[1]]).toEqual([8.225, 7.0]);
     expect(pipes(p).filter((x) => x.props.network === 'sew-kitchen').map((x) => JSON.stringify(x.props.start))).not.toEqual(before);
     expect(check(p, 'slope:sew-kitchen').status).toBe('pass');
     expect(check(p, 'dn:sew-kitchen').status).toBe('pass');
     expect(check(p, 'slope:sew-kitchen').value).not.toBe(check(v3, 'slope:sew-kitchen').value);
     // and the slope check catches a branch made too flat by hand
-    const flat = pipes(p).find((x) => x.props.network === 'sew-kitchen' && Math.abs(x.props.start[1] - x.props.end[1]) > 0.5)!;
+    const flat = pipes(p).find((x) => x.props.network === 'sew-kitchen' && Math.hypot(x.props.start[0] - x.props.end[0], x.props.start[1] - x.props.end[1]) > 0.5)!;
     const broken: Project = { ...p, elements: p.elements.map((e) => (e.id === flat.id && e.type === 'PipeSegment' ? { ...e, props: { ...e.props, end: [e.props.end[0], e.props.end[1], e.props.start[2]] as [number, number, number] } } : e)) };
     expect(check(broken, 'slope:sew-kitchen').status).toBe('fail');
   });
@@ -84,13 +88,20 @@ describe('plumbing model (Version 3)', () => {
     expect(sewageDnFor(3, true)).toBe(100);
   });
 
-  it('grows right-angled trees', () => {
-    const t = growTree([0, 0], [{ id: 'a', at: [2, 0] }, { id: 'b', at: [2, 3] }, { id: 'c', at: [-1, 1] }]);
-    for (const n of t) if (n.parent >= 0) {
-      const pa = t[n.parent]!;
-      expect(n.x === pa.x || n.y === pa.y).toBe(true);
+  it('grows trees through a layer: every target reached, edges straight (0°, 45° or 90°)', () => {
+    const L = new Layer('test', { x0: -1, y0: -1, x1: 4, y1: 4 }, true);
+    L.paint({ x0: -1, y0: -1, x1: 4, y1: 4 }, { id: 'p', kind: 'plenum', name: 'test' }, 1, 0);
+    L.block({ x0: 0.5, y0: -1, x1: 0.8, y1: 2 }, 'a wall');
+    const t = growTree(L, [0, 0], [{ id: 'a', at: [2, 0] }, { id: 'b', at: [2, 3] }, { id: 'c', at: [-0.5, 1] }]);
+    expect(t.failed).toEqual([]);
+    for (const n of t.nodes) if (n.parent >= 0) {
+      const pa = t.nodes[n.parent]!;
+      const dx = Math.abs(n.x - pa.x), dy = Math.abs(n.y - pa.y);
+      expect(dx < 1e-6 || dy < 1e-6 || Math.abs(dx - dy) < 1e-6).toBe(true);
+      // nothing crosses the blocked strip
+      expect(Math.min(n.x, pa.x) < 0.5 && Math.max(n.x, pa.x) > 0.8 && Math.max(n.y, pa.y) < 2).toBe(false);
     }
-    expect(t.filter((n) => n.target).map((n) => n.target).sort()).toEqual(['a', 'b', 'c']);
+    expect(t.nodes.filter((n) => n.target).map((n) => n.target).sort()).toEqual(['a', 'b', 'c']);
   });
 
   it('adds the plumbing to a Version 3 model saved before spec 03', () => {

@@ -8,11 +8,22 @@ import { clampToHost, nextId, rebuildLevel } from './walls';
 import { UTILITIES_DEFAULT, withPlumbing } from './plumbing/route';
 import { withElectrical } from './electrical/design';
 import { deviceType } from './electrical/library';
+import { hostOne, withHosts } from './mep/hosting';
 
 export interface Command {
   label: string;
   apply(p: Project): Project;
+  /** A quick version for live dragging (no re-routing); the full `apply` runs when the drag ends. */
+  preview?(p: Project): Project;
 }
+
+/** Spec 04b: after an edit, every fixture and device keeps (or re-finds) its host and the networks re-route. */
+export function withMep(p: Project): Project {
+  if (!p.elements.some((e) => e.type === 'Fixture' || e.type === 'Device')) return p;
+  return withElectrical(withPlumbing(withHosts(p)));
+}
+/** Wrap a geometry command so the services follow it (full on apply, hosts only while dragging). */
+const mep = (c: Command): Command => ({ label: c.label, apply: (p) => { const n = c.apply(p); return n === p ? p : withMep(n); }, preview: (p) => withHosts(c.apply(p)) });
 
 export class CommandError extends Error {}
 
@@ -55,7 +66,7 @@ const inSpan = (cell: Rect, o: Orient, a: number, b: number) =>
  * `at` is any point along the line, used to pick the right run when a line has several.
  */
 export function moveWall(level: string, o: Orient, c: number, at: number, to: number): Command {
-  return {
+  return mep({
     label: 'Move wall',
     apply(p) {
       const h = findHandle(p, level, o, c, at);
@@ -77,12 +88,12 @@ export function moveWall(level: string, o: Orient, c: number, at: number, to: nu
       });
       return rebuildLevel({ ...p, elements }, level, { o, c, a: h.a, b: h.b, to: nc });
     },
-  };
+  });
 }
 
 /** Slide a door or window along its wall. `start` is the absolute coordinate of its near edge. */
 export function moveOpening(id: string, start: number): Command {
-  return {
+  return mep({
     label: 'Move opening',
     apply(p) {
       const { op, host } = opening(p, id);
@@ -91,7 +102,7 @@ export function moveOpening(id: string, start: number): Command {
       const moved = { ...op, props: { ...op.props, offset: q(offset) } };
       return replace(p, { ...moved, props: clampToHost(moved, host) });
     },
-  };
+  });
 }
 
 export const DOOR_MIN = 0.6, WINDOW_MIN = 0.4;
@@ -99,7 +110,7 @@ export const doorMax = (op: Opening) => (op.props.kind === 'garage' ? 6 : 2.4);
 
 /** Change the width. Doors keep 0.60–2.40 m (garage up to 6 m), windows at least 0.40 m. */
 export function resizeOpening(id: string, width: number): Command {
-  return {
+  return mep({
     label: 'Resize opening',
     apply(p) {
       const { op, host } = opening(p, id);
@@ -109,11 +120,11 @@ export function resizeOpening(id: string, width: number): Command {
       const next = { ...op, props: { ...op.props, width: w } };
       return replace(p, { ...next, props: clampToHost(next, host) });
     },
-  };
+  });
 }
 
 export function setOpeningSize(id: string, patch: { height?: number; sill?: number }): Command {
-  return {
+  return mep({
     label: 'Change opening',
     apply(p) {
       const { op } = opening(p, id);
@@ -121,27 +132,27 @@ export function setOpeningSize(id: string, patch: { height?: number; sill?: numb
       const sill = patch.sill !== undefined ? q(Math.min(Math.max(patch.sill, 0), 2.5)) : op.props.sill;
       return replace(p, { ...op, props: { ...op.props, height, sill } });
     },
-  };
+  });
 }
 
 export function flipOpening(id: string): Command {
-  return {
+  return mep({
     label: 'Flip door swing',
     apply(p) {
       const { op } = opening(p, id);
       return replace(p, { ...op, props: { ...op.props, swing: op.props.swing === 1 ? -1 : 1 } });
     },
-  };
+  });
 }
 
 export function deleteOpening(id: string): Command {
-  return {
+  return mep({
     label: 'Delete opening',
     apply(p) {
       opening(p, id);
       return { ...p, elements: p.elements.filter((e) => e.id !== id) };
     },
-  };
+  });
 }
 
 /** The id the next opening on this level will get. */
@@ -150,7 +161,7 @@ export const nextOpeningId = (p: Project, level: string, role: 'door' | 'window'
 
 /** Add a door (0.80 m) or window (1.20 m) centred at `center` along a wall. */
 export function addOpening(id: string, wallId: string, center: number, role: 'door' | 'window'): Command {
-  return {
+  return mep({
     label: role === 'door' ? 'Add door' : 'Add window',
     apply(p) {
       const host = getEl(p, wallId);
@@ -166,7 +177,7 @@ export function addOpening(id: string, wallId: string, center: number, role: 'do
       };
       return { ...p, elements: [...p.elements, { ...op, props: clampToHost(op, host) }] };
     },
-  };
+  });
 }
 
 export function renameSpace(id: string, name: string): Command {
@@ -187,14 +198,14 @@ export function renameSpace(id: string, name: string): Command {
 }
 
 export function setWallThickness(id: string, t: number): Command {
-  return {
+  return mep({
     label: 'Change wall thickness',
     apply(p) {
       const w = getEl(p, id);
       if (!w || w.type !== 'Wall') throw new CommandError(`No wall ${id}`);
       return replace(p, { ...w, props: { ...w.props, thickness: q(Math.min(Math.max(t, 0.05), 1)) } });
     },
-  };
+  });
 }
 
 /** Put one floor back to the original version. Other floors keep their edits. */
@@ -227,6 +238,33 @@ export function setElementProps(id: string, patch: Record<string, unknown>, labe
   };
 }
 
+/** Delete a wall (spec 04b). Its doors and windows go with it; the items it hosted stay where they are and are
+ *  flagged "unhosted" by the checks until they are moved onto another wall. */
+export function deleteWall(id: string): Command {
+  return {
+    label: 'Delete wall',
+    apply(p) {
+      const w = getEl(p, id);
+      if (!w || w.type !== 'Wall') throw new CommandError(`No wall ${id}`);
+      return withMep({ ...p, elements: p.elements.filter((e) => e.id !== id && !(e.type === 'Opening' && e.props.host === id)) });
+    },
+  };
+}
+
+/** Change a shaft, plenum or roof zone (spec 04b): move or resize it, or change a lowered ceiling's depth. */
+export function setServiceSpace(id: string, patch: { rect?: Rect; depth?: number }): Command {
+  return {
+    label: 'Change service space',
+    apply(p) {
+      const e = getEl(p, id);
+      if (!e || e.type !== 'ServiceSpace') throw new CommandError(`No service space ${id}`);
+      if (patch.depth !== undefined && (patch.depth < 0.1 || patch.depth > 0.8)) throw new CommandError('A lowered ceiling is 0.10–0.80 m deep.');
+      if (patch.rect && (patch.rect.x1 - patch.rect.x0 < 0.15 || patch.rect.y1 - patch.rect.y0 < 0.15)) throw new CommandError('At least 0.15 m each way.');
+      return withMep(replace(p, { ...e, props: { ...e.props, ...patch } }));
+    },
+  };
+}
+
 /* ---------- plumbing (spec 03) ---------- */
 
 /** Move a fixture to a new plan position (5 cm steps); the pipes re-route. */
@@ -244,7 +282,14 @@ export function moveFixture(id: string, x: number, y: number): Command {
         && !spacesOn(p, f.level).some((s) => s.props.cells.some((c) => at[0] > c.x0 && at[0] < c.x1 && at[1] > c.y0 && at[1] < c.y1))) {
         throw new CommandError('A fixture has to stay inside a room.');
       }
-      return withPlumbing(replace(p, { ...f, props: { ...f.props, at } }));
+      // it snaps to a wall face of its room (or the floor), then the pipes and conduits follow
+      const moved = hostOne(p, { ...f, props: { ...f.props, at } }, true);
+      return withElectrical(withPlumbing(replace(p, moved)));
+    },
+    preview(p) {
+      const f = getEl(p, id);
+      if (!f || f.type !== 'Fixture') return p;
+      return replace(p, hostOne(p, { ...f, props: { ...f.props, at: [snap(x), snap(y)] } }, true));
     },
   };
 }
@@ -294,7 +339,7 @@ export function addDevice(id: string, kind: string, level: string, at: [number, 
         id, type: 'Device', level, tags: [],
         props: { kind, name: name ?? `${t.label} · ${room?.props.name ?? level}`, at: [snap(at[0]), snap(at[1])], z: q(floor + t.height), power: t.power },
       };
-      return withElectrical({ ...p, elements: [...p.elements, d] });
+      return withElectrical({ ...p, elements: [...p.elements, hostOne(p, d, true)] });
     },
   };
 }
@@ -307,7 +352,13 @@ export function moveDevice(id: string, x: number, y: number): Command {
       if (!d || d.type !== 'Device') throw new CommandError(`No device ${id}`);
       const at: [number, number] = [eq(x, d.props.at[0]) ? d.props.at[0] : snap(x), eq(y, d.props.at[1]) ? d.props.at[1] : snap(y)];
       if (eq(at[0], d.props.at[0]) && eq(at[1], d.props.at[1])) return p;
-      return withElectrical(replace(p, { ...d, props: { ...d.props, at } }));
+      // a wall point snaps to the nearest legal place on a wall face of its room; then its circuit re-routes
+      return withElectrical(replace(p, hostOne(p, { ...d, props: { ...d.props, at, hostWallId: undefined, hostId: d.props.hostId === 'post' ? 'post' : undefined } }, true)));
+    },
+    preview(p) {
+      const d = getEl(p, id);
+      if (!d || d.type !== 'Device') return p;
+      return replace(p, hostOne(p, { ...d, props: { ...d.props, at: [snap(x), snap(y)], hostWallId: undefined } }, true));
     },
   };
 }

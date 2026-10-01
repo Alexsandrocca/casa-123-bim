@@ -90,16 +90,27 @@ function build(p: Project): MepContext {
   const walls = p.elements.filter((e): e is Wall => e.type === 'Wall');
   const zones = groundZones(p);
   const patio = slabs.filter((s) => s.props.onGrade && s.tags.includes('patio')).map((s) => slabRect(p, s));
-  const surface = (x: number, y: number) => {
-    let z = groundAt(p, x, y, zones);
+  // the ground is asked about at every grid cell: remember each answer (1 cm keys)
+  const memo = <T,>(fn: (x: number, y: number) => T) => {
+    const m = new Map<number, T>();
+    return (x: number, y: number): T => {
+      const k = Math.round(x * 100) * 100003 + Math.round(y * 100);
+      let v = m.get(k);
+      if (v === undefined) { v = fn(x, y); m.set(k, v); }
+      return v;
+    };
+  };
+  const ground = memo((x, y) => groundAt(p, x, y, zones));
+  const surface = memo((x: number, y: number) => {
+    let z = ground(x, y);
     for (const r of patio) if (pointInRect(x, y, r)) z = Math.max(z, elev('SL'));
     return z;
-  };
+  });
   const carport = p.elements.find((e) => e.type === 'Carport');
-  const cover = (x: number, y: number) => {
+  const cover = memo((x: number, y: number) => {
     if (carport?.type === 'Carport' && carport.props.parking.some((r) => pointInRect(x, y, r))) return COVER.drive;
     return COVER.garden;
-  };
+  });
   const voidsOf = new Map(slabs.map((s) => [s.id, slabVoids(p, s)]));
   const structural = (s: Slab) => !s.props.onGrade;
   const slabAt = (level: string, x: number, y: number, pred: (s: Slab) => boolean = () => true) =>
@@ -170,7 +181,7 @@ function build(p: Project): MepContext {
     const top = sl.props.topElevation - sl.props.thickness;
     crawl.forEach((c, i) => volumes.push({
       id: `crawl:${i}`, kind: 'crawlspace', name: 'Crawlspace under the street floor', level: 'SL', rect: c,
-      zLo: (x, y) => groundAt(p, x, y, zones), zHi: flat(top), allows: new Set(ALL), maxDn: 150,
+      zLo: ground, zHi: flat(top), allows: new Set(ALL), maxDn: 150,
     }));
   }
   /* underground: outside the house, and under the lower-level slab on grade */
@@ -186,15 +197,15 @@ function build(p: Project): MepContext {
   volumes.push({
     id: 'ground', kind: 'underground', name: 'Underground', level: 'site', rect: lotRect,
     zLo: flat(-10),
-    zHi: (x, y) => {
+    zHi: memo((x, y) => {
       if (llSlab && pointInRect(x, y, slabRect(p, llSlab))) return llSlab.props.topElevation - llSlab.props.thickness;
-      if (crawl.some((c) => pointInRect(x, y, c))) return groundAt(p, x, y, zones);
+      if (crawl.some((c) => pointInRect(x, y, c))) return ground(x, y);
       // under the foundation of an outer wall
       const w = outerWalls.find((v) => pointInRect(x, y, v.rect));
       if (w) return w.base - 0.01;
       if (house(x, y)) return -Infinity;
       return surface(x, y) - cover(x, y);
-    },
+    }),
     allows: new Set(ALL), maxDn: 150,
   });
   // slab bodies: pipes and conduits only cross them vertically, through sleeves

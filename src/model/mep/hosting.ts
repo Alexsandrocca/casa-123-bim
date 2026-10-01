@@ -128,7 +128,9 @@ function placeOnWallZ(p: Project, e: Item, want: P2, only: Face | undefined, sho
     const wallFixtures = elec ? p.elements.filter((x): x is Fixture => x.type === 'Fixture' && x.props.hostWallId === f.wall.id && !!(kindOf(x.props.kind).weight)) : [];
     const shafts = p.elements.flatMap((x) => (x.type === 'ServiceSpace' && x.props.kind === 'shaft' && !/electric/i.test(x.props.name) ? [x.props.rect] : []));
     const neighbours = p.elements.filter((x): x is Device | Fixture => (x.type === 'Device' || x.type === 'Fixture') && x.id !== e.id && x.props.hostWallId === f.wall.id && x.props.face === f.face);
-    const cols = p.elements.filter((c) => c.type === 'Column' && (s.o === 'v' ? Math.abs(c.props.at[0] - s.c) < 0.2 : Math.abs(c.props.at[1] - s.c) < 0.2)).map((c) => (c.type === 'Column' ? (s.o === 'v' ? c.props.at[1] : c.props.at[0]) : 0));
+    // columns standing in this wall (not the piers under the floor)
+    const wallBase = elevOf(p, f.wall.level);
+    const cols = p.elements.filter((c) => c.type === 'Column' && c.props.topElevation > wallBase + 0.1 && (s.o === 'v' ? Math.abs(c.props.at[0] - s.c) < 0.2 : Math.abs(c.props.at[1] - s.c) < 0.2)).map((c) => (c.type === 'Column' ? (s.o === 'v' ? c.props.at[1] : c.props.at[0]) : 0));
     const ok = (tt: number) => {
       for (const op of openings) {
         const os = openingSeg(op, f.wall);
@@ -162,7 +164,10 @@ function placeOnWallZ(p: Project, e: Item, want: P2, only: Face | undefined, sho
         const nz = nb.type === 'Device' ? nb.props.z : nb.props.z + (kindOf(nb.props.kind).supplyZ ?? 0.6);
         // two switches side by side share one plate
         if (e.props.kind === 'switch' && nb.type === 'Device' && nb.props.kind === 'switch') continue;
-        if (Math.abs((nb.props.offset ?? 0) + s.a - tt) < 0.15 && Math.abs(nz - z) < 0.4) return false;
+        // fixtures need their own width along the wall; small points 0.15 m
+        const nw = nb.type === 'Fixture' ? kindOf(nb.props.kind).size[0] / 2 : 0;
+        const gapNeeded = e.type === 'Fixture' || nb.type === 'Fixture' ? halfWidth + nw + 0.05 : 0.15;
+        if (Math.abs((nb.props.offset ?? 0) + s.a - tt) < gapNeeded && (e.type === 'Fixture' && nb.type === 'Fixture' ? true : Math.abs(nz - z) < 0.4)) return false;
       }
       for (const c of cols) if (Math.abs(c - tt) < 0.25 + halfWidth) return false;
       return true;
@@ -251,7 +256,11 @@ export function hostOne<T extends Item>(p: Project, e: T, fresh: boolean): T {
       if (w?.type !== 'Wall') return e; // unhosted: the checks list it
       const s = wallSeg(w);
       const want: P2 = s.o === 'v' ? [s.c, s.a + (e.props.offset ?? 0)] : [s.a + (e.props.offset ?? 0), s.c];
-      const face = facesFor(p, e).find((f) => f.wall.id === w.id && f.face === e.props.face);
+      // the room is the one on the item's side of its wall, wherever the wall now is
+      const d = w.props.thickness / 2 + 0.05, f0 = e.props.face ?? 1;
+      const probe: P2 = s.o === 'v' ? [s.c + f0 * d, want[1]] : [want[0], s.c + f0 * d];
+      const side = p.elements.find((r): r is Space => r.type === 'Space' && r.level === w.level && r.props.cells.some((c) => strictly(probe[0], probe[1], c)));
+      const face = facesFor(p, e, side).find((f) => f.wall.id === w.id && f.face === e.props.face);
       const pl = (face && placeOnWall(p, e, want, face)) ?? placeOnWall(p, e, e.props.at);
       return pl ? apply(p, e, pl) : e;
     }

@@ -33,7 +33,7 @@ export function placeV3Plumbing(p: Project, overlays: Record<string, { plumb: [s
       if (!at) continue; // e.g. the garage exit, gone in Version 3
       const kind = level === 'SL' && room === 'Kitchen' && k === 'sink' ? 'kitchen-sink' : OVERLAY_KIND[k] ?? k;
       // spec 04b: the stacks run in shafts beside the wet wall (x 3.28–3.52), clear of the beam on grid line x 3.20
-      if (kind === 'stack') at[0] = 3.4;
+      if (kind === 'stack') { at[0] = 3.4; if (at[1] < 8) at[1] = 6.05; } // the front stack at the front of its shaft keeps the roof clear for the solar array
       // the laundry is under the stair (no ceiling to feed it from): washer and tank go on the wall shared with the hall
       if (kind === 'washer' || kind === 'laundry-tank') at[1] = 12.3;
       // the lift station stands clear of the stair foot and the walls, with room around its lid
@@ -61,10 +61,10 @@ export function placeV3Plumbing(p: Project, overlays: Record<string, { plumb: [s
   const roof = p.elements.find((e) => e.id === 'roof-slab-01');
   const eaves = roof?.type === 'Slab' ? roof.props.eaves ?? 0 : 0;
   const mainArea = roof?.type === 'Slab' && roof.props.rect ? (roof.props.rect.x1 - roof.props.rect.x0 + 2 * eaves) * (roof.props.rect.y1 - roof.props.rect.y0 + 2 * eaves) : 0;
-  // main roof: the screed falls to two drains over the front stack shaft, whose downpipes run in that shaft
-  // straight down to the crawlspace (the rear shaft's bulkhead is full with the collector)
-  add('roof-drain', 'roof', [3.4, 6.0], elev('roof'), { area: q(mainArea / 2) });
-  add('roof-drain', 'roof', [3.4, 6.3], elev('roof'), { area: q(mainArea / 2) });
+  // main roof: the screed falls south to two drains over the water shaft, in the equipment band; their downpipes run
+  // in that shaft straight down to the crawlspace (the north of the roof stays free for the solar array)
+  add('roof-drain', 'roof', [0.3, 5.92], elev('roof'), { area: q(mainArea / 2) });
+  add('roof-drain', 'roof', [0.3, 6.07], elev('roof'), { area: q(mainArea / 2) });
   const entry = p.elements.find((e) => e.id === 'UF-slab-02');
   if (entry?.type === 'Slab' && entry.props.rect) {
     const r = entry.props.rect;

@@ -23,7 +23,7 @@ export function addServiceSpaces(p: Project): Project {
   // shafts: stacked through the floors; the stacks run in the strip at x 3.28–3.52 beside the wet wall
   add('shaft-s1', 'SL', 'shaft', 'Shaft at soil stack 1 (baths 2 and 3)', R(3.28, 5.85, 3.52, 6.9), { z0: -0.6, z1: roofTop + 0.7, accessFace: 'E' });
   add('shaft-s2', 'SL', 'shaft', 'Shaft at soil stack 2 (master bath)', R(3.28, 10.7, 3.52, 11.4), { z0: -0.3, z1: roofTop + 0.7, accessFace: 'E' });
-  add('shaft-w', 'SL', 'shaft', 'Water shaft (feed and risers)', R(0.1, 5.85, 0.5, 6.45), { z0: -0.6, z1: roofTop + 0.5, accessFace: 'E' });
+  add('shaft-w', 'SL', 'shaft', 'Water shaft (feed, risers, roof downpipes)', R(0.1, 5.85, 0.5, 6.75), { z0: -0.6, z1: roofTop + 0.5, accessFace: 'E' });
   add('shaft-e', 'SL', 'shaft', 'Electrical shaft (riser)', R(0.1, 5.3, 0.4, 5.6), { z0: -0.6, z1: roofTop + 0.5, accessFace: 'E' });
 
   // plenums: the wet rooms, kitchen, halls and service rooms, where a slab is above

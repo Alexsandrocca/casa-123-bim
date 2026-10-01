@@ -92,6 +92,7 @@ export interface AppState {
 }
 
 let flashTimer: ReturnType<typeof setTimeout> | undefined;
+let lastPreview: Command | null = null;
 
 export const useApp = create<AppState>((set, get) => {
   const hist = () => get().versions[get().active];
@@ -135,13 +136,19 @@ export const useApp = create<AppState>((set, get) => {
       } catch (e) { return fail(e); }
     },
     previewCmd(cmd) {
-      try { set({ preview: cmd.apply(hist().present) }); } catch (e) { fail(e); }
+      // a quick version while dragging when the command has one; the full one runs when the drag ends
+      try { lastPreview = cmd; set({ preview: (cmd.preview ?? cmd.apply).call(cmd, hist().present) }); } catch (e) { fail(e); }
     },
     commitPreview() {
       const p = get().preview;
-      if (p) setHist(commit(hist(), p), { preview: null });
+      const cmd = lastPreview;
+      lastPreview = null;
+      if (!p) return;
+      if (cmd?.preview) {
+        try { setHist(runCmd(hist(), cmd), { preview: null }); } catch (e) { set({ preview: null }); fail(e); }
+      } else setHist(commit(hist(), p), { preview: null });
     },
-    cancelPreview() { set({ preview: null }); },
+    cancelPreview() { lastPreview = null; set({ preview: null }); },
     undo() { const h = undo(hist()); if (h !== hist()) setHist(h, { selection: null, preview: null }); },
     redo() { const h = redo(hist()); if (h !== hist()) setHist(h, { selection: null, preview: null }); },
     setVersion(v) {

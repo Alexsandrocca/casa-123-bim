@@ -477,12 +477,41 @@ export function routePlumbing(p: Project): { pipes: PipeSegment[]; auto: Fixture
   }
 
   /* ===== vents: each stack continues up its shaft through the roof; the lift station has its own vent ===== */
+  const pvZone = p.elements.find((e): e is ServiceSpace => e.type === 'ServiceSpace' && e.props.kind === 'roof-zone' && e.props.purpose === 'pv');
+  const techZones = p.elements.filter((e): e is ServiceSpace => e.type === 'ServiceSpace' && e.props.kind === 'roof-zone' && e.props.purpose !== 'pv' && Math.abs((e.props.z0 ?? 0) - ROOF) < 0.05);
   for (const st of stacks) {
     const top = Math.max(...out.pipes.filter((x) => x.props.network === `stack-${st.id}`).flatMap((x) => [x.props.start[2], x.props.end[2]]), -Infinity);
     if (!Number.isFinite(top)) continue;
     const ids = (joins.get(st.id) ?? []).flatMap((j) => j.ids);
-    out.pipe(`vent-${st.id}`, 'UF', 'vent', 75, [st.props.at[0], st.props.at[1], top], [st.props.at[0], st.props.at[1], ROOF - 0.14], { serves: ids });
-    out.pipe(`vent-${st.id}`, 'roof', 'vent', 75, [st.props.at[0], st.props.at[1], ROOF - 0.14], [st.props.at[0], st.props.at[1], ROOF + 0.6], { serves: ids });
+    const net = `vent-${st.id}`;
+    const [sx, sy] = st.props.at;
+    // a stack in the middle of the solar area vents through the upper-floor ceiling to the equipment band instead
+    const inPv = pvZone && pointInRect(sx, sy, pvZone.props.rect) && !pointInRect(sx, sy, { ...pvZone.props.rect, y0: pvZone.props.rect.y0, y1: pvZone.props.rect.y0 + 1.3 });
+    if (inPv && techZones.length) {
+      // keep clear of the water drops to come beside each upper-floor fixture
+      const drops = fx.filter((f) => f.level === 'UF' && (kindOf(f.props.kind).weight ?? 0) > 0).flatMap((f) => {
+        const cp = cavityPoint(p, f);
+        return cp ? [{ at: cp.room, r: 0.16, why: `the water drops of ${f.id}` }] : [];
+      });
+      const Lv = layer({ key: 'upper-floor ceiling plenum', carry: 'vent', dn: 75, plenums: ['UF'], reserved: [...ceilingBoxes('UF'), ...drops] }, (o) => o.net === net);
+      const band = rootZ(Lv, st.props.at);
+      let goal: P2 | null = null, gd = Infinity;
+      for (const z of techZones) Lv.forRect(z.props.rect, (k, x, y) => {
+        if (!Lv.passable(k) || x < z.props.rect.x0 + 0.3 || x > z.props.rect.x1 - 0.2) return;
+        const d = Math.hypot(x - sx, y - sy);
+        if (d < gd) { gd = d; goal = [x, y]; }
+      });
+      const r = goal && Number.isFinite(band) ? routePath(Lv, st.props.at, goal, { bend: 0.3 }) : { pts: [] };
+      if (r.pts.length && goal) {
+        const g: P2 = goal;
+        out.pipe(net, 'UF', 'vent', 75, [sx, sy, top], [sx, sy, band], { serves: ids });
+        out.poly(net, 'UF', 'vent', 75, r.pts.map((x) => [x.x, x.y, band] as P3), { serves: ids });
+        out.pipe(net, 'roof', 'vent', 75, [g[0], g[1], band], [g[0], g[1], ROOF + 0.6], { serves: ids });
+        continue;
+      }
+    }
+    out.pipe(net, 'UF', 'vent', 75, [sx, sy, top], [sx, sy, ROOF - 0.14], { serves: ids });
+    out.pipe(net, 'roof', 'vent', 75, [sx, sy, ROOF - 0.14], [sx, sy, ROOF + 0.6], { serves: ids });
   }
   if (ls) {
     // the sealed lift station's own vent: under the slab to the nearest outer wall that rises to the roof, then up
@@ -643,13 +672,14 @@ export function routePlumbing(p: Project): { pipes: PipeSegment[]; auto: Fixture
     const ufOf = (users: Fixture[], st: Fixture) => users.filter((x) => x.level === 'UF' && nearestStack(x.props.at).id === st.id);
     // every riser slot is booked first, so the hot trees (routed first) keep off the cold risers to come
     const booked = new Map<string, P2>();
+    // the feed comes up from the ground: it takes the free end of the shaft, clear of the pier footing
+    if (meter) booked.set('cold:feed', shafts.slot(waterShaft, 25, 'water feed'));
     for (const system of ['hot', 'cold'] as const) {
       const users = system === 'hot' ? hotUsers : waterUsers;
       for (const g of ufGroups) if (ufOf(users, g.st).length) booked.set(`${system}:UF:${g.st.id}`, shafts.slot(g.s!, 32, `${system} water riser`));
       if (users.some((x) => x.level === 'LL')) booked.set(`${system}:LL`, shafts.slot(waterShaft, 32, `${system} water to the lower level`));
     }
     booked.set('cold:riser', shafts.slot(waterShaft, 40, 'cold water riser'));
-    if (meter) booked.set('cold:feed', shafts.slot(waterShaft, 25, 'water feed'));
     const otherSlots = (system: string) => [...booked].filter(([k]) => !k.startsWith(system) || k === 'cold:feed').map(([k, at]) => ({ at, r: 0.045, why: `the ${k.replace(':', ' ')} slot` }));
     // and hot keeps clear of the cold drops beside each fixture
     const coldPoints = waterUsers.flatMap((fi) => { const t = toFixture('cold', 'x', fi); return [{ at: t.at, r: 0.035, why: 'a cold drop' }, ...(t.alt ? [{ at: t.alt.at, r: 0.035, why: 'a cold drop' }] : [])]; });
