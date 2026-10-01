@@ -63,7 +63,13 @@
    "Whether decks are allowed in the setbacks",
    "CPFL supply type",
    "Which side boundary takes the extra 1 m at the rear"
-  ]
+  ],
+  "utilities": {
+   "sewerDepth": 3,
+   "sewerOffset": 6.5,
+   "waterMainDepth": 1.5,
+   "rainIntensity": 150
+  }
  },
  "structure": {
   "floorToFloor": 3.1,
@@ -3925,6 +3931,6235 @@
      0.5,
      0.7
     ]
+   }
+  },
+  {
+   "id": "fx-toilet-01",
+   "type": "Fixture",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "toilet",
+    "name": "Toilet (WC)",
+    "at": [
+     4,
+     14.745
+    ],
+    "z": -2.5
+   }
+  },
+  {
+   "id": "fx-basin-01",
+   "type": "Fixture",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "basin",
+    "name": "Basin",
+    "at": [
+     3.52,
+     13.64
+    ],
+    "z": -2.5
+   }
+  },
+  {
+   "id": "fx-shower-01",
+   "type": "Fixture",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "shower",
+    "name": "Shower drain",
+    "at": [
+     4.48,
+     13.725
+    ],
+    "z": -2.5
+   }
+  },
+  {
+   "id": "fx-washer-01",
+   "type": "Fixture",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "washer",
+    "name": "Washing machine",
+    "at": [
+     0.48,
+     11.5
+    ],
+    "z": -2.5
+   }
+  },
+  {
+   "id": "fx-laundry-tank-01",
+   "type": "Fixture",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "laundry-tank",
+    "name": "Laundry tank",
+    "at": [
+     1.12,
+     11.5
+    ],
+    "z": -2.5
+   }
+  },
+  {
+   "id": "fx-lift-station-01",
+   "type": "Fixture",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "lift-station",
+    "name": "Lift station (sealed, pump, alarm, check valve)",
+    "at": [
+     0.32,
+     13.125
+    ],
+    "z": -2.5
+   }
+  },
+  {
+   "id": "fx-floor-drain-01",
+   "type": "Fixture",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "floor-drain",
+    "name": "Floor drain",
+    "at": [
+     1.6,
+     14.875
+    ],
+    "z": -2.5
+   }
+  },
+  {
+   "id": "fx-kitchen-sink-01",
+   "type": "Fixture",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "kitchen-sink",
+    "name": "Kitchen sink",
+    "at": [
+     8.33,
+     6.3
+    ],
+    "z": 0.6
+   }
+  },
+  {
+   "id": "fx-toilet-02",
+   "type": "Fixture",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "toilet",
+    "name": "Toilet (WC)",
+    "at": [
+     0.6,
+     3.88
+    ],
+    "z": 0.6
+   }
+  },
+  {
+   "id": "fx-basin-02",
+   "type": "Fixture",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "basin",
+    "name": "Basin",
+    "at": [
+     1.6,
+     2.92
+    ],
+    "z": 0.6
+   }
+  },
+  {
+   "id": "fx-toilet-03",
+   "type": "Fixture",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "toilet",
+    "name": "Toilet (WC)",
+    "at": [
+     4.28,
+     5.48
+    ],
+    "z": 3.7
+   }
+  },
+  {
+   "id": "fx-shower-02",
+   "type": "Fixture",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "shower",
+    "name": "Shower drain",
+    "at": [
+     4.28,
+     6.28
+    ],
+    "z": 3.7
+   }
+  },
+  {
+   "id": "fx-toilet-04",
+   "type": "Fixture",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "toilet",
+    "name": "Toilet (WC)",
+    "at": [
+     4.28,
+     7.72
+    ],
+    "z": 3.7
+   }
+  },
+  {
+   "id": "fx-shower-03",
+   "type": "Fixture",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "shower",
+    "name": "Shower drain",
+    "at": [
+     4.28,
+     6.92
+    ],
+    "z": 3.7
+   }
+  },
+  {
+   "id": "fx-toilet-05",
+   "type": "Fixture",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "toilet",
+    "name": "Toilet (WC)",
+    "at": [
+     4.28,
+     10.44
+    ],
+    "z": 3.7
+   }
+  },
+  {
+   "id": "fx-shower-04",
+   "type": "Fixture",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "shower",
+    "name": "Shower drain",
+    "at": [
+     4.28,
+     11.65
+    ],
+    "z": 3.7
+   }
+  },
+  {
+   "id": "fx-stack-01",
+   "type": "Fixture",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "stack",
+    "name": "Soil stack",
+    "at": [
+     3.29,
+     6.52
+    ],
+    "z": 3.7
+   }
+  },
+  {
+   "id": "fx-stack-02",
+   "type": "Fixture",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "stack",
+    "name": "Soil stack",
+    "at": [
+     3.29,
+     10.99
+    ],
+    "z": 3.7
+   }
+  },
+  {
+   "id": "fx-basin-03",
+   "type": "Fixture",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "basin",
+    "name": "Basin",
+    "at": [
+     3.56,
+     5.8
+    ],
+    "z": 3.7
+   }
+  },
+  {
+   "id": "fx-basin-04",
+   "type": "Fixture",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "basin",
+    "name": "Basin",
+    "at": [
+     3.56,
+     7.4
+    ],
+    "z": 3.7
+   }
+  },
+  {
+   "id": "fx-basin-05",
+   "type": "Fixture",
+   "level": "UF",
+   "tags": [],
+   "props": {
+    "kind": "basin",
+    "name": "Basin",
+    "at": [
+     3.56,
+     11.1
+    ],
+    "z": 3.7
+   }
+  },
+  {
+   "id": "fx-dishwasher-01",
+   "type": "Fixture",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "dishwasher",
+    "name": "Dishwasher",
+    "at": [
+     8.33,
+     5.39
+    ],
+    "z": 0.6
+   }
+  },
+  {
+   "id": "fx-grease-trap-01",
+   "type": "Fixture",
+   "level": "SL",
+   "tags": [],
+   "props": {
+    "kind": "grease-trap",
+    "name": "Grease trap",
+    "at": [
+     7.4,
+     4.3
+    ],
+    "z": 0.6
+   }
+  },
+  {
+   "id": "fx-backflow-valve-01",
+   "type": "Fixture",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "backflow-valve",
+    "name": "Backflow valve",
+    "at": [
+     0.32,
+     12.75
+    ],
+    "z": -2.5
+   }
+  },
+  {
+   "id": "fx-water-meter-01",
+   "type": "Fixture",
+   "level": "site",
+   "tags": [],
+   "props": {
+    "kind": "water-meter",
+    "name": "Water meter",
+    "at": [
+     1.2,
+     -3.85
+    ],
+    "z": 0.3
+   }
+  },
+  {
+   "id": "fx-roof-tank-01",
+   "type": "Fixture",
+   "level": "roof",
+   "tags": [],
+   "props": {
+    "kind": "roof-tank",
+    "name": "Roof water tank 1,000 L",
+    "at": [
+     0.85,
+     10.3
+    ],
+    "z": 6.8
+   }
+  },
+  {
+   "id": "fx-roof-tank-02",
+   "type": "Fixture",
+   "level": "roof",
+   "tags": [],
+   "props": {
+    "kind": "roof-tank",
+    "name": "Roof water tank 1,000 L",
+    "at": [
+     2.15,
+     10.3
+    ],
+    "z": 6.8
+   }
+  },
+  {
+   "id": "fx-pressure-pump-01",
+   "type": "Fixture",
+   "level": "roof",
+   "tags": [],
+   "props": {
+    "kind": "pressure-pump",
+    "name": "Pressure pump (upper-floor showers)",
+    "at": [
+     2.9,
+     9.2
+    ],
+    "z": 6.8
+   }
+  },
+  {
+   "id": "fx-water-heater-01",
+   "type": "Fixture",
+   "level": "roof",
+   "tags": [],
+   "props": {
+    "kind": "water-heater",
+    "name": "Heat-pump water heater 300 L",
+    "at": [
+     1.6,
+     3
+    ],
+    "z": 3.7
+   }
+  },
+  {
+   "id": "fx-garden-tap-01",
+   "type": "Fixture",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "garden-tap",
+    "name": "Garden tap",
+    "at": [
+     6,
+     15.2
+    ],
+    "z": -2.55
+   }
+  },
+  {
+   "id": "fx-roof-drain-01",
+   "type": "Fixture",
+   "level": "roof",
+   "tags": [],
+   "props": {
+    "kind": "roof-drain",
+    "name": "Roof drain",
+    "at": [
+     0.3,
+     5.3
+    ],
+    "z": 6.8,
+    "area": 44.18
+   }
+  },
+  {
+   "id": "fx-roof-drain-02",
+   "type": "Fixture",
+   "level": "roof",
+   "tags": [],
+   "props": {
+    "kind": "roof-drain",
+    "name": "Roof drain",
+    "at": [
+     8.3,
+     5.3
+    ],
+    "z": 6.8,
+    "area": 44.18
+   }
+  },
+  {
+   "id": "fx-roof-drain-03",
+   "type": "Fixture",
+   "level": "roof",
+   "tags": [],
+   "props": {
+    "kind": "roof-drain",
+    "name": "Roof drain",
+    "at": [
+     0.3,
+     1.3
+    ],
+    "z": 3.7,
+    "area": 12.8
+   }
+  },
+  {
+   "id": "fx-roof-drain-04",
+   "type": "Fixture",
+   "level": "site",
+   "tags": [],
+   "props": {
+    "kind": "roof-drain",
+    "name": "Roof drain",
+    "at": [
+     8.45,
+     -3.95
+    ],
+    "z": 2.6,
+    "area": 33.39
+   }
+  },
+  {
+   "id": "fx-roof-drain-05",
+   "type": "Fixture",
+   "level": "SL",
+   "tags": [
+    "to-garden"
+   ],
+   "props": {
+    "kind": "roof-drain",
+    "name": "Roof drain",
+    "at": [
+     8.3,
+     14.7
+    ],
+    "z": 0.6,
+    "area": 20.64
+   }
+  },
+  {
+   "id": "fx-rain-cistern-01",
+   "type": "Fixture",
+   "level": "site",
+   "tags": [],
+   "props": {
+    "kind": "rain-cistern",
+    "name": "Rain reuse cistern 5,000 L",
+    "at": [
+     1.3,
+     -2.6
+    ],
+    "z": 0
+   }
+  },
+  {
+   "id": "fx-infiltration-trench-01",
+   "type": "Fixture",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "infiltration-trench",
+    "name": "Infiltration trench",
+    "at": [
+     4.3,
+     19
+    ],
+    "z": -2.55
+   }
+  },
+  {
+   "id": "fx-sump-pump-01",
+   "type": "Fixture",
+   "level": "LL",
+   "tags": [],
+   "props": {
+    "kind": "sump-pump",
+    "name": "Garden sump pump",
+    "at": [
+     8,
+     16.6
+    ],
+    "z": -2.55
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-001",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     3.56,
+     6.52,
+     3.325
+    ],
+    "end": [
+     3.29,
+     6.52,
+     3.325
+    ],
+    "load": 18,
+    "serves": [
+     "fx-basin-04",
+     "fx-basin-03",
+     "fx-shower-02",
+     "fx-shower-03",
+     "fx-toilet-04",
+     "fx-toilet-03"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-002",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     3.56,
+     5.8,
+     3.34
+    ],
+    "end": [
+     3.56,
+     6.28,
+     3.33
+    ],
+    "load": 1,
+    "serves": [
+     "fx-basin-03"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-003",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     3.56,
+     7.4,
+     3.345
+    ],
+    "end": [
+     3.56,
+     6.52,
+     3.325
+    ],
+    "load": 1,
+    "serves": [
+     "fx-basin-04"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-004",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     3.56,
+     6.28,
+     3.33
+    ],
+    "end": [
+     3.56,
+     6.52,
+     3.325
+    ],
+    "load": 17,
+    "serves": [
+     "fx-basin-03",
+     "fx-shower-02",
+     "fx-shower-03",
+     "fx-toilet-04",
+     "fx-toilet-03"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-005",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     4.28,
+     6.28,
+     3.335
+    ],
+    "end": [
+     3.56,
+     6.28,
+     3.33
+    ],
+    "load": 16,
+    "serves": [
+     "fx-shower-02",
+     "fx-shower-03",
+     "fx-toilet-04",
+     "fx-toilet-03"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-006",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     4.28,
+     6.92,
+     3.34
+    ],
+    "end": [
+     4.28,
+     6.28,
+     3.335
+    ],
+    "load": 8,
+    "serves": [
+     "fx-shower-03",
+     "fx-toilet-04"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-007",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     4.28,
+     5.48,
+     3.345
+    ],
+    "end": [
+     4.28,
+     6.28,
+     3.335
+    ],
+    "load": 6,
+    "serves": [
+     "fx-toilet-03"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-008",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     4.28,
+     7.72,
+     3.35
+    ],
+    "end": [
+     4.28,
+     6.92,
+     3.34
+    ],
+    "load": 6,
+    "serves": [
+     "fx-toilet-04"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-009",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     3.56,
+     5.8,
+     3.7
+    ],
+    "end": [
+     3.56,
+     5.8,
+     3.34
+    ],
+    "load": 1,
+    "serves": [
+     "fx-basin-03"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-010",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     3.56,
+     7.4,
+     3.7
+    ],
+    "end": [
+     3.56,
+     7.4,
+     3.345
+    ],
+    "load": 1,
+    "serves": [
+     "fx-basin-04"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-011",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     4.28,
+     6.28,
+     3.7
+    ],
+    "end": [
+     4.28,
+     6.28,
+     3.335
+    ],
+    "load": 2,
+    "serves": [
+     "fx-shower-02"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-012",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     4.28,
+     6.92,
+     3.7
+    ],
+    "end": [
+     4.28,
+     6.92,
+     3.34
+    ],
+    "load": 2,
+    "serves": [
+     "fx-shower-03"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-013",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     4.28,
+     5.48,
+     3.7
+    ],
+    "end": [
+     4.28,
+     5.48,
+     3.345
+    ],
+    "load": 6,
+    "serves": [
+     "fx-toilet-03"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-01-014",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-01",
+    "start": [
+     4.28,
+     7.72,
+     3.7
+    ],
+    "end": [
+     4.28,
+     7.72,
+     3.35
+    ],
+    "load": 6,
+    "serves": [
+     "fx-toilet-04"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-02-001",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-02",
+    "start": [
+     3.56,
+     10.99,
+     3.33
+    ],
+    "end": [
+     3.29,
+     10.99,
+     3.325
+    ],
+    "load": 9,
+    "serves": [
+     "fx-basin-05",
+     "fx-toilet-05",
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-02-002",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-02",
+    "start": [
+     3.56,
+     11.1,
+     3.33
+    ],
+    "end": [
+     3.56,
+     10.99,
+     3.33
+    ],
+    "load": 1,
+    "serves": [
+     "fx-basin-05"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-02-003",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-02",
+    "start": [
+     4.28,
+     10.99,
+     3.335
+    ],
+    "end": [
+     3.56,
+     10.99,
+     3.33
+    ],
+    "load": 8,
+    "serves": [
+     "fx-toilet-05",
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-02-004",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-02",
+    "start": [
+     4.28,
+     10.44,
+     3.34
+    ],
+    "end": [
+     4.28,
+     10.99,
+     3.335
+    ],
+    "load": 6,
+    "serves": [
+     "fx-toilet-05"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-02-005",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-02",
+    "start": [
+     4.28,
+     11.65,
+     3.35
+    ],
+    "end": [
+     4.28,
+     10.99,
+     3.335
+    ],
+    "load": 2,
+    "serves": [
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-02-006",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-02",
+    "start": [
+     3.56,
+     11.1,
+     3.7
+    ],
+    "end": [
+     3.56,
+     11.1,
+     3.33
+    ],
+    "load": 1,
+    "serves": [
+     "fx-basin-05"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-02-007",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-02",
+    "start": [
+     4.28,
+     10.44,
+     3.7
+    ],
+    "end": [
+     4.28,
+     10.44,
+     3.34
+    ],
+    "load": 6,
+    "serves": [
+     "fx-toilet-05"
+    ]
+   }
+  },
+  {
+   "id": "sew-UF-fx-stack-02-008",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-UF-fx-stack-02",
+    "start": [
+     4.28,
+     11.65,
+     3.7
+    ],
+    "end": [
+     4.28,
+     11.65,
+     3.35
+    ],
+    "load": 2,
+    "serves": [
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "sew-SL-fx-stack-01-001",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-SL-fx-stack-01",
+    "start": [
+     1.6,
+     6.52,
+     0.105
+    ],
+    "end": [
+     3.29,
+     6.52,
+     0.085
+    ],
+    "load": 7,
+    "serves": [
+     "fx-basin-02",
+     "fx-toilet-02"
+    ]
+   }
+  },
+  {
+   "id": "sew-SL-fx-stack-01-002",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-SL-fx-stack-01",
+    "start": [
+     1.6,
+     2.92,
+     0.15
+    ],
+    "end": [
+     1.6,
+     3.88,
+     0.13
+    ],
+    "load": 1,
+    "serves": [
+     "fx-basin-02"
+    ]
+   }
+  },
+  {
+   "id": "sew-SL-fx-stack-01-003",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-SL-fx-stack-01",
+    "start": [
+     1.6,
+     3.88,
+     0.13
+    ],
+    "end": [
+     1.6,
+     6.52,
+     0.105
+    ],
+    "load": 7,
+    "serves": [
+     "fx-basin-02",
+     "fx-toilet-02"
+    ]
+   }
+  },
+  {
+   "id": "sew-SL-fx-stack-01-004",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-SL-fx-stack-01",
+    "start": [
+     0.6,
+     3.88,
+     0.14
+    ],
+    "end": [
+     1.6,
+     3.88,
+     0.13
+    ],
+    "load": 6,
+    "serves": [
+     "fx-toilet-02"
+    ]
+   }
+  },
+  {
+   "id": "sew-SL-fx-stack-01-005",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-SL-fx-stack-01",
+    "start": [
+     1.6,
+     2.92,
+     0.6
+    ],
+    "end": [
+     1.6,
+     2.92,
+     0.15
+    ],
+    "load": 1,
+    "serves": [
+     "fx-basin-02"
+    ]
+   }
+  },
+  {
+   "id": "sew-SL-fx-stack-01-006",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-SL-fx-stack-01",
+    "start": [
+     0.6,
+     3.88,
+     0.6
+    ],
+    "end": [
+     0.6,
+     3.88,
+     0.14
+    ],
+    "load": 6,
+    "serves": [
+     "fx-toilet-02"
+    ]
+   }
+  },
+  {
+   "id": "sew-kitchen-001",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 50,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-kitchen",
+    "start": [
+     8.33,
+     4.3,
+     0.11
+    ],
+    "end": [
+     7.4,
+     4.3,
+     0.09
+    ],
+    "load": 5,
+    "serves": [
+     "fx-dishwasher-01",
+     "fx-kitchen-sink-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-kitchen-002",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 50,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-kitchen",
+    "start": [
+     8.33,
+     5.39,
+     0.13
+    ],
+    "end": [
+     8.33,
+     4.3,
+     0.11
+    ],
+    "load": 5,
+    "serves": [
+     "fx-dishwasher-01",
+     "fx-kitchen-sink-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-kitchen-003",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-kitchen",
+    "start": [
+     8.33,
+     6.3,
+     0.15
+    ],
+    "end": [
+     8.33,
+     5.39,
+     0.13
+    ],
+    "load": 3,
+    "serves": [
+     "fx-kitchen-sink-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-kitchen-004",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 50,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-kitchen",
+    "start": [
+     8.33,
+     5.39,
+     0.6
+    ],
+    "end": [
+     8.33,
+     5.39,
+     0.13
+    ],
+    "load": 2,
+    "serves": [
+     "fx-dishwasher-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-kitchen-005",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 50,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-kitchen",
+    "start": [
+     8.33,
+     6.3,
+     0.6
+    ],
+    "end": [
+     8.33,
+     6.3,
+     0.15
+    ],
+    "load": 3,
+    "serves": [
+     "fx-kitchen-sink-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-001",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     0.48,
+     13.125,
+     -2.8
+    ],
+    "end": [
+     0.32,
+     13.125,
+     -2.805
+    ],
+    "load": 16,
+    "serves": [
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-floor-drain-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-toilet-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-002",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 50,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     0.48,
+     11.5,
+     -2.77
+    ],
+    "end": [
+     0.48,
+     13.125,
+     -2.8
+    ],
+    "load": 6,
+    "serves": [
+     "fx-washer-01",
+     "fx-laundry-tank-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-003",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     1.12,
+     11.5,
+     -2.755
+    ],
+    "end": [
+     0.48,
+     11.5,
+     -2.77
+    ],
+    "load": 3,
+    "serves": [
+     "fx-laundry-tank-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-004",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     1.6,
+     13.125,
+     -2.79
+    ],
+    "end": [
+     0.48,
+     13.125,
+     -2.8
+    ],
+    "load": 10,
+    "serves": [
+     "fx-floor-drain-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-toilet-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-005",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     1.6,
+     14.875,
+     -2.76
+    ],
+    "end": [
+     1.6,
+     13.64,
+     -2.785
+    ],
+    "load": 1,
+    "serves": [
+     "fx-floor-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-006",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     1.6,
+     13.64,
+     -2.785
+    ],
+    "end": [
+     1.6,
+     13.125,
+     -2.79
+    ],
+    "load": 10,
+    "serves": [
+     "fx-floor-drain-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-toilet-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-007",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     3.52,
+     13.64,
+     -2.765
+    ],
+    "end": [
+     1.6,
+     13.64,
+     -2.785
+    ],
+    "load": 9,
+    "serves": [
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-toilet-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-008",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     4.48,
+     13.64,
+     -2.75
+    ],
+    "end": [
+     4,
+     13.64,
+     -2.76
+    ],
+    "load": 2,
+    "serves": [
+     "fx-shower-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-009",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     4.48,
+     13.725,
+     -2.75
+    ],
+    "end": [
+     4.48,
+     13.64,
+     -2.75
+    ],
+    "load": 2,
+    "serves": [
+     "fx-shower-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-010",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     4,
+     13.64,
+     -2.76
+    ],
+    "end": [
+     3.52,
+     13.64,
+     -2.765
+    ],
+    "load": 8,
+    "serves": [
+     "fx-shower-01",
+     "fx-toilet-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-011",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     4,
+     14.745,
+     -2.75
+    ],
+    "end": [
+     4,
+     13.64,
+     -2.76
+    ],
+    "load": 6,
+    "serves": [
+     "fx-toilet-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-012",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 50,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     0.48,
+     11.5,
+     -2.5
+    ],
+    "end": [
+     0.48,
+     11.5,
+     -2.77
+    ],
+    "load": 3,
+    "serves": [
+     "fx-washer-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-013",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     1.12,
+     11.5,
+     -2.5
+    ],
+    "end": [
+     1.12,
+     11.5,
+     -2.755
+    ],
+    "load": 3,
+    "serves": [
+     "fx-laundry-tank-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-014",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     1.6,
+     14.875,
+     -2.5
+    ],
+    "end": [
+     1.6,
+     14.875,
+     -2.76
+    ],
+    "load": 1,
+    "serves": [
+     "fx-floor-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-015",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     3.52,
+     13.64,
+     -2.5
+    ],
+    "end": [
+     3.52,
+     13.64,
+     -2.765
+    ],
+    "load": 1,
+    "serves": [
+     "fx-basin-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-016",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 40,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     4.48,
+     13.725,
+     -2.5
+    ],
+    "end": [
+     4.48,
+     13.725,
+     -2.75
+    ],
+    "load": 2,
+    "serves": [
+     "fx-shower-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-017",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-LL",
+    "start": [
+     4,
+     14.745,
+     -2.5
+    ],
+    "end": [
+     4,
+     14.745,
+     -2.75
+    ],
+    "load": 6,
+    "serves": [
+     "fx-toilet-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-collector-001",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-collector",
+    "start": [
+     3.29,
+     10.99,
+     -0.05
+    ],
+    "end": [
+     3.29,
+     6.52,
+     -0.095
+    ],
+    "load": 25,
+    "serves": [
+     "fx-toilet-05",
+     "fx-shower-04",
+     "fx-basin-05",
+     "fx-toilet-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-floor-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-collector-002",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-collector",
+    "start": [
+     3.29,
+     6.52,
+     -0.095
+    ],
+    "end": [
+     3.29,
+     4.3,
+     -0.115
+    ],
+    "load": 50,
+    "serves": [
+     "fx-toilet-05",
+     "fx-shower-04",
+     "fx-basin-05",
+     "fx-toilet-03",
+     "fx-shower-02",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-toilet-02",
+     "fx-basin-02",
+     "fx-toilet-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-floor-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-collector-003",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-collector",
+    "start": [
+     3.29,
+     4.3,
+     -0.115
+    ],
+    "end": [
+     3.29,
+     1,
+     -0.15
+    ],
+    "load": 55,
+    "serves": [
+     "fx-toilet-05",
+     "fx-shower-04",
+     "fx-basin-05",
+     "fx-toilet-03",
+     "fx-shower-02",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-toilet-02",
+     "fx-basin-02",
+     "fx-toilet-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-floor-drain-01",
+     "fx-kitchen-sink-01",
+     "fx-dishwasher-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-collector-004",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-collector",
+    "start": [
+     3.29,
+     1,
+     -0.15
+    ],
+    "end": [
+     3.29,
+     0.55,
+     -0.155
+    ],
+    "load": 55,
+    "serves": [
+     "fx-toilet-05",
+     "fx-shower-04",
+     "fx-basin-05",
+     "fx-toilet-03",
+     "fx-shower-02",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-toilet-02",
+     "fx-basin-02",
+     "fx-toilet-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-floor-drain-01",
+     "fx-kitchen-sink-01",
+     "fx-dishwasher-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-collector-005",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-collector",
+    "start": [
+     3.29,
+     0.55,
+     -0.41
+    ],
+    "end": [
+     3.29,
+     -3.7,
+     -0.45
+    ],
+    "load": 55,
+    "serves": [
+     "fx-toilet-05",
+     "fx-shower-04",
+     "fx-basin-05",
+     "fx-toilet-03",
+     "fx-shower-02",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-toilet-02",
+     "fx-basin-02",
+     "fx-toilet-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-floor-drain-01",
+     "fx-kitchen-sink-01",
+     "fx-dishwasher-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-collector-006",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-collector",
+    "start": [
+     3.29,
+     -3.7,
+     -0.495
+    ],
+    "end": [
+     3.29,
+     -10.5,
+     -0.56
+    ],
+    "load": 55,
+    "serves": [
+     "fx-toilet-03",
+     "fx-shower-02",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-toilet-02",
+     "fx-basin-02",
+     "fx-toilet-05",
+     "fx-shower-04",
+     "fx-basin-05",
+     "fx-kitchen-sink-01",
+     "fx-dishwasher-01",
+     "fx-toilet-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-floor-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "stack-fx-stack-01-001",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "stack-fx-stack-01",
+    "start": [
+     3.29,
+     6.52,
+     3.325
+    ],
+    "end": [
+     3.29,
+     6.52,
+     0.085
+    ],
+    "load": 18,
+    "serves": [
+     "fx-toilet-03",
+     "fx-shower-02",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-basin-03",
+     "fx-basin-04"
+    ]
+   }
+  },
+  {
+   "id": "stack-fx-stack-01-002",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "stack-fx-stack-01",
+    "start": [
+     3.29,
+     6.52,
+     0.085
+    ],
+    "end": [
+     3.29,
+     6.52,
+     -0.095
+    ],
+    "load": 25,
+    "serves": [
+     "fx-toilet-03",
+     "fx-shower-02",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-toilet-02",
+     "fx-basin-02"
+    ]
+   }
+  },
+  {
+   "id": "vent-fx-stack-01-001",
+   "type": "PipeSegment",
+   "level": "roof",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "vent",
+    "dn": 75,
+    "material": "PVC",
+    "pressure": false,
+    "network": "vent-fx-stack-01",
+    "start": [
+     3.29,
+     6.52,
+     3.325
+    ],
+    "end": [
+     3.29,
+     6.52,
+     7.4
+    ],
+    "load": 0,
+    "serves": [
+     "fx-toilet-03",
+     "fx-shower-02",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-toilet-02",
+     "fx-basin-02"
+    ]
+   }
+  },
+  {
+   "id": "stack-fx-stack-02-001",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "stack-fx-stack-02",
+    "start": [
+     3.29,
+     10.99,
+     3.325
+    ],
+    "end": [
+     3.29,
+     10.99,
+     -0.05
+    ],
+    "load": 9,
+    "serves": [
+     "fx-toilet-05",
+     "fx-shower-04",
+     "fx-basin-05"
+    ]
+   }
+  },
+  {
+   "id": "vent-fx-stack-02-001",
+   "type": "PipeSegment",
+   "level": "roof",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "vent",
+    "dn": 75,
+    "material": "PVC",
+    "pressure": false,
+    "network": "vent-fx-stack-02",
+    "start": [
+     3.29,
+     10.99,
+     3.325
+    ],
+    "end": [
+     3.29,
+     10.99,
+     7.4
+    ],
+    "load": 0,
+    "serves": [
+     "fx-toilet-05",
+     "fx-shower-04",
+     "fx-basin-05"
+    ]
+   }
+  },
+  {
+   "id": "sew-kitchen-006",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "sew-kitchen",
+    "start": [
+     7.4,
+     4.3,
+     0.01
+    ],
+    "end": [
+     3.29,
+     4.3,
+     -0.03
+    ],
+    "load": 5,
+    "serves": [
+     "fx-kitchen-sink-01",
+     "fx-dishwasher-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-pumped-001",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 50,
+    "material": "PVC",
+    "pressure": true,
+    "network": "sew-LL-pumped",
+    "start": [
+     0.32,
+     13.125,
+     -2.805
+    ],
+    "end": [
+     0.32,
+     12.75,
+     -2.805
+    ],
+    "load": 16,
+    "serves": [
+     "fx-toilet-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-floor-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-pumped-002",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 50,
+    "material": "PVC",
+    "pressure": true,
+    "network": "sew-LL-pumped",
+    "start": [
+     0.32,
+     12.75,
+     -2.805
+    ],
+    "end": [
+     0.32,
+     12.75,
+     0.05
+    ],
+    "load": 16,
+    "serves": [
+     "fx-toilet-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-floor-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-pumped-003",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 50,
+    "material": "PVC",
+    "pressure": true,
+    "network": "sew-LL-pumped",
+    "start": [
+     0.32,
+     12.75,
+     0.05
+    ],
+    "end": [
+     3.29,
+     12.75,
+     0.05
+    ],
+    "load": 16,
+    "serves": [
+     "fx-toilet-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-floor-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-pumped-004",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 50,
+    "material": "PVC",
+    "pressure": true,
+    "network": "sew-LL-pumped",
+    "start": [
+     3.29,
+     12.75,
+     0.05
+    ],
+    "end": [
+     3.29,
+     10.99,
+     0.05
+    ],
+    "load": 16,
+    "serves": [
+     "fx-toilet-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-floor-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "sew-LL-pumped-005",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "sewage",
+    "dn": 50,
+    "material": "PVC",
+    "pressure": true,
+    "network": "sew-LL-pumped",
+    "start": [
+     3.29,
+     10.99,
+     0.05
+    ],
+    "end": [
+     3.29,
+     10.99,
+     -0.05
+    ],
+    "load": 16,
+    "serves": [
+     "fx-toilet-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-floor-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-001",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     0.2,
+     8.7,
+     6.45
+    ],
+    "end": [
+     3.56,
+     8.7,
+     6.45
+    ],
+    "load": 3,
+    "serves": [
+     "fx-basin-04",
+     "fx-basin-03",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-shower-02",
+     "fx-toilet-03",
+     "fx-basin-05",
+     "fx-toilet-05",
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-002",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     3.56,
+     7.72,
+     6.45
+    ],
+    "end": [
+     3.56,
+     7.4,
+     6.45
+    ],
+    "load": 0.6,
+    "serves": [
+     "fx-basin-04",
+     "fx-basin-03"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-003",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     3.56,
+     8.7,
+     6.45
+    ],
+    "end": [
+     3.56,
+     7.72,
+     6.45
+    ],
+    "load": 2,
+    "serves": [
+     "fx-basin-04",
+     "fx-basin-03",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-shower-02",
+     "fx-toilet-03"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-004",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     3.56,
+     7.72,
+     6.45
+    ],
+    "end": [
+     4.28,
+     7.72,
+     6.45
+    ],
+    "load": 1.4,
+    "serves": [
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-shower-02",
+     "fx-toilet-03"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-005",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     3.56,
+     10.44,
+     6.45
+    ],
+    "end": [
+     3.56,
+     11.1,
+     6.45
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-05"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-006",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     3.56,
+     8.7,
+     6.45
+    ],
+    "end": [
+     3.56,
+     10.44,
+     6.45
+    ],
+    "load": 1,
+    "serves": [
+     "fx-basin-05",
+     "fx-toilet-05",
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-007",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     3.56,
+     10.44,
+     6.45
+    ],
+    "end": [
+     4.28,
+     10.44,
+     6.45
+    ],
+    "load": 0.7,
+    "serves": [
+     "fx-toilet-05",
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-008",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     4.28,
+     7.72,
+     6.45
+    ],
+    "end": [
+     4.28,
+     6.92,
+     6.45
+    ],
+    "load": 1.1,
+    "serves": [
+     "fx-shower-03",
+     "fx-shower-02",
+     "fx-toilet-03"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-009",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     3.56,
+     7.4,
+     6.45
+    ],
+    "end": [
+     3.56,
+     5.8,
+     6.45
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-03"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-010",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     4.28,
+     6.92,
+     6.45
+    ],
+    "end": [
+     4.28,
+     6.28,
+     6.45
+    ],
+    "load": 0.7,
+    "serves": [
+     "fx-shower-02",
+     "fx-toilet-03"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-011",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     4.28,
+     10.44,
+     6.45
+    ],
+    "end": [
+     4.28,
+     11.65,
+     6.45
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-012",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     4.28,
+     6.28,
+     6.45
+    ],
+    "end": [
+     4.28,
+     5.48,
+     6.45
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-toilet-03"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-013",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     3.56,
+     7.4,
+     6.45
+    ],
+    "end": [
+     3.56,
+     7.4,
+     4.3
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-04"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-014",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     4.28,
+     7.72,
+     6.45
+    ],
+    "end": [
+     4.28,
+     7.72,
+     4
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-toilet-04"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-015",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     3.56,
+     11.1,
+     6.45
+    ],
+    "end": [
+     3.56,
+     11.1,
+     4.3
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-05"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-016",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     4.28,
+     10.44,
+     6.45
+    ],
+    "end": [
+     4.28,
+     10.44,
+     4
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-toilet-05"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-017",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     4.28,
+     6.92,
+     6.45
+    ],
+    "end": [
+     4.28,
+     6.92,
+     5.8
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-03"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-018",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     3.56,
+     5.8,
+     6.45
+    ],
+    "end": [
+     3.56,
+     5.8,
+     4.3
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-03"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-019",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     4.28,
+     6.28,
+     6.45
+    ],
+    "end": [
+     4.28,
+     6.28,
+     5.8
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-02"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-020",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     4.28,
+     11.65,
+     6.45
+    ],
+    "end": [
+     4.28,
+     11.65,
+     5.8
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "cold-UF-021",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-UF",
+    "start": [
+     4.28,
+     5.48,
+     6.45
+    ],
+    "end": [
+     4.28,
+     5.48,
+     4
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-toilet-03"
+    ]
+   }
+  },
+  {
+   "id": "cold-SL-001",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 25,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-SL",
+    "start": [
+     0.2,
+     8.7,
+     3.35
+    ],
+    "end": [
+     0.6,
+     8.7,
+     3.35
+    ],
+    "load": 6.8,
+    "serves": [
+     "fx-toilet-02",
+     "fx-water-heater-01",
+     "fx-basin-02",
+     "fx-kitchen-sink-01",
+     "fx-dishwasher-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-SL-002",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 25,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-SL",
+    "start": [
+     0.6,
+     6.3,
+     3.35
+    ],
+    "end": [
+     0.6,
+     3.88,
+     3.35
+    ],
+    "load": 5.1,
+    "serves": [
+     "fx-toilet-02",
+     "fx-water-heater-01",
+     "fx-basin-02"
+    ]
+   }
+  },
+  {
+   "id": "cold-SL-003",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 25,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-SL",
+    "start": [
+     0.6,
+     3.88,
+     3.35
+    ],
+    "end": [
+     1.6,
+     3.88,
+     3.35
+    ],
+    "load": 4.8,
+    "serves": [
+     "fx-water-heater-01",
+     "fx-basin-02"
+    ]
+   }
+  },
+  {
+   "id": "cold-SL-004",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 25,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-SL",
+    "start": [
+     1.6,
+     3.88,
+     3.35
+    ],
+    "end": [
+     1.6,
+     3,
+     3.35
+    ],
+    "load": 4.8,
+    "serves": [
+     "fx-water-heater-01",
+     "fx-basin-02"
+    ]
+   }
+  },
+  {
+   "id": "cold-SL-005",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-SL",
+    "start": [
+     1.6,
+     3,
+     3.35
+    ],
+    "end": [
+     1.6,
+     2.92,
+     3.35
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-02"
+    ]
+   }
+  },
+  {
+   "id": "cold-SL-006",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 25,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-SL",
+    "start": [
+     0.6,
+     8.7,
+     3.35
+    ],
+    "end": [
+     0.6,
+     6.3,
+     3.35
+    ],
+    "load": 6.8,
+    "serves": [
+     "fx-toilet-02",
+     "fx-water-heater-01",
+     "fx-basin-02",
+     "fx-kitchen-sink-01",
+     "fx-dishwasher-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-SL-007",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-SL",
+    "start": [
+     0.6,
+     6.3,
+     3.35
+    ],
+    "end": [
+     8.33,
+     6.3,
+     3.35
+    ],
+    "load": 1.7,
+    "serves": [
+     "fx-kitchen-sink-01",
+     "fx-dishwasher-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-SL-008",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-SL",
+    "start": [
+     8.33,
+     6.3,
+     3.35
+    ],
+    "end": [
+     8.33,
+     5.39,
+     3.35
+    ],
+    "load": 1,
+    "serves": [
+     "fx-dishwasher-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-SL-009",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-SL",
+    "start": [
+     0.6,
+     3.88,
+     3.35
+    ],
+    "end": [
+     0.6,
+     3.88,
+     0.9
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-toilet-02"
+    ]
+   }
+  },
+  {
+   "id": "cold-SL-010",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 25,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-SL",
+    "start": [
+     1.6,
+     3,
+     3.35
+    ],
+    "end": [
+     1.6,
+     3,
+     4
+    ],
+    "load": 4.5,
+    "serves": [
+     "fx-water-heater-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-SL-011",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-SL",
+    "start": [
+     1.6,
+     2.92,
+     3.35
+    ],
+    "end": [
+     1.6,
+     2.92,
+     1.2
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-02"
+    ]
+   }
+  },
+  {
+   "id": "cold-SL-012",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-SL",
+    "start": [
+     8.33,
+     6.3,
+     3.35
+    ],
+    "end": [
+     8.33,
+     6.3,
+     1.2
+    ],
+    "load": 0.7,
+    "serves": [
+     "fx-kitchen-sink-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-SL-013",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-SL",
+    "start": [
+     8.33,
+     5.39,
+     3.35
+    ],
+    "end": [
+     8.33,
+     5.39,
+     1.1
+    ],
+    "load": 1,
+    "serves": [
+     "fx-dishwasher-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-001",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     0.2,
+     8.7,
+     0.1
+    ],
+    "end": [
+     0.48,
+     8.7,
+     0.1
+    ],
+    "load": 3.1,
+    "serves": [
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-toilet-01",
+     "fx-garden-tap-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-002",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     0.48,
+     8.7,
+     0.1
+    ],
+    "end": [
+     0.48,
+     11.5,
+     0.1
+    ],
+    "load": 3.1,
+    "serves": [
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-toilet-01",
+     "fx-garden-tap-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-003",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     0.48,
+     11.5,
+     0.1
+    ],
+    "end": [
+     1.12,
+     11.5,
+     0.1
+    ],
+    "load": 2.1,
+    "serves": [
+     "fx-laundry-tank-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-toilet-01",
+     "fx-garden-tap-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-004",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     1.12,
+     11.5,
+     0.1
+    ],
+    "end": [
+     3.52,
+     11.5,
+     0.1
+    ],
+    "load": 1.4,
+    "serves": [
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-toilet-01",
+     "fx-garden-tap-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-005",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     3.52,
+     11.5,
+     0.1
+    ],
+    "end": [
+     3.52,
+     13.64,
+     0.1
+    ],
+    "load": 1.4,
+    "serves": [
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-toilet-01",
+     "fx-garden-tap-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-006",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     4,
+     13.64,
+     0.1
+    ],
+    "end": [
+     4.48,
+     13.64,
+     0.1
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-007",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     4.48,
+     13.64,
+     0.1
+    ],
+    "end": [
+     4.48,
+     13.725,
+     0.1
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-008",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     3.52,
+     13.64,
+     0.1
+    ],
+    "end": [
+     4,
+     13.64,
+     0.1
+    ],
+    "load": 1.1,
+    "serves": [
+     "fx-shower-01",
+     "fx-toilet-01",
+     "fx-garden-tap-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-009",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     4,
+     13.64,
+     0.1
+    ],
+    "end": [
+     4,
+     14.745,
+     0.1
+    ],
+    "load": 0.7,
+    "serves": [
+     "fx-toilet-01",
+     "fx-garden-tap-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-010",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     4,
+     14.745,
+     0.1
+    ],
+    "end": [
+     6,
+     14.745,
+     0.1
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-garden-tap-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-011",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     6,
+     14.745,
+     0.1
+    ],
+    "end": [
+     6,
+     15.2,
+     0.1
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-garden-tap-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-012",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     0.48,
+     11.5,
+     0.1
+    ],
+    "end": [
+     0.48,
+     11.5,
+     -1.6
+    ],
+    "load": 1,
+    "serves": [
+     "fx-washer-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-013",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     1.12,
+     11.5,
+     0.1
+    ],
+    "end": [
+     1.12,
+     11.5,
+     -1.6
+    ],
+    "load": 0.7,
+    "serves": [
+     "fx-laundry-tank-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-014",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     3.52,
+     13.64,
+     0.1
+    ],
+    "end": [
+     3.52,
+     13.64,
+     -1.9
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-015",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     4.48,
+     13.725,
+     0.1
+    ],
+    "end": [
+     4.48,
+     13.725,
+     -0.4
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-016",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     4,
+     14.745,
+     0.1
+    ],
+    "end": [
+     4,
+     14.745,
+     -2.2
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-toilet-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-LL-017",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-LL",
+    "start": [
+     6,
+     15.2,
+     0.1
+    ],
+    "end": [
+     6,
+     15.2,
+     -1.9
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-garden-tap-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-riser-001",
+   "type": "PipeSegment",
+   "level": "roof",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 32,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-riser",
+    "start": [
+     0.85,
+     10.3,
+     6.85
+    ],
+    "end": [
+     0.2,
+     10.3,
+     6.85
+    ],
+    "load": 12.9,
+    "serves": [
+     "fx-toilet-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-kitchen-sink-01",
+     "fx-toilet-02",
+     "fx-basin-02",
+     "fx-toilet-03",
+     "fx-shower-02",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-toilet-05",
+     "fx-shower-04",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-basin-05",
+     "fx-dishwasher-01",
+     "fx-garden-tap-01",
+     "fx-water-heater-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-riser-002",
+   "type": "PipeSegment",
+   "level": "roof",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 32,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-riser",
+    "start": [
+     0.2,
+     10.3,
+     6.85
+    ],
+    "end": [
+     0.2,
+     8.7,
+     6.85
+    ],
+    "load": 12.9,
+    "serves": [
+     "fx-toilet-01",
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-washer-01",
+     "fx-laundry-tank-01",
+     "fx-kitchen-sink-01",
+     "fx-toilet-02",
+     "fx-basin-02",
+     "fx-toilet-03",
+     "fx-shower-02",
+     "fx-toilet-04",
+     "fx-shower-03",
+     "fx-toilet-05",
+     "fx-shower-04",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-basin-05",
+     "fx-dishwasher-01",
+     "fx-garden-tap-01",
+     "fx-water-heater-01"
+    ]
+   }
+  },
+  {
+   "id": "cold-riser-003",
+   "type": "PipeSegment",
+   "level": "roof",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 32,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-riser",
+    "start": [
+     2.15,
+     10.3,
+     6.85
+    ],
+    "end": [
+     0.85,
+     10.3,
+     6.85
+    ],
+    "load": 0,
+    "serves": []
+   }
+  },
+  {
+   "id": "cold-riser-004",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 32,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-riser",
+    "start": [
+     0.2,
+     8.7,
+     6.85
+    ],
+    "end": [
+     0.2,
+     8.7,
+     6.45
+    ],
+    "load": 12.9,
+    "serves": []
+   }
+  },
+  {
+   "id": "cold-riser-005",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 32,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-riser",
+    "start": [
+     0.2,
+     8.7,
+     6.45
+    ],
+    "end": [
+     0.2,
+     8.7,
+     3.35
+    ],
+    "load": 9.9,
+    "serves": []
+   }
+  },
+  {
+   "id": "cold-riser-006",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 20,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-riser",
+    "start": [
+     0.2,
+     8.7,
+     3.35
+    ],
+    "end": [
+     0.2,
+     8.7,
+     0.1
+    ],
+    "load": 3.1,
+    "serves": []
+   }
+  },
+  {
+   "id": "hot-UF-001",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     0.32,
+     8.7,
+     6.37
+    ],
+    "end": [
+     3.56,
+     8.7,
+     6.37
+    ],
+    "load": 2.1,
+    "serves": [
+     "fx-basin-04",
+     "fx-shower-03",
+     "fx-shower-02",
+     "fx-basin-03",
+     "fx-basin-05",
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-002",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     3.56,
+     8.7,
+     6.37
+    ],
+    "end": [
+     3.56,
+     7.4,
+     6.37
+    ],
+    "load": 1.4,
+    "serves": [
+     "fx-basin-04",
+     "fx-shower-03",
+     "fx-shower-02",
+     "fx-basin-03"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-003",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     3.56,
+     8.7,
+     6.37
+    ],
+    "end": [
+     3.56,
+     11.1,
+     6.37
+    ],
+    "load": 0.7,
+    "serves": [
+     "fx-basin-05",
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-004",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     3.56,
+     7.4,
+     6.37
+    ],
+    "end": [
+     4.28,
+     7.4,
+     6.37
+    ],
+    "load": 0.8,
+    "serves": [
+     "fx-shower-03",
+     "fx-shower-02"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-005",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     4.28,
+     7.4,
+     6.37
+    ],
+    "end": [
+     4.28,
+     6.92,
+     6.37
+    ],
+    "load": 0.8,
+    "serves": [
+     "fx-shower-03",
+     "fx-shower-02"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-006",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     3.56,
+     7.4,
+     6.37
+    ],
+    "end": [
+     3.56,
+     5.8,
+     6.37
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-03"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-007",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     4.28,
+     6.92,
+     6.37
+    ],
+    "end": [
+     4.28,
+     6.28,
+     6.37
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-02"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-008",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     3.56,
+     11.1,
+     6.37
+    ],
+    "end": [
+     4.28,
+     11.1,
+     6.37
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-009",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     4.28,
+     11.1,
+     6.37
+    ],
+    "end": [
+     4.28,
+     11.65,
+     6.37
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-010",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     3.56,
+     7.4,
+     6.37
+    ],
+    "end": [
+     3.56,
+     7.4,
+     4.3
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-04"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-011",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     3.56,
+     11.1,
+     6.37
+    ],
+    "end": [
+     3.56,
+     11.1,
+     4.3
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-05"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-012",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     4.28,
+     6.92,
+     6.37
+    ],
+    "end": [
+     4.28,
+     6.92,
+     5.8
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-03"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-013",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     3.56,
+     5.8,
+     6.37
+    ],
+    "end": [
+     3.56,
+     5.8,
+     4.3
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-03"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-014",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     4.28,
+     6.28,
+     6.37
+    ],
+    "end": [
+     4.28,
+     6.28,
+     5.8
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-02"
+    ]
+   }
+  },
+  {
+   "id": "hot-UF-015",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-UF",
+    "start": [
+     4.28,
+     11.65,
+     6.37
+    ],
+    "end": [
+     4.28,
+     11.65,
+     5.8
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-04"
+    ]
+   }
+  },
+  {
+   "id": "hot-SL-001",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-SL",
+    "start": [
+     0.32,
+     8.7,
+     3.27
+    ],
+    "end": [
+     1.6,
+     8.7,
+     3.27
+    ],
+    "load": 1,
+    "serves": [
+     "fx-basin-02",
+     "fx-kitchen-sink-01"
+    ]
+   }
+  },
+  {
+   "id": "hot-SL-002",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-SL",
+    "start": [
+     1.6,
+     6.3,
+     3.27
+    ],
+    "end": [
+     1.6,
+     2.92,
+     3.27
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-02"
+    ]
+   }
+  },
+  {
+   "id": "hot-SL-003",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-SL",
+    "start": [
+     1.6,
+     8.7,
+     3.27
+    ],
+    "end": [
+     1.6,
+     6.3,
+     3.27
+    ],
+    "load": 1,
+    "serves": [
+     "fx-basin-02",
+     "fx-kitchen-sink-01"
+    ]
+   }
+  },
+  {
+   "id": "hot-SL-004",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-SL",
+    "start": [
+     1.6,
+     6.3,
+     3.27
+    ],
+    "end": [
+     8.33,
+     6.3,
+     3.27
+    ],
+    "load": 0.7,
+    "serves": [
+     "fx-kitchen-sink-01"
+    ]
+   }
+  },
+  {
+   "id": "hot-SL-005",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-SL",
+    "start": [
+     1.6,
+     2.92,
+     3.27
+    ],
+    "end": [
+     1.6,
+     2.92,
+     1.2
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-02"
+    ]
+   }
+  },
+  {
+   "id": "hot-SL-006",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-SL",
+    "start": [
+     8.33,
+     6.3,
+     3.27
+    ],
+    "end": [
+     8.33,
+     6.3,
+     1.2
+    ],
+    "load": 0.7,
+    "serves": [
+     "fx-kitchen-sink-01"
+    ]
+   }
+  },
+  {
+   "id": "hot-LL-001",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-LL",
+    "start": [
+     0.32,
+     8.7,
+     0.02
+    ],
+    "end": [
+     1.12,
+     8.7,
+     0.02
+    ],
+    "load": 1.4,
+    "serves": [
+     "fx-laundry-tank-01",
+     "fx-basin-01",
+     "fx-shower-01"
+    ]
+   }
+  },
+  {
+   "id": "hot-LL-002",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-LL",
+    "start": [
+     1.12,
+     8.7,
+     0.02
+    ],
+    "end": [
+     1.12,
+     11.5,
+     0.02
+    ],
+    "load": 1.4,
+    "serves": [
+     "fx-laundry-tank-01",
+     "fx-basin-01",
+     "fx-shower-01"
+    ]
+   }
+  },
+  {
+   "id": "hot-LL-003",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-LL",
+    "start": [
+     1.12,
+     11.5,
+     0.02
+    ],
+    "end": [
+     3.52,
+     11.5,
+     0.02
+    ],
+    "load": 0.7,
+    "serves": [
+     "fx-basin-01",
+     "fx-shower-01"
+    ]
+   }
+  },
+  {
+   "id": "hot-LL-004",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-LL",
+    "start": [
+     3.52,
+     11.5,
+     0.02
+    ],
+    "end": [
+     3.52,
+     13.64,
+     0.02
+    ],
+    "load": 0.7,
+    "serves": [
+     "fx-basin-01",
+     "fx-shower-01"
+    ]
+   }
+  },
+  {
+   "id": "hot-LL-005",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-LL",
+    "start": [
+     3.52,
+     13.64,
+     0.02
+    ],
+    "end": [
+     4.48,
+     13.64,
+     0.02
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-01"
+    ]
+   }
+  },
+  {
+   "id": "hot-LL-006",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-LL",
+    "start": [
+     4.48,
+     13.64,
+     0.02
+    ],
+    "end": [
+     4.48,
+     13.725,
+     0.02
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-01"
+    ]
+   }
+  },
+  {
+   "id": "hot-LL-007",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-LL",
+    "start": [
+     1.12,
+     11.5,
+     0.02
+    ],
+    "end": [
+     1.12,
+     11.5,
+     -1.6
+    ],
+    "load": 0.7,
+    "serves": [
+     "fx-laundry-tank-01"
+    ]
+   }
+  },
+  {
+   "id": "hot-LL-008",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-LL",
+    "start": [
+     3.52,
+     13.64,
+     0.02
+    ],
+    "end": [
+     3.52,
+     13.64,
+     -1.9
+    ],
+    "load": 0.3,
+    "serves": [
+     "fx-basin-01"
+    ]
+   }
+  },
+  {
+   "id": "hot-LL-009",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-LL",
+    "start": [
+     4.48,
+     13.725,
+     0.02
+    ],
+    "end": [
+     4.48,
+     13.725,
+     -0.4
+    ],
+    "load": 0.4,
+    "serves": [
+     "fx-shower-01"
+    ]
+   }
+  },
+  {
+   "id": "hot-main-001",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 25,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-main",
+    "start": [
+     1.6,
+     3,
+     4
+    ],
+    "end": [
+     1.6,
+     3,
+     3.27
+    ],
+    "load": 4.5,
+    "serves": [
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-laundry-tank-01",
+     "fx-kitchen-sink-01",
+     "fx-basin-02",
+     "fx-shower-02",
+     "fx-shower-03",
+     "fx-shower-04",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-basin-05"
+    ]
+   }
+  },
+  {
+   "id": "hot-main-002",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 25,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-main",
+    "start": [
+     1.6,
+     3,
+     3.27
+    ],
+    "end": [
+     0.32,
+     3,
+     3.27
+    ],
+    "load": 4.5,
+    "serves": [
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-laundry-tank-01",
+     "fx-kitchen-sink-01",
+     "fx-basin-02",
+     "fx-shower-02",
+     "fx-shower-03",
+     "fx-shower-04",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-basin-05"
+    ]
+   }
+  },
+  {
+   "id": "hot-main-003",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 25,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-main",
+    "start": [
+     0.32,
+     3,
+     3.27
+    ],
+    "end": [
+     0.32,
+     8.7,
+     3.27
+    ],
+    "load": 4.5,
+    "serves": [
+     "fx-basin-01",
+     "fx-shower-01",
+     "fx-laundry-tank-01",
+     "fx-kitchen-sink-01",
+     "fx-basin-02",
+     "fx-shower-02",
+     "fx-shower-03",
+     "fx-shower-04",
+     "fx-basin-03",
+     "fx-basin-04",
+     "fx-basin-05"
+    ]
+   }
+  },
+  {
+   "id": "hot-riser-001",
+   "type": "PipeSegment",
+   "level": "UF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-riser",
+    "start": [
+     0.32,
+     8.7,
+     3.27
+    ],
+    "end": [
+     0.32,
+     8.7,
+     6.37
+    ],
+    "load": 2.1,
+    "serves": []
+   }
+  },
+  {
+   "id": "hot-riser-002",
+   "type": "PipeSegment",
+   "level": "LL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "hot",
+    "dn": 20,
+    "material": "CPVC",
+    "pressure": true,
+    "network": "hot-riser",
+    "start": [
+     0.32,
+     8.7,
+     3.27
+    ],
+    "end": [
+     0.32,
+     8.7,
+     0.02
+    ],
+    "load": 1.4,
+    "serves": []
+   }
+  },
+  {
+   "id": "cold-feed-001",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 25,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-feed",
+    "start": [
+     1.2,
+     -3.85,
+     0.3
+    ],
+    "end": [
+     1.2,
+     -3.85,
+     -0.6
+    ],
+    "load": 0,
+    "serves": [
+     "fx-roof-tank-01",
+     "fx-roof-tank-02"
+    ]
+   }
+  },
+  {
+   "id": "cold-feed-002",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 25,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-feed",
+    "start": [
+     1.2,
+     -3.85,
+     -0.6
+    ],
+    "end": [
+     1.2,
+     8.35,
+     -0.6
+    ],
+    "load": 0,
+    "serves": [
+     "fx-roof-tank-01",
+     "fx-roof-tank-02"
+    ]
+   }
+  },
+  {
+   "id": "cold-feed-003",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 25,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-feed",
+    "start": [
+     1.2,
+     8.35,
+     -0.6
+    ],
+    "end": [
+     0.15,
+     8.35,
+     -0.6
+    ],
+    "load": 0,
+    "serves": [
+     "fx-roof-tank-01",
+     "fx-roof-tank-02"
+    ]
+   }
+  },
+  {
+   "id": "cold-feed-004",
+   "type": "PipeSegment",
+   "level": "roof",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 25,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-feed",
+    "start": [
+     0.15,
+     8.35,
+     -0.6
+    ],
+    "end": [
+     0.15,
+     8.35,
+     7.9
+    ],
+    "load": 0,
+    "serves": [
+     "fx-roof-tank-01",
+     "fx-roof-tank-02"
+    ]
+   }
+  },
+  {
+   "id": "cold-feed-005",
+   "type": "PipeSegment",
+   "level": "roof",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 25,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-feed",
+    "start": [
+     0.15,
+     8.35,
+     7.9
+    ],
+    "end": [
+     0.85,
+     8.35,
+     7.9
+    ],
+    "load": 0,
+    "serves": [
+     "fx-roof-tank-01",
+     "fx-roof-tank-02"
+    ]
+   }
+  },
+  {
+   "id": "cold-feed-006",
+   "type": "PipeSegment",
+   "level": "roof",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "cold",
+    "dn": 25,
+    "material": "PVC",
+    "pressure": true,
+    "network": "cold-feed",
+    "start": [
+     0.85,
+     8.35,
+     7.9
+    ],
+    "end": [
+     0.85,
+     10.3,
+     7.9
+    ],
+    "load": 0,
+    "serves": [
+     "fx-roof-tank-01",
+     "fx-roof-tank-02"
+    ]
+   }
+  },
+  {
+   "id": "rain-cistern-001",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-cistern",
+    "start": [
+     0.3,
+     -1.4,
+     -0.04
+    ],
+    "end": [
+     1.3,
+     -1.4,
+     -0.05
+    ],
+    "load": 56.98,
+    "serves": [
+     "fx-roof-drain-03",
+     "fx-roof-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "rain-cistern-002",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-cistern",
+    "start": [
+     0.3,
+     1.3,
+     -0.015
+    ],
+    "end": [
+     0.3,
+     -1.4,
+     -0.04
+    ],
+    "load": 56.98,
+    "serves": [
+     "fx-roof-drain-03",
+     "fx-roof-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "rain-cistern-003",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-cistern",
+    "start": [
+     0.3,
+     5.3,
+     0.025
+    ],
+    "end": [
+     0.3,
+     1.3,
+     -0.015
+    ],
+    "load": 44.18,
+    "serves": [
+     "fx-roof-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "rain-cistern-004",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-cistern",
+    "start": [
+     8.45,
+     -1.4,
+     0.02
+    ],
+    "end": [
+     8.3,
+     -1.4,
+     0.02
+    ],
+    "load": 33.39,
+    "serves": [
+     "fx-roof-drain-04"
+    ]
+   }
+  },
+  {
+   "id": "rain-cistern-005",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-cistern",
+    "start": [
+     8.45,
+     -3.95,
+     0.045
+    ],
+    "end": [
+     8.45,
+     -1.4,
+     0.02
+    ],
+    "load": 33.39,
+    "serves": [
+     "fx-roof-drain-04"
+    ]
+   }
+  },
+  {
+   "id": "rain-cistern-006",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-cistern",
+    "start": [
+     8.3,
+     -1.4,
+     0.02
+    ],
+    "end": [
+     1.3,
+     -1.4,
+     -0.05
+    ],
+    "load": 77.57,
+    "serves": [
+     "fx-roof-drain-04",
+     "fx-roof-drain-02"
+    ]
+   }
+  },
+  {
+   "id": "rain-cistern-007",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-cistern",
+    "start": [
+     8.3,
+     5.3,
+     0.085
+    ],
+    "end": [
+     8.3,
+     -1.4,
+     0.02
+    ],
+    "load": 44.18,
+    "serves": [
+     "fx-roof-drain-02"
+    ]
+   }
+  },
+  {
+   "id": "rain-cistern-008",
+   "type": "PipeSegment",
+   "level": "roof",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-cistern",
+    "start": [
+     0.3,
+     1.3,
+     3.7
+    ],
+    "end": [
+     0.3,
+     1.3,
+     -0.015
+    ],
+    "load": 12.8,
+    "serves": [
+     "fx-roof-drain-03"
+    ]
+   }
+  },
+  {
+   "id": "rain-cistern-009",
+   "type": "PipeSegment",
+   "level": "roof",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-cistern",
+    "start": [
+     0.3,
+     5.3,
+     6.8
+    ],
+    "end": [
+     0.3,
+     5.3,
+     0.025
+    ],
+    "load": 44.18,
+    "serves": [
+     "fx-roof-drain-01"
+    ]
+   }
+  },
+  {
+   "id": "rain-cistern-010",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-cistern",
+    "start": [
+     8.45,
+     -3.95,
+     2.6
+    ],
+    "end": [
+     8.45,
+     -3.95,
+     0.045
+    ],
+    "load": 33.39,
+    "serves": [
+     "fx-roof-drain-04"
+    ]
+   }
+  },
+  {
+   "id": "rain-cistern-011",
+   "type": "PipeSegment",
+   "level": "roof",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-cistern",
+    "start": [
+     8.3,
+     5.3,
+     6.8
+    ],
+    "end": [
+     8.3,
+     5.3,
+     0.085
+    ],
+    "load": 44.18,
+    "serves": [
+     "fx-roof-drain-02"
+    ]
+   }
+  },
+  {
+   "id": "rain-overflow-001",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-overflow",
+    "start": [
+     1.3,
+     -3.8,
+     -0.1
+    ],
+    "end": [
+     1.3,
+     -6.5,
+     -0.125
+    ],
+    "load": 0,
+    "serves": [
+     "fx-rain-cistern-01"
+    ]
+   }
+  },
+  {
+   "id": "rain-garden-001",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-garden",
+    "start": [
+     8.3,
+     19,
+     -2.81
+    ],
+    "end": [
+     4.3,
+     19,
+     -2.85
+    ],
+    "load": 20.64,
+    "serves": [
+     "fx-roof-drain-05"
+    ]
+   }
+  },
+  {
+   "id": "rain-garden-002",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-garden",
+    "start": [
+     8.3,
+     14.7,
+     -2.765
+    ],
+    "end": [
+     8.3,
+     19,
+     -2.81
+    ],
+    "load": 20.64,
+    "serves": [
+     "fx-roof-drain-05"
+    ]
+   }
+  },
+  {
+   "id": "rain-garden-003",
+   "type": "PipeSegment",
+   "level": "SL",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 100,
+    "material": "PVC",
+    "pressure": false,
+    "network": "rain-garden",
+    "start": [
+     8.3,
+     14.7,
+     0.6
+    ],
+    "end": [
+     8.3,
+     14.7,
+     -2.765
+    ],
+    "load": 20.64,
+    "serves": [
+     "fx-roof-drain-05"
+    ]
+   }
+  },
+  {
+   "id": "rain-sump-001",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 50,
+    "material": "PVC",
+    "pressure": true,
+    "network": "rain-sump",
+    "start": [
+     8,
+     16.6,
+     -2.95
+    ],
+    "end": [
+     9.6,
+     16.6,
+     -2.95
+    ],
+    "load": 0,
+    "serves": [
+     "fx-sump-pump-01"
+    ]
+   }
+  },
+  {
+   "id": "rain-sump-002",
+   "type": "PipeSegment",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "system": "rain",
+    "dn": 50,
+    "material": "PVC",
+    "pressure": true,
+    "network": "rain-sump",
+    "start": [
+     9.6,
+     16.6,
+     -2.95
+    ],
+    "end": [
+     9.6,
+     -6.5,
+     -0.13
+    ],
+    "load": 0,
+    "serves": [
+     "fx-sump-pump-01"
+    ]
+   }
+  },
+  {
+   "id": "ib-auto-01",
+   "type": "Fixture",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "kind": "inspection-box",
+    "name": "Inspection box",
+    "at": [
+     3.29,
+     4.3
+    ],
+    "z": 0.6
+   }
+  },
+  {
+   "id": "ib-auto-02",
+   "type": "Fixture",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "kind": "inspection-box",
+    "name": "Inspection box",
+    "at": [
+     3.29,
+     0.55
+    ],
+    "z": 0.09
+   }
+  },
+  {
+   "id": "ib-auto-03",
+   "type": "Fixture",
+   "level": "site",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "kind": "inspection-box",
+    "name": "Inspection box",
+    "at": [
+     3.29,
+     -3.7
+    ],
+    "z": 0.005
    }
   }
  ]

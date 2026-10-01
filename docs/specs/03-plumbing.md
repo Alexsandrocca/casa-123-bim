@@ -1,5 +1,5 @@
 # 03 — Plumbing: water, hot water, sewage, rainwater
-Status: ready
+Status: in progress
 
 > Manager note (2026-09-29): Build on **Version 3** (spec 02b). Item 0.1 is done in 02b. The kitchen sink branch and the WC keep their V2 positions.
 
