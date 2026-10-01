@@ -5,6 +5,7 @@ import {
 } from './geometry';
 import { Element as ElementSchema, type Element, type Opening, type Project, type Rect, type Wall } from './schema';
 import { clampToHost, nextId, rebuildLevel } from './walls';
+import { UTILITIES_DEFAULT, withPlumbing } from './plumbing/route';
 
 export interface Command {
   label: string;
@@ -220,6 +221,54 @@ export function setElementProps(id: string, patch: Record<string, unknown>, labe
       const parsed = ElementSchema.safeParse({ ...e, props: { ...e.props, ...patch } });
       if (!parsed.success) throw new CommandError('That value is not allowed here.');
       return replace(p, parsed.data);
+    },
+  };
+}
+
+/* ---------- plumbing (spec 03) ---------- */
+
+/** Move a fixture to a new plan position (5 cm steps); the pipes re-route. */
+export function moveFixture(id: string, x: number, y: number): Command {
+  return {
+    label: 'Move fixture',
+    apply(p) {
+      const f = getEl(p, id);
+      if (!f || f.type !== 'Fixture') throw new CommandError(`No fixture ${id}`);
+      if (f.tags.includes('auto')) throw new CommandError('Inspection boxes are placed by the router. Move the pipes or fixtures instead.');
+      // snap only what moved, so a fixture moved along one axis keeps its other coordinate
+      const at: [number, number] = [eq(x, f.props.at[0]) ? f.props.at[0] : snap(x), eq(y, f.props.at[1]) ? f.props.at[1] : snap(y)];
+      if (eq(at[0], f.props.at[0]) && eq(at[1], f.props.at[1])) return p;
+      if (['LL', 'SL', 'UF'].includes(f.level) && LIBRARY_ROOM_KINDS.has(f.props.kind)
+        && !spacesOn(p, f.level).some((s) => s.props.cells.some((c) => at[0] > c.x0 && at[0] < c.x1 && at[1] > c.y0 && at[1] < c.y1))) {
+        throw new CommandError('A fixture has to stay inside a room.');
+      }
+      return withPlumbing(replace(p, { ...f, props: { ...f.props, at } }));
+    },
+  };
+}
+const LIBRARY_ROOM_KINDS = new Set(['toilet', 'basin', 'shower', 'kitchen-sink', 'laundry-tank', 'washer', 'dishwasher', 'floor-drain', 'stack', 'lift-station', 'backflow-valve']);
+
+/** Change a pipe's DN or material by hand; the router keeps it. */
+export function setPipe(id: string, patch: { dn?: number; material?: 'PVC' | 'PPR' | 'CPVC' }): Command {
+  return {
+    label: 'Change pipe',
+    apply(p) {
+      const s = getEl(p, id);
+      if (!s || s.type !== 'PipeSegment') throw new CommandError(`No pipe ${id}`);
+      return replace(p, { ...s, props: { ...s.props, ...patch, manual: true } });
+    },
+  };
+}
+
+/** Street services: sewer depth (from SEMAE), rainfall intensity… The checks recompute; the pipes re-route. */
+export function setUtilities(patch: Partial<NonNullable<Project['site']['utilities']>>): Command {
+  return {
+    label: 'Change street services',
+    apply(p) {
+      const u = { ...(p.site.utilities ?? UTILITIES_DEFAULT), ...patch };
+      if (u.sewerDepth < 0.5 || u.sewerDepth > 8) throw new CommandError('The sewer depth should be between 0.5 and 8 m.');
+      if (u.rainIntensity < 50 || u.rainIntensity > 400) throw new CommandError('Rainfall intensity should be between 50 and 400 mm/h.');
+      return withPlumbing({ ...p, site: { ...p.site, utilities: u } });
     },
   };
 }

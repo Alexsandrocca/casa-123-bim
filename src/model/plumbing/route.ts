@@ -73,6 +73,9 @@ function subtreeTargets(nodes: TNode[]): string[][] {
   return memo;
 }
 const len2 = (a: TNode, b: TNode) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+/** Fall of a gravity pipe, rounded up to the model's 5 mm, so the stored slope is never below the design slope. */
+const fallOf = (length: number, slope: number) => Math.ceil((length * slope) / 0.005 - 1e-9) * 0.005;
+const floor5 = (z: number) => Math.floor(z / 0.005 + 1e-9) * 0.005;
 
 /* ---------- output ---------- */
 
@@ -126,10 +129,10 @@ export function routePlumbing(p: Project): { pipes: PipeSegment[]; auto: Fixture
     order.sort((a, b) => depth(a) - depth(b));
     for (const i of order) {
       const n = nodes[i]!;
-      if (n.parent >= 0) fall[i] = fall[n.parent]! + len2(n, nodes[n.parent]!) * minSewageSlope(dn[i]!);
+      if (n.parent >= 0) fall[i] = fall[n.parent]! + fallOf(len2(n, nodes[n.parent]!), minSewageSlope(dn[i]!));
     }
     const outletZ = (fid: string) => elev(fxById.get(fid)!.level) - belowFloor;
-    const rootZ = Math.min(...nodes.map((n, i) => (n.target ? outletZ(n.target) - fall[i]! : Infinity)));
+    const rootZ = floor5(Math.min(...nodes.map((n, i) => (n.target ? outletZ(n.target) - fall[i]! : Infinity))));
     const z = (i: number) => rootZ + fall[i]!;
     nodes.forEach((n, i) => {
       if (n.parent < 0) return;
@@ -188,16 +191,16 @@ export function routePlumbing(p: Project): { pipes: PipeSegment[]; auto: Fixture
       return ids;
     };
     // inverts: start under the lowest join of the first stack, fall 1 % (DN 100), step down outside to keep 0.5 m of cover
-    const firstJoin = Math.min(...(joins.get(feet[0]!.id) ?? [{ z: SL - 0.6 }]).map((j) => j.z), SL - 0.6) - 0.05;
+    const firstJoin = floor5(Math.min(...(joins.get(feet[0]!.id) ?? [{ z: SL - 0.6 }]).map((j) => j.z), SL - 0.6) - 0.05);
     // Each node has an inlet and an outlet invert: an inspection box may drop the flow inside it to keep 0.5 m of cover.
     const inverts = (start: number) => {
       const zin = [start], zout = [start];
       for (let k = 1; k < path.length; k++) {
         const a = path[k - 1]!.at, b = path[k]!.at;
-        let z = zout[k - 1]! - 0.01 * (Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]));
+        let z = zout[k - 1]! - fallOf(Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]), 0.01);
         if (path[k]!.stack) z = Math.min(z, Math.min(...(joins.get(path[k]!.stack!.id) ?? [{ z }]).map((j) => j.z)) - 0.05);
         zin.push(z);
-        zout.push(path[k]!.ib ? Math.min(z, surface(p, b, ground) - 0.5) : z);
+        zout.push(path[k]!.ib ? Math.min(z, floor5(surface(p, b, ground) - 0.5)) : z);
       }
       return { zin, zout };
     };
@@ -205,7 +208,7 @@ export function routePlumbing(p: Project): { pipes: PipeSegment[]; auto: Fixture
     let start = firstJoin;
     let gtJoin: { k: number; at: P2; z: number } | null = null;
     if (gt && gtIn !== null) {
-      const gtOut = gtIn - 0.08;
+      const gtOut = floor5(gtIn - 0.08);
       let best = { d: Infinity, k: 1, at: [0, 0] as P2 };
       for (let k = 1; k < path.length - 1; k++) {
         const a = path[k - 1]!.at, b = path[k]!.at;
@@ -221,7 +224,7 @@ export function routePlumbing(p: Project): { pipes: PipeSegment[]; auto: Fixture
         const { zin } = inverts(start);
         const need = gtOut - 0.01 * best.d - 0.02;
         if (zin[best.k]! <= need) { gtJoin = { k: best.k, at: best.at, z: zin[best.k]! }; break; }
-        start -= zin[best.k]! - need;
+        start = floor5(start - (zin[best.k]! - need));
       }
     }
     const { zin, zout } = inverts(start);
@@ -231,7 +234,7 @@ export function routePlumbing(p: Project): { pipes: PipeSegment[]; auto: Fixture
       const ids = [...new Set([...collLoad(k - 1), ...(gtJoin && k > gtJoin.k ? kitchenItems.map((i) => i.id) : [])])];
       out.pipe('sew-collector', insideHouse(p, b.at) ? 'SL' : 'site', 'sewage', 100, [a.at[0], a.at[1], zout[k - 1]!], [b.at[0], b.at[1], zin[k]!], { load: uhc(ids), serves: ids });
     }
-    const arrival = zout[zout.length - 1]! - 0.01 * Math.abs(ib2[1] - sewer[1]);
+    const arrival = zout[zout.length - 1]! - fallOf(Math.abs(ib2[1] - sewer[1]), 0.01);
     out.pipe('sew-collector', 'site', 'sewage', 100, [ib2[0], ib2[1], zout[zout.length - 1]!], [sewer[0], sewer[1], arrival], { load: uhc(upstreamIds), serves: upstreamIds });
     path.forEach((n) => {
       if (n.ib) out.auto.push(autoFixture(`ib-auto-${String(out.auto.length + 1).padStart(2, '0')}`, 'inspection-box', n.at, surface(p, n.at, ground), insideHouse(p, n.at) ? 'SL' : 'site'));
@@ -254,13 +257,13 @@ export function routePlumbing(p: Project): { pipes: PipeSegment[]; auto: Fixture
     }
     // kitchen line from the grease trap to the collector
     if (gt && gtIn !== null && gtJoin) {
-      const zOut = gtIn - 0.08;
+      const zOut = floor5(gtIn - 0.08);
       const corner: P2 = [gtJoin.at[0], gt.props.at[1]];
       const ids = kitchenItems.map((i) => i.id);
       const d1 = Math.abs(gt.props.at[0] - corner[0]), d2 = Math.abs(corner[1] - gtJoin.at[1]);
-      const zc = zOut - 0.01 * d1;
+      const zc = zOut - fallOf(d1, 0.01);
       out.pipe('sew-kitchen', 'site', 'sewage', 100, [gt.props.at[0], gt.props.at[1], zOut], [corner[0], corner[1], zc], { load: uhc(ids), serves: ids });
-      out.pipe('sew-kitchen', 'site', 'sewage', 100, [corner[0], corner[1], zc], [gtJoin.at[0], gtJoin.at[1], Math.max(gtJoin.z, zc - 0.01 * d2)], { load: uhc(ids), serves: ids });
+      out.pipe('sew-kitchen', 'site', 'sewage', 100, [corner[0], corner[1], zc], [gtJoin.at[0], gtJoin.at[1], Math.min(zc - fallOf(d2, 0.01), Math.max(gtJoin.z, zc - fallOf(d2, 0.01)))], { load: uhc(ids), serves: ids });
     }
     // lower level: pumped from the lift station up to the start of the collector, through the backflow valve
     if (ls && lsIn !== null) {
@@ -366,7 +369,7 @@ export function routePlumbing(p: Project): { pipes: PipeSegment[]; auto: Fixture
     const depth = (i: number): number => (nodes[i]!.parent < 0 ? 0 : 1 + depth(nodes[i]!.parent));
     [...nodes.keys()].sort((a, b) => depth(a) - depth(b)).forEach((i) => {
       const n = nodes[i]!;
-      if (n.parent >= 0) fall[i] = fall[n.parent]! + len2(n, nodes[n.parent]!) * 0.01;
+      if (n.parent >= 0) fall[i] = fall[n.parent]! + fallOf(len2(n, nodes[n.parent]!), 0.01);
     });
     nodes.forEach((n, i) => {
       if (n.parent < 0) return;
@@ -382,11 +385,11 @@ export function routePlumbing(p: Project): { pipes: PipeSegment[]; auto: Fixture
   if (cistern) {
     const inlet: P2 = [cistern.props.at[0], cistern.props.at[1] + 1.2];
     const top = cistern.props.z;
-    rainTree('rain-cistern', inlet, top - 0.05, drainsR.filter((d) => !d.tags.includes('to-garden')));
+    rainTree('rain-cistern', inlet, floor5(top - 0.05), drainsR.filter((d) => !d.tags.includes('to-garden')));
     // overflow to the street gutter
     const gutter: P2 = [cistern.props.at[0], f.yStreet - 2.5];
     const zo = top - 0.1;
-    out.pipe('rain-overflow', 'site', 'rain', 100, [cistern.props.at[0], cistern.props.at[1] - 1.2, zo], [gutter[0], gutter[1], zo - 0.01 * Math.abs(cistern.props.at[1] - 1.2 - gutter[1])], { serves: [cistern.id] });
+    out.pipe('rain-overflow', 'site', 'rain', 100, [cistern.props.at[0], cistern.props.at[1] - 1.2, zo], [gutter[0], gutter[1], zo - fallOf(Math.abs(cistern.props.at[1] - 1.2 - gutter[1]), 0.01)], { serves: [cistern.id] });
   }
   if (trench) rainTree('rain-garden', trench.props.at, trench.props.z - 0.3, drainsR.filter((d) => d.tags.includes('to-garden')));
   const sump = byKind('sump-pump')[0];

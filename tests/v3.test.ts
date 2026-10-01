@@ -45,8 +45,8 @@ describe('Version 3 (spec 02b)', () => {
     expect(f.xNorth(f.yRear) - 8.6).toBeCloseTo(4.9, 5);
   });
 
-  it('passes every check except the carport in the front setback, which stays TO CONFIRM', () => {
-    const r = runChecks(v3);
+  it('passes every non-plumbing check except the carport in the front setback, which stays TO CONFIRM', () => {
+    const r = runChecks(v3).filter((c) => c.group !== 'Plumbing'); // plumbing has its own tests (spec 03)
     const s = summarize(r);
     expect(s.fail).toBe(0);
     expect(s.confirm).toBe(1);

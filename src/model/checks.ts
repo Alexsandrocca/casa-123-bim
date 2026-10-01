@@ -5,12 +5,13 @@ import {
 import { PLAN_LEVELS, type Project, type Space, type Stair } from './schema';
 import { EAVES_LIMIT_DEFAULT } from './site';
 import { checkSupport } from './support';
+import { plumbingChecks } from './plumbing/checks';
 
 /** confirm = cannot be decided by the app; an authority must confirm it. Never counts as a pass. */
 export type CheckStatus = 'pass' | 'warn' | 'fail' | 'confirm';
 export interface CheckResult {
   id: string;
-  group: 'Rooms' | 'Windows' | 'Circulation' | 'Stairs' | 'Site' | 'Structure';
+  group: 'Rooms' | 'Windows' | 'Circulation' | 'Stairs' | 'Site' | 'Structure' | 'Plumbing';
   title: string;
   status: CheckStatus;
   value: string;
@@ -305,7 +306,7 @@ function parkingChecks(p: Project): CheckResult[] {
 }
 
 export function runChecks(p: Project): CheckResult[] {
-  return [...roomChecks(p), ...circulationChecks(p), ...stairChecks(p), ...siteChecks(p), ...parkingChecks(p), ...structureChecks(p)];
+  return [...roomChecks(p), ...circulationChecks(p), ...stairChecks(p), ...siteChecks(p), ...parkingChecks(p), ...structureChecks(p), ...plumbingChecks(p)];
 }
 
 export function summarize(results: CheckResult[]) {
