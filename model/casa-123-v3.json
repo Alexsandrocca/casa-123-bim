@@ -283,7 +283,7 @@
      8.6,
      8.5
     ],
-    "thickness": 0.25,
+    "thickness": 0.26,
     "height": 3.1,
     "wallType": "retaining"
    }
@@ -302,7 +302,7 @@
      8.6,
      8.9
     ],
-    "thickness": 0.25,
+    "thickness": 0.26,
     "height": 3.1,
     "wallType": "retaining"
    }
@@ -359,7 +359,7 @@
      0,
      10.5
     ],
-    "thickness": 0.25,
+    "thickness": 0.26,
     "height": 3.1,
     "wallType": "retaining"
    }

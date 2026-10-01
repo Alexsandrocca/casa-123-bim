@@ -53,6 +53,8 @@ export const Wall = z.object({
     thickness: z.number().positive(),
     height: z.number().positive(),
     wallType: WallType,
+    /** Spec 08: its build-up (eng/library.ts). Without one, the default for its wall type. Its thickness follows the assembly. */
+    assemblyId: z.string().optional(),
   }),
 });
 export type Wall = z.infer<typeof Wall>;
@@ -98,6 +100,8 @@ export const Slab = z.object({
     /** Roofs: parapet height above the top of the slab, and how far the slab overhangs the walls. */
     parapet: z.number().min(0).optional(),
     eaves: z.number().min(0).optional(),
+    /** Spec 08: its build-up. The drawn thickness stays the structural deck, so the levels and the frame do not move. */
+    assemblyId: z.string().optional(),
   }),
 });
 export type Slab = z.infer<typeof Slab>;
@@ -364,13 +368,39 @@ export const ServiceSpace = z.object({
   }),
 });
 export type ServiceSpace = z.infer<typeof ServiceSpace>;
+/** Spec 08: architectural features placed as real elements, each with its own estimate (eng/features.ts). */
+export const FeatureKind = z.enum(['brise', 'pergola', 'cobogo', 'skylight', 'eave', 'green-roof', 'planter', 'gutter', 'shutters', 'awning', 'solar-heater']);
+export type FeatureKind = z.infer<typeof FeatureKind>;
+export const Feature = z.object({
+  ...base,
+  type: z.literal('Feature'),
+  props: z.object({
+    kind: FeatureKind,
+    name: z.string(),
+    /** The opening (brise, shutters, awning), wall (cobogó, planter) or roof slab (eave, gutter) it belongs to. */
+    host: z.string().optional(),
+    /** Plan footprint (pergola, skylight, green roof, solar heater). */
+    rect: Rect.optional(),
+    /** Eave and gutter: which edge of the roof (N, S, E = street, W = garden). */
+    side: z.enum(['N', 'S', 'E', 'W']).optional(),
+    /** Wall-hosted panels: distance from the wall start, width, height and sill. */
+    offset: z.number().optional(),
+    width: z.number().positive().optional(),
+    height: z.number().positive().optional(),
+    sill: z.number().min(0).optional(),
+    /** Absolute height of its base (pergola, skylight, roof items). */
+    z: z.number().optional(),
+    params: z.record(z.string(), z.union([z.number(), z.string(), z.boolean()])),
+  }),
+});
+export type Feature = z.infer<typeof Feature>;
 export const Furniture = later('Furniture');
 export const Plant = later('Plant');
 export const Material = later('Material');
 
 export const Element = z.discriminatedUnion('type', [
   Space, Wall, Opening, Slab, Column, Beam, Footing, Stair, Deck, Carport, Conduit, SolarArray,
-  Fixture, PipeSegment, Device, Circuit, ServiceSpace, Furniture, Plant, Material,
+  Fixture, PipeSegment, Device, Circuit, ServiceSpace, Feature, Furniture, Plant, Material,
 ]);
 export type Element = z.infer<typeof Element>;
 export type ElementType = Element['type'];
@@ -434,6 +464,13 @@ export const Project = z.object({
   mep: z.object({
     noRoute: z.array(z.object({ system: z.string(), network: z.string(), item: z.string(), reason: z.string() })),
     notes: z.array(z.string()),
+  }).optional(),
+  /** Spec 08: values the family changed in the Engineering assumptions panel (key → value; null = left empty, TO CONFIRM). */
+  assumptions: z.record(z.string(), z.number().nullable()).optional(),
+  /** Spec 08: default assembly per use, and the saved cost snapshot. */
+  engineering: z.object({
+    assemblyDefaults: z.record(z.string(), z.string()).optional(),
+    snapshot: z.object({ date: z.string(), label: z.string(), total: z.number(), items: z.record(z.string(), z.number()) }).optional(),
   }).optional(),
   elements: z.array(Element),
 });

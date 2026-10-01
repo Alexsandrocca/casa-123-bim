@@ -1,25 +1,17 @@
 // Steel sections and pier sizes used by the structure. Sizes in metres (depth d × flange width b).
+// Spec 08: the steel lists come from the section table (eng/steel.ts), the same one the pre-sizing picks from.
+import { HSS_SECTIONS, W_SECTIONS } from './eng/steel';
+
 export interface Profile { name: string; d: number; b: number; kind: 'W' | 'HSS' | 'concrete' }
 
-export const COLUMN_PROFILES: Profile[] = [
-  { name: 'HSS 100×100×4', d: 0.1, b: 0.1, kind: 'HSS' },
-  { name: 'W150×22.5', d: 0.152, b: 0.152, kind: 'W' },
-  { name: 'W200×46.1', d: 0.203, b: 0.203, kind: 'W' },
-  { name: 'W250×73', d: 0.253, b: 0.254, kind: 'W' },
-  { name: 'HSS 150×150×6.4', d: 0.15, b: 0.15, kind: 'HSS' },
-  { name: 'HSS 200×200×8', d: 0.2, b: 0.2, kind: 'HSS' },
-];
+const toProfile = (s: { name: string; d: number; bf: number; kind: 'W' | 'HSS' }): Profile => ({ name: s.name, d: s.d, b: s.bf, kind: s.kind });
+
+export const COLUMN_PROFILES: Profile[] = [...W_SECTIONS.filter((s) => s.h), ...HSS_SECTIONS].sort((a, b) => a.kg - b.kg).map(toProfile);
 export const PIER_PROFILES: Profile[] = [
   { name: 'Concrete 30×30', d: 0.3, b: 0.3, kind: 'concrete' },
   { name: 'Concrete 40×40', d: 0.4, b: 0.4, kind: 'concrete' },
 ];
-export const BEAM_PROFILES: Profile[] = [
-  { name: 'W150×13', d: 0.148, b: 0.1, kind: 'W' },
-  { name: 'W200×26.6', d: 0.207, b: 0.133, kind: 'W' },
-  { name: 'W250×32.7', d: 0.258, b: 0.146, kind: 'W' },
-  { name: 'W310×38.7', d: 0.31, b: 0.165, kind: 'W' },
-  { name: 'W360×44', d: 0.352, b: 0.171, kind: 'W' },
-];
+export const BEAM_PROFILES: Profile[] = [...W_SECTIONS].sort((a, b) => a.kg - b.kg).map(toProfile);
 
 const ALL = [...COLUMN_PROFILES, ...PIER_PROFILES, ...BEAM_PROFILES];
 export const profile = (name: string): Profile => ALL.find((p) => p.name === name) ?? { name, d: 0.2, b: 0.2, kind: 'W' };

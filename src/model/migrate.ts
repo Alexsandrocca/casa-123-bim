@@ -1,6 +1,7 @@
 // Bring a model saved by an older version of the app up to date.
 import type { Project } from './schema';
 import { withMep } from './commands';
+import { syncThickness } from './eng/commands';
 
 const EDITED = ['Space', 'Wall', 'Opening'];
 
@@ -32,6 +33,9 @@ export function migrate(p: Project, base: Project): Project {
     const MEP = ['Fixture', 'PipeSegment', 'Device', 'Circuit', 'Conduit', 'SolarArray', 'ServiceSpace'];
     p = withMep({ ...p, elements: [...p.elements.filter((e) => !MEP.includes(e.type)), ...base.elements.filter((e) => MEP.includes(e.type))] });
   }
+  // Spec 08: walls take the thickness of their assembly (only the retaining walls change, 0.25 → 0.26 m)
+  const synced = syncThickness(p);
+  if (synced !== p) p = p.elements.some((e) => e.type === 'Fixture' || e.type === 'Device') ? withMep(synced) : synced;
   return p;
 }
 
