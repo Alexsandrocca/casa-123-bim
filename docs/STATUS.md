@@ -2,6 +2,78 @@
 
 _Updated by Claude Code after every spec. The manager reads this file._
 
+## 2026-10-01 — Spec 04b done: plumbing and electrical obey the building (Version 3)
+
+### What was built
+- **Service spaces.** Pipes and conduits may only run inside something real:
+  - **Stored, and editable in the properties panel (24 in all):**
+    - 4 shafts: two at the soil stacks beside the wet wall, the water shaft and the electrical shaft;
+    - 17 lowered ceilings (plenums) in the wet rooms, kitchen, halls and service rooms, plus strips under the upper bathrooms and a 0.46 m bulkhead along the studio wall for the sewage collector;
+    - 3 roof zones: tanks and equipment to the south, solar to the north, the entry roof.
+  - **Read from the model, so they follow every edit:** wall cavities (thickness minus 2 × 15 mm), the 50 mm floor screed (conduits only), the crawlspace, and the ground with its cover (0.40 m; 0.60 m under the car bays).
+- **Forbidden zones:**
+  - stair voids and flights, doors (+0.10 m frame), windows, columns, footings and the retaining-wall cores;
+  - a beam is crossed only through a web hole (Ø ≤ 0.4 × depth, middle third of the span). All 19 holes are listed for the engineer.
+- **Real routing (A\*).** The old L-shaped routing is replaced by a graph search through those spaces. It penalises length, bends and changes of space.
+  - Systems go in order: sewage, rain, vents, hot, cold, electrical.
+  - Gravity pipes fall all the way, with 45° bends where they can.
+  - Anything that cannot be routed is reported as "no route" with the reason, and nothing is drawn.
+  - Conduits keep 0.20 m from hot water (project rule, to verify).
+- **Every fixture and device has a host:**
+  - wall items sit on a face of their own room, clear of openings, door swings, corners and columns (bathroom outlets out of the shower zone);
+  - ceiling items hang from the plenum or slab above; floor items stand on the slab;
+  - equipment stands in a roof zone with a service clearance, shown in 3D when selected.
+  - When a wall moves, its items move with it. When a wall is deleted, they turn red ("unhosted").
+- **Version 3 re-done:**
+  - the pressure pump is on the roof beside the tanks;
+  - the five AC condensers are on the roof zones, each with a roof drain for its condensate;
+  - the cistern has left the entry path for the front of the south passage;
+  - Q14 is answered with the zones: the tanks have the south band and the solar array keeps the north, still **12 modules**.
+- **New checks group "MEP physics":** unhosted items, runs outside a service space, forbidden zones, capacity, slopes, clashes (one row each; a click zooms the 3D view), hangers (221 on 85 hung runs, drawn in 3D), equipment access, and ceiling heights under the plenums.
+- **Views:**
+  - a **Physics** colour mode in 3D and on the plan colours every run by what holds it, and anything floating would be red;
+  - shafts, plenums and the crawlspace show as see-through volumes;
+  - a "Why here?" line on every pipe, conduit and device.
+
+### How to see it
+- Double-click **`Open Casa 123.command`**.
+- **3D:** click **Physics**.
+- **Plan:** tick **Plumbing** or **Electrical**, then **Physics colours**.
+- Click any pipe or point to read its "Why here?" line.
+- Screenshots: `docs/screens/04b.png`, `04b-physics-xray.png`, `04b-plan-SL.png`, `04b-plan-UF.png`.
+
+### Tests
+- `npm test`: 88 unit tests (8 new). They include the six acceptance cases:
+  - a pipe cannot cross a stair void or a door;
+  - a DN 100 stack cannot go in a 0.12 m wall;
+  - moving a wall re-snaps its outlets;
+  - deleting a wall flags its devices;
+  - the sewage keeps its slope from the upper bathroom to the street;
+  - a condenser with no support is flagged.
+- `npm run e2e`: 27 browser tests (3 new).
+- `npm run build` passes.
+
+### Checks on Version 3 now
+148 pass, 2 to confirm, 3 fail:
+- **0 floating runs, 0 forbidden crossings, 0 clashes.**
+- **Fails on purpose:** the lower level cannot drain by gravity at 3.00 m (the lift station is there).
+- **Two rows for the same item: Bath 3 has no legal place for its basin outlet** (see Q16). The room is 1.80 × 1.60 m with the shower in the middle. Every wall spot is inside the shower zone, in the door swing, beside a water drop, or against the stack shaft.
+
+### Not done yet / known gaps
+- A full re-route takes about 2 seconds. While dragging, only the item and its host move; pipes and conduits re-route when you let go.
+- When a shaft is too small the router says so; it does not grow the shaft by itself (none is full today).
+- Refrigerant lines between the AC indoor and outdoor units are not drawn.
+- Versions 1 and 2 still have no plumbing or electrical.
+
+### Open questions
+- New: Q16 (Bath 3 outlet), Q17 (shower glass screens and zone 2), Q18 (kitchen height rule).
+- Q10 now has a provisional answer (option c, the garden trench), for the manager to confirm.
+- Still open: Q7–Q9, Q11–Q13 and Q15.
+
+### Next
+Spec 08: architectural features and engineering estimates. It is ready; per the manager's order 04b → 08 → 09 → 10.
+GitHub: the GitHub connector here cannot create repositories (403). The owner needs to create an empty private repository `casa-123-bim` on github.com; then I can add it and push.
+
 ## 2026-10-01 — Spec 04 done: electrical, solar and cameras (Version 3)
 
 ### What was built

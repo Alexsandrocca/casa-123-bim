@@ -29,6 +29,7 @@ export function Controls3D() {
   const doorsOpen = useApp((s) => s.doorsOpen);
   const xray = useApp((s) => s.xray);
   const cones = useApp((s) => s.cones);
+  const physics = useApp((s) => s.physics);
   const section = useApp((s) => s.section);
   const sun = useApp((s) => s.sun);
   const { set3d, goCamera, lookFrom } = useApp.getState();
@@ -68,6 +69,7 @@ export function Controls3D() {
         <button className="small" aria-pressed={walk} onClick={() => set3d({ walk: !walk })} data-testid="walk">{walk ? 'Stop walking' : 'Walk'}</button>
         <button className="small" aria-pressed={doorsOpen} onClick={() => set3d({ doorsOpen: !doorsOpen })}>{doorsOpen ? 'Doors open' : 'Doors closed'}</button>
         <button className="small" aria-pressed={xray} onClick={() => { set3d({ xray: !xray }); if (!xray) lookFrom([17, -9, 11], [4.3, 7.5, 0.5]); }} data-testid="xray">Systems x-ray</button>
+        <button className="small" aria-pressed={physics} onClick={() => { set3d({ physics: !physics }); if (!physics) lookFrom([17, -9, 11], [4.3, 7.5, 0.5]); }} data-testid="physics" title="Colour every pipe and conduit by what holds it; red = floating">Physics</button>
         <button className="small" aria-pressed={cones} onClick={() => set3d({ cones: !cones })} data-testid="cones">Camera views</button>
         <button className="small ghost" onClick={() => setOpen(!open)} aria-expanded={open}>{open ? 'Less ▴' : 'Section & sun ▾'}</button>
       </div>

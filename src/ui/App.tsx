@@ -41,6 +41,7 @@ export function App() {
   const view = useApp((s) => s.view);
   const plumbing2d = useApp((s) => s.plumbing2d);
   const elec2d = useApp((s) => s.elec2d);
+  const physics = useApp((s) => s.physics);
   const canUndo = useApp((s) => s.versions[s.active].past.length > 0);
   const canRedo = useApp((s) => s.versions[s.active].future.length > 0);
   const p = useProject();
@@ -138,6 +139,11 @@ export function App() {
           {view !== '3d' && (
             <label className="check">
               <input type="checkbox" checked={elec2d} onChange={(e) => st.set3d({ elec2d: e.target.checked })} data-testid="elec2d" /> Electrical
+            </label>
+          )}
+          {view !== '3d' && (plumbing2d || elec2d) && (
+            <label className="check" title="Colour each pipe and conduit by the space that holds it; red = floating">
+              <input type="checkbox" checked={physics} onChange={(e) => st.set3d({ physics: e.target.checked })} data-testid="physics2d" /> Physics colours
             </label>
           )}
           <span className="hint">

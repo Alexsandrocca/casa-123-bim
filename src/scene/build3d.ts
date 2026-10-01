@@ -8,6 +8,8 @@ import { slabRect, slabVoids } from '../model/structure';
 import { kindOf } from '../model/plumbing/library';
 import { cameraFov, cameraRange, deviceType } from '../model/electrical/library';
 import { layoutModules } from '../model/electrical/solar';
+import { mepReport } from '../model/mep/analysis';
+import { mepContext } from '../model/mep/spaces';
 
 export type V3 = [number, number, number];
 export type Mat =
@@ -17,7 +19,10 @@ export type Mat =
   | 'grass' | 'paving' | 'soil' | 'ramp' | 'asphalt' | 'sidewalk' | 'boundary' | 'setback'
   | 'marking' | 'solarGhost' | 'device' | 'planter'
   | 'pCold' | 'pHot' | 'pSewage' | 'pVent' | 'pRain' | 'fixture' | 'equipment' | 'tank'
-  | 'camera' | 'conduit' | 'pvModule' | 'cone';
+  | 'camera' | 'conduit' | 'pvModule' | 'cone'
+  // spec 04b: service-space volumes, hangers, maintenance clearance, and runs coloured by their host
+  | 'svcShaft' | 'svcPlenum' | 'svcCrawl' | 'hanger' | 'clearance'
+  | 'hWall' | 'hShaft' | 'hPlenum' | 'hScreed' | 'hCrawl' | 'hGround' | 'hRoof' | 'hFacade' | 'hSleeve' | 'hEquip' | 'hExposed';
 
 /** A box: centre c, size s (along x, y, z), optional rotation about x (pitch) then z (yaw), in radians. */
 export interface BoxPart { kind: 'box'; id: string; mat: Mat; c: V3; s: V3; rx?: number; rz?: number; solid?: boolean }
@@ -32,9 +37,20 @@ export type Part = BoxPart | PolyPart | LinePart | PipePart | ConePart;
 
 export const PIPE_MAT: Record<string, Mat> = { cold: 'pCold', hot: 'pHot', sewage: 'pSewage', vent: 'pVent', rain: 'pRain' };
 /** Materials that are building fabric (ghosted in x-ray mode). */
-export const SERVICE_MATS = new Set<Mat>(['pCold', 'pHot', 'pSewage', 'pVent', 'pRain', 'fixture', 'equipment', 'tank', 'device', 'camera', 'conduit', 'pvModule', 'cone']);
+export const HOST_MAT: Record<string, Mat> = {
+  wall: 'hWall', shaft: 'hShaft', plenum: 'hPlenum', screed: 'hScreed', crawlspace: 'hCrawl', underground: 'hGround',
+  'roof-zone': 'hRoof', facade: 'hFacade', sleeve: 'hSleeve', equipment: 'hEquip', exposed: 'hExposed',
+};
+export const SERVICE_MATS = new Set<Mat>(['pCold', 'pHot', 'pSewage', 'pVent', 'pRain', 'fixture', 'equipment', 'tank', 'device', 'camera', 'conduit', 'pvModule', 'cone',
+  'svcShaft', 'svcPlenum', 'svcCrawl', 'hanger', 'clearance', ...(Object.values(HOST_MAT) as Mat[])]);
 
-export interface BuildOptions { doorsOpen: boolean; /** conduits (x-ray) */ conduits?: boolean; /** camera view cones */ cones?: boolean }
+export interface BuildOptions {
+  doorsOpen: boolean;
+  /** conduits (x-ray) */ conduits?: boolean;
+  /** camera view cones */ cones?: boolean;
+  /** spec 04b: colour runs by host, show service spaces and hangers */ physics?: boolean;
+  /** the selected element (its maintenance clearance is shown) */ selection?: string | null;
+}
 
 /** A walkable surface: a rectangle or convex polygon whose height is z0 + dzdy·(y − y0). */
 export interface Surface { id: string; rect?: Rect; poly?: [number, number][]; holes?: Rect[]; z0: number; y0: number; dzdy: number }
@@ -555,9 +571,24 @@ export function buildScene(p: Project, opt: BuildOptions = { doorsOpen: false })
   for (const st of byType('Stair')) stairParts(p, st, parts, surfaces);
   for (const d of byType('Deck')) deckParts(p, d, parts, surfaces);
   for (const c of byType('Carport')) carportParts(p, c, parts);
+  const rep = opt.physics || opt.selection ? mepReport(p) : null;
+  const hostMat = (id: string, fallback: Mat): Mat => (opt.physics && rep ? HOST_MAT[rep.segs.get(id)?.host ?? ''] ?? fallback : fallback);
   for (const x of byType('PipeSegment')) {
-    parts.push({ kind: 'pipe', id: x.id, mat: PIPE_MAT[x.props.system]!, a: x.props.start, b: x.props.end, r: Math.max(0.012, x.props.dn / 2000) });
+    parts.push({ kind: 'pipe', id: x.id, mat: hostMat(x.id, PIPE_MAT[x.props.system]!), a: x.props.start, b: x.props.end, r: Math.max(0.012, x.props.dn / 2000) });
   }
+  if (opt.physics && rep) {
+    // shafts, ceiling plenums and the crawlspace as see-through volumes; hangers from the slab above
+    const ctx = mepContext(p);
+    for (const v of ctx.volumes) {
+      const r = v.rect, cx = (r.x0 + r.x1) / 2, cy = (r.y0 + r.y1) / 2;
+      if (v.kind === 'shaft') parts.push(box(v.id, 'svcShaft', r.x0, r.y0, v.zLo(cx, cy), r.x1, r.y1, v.zHi(cx, cy), false));
+      else if (v.kind === 'plenum') parts.push(box(v.id, 'svcPlenum', r.x0, r.y0, v.zLo(cx, cy), r.x1, r.y1, v.zHi(cx, cy), false));
+      else if (v.kind === 'crawlspace') parts.push(box('site:crawl', 'svcCrawl', r.x0, r.y0, v.zLo(cx, cy) + 0.02, r.x1, r.y1, v.zHi(cx, cy), false));
+    }
+    for (const h of rep.hangers) h.pts.forEach((pt, i) => parts.push({ kind: 'line', id: h.seg, mat: 'hanger', pts: [pt, [pt[0], pt[1], h.tops[i]!]] }));
+  }
+  const clear = opt.selection && rep ? rep.items.get(opt.selection)?.clearance : undefined;
+  if (clear) parts.push(box('site:clearance', 'clearance', clear.x0, clear.y0, clear.z0, clear.x1, clear.y1, clear.z1, false));
   for (const fx of byType('Fixture')) {
     const t = kindOf(fx.props.kind);
     if (fx.props.kind === 'stack') continue; // the stack is its pipes
@@ -574,7 +605,7 @@ export function buildScene(p: Project, opt: BuildOptions = { doorsOpen: false })
       parts.push({ kind: 'cone', id: d.id, mat: 'cone', apex: [d.props.at[0], d.props.at[1], d.props.z], dir: [Math.cos(b) * Math.cos(t), -Math.sin(b) * Math.cos(t), -Math.sin(t)], length: range, radius: range * Math.tan(((cameraFov(lens) / 2) * Math.PI) / 180) });
     }
   }
-  if (opt.conduits) for (const c of byType('Conduit')) parts.push({ kind: 'pipe', id: c.id, mat: 'conduit', a: c.props.start, b: c.props.end, r: c.props.dn / 2000 });
+  if (opt.conduits || opt.physics) for (const c of byType('Conduit')) parts.push({ kind: 'pipe', id: c.id, mat: hostMat(c.id, 'conduit'), a: c.props.start, b: c.props.end, r: c.props.dn / 2000 });
   for (const a of byType('SolarArray')) {
     const t = (a.props.tilt * Math.PI) / 180;
     for (const m of layoutModules(p, a)) {

@@ -10,6 +10,8 @@ import {
 } from '../model/geometry';
 import type { Carport, Opening, Rect, Space, Wall } from '../model/schema';
 import { useApp, useProject } from '../store';
+import { mepReport } from '../model/mep/analysis';
+import { mepContext } from '../model/mep/spaces';
 
 const S = 40; // px per metre, same drawing scale as the prototype
 
@@ -37,6 +39,7 @@ export function PlanView() {
   const tool = useApp((s) => s.tool);
   const plumbing2d = useApp((s) => s.plumbing2d);
   const elec2d = useApp((s) => s.elec2d);
+  const physics = useApp((s) => s.physics);
   const svgRef = useRef<SVGSVGElement>(null);
   const drag = useRef<Drag | null>(null);
   const infoRef = useRef<HTMLDivElement>(null);
@@ -188,11 +191,11 @@ export function PlanView() {
     } else if (d.kind === 'device') {
       st.previewCmd(moveDevice(d.id, x - d.dx, y - d.dy));
       const dv = useApp.getState().preview?.elements.find((e) => e.id === d.id);
-      if (infoRef.current && dv?.type === 'Device') infoRef.current.textContent = `${dv.props.name} at x ${dv.props.at[0].toFixed(2)}, y ${dv.props.at[1].toFixed(2)} · circuit re-routed`;
+      if (infoRef.current && dv?.type === 'Device') infoRef.current.textContent = `${dv.props.name} at x ${dv.props.at[0].toFixed(2)}, y ${dv.props.at[1].toFixed(2)} · its circuit re-routes when you let go`;
     } else if (d.kind === 'fixture') {
       st.previewCmd(moveFixture(d.id, x - d.dx, y - d.dy));
       const f = useApp.getState().preview?.elements.find((e) => e.id === d.id);
-      if (infoRef.current && f?.type === 'Fixture') infoRef.current.textContent = `${f.props.name} at x ${f.props.at[0].toFixed(2)}, y ${f.props.at[1].toFixed(2)} · pipes re-routed`;
+      if (infoRef.current && f?.type === 'Fixture') infoRef.current.textContent = `${f.props.name} at x ${f.props.at[0].toFixed(2)}, y ${f.props.at[1].toFixed(2)} · pipes re-route when you let go`;
     } else {
       st.previewCmd(moveOpening(d.id, (d.o === 'h' ? x : y) - d.off));
     }
@@ -279,8 +282,9 @@ export function PlanView() {
     if (host) out.push(<OpeningGlyph key={op.id} op={op} s={openingSeg(op, host)} selected={selection === op.id} line={line} rect={rect} px={px} py={py} />);
   }
 
-  if (elec2d) out.push(<ElectricalOverlay key="elec" p={p} level={level} selection={selection} line={line} rect={rect} px={px} py={py} />);
-  if (plumbing2d) out.push(<PlumbingOverlay key="plumbing" p={p} level={level} selection={selection} line={line} rect={rect} px={px} py={py} />);
+  if (physics && (elec2d || plumbing2d)) out.push(<ServiceSpacesOverlay key="svc" p={p} level={level} rect={rect} />);
+  if (elec2d) out.push(<ElectricalOverlay key="elec" p={p} level={level} selection={selection} line={line} rect={rect} px={px} py={py} physics={physics} />);
+  if (plumbing2d) out.push(<PlumbingOverlay key="plumbing" p={p} level={level} selection={selection} line={line} rect={rect} px={px} py={py} physics={physics} />);
 
   // Room names and areas.
   for (const s of spaces) {
@@ -402,7 +406,28 @@ function Stair({ s, level, rect, line, px, py }: { s: Space; level: string } & D
 
 /* ---------- plumbing overlay (spec 03) ---------- */
 
-function PlumbingOverlay({ p, level, selection, line, rect, px, py }: { p: import('../model/schema').Project; level: string; selection: string | null } & Draw) {
+/* ---------- service spaces (spec 04b) ---------- */
+
+/** Shafts, lowered ceilings and (on the street level) the crawlspace under this floor, drawn as light tints. */
+function ServiceSpacesOverlay({ p, level, rect }: { p: import('../model/schema').Project; level: string; rect: Draw['rect'] }) {
+  const ctx = mepContext(p);
+  const o: ReactNode[] = [];
+  ctx.volumes.forEach((v, i) => {
+    const show = v.kind === 'shaft' || (v.kind === 'plenum' && v.level === level) || (v.kind === 'crawlspace' && level === 'SL');
+    if (!show) return;
+    o.push(<g key={`${v.id}-${i}`} className={`svc2d svc-${v.kind}`} data-el={v.elementId}>{rect(v.rect, 'svcr', 'r')}</g>);
+  });
+  return <g className="svc">{o}</g>;
+}
+
+/** Class for a run in the physics colours: its host, or "exposed" (red). */
+const hostClass = (p: import('../model/schema').Project, id: string, physics: boolean) => {
+  if (!physics) return '';
+  const s = mepReport(p).segs.get(id);
+  return s ? ` h-${s.host}${s.issues.length ? ' issue' : ''}` : '';
+};
+
+function PlumbingOverlay({ p, level, selection, line, rect, px, py, physics }: { p: import('../model/schema').Project; level: string; selection: string | null; physics: boolean } & Draw) {
   const elev = (l: string) => p.levels.find((x) => x.id === l)?.elevation ?? 0;
   const order = ['LL', 'SL', 'UF', 'roof'];
   const i = order.indexOf(level);
@@ -417,9 +442,9 @@ function PlumbingOverlay({ p, level, selection, line, rect, px, py }: { p: impor
     if (vertical) {
       const z0 = Math.min(a[2], b[2]), z1 = Math.max(a[2], b[2]);
       if (z1 < lo || z0 > hi) continue;
-      o.push(<circle key={e.id} cx={px(a[0])} cy={py(a[1])} r={3.2} className={`pipe2d riser s-${e.props.system}${sel}`} data-el={e.id} />);
+      o.push(<circle key={e.id} cx={px(a[0])} cy={py(a[1])} r={3.2} className={`pipe2d riser s-${e.props.system}${sel}${hostClass(p, e.id, physics)}`} data-el={e.id} />);
     } else if (onPlan(e.level, level)) {
-      o.push(line(a[0], a[1], b[0], b[1], `pipe2d s-${e.props.system}${gravity ? ' below' : ''}${sel}`, e.id, { 'data-el': e.id }));
+      o.push(line(a[0], a[1], b[0], b[1], `pipe2d s-${e.props.system}${gravity ? ' below' : ''}${sel}${hostClass(p, e.id, physics)}`, e.id, { 'data-el': e.id }));
     }
   }
   for (const e of p.elements) {
@@ -441,7 +466,7 @@ function PlumbingOverlay({ p, level, selection, line, rect, px, py }: { p: impor
 
 /* ---------- electrical overlay (spec 04) ---------- */
 
-function ElectricalOverlay({ p, level, selection, line, rect, px, py }: { p: import('../model/schema').Project; level: string; selection: string | null } & Draw) {
+function ElectricalOverlay({ p, level, selection, line, rect, px, py, physics }: { p: import('../model/schema').Project; level: string; selection: string | null; physics: boolean } & Draw) {
   const elev = (l: string) => p.levels.find((x) => x.id === l)?.elevation ?? 0;
   const order = ['LL', 'SL', 'UF', 'roof'];
   const i = order.indexOf(level);
@@ -454,7 +479,7 @@ function ElectricalOverlay({ p, level, selection, line, rect, px, py }: { p: imp
     if (Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) < 0.01) continue;
     const z = (a[2] + b[2]) / 2;
     if (z < lo || z >= hi) continue;
-    o.push(line(a[0], a[1], b[0], b[1], 'conduit2d' + (selCircuit === c.props.circuit ? ' sel' : ''), c.id));
+    o.push(line(a[0], a[1], b[0], b[1], 'conduit2d' + (selCircuit === c.props.circuit ? ' sel' : '') + hostClass(p, c.id, physics), c.id));
   }
   const devOn = (l: string) => l === level || (level === 'SL' && (l === 'site' || l === 'carport')) || (level === 'UF' && l === 'roof');
   for (const d of p.elements) {

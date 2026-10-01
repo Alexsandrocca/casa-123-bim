@@ -232,3 +232,20 @@ button.small { font-size: 12.5px; min-height: 28px; padding: 3px 10px; }
 .lm-lot { fill: #EEF1EA; stroke: var(--ink); stroke-width: 1.2; stroke-dasharray: 6 3; } .lm-house { fill: #D6D8D4; stroke: none; }
 .lm-blind { fill: var(--bad); fill-opacity: .55; } .lm-fov { fill: #7A3FB0; fill-opacity: .1; stroke: #7A3FB0; stroke-opacity: .4; stroke-width: .8; } .lm-dot { fill: #7A3FB0; } .lm-cam { cursor: pointer; }
 @media (max-width: 900px) { .solar { grid-template-columns: 1fr; } }
+
+/* spec 04b: physics colours (by the space that holds each run) and service spaces */
+.pipe2d.h-wall, .conduit2d.h-wall { stroke: #7C64B8; } .pipe2d.h-shaft, .conduit2d.h-shaft { stroke: #2E8B57; }
+.pipe2d.h-plenum, .conduit2d.h-plenum { stroke: #2F7FB5; } .pipe2d.h-screed, .conduit2d.h-screed { stroke: #D99A20; }
+.pipe2d.h-crawlspace, .conduit2d.h-crawlspace { stroke: #A0522D; } .pipe2d.h-underground, .conduit2d.h-underground { stroke: #6B7F2A; }
+.pipe2d.h-roof-zone, .conduit2d.h-roof-zone { stroke: #3F8F99; } .pipe2d.h-facade, .conduit2d.h-facade { stroke: #5E6E7A; }
+.pipe2d.h-sleeve, .conduit2d.h-sleeve, .pipe2d.h-equipment, .conduit2d.h-equipment { stroke: #55606A; }
+.pipe2d.h-exposed, .conduit2d.h-exposed, .pipe2d.issue, .conduit2d.issue { stroke: #E01E1E; stroke-width: 3.2; stroke-dasharray: none; }
+.pipe2d.riser.h-exposed { fill: #E01E1E; }
+.svc2d .svcr { stroke-width: 1; stroke-dasharray: 3 3; pointer-events: none; }
+.svc-shaft .svcr { fill: rgba(46, 139, 87, 0.18); stroke: #2E8B57; } .svc-plenum .svcr { fill: rgba(47, 127, 181, 0.07); stroke: #2F7FB5; }
+.svc-crawlspace .svcr { fill: rgba(160, 82, 45, 0.05); stroke: #A0522D; }
+.legend-physics { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 12px; }
+.legend-physics i { display: inline-block; width: 14px; height: 3px; margin-right: 4px; vertical-align: middle; }
+.why { margin: 8px 0; padding: 8px 10px; border-left: 3px solid var(--accent); background: var(--sheet); font-size: 12.5px; line-height: 1.45; }
+.why.bad { border-left-color: #E01E1E; }
+@media (prefers-color-scheme: dark) { .svc-plenum .svcr { fill: rgba(47, 127, 181, 0.12); } }

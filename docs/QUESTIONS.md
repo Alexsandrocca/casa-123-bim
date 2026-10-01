@@ -59,3 +59,31 @@ To fit all 12 modules facing north with no winter shade, I moved the two water t
 
 ## Q15 (2026-10-01, spec 04) — CPFL supply
 I assumed CPFL three-phase 127/220 V. If the supply is 220/380 V, the general circuits change to 220 V. **Please confirm with CPFL** (it is already in the "to confirm" list).
+
+## Q16 (2026-10-01, spec 04b) — Bath 3 has no legal place for its basin outlet
+Bath 3 is 1.80 × 1.60 m with the shower in the middle. Every wall spot falls in at least one of:
+- the shower zone (even with a glass screen);
+- the door swing;
+- 0.35 m of a water drop;
+- next to the stack shaft.
+
+The outlet is flagged "unhosted", and no conduit is drawn to it. Options:
+- (a) move the shower to the far corner (x 4.2–5.0);
+- (b) use a shaver socket inside the mirror cabinet;
+- (c) turn the door swing the other way;
+- (d) accept no outlet in Bath 3.
+
+**Which one?**
+
+## Q17 (2026-10-01, spec 04b) — Shower zone 2 and glass screens
+NBR 5410 §9.1 keeps outlets out of volumes 1 and 2 (0.60 m beyond the shower). The bathrooms are too small for that, so where 0.60 m is impossible I assumed a fixed glass screen that bounds volume 2, and kept outlets 0.30 m from it. **Confirm the showers get fixed glass screens.**
+
+## Q18 (2026-10-01, spec 04b) — Height rule for the kitchen and the studio
+Spec 04b asks for 2.70 m in living rooms and bedrooms and 2.50 m in wet rooms and halls.
+- I counted the **kitchen as a wet room (2.50 m)**: it has a 0.32 m lowered ceiling and 2.64 m clear.
+- I counted the **studio as a long-stay room (2.70 m)**. Its 0.46 m bulkhead along one wall, only 0.56 m wide, is checked as a bulkhead: 2.20 m, with 2.50 m clear.
+
+**Confirm.**
+
+## Q10 — answer used for now (spec 04b)
+The cistern is now buried at the front of the south passage, with its lid on a riser. Its overflow runs by gravity along the passage to the garden infiltration trench (option c). Nothing goes to the street gutter. **The manager confirms or changes it.**

@@ -1,5 +1,6 @@
 // Bring a model saved by an older version of the app up to date.
 import type { Project } from './schema';
+import { withMep } from './commands';
 
 const EDITED = ['Space', 'Wall', 'Opening'];
 
@@ -24,6 +25,12 @@ export function migrate(p: Project, base: Project): Project {
       site: { ...p.site, utilities: p.site.utilities ?? base.site.utilities },
       elements: [...p.elements.filter((e) => !missing.includes(e.type)), ...base.elements.filter((e) => missing.includes(e.type))],
     };
+  }
+  // Spec 04b rebuilt the services on hosts, shafts and plenums: a model saved before it takes the new services from the
+  // base (keeping the family's room edits), and they are re-hosted and re-routed to fit those edits.
+  if (!p.elements.some((e) => e.type === 'ServiceSpace') && base.elements.some((e) => e.type === 'ServiceSpace')) {
+    const MEP = ['Fixture', 'PipeSegment', 'Device', 'Circuit', 'Conduit', 'SolarArray', 'ServiceSpace'];
+    p = withMep({ ...p, elements: [...p.elements.filter((e) => !MEP.includes(e.type)), ...base.elements.filter((e) => MEP.includes(e.type))] });
   }
   return p;
 }

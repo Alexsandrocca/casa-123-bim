@@ -1,5 +1,5 @@
 # 04b — Plumbing and electrical that obey the building (physical placement and routing)
-Status: in progress
+Status: done (2026-10-01)
 
 ## Why (manager review of 03 and 04, 2026-10-01)
 The owner likes the systems, but they look like they float and pass through the wrong places.

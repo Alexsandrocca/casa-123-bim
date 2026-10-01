@@ -40,7 +40,9 @@ test('kitchen minimum points fail when its outlets are removed', async ({ page }
   await page.getByTestId('checks-toggle').click();
   await expect(page.getByRole('row', { name: /Points · Kitchen/ })).toContainText('outlets 5 of 5');
   await page.getByTestId('checks-toggle').click();
-  const kitchenOutlet = page.locator('g[data-device^="dev-outlet"]', { has: page.locator('title', { hasText: 'Outlet · Kitchen' }) }).first();
+  // (an outlet on its own: another sits under the kitchen switch)
+  const kitchenOutlet = page.locator('g[data-device="dev-outlet-14"]');
+  await expect(kitchenOutlet.locator('title')).toHaveText('Outlet · Kitchen');
   await kitchenOutlet.locator('.devhit').click({ force: true });
   await expect(page.locator('.props')).toContainText('Kitchen');
   await page.getByRole('button', { name: 'Delete' }).click();

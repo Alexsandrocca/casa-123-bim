@@ -2,14 +2,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { minArea, needsDaylight, runChecks, summarize, type CheckResult } from '../model/checks';
 import {
-  deleteDevice, deleteOpening, doorMax, flipOpening, moveDevice, moveFixture, setCircuitSection, setDevice, setSolar, renameSpace, resizeOpening, setElementProps, setOpeningSize, setPipe, setWallThickness,
+  deleteDevice, deleteOpening, doorMax, flipOpening, moveDevice, moveFixture, setCircuitSection, setDevice, setSolar, renameSpace, resizeOpening, setElementProps, setOpeningSize, setPipe, setServiceSpace, setWallThickness,
 } from '../model/commands';
+import { whyHere } from '../model/mep/analysis';
 import { networkLabel } from '../model/plumbing/checks';
 import { kindOf } from '../model/plumbing/library';
 import { BEAM_PROFILES, COLUMN_PROFILES, PIER_PROFILES, profile } from '../model/profiles';
 import { byLevel, getEl, glassArea, openingSegIn, spaceArea, wallLength, wallSeg } from '../model/geometry';
 import { cameraFov, cameraRange, deviceType } from '../model/electrical/library';
-import type { Beam, Carport, Circuit, Column, Device, Element, Fixture, PipeSegment, SolarArray, Footing, Opening, PlanLevel, Project, Slab, Space, Stair, Wall } from '../model/schema';
+import type { Beam, Carport, Circuit, Column, Conduit, Device, Element, Fixture, PipeSegment, ServiceSpace, SolarArray, Footing, Opening, PlanLevel, Project, Slab, Space, Stair, Wall } from '../model/schema';
 import { useApp, useProject } from '../store';
 import { ZONE_COLOR } from './PlanView';
 
@@ -98,13 +99,16 @@ export function PropertiesPanel() {
       {el?.type === 'Device' && <DeviceProps d={el} p={p} />}
       {el?.type === 'Circuit' && <CircuitProps c={el} p={p} />}
       {el?.type === 'SolarArray' && <SolarProps a={el} />}
+      {el?.type === 'ServiceSpace' && <ServiceSpaceProps sp={el} />}
+      {el?.type === 'Conduit' && <ConduitProps c={el} p={p} />}
+      {el && ['Fixture', 'PipeSegment', 'Device', 'Conduit'].includes(el.type) && <WhyHere p={p} id={el.id} />}
       {el?.notes?.length ? (
         <div className="notes" data-testid="notes">
           <h4>Notes for the architect and engineers</h4>
           {el.notes.map((n, i) => <p key={i}>{n}</p>)}
         </div>
       ) : null}
-      {el && !['Space', 'Wall', 'Opening', 'Column', 'Beam', 'Slab', 'Footing', 'Stair', 'Carport', 'Fixture', 'PipeSegment', 'Device', 'Circuit', 'SolarArray'].includes(el.type) && <GenericProps el={el} />}
+      {el && !['Space', 'Wall', 'Opening', 'Column', 'Beam', 'Slab', 'Footing', 'Stair', 'Carport', 'Fixture', 'PipeSegment', 'Device', 'Circuit', 'SolarArray', 'ServiceSpace', 'Conduit'].includes(el.type) && <GenericProps el={el} />}
     </aside>
   );
 }
@@ -470,6 +474,64 @@ function SolarProps({ a }: { a: SolarArray }) {
   );
 }
 
+/* ---------- spec 04b ---------- */
+
+/** One line: what holds this item or run, why it goes this way, and the rule. */
+function WhyHere({ p, id }: { p: Project; id: string }) {
+  const text = useMemo(() => whyHere(p, id), [p, id]);
+  if (!text) return null;
+  const bad = /PROBLEM|Not inside|crosses|outside|horizontal run|above the crawlspace/.test(text);
+  return <p className={'why' + (bad ? ' bad' : '')} data-testid="why-here"><b>Why here? </b>{text}</p>;
+}
+
+function ConduitProps({ c, p }: { c: Conduit; p: Project }) {
+  const [a, b] = [c.props.start, c.props.end];
+  const circuit = p.elements.find((e) => e.id === c.props.circuit);
+  return (
+    <>
+      <Header title="Conduit" sub={`${c.id} · ${circuit?.type === 'Circuit' ? circuit.props.name : c.props.circuit}`} />
+      <div className="kvs">
+        <Row k="Size" v={`${c.props.dn} mm`} />
+        <Row k="Length" v={`${m(Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]))} m`} />
+        <Row k="From" v={`(${m(a[0])}, ${m(a[1])}) at ${lvl(a[2])}`} />
+        <Row k="To" v={`(${m(b[0])}, ${m(b[1])}) at ${lvl(b[2])}`} />
+      </div>
+    </>
+  );
+}
+
+const SVC_TITLE: Record<string, string> = { shaft: 'Shaft', plenum: 'Lowered ceiling (plenum)', 'roof-zone': 'Roof zone' };
+
+function ServiceSpaceProps({ sp }: { sp: ServiceSpace }) {
+  const run = useApp((st) => st.run);
+  const r = sp.props.rect;
+  const setRect = (patch: Partial<typeof r>) => run(setServiceSpace(sp.id, { rect: { ...r, ...patch } }));
+  return (
+    <>
+      <Header title={SVC_TITLE[sp.props.kind] ?? sp.props.kind} sub={`${sp.props.name} · ${sp.id}`} />
+      {sp.props.kind === 'plenum' && (
+        <NumberField label="Depth below the slab" value={sp.props.depth ?? 0.25} step={0.01} min={0.1} onCommit={(v) => run(setServiceSpace(sp.id, { depth: v }))} testId="plenum-depth" />
+      )}
+      {sp.props.kind === 'shaft' && (
+        <>
+          <NumberField label="From x" value={r.x0} onCommit={(v) => setRect({ x0: v, x1: v + (r.x1 - r.x0) })} testId="shaft-x" />
+          <NumberField label="From y" value={r.y0} onCommit={(v) => setRect({ y0: v, y1: v + (r.y1 - r.y0) })} testId="shaft-y" />
+          <NumberField label="Width (x)" value={r.x1 - r.x0} onCommit={(v) => setRect({ x1: r.x0 + v })} />
+          <NumberField label="Length (y)" value={r.y1 - r.y0} onCommit={(v) => setRect({ y1: r.y0 + v })} />
+        </>
+      )}
+      <div className="kvs">
+        <Row k="Plan" v={`x ${m(r.x0)}–${m(r.x1)}, y ${m(r.y0)}–${m(r.y1)}`} />
+        {sp.props.z0 !== undefined && <Row k={sp.props.kind === 'roof-zone' ? 'Stands at' : 'From'} v={lvl(sp.props.z0)} />}
+        {sp.props.z1 !== undefined && <Row k="To" v={lvl(sp.props.z1)} />}
+        {sp.props.accessFace && <Row k="Access panel" v={`${sp.props.accessFace} face`} />}
+        {sp.props.access && <Row k="Access" v={sp.props.access} />}
+      </div>
+      <p className="hint">{sp.props.kind === 'plenum' ? 'A deeper lowered ceiling holds more pipes but lowers the room; the height check shows the result.' : sp.props.kind === 'shaft' ? 'Pipes and conduits re-route when the shaft moves or changes size.' : 'Equipment stands here with room around it for maintenance.'}</p>
+    </>
+  );
+}
+
 function GenericProps({ el }: { el: Element }) {
   return (
     <>
@@ -497,6 +559,8 @@ export function ChecksBar() {
   const go = (c: CheckResult) => {
     if (c.level && c.level !== level && ['LL', 'SL', 'UF'].includes(c.level)) setLevel(c.level as PlanLevel);
     if (c.elementIds[0]) select(c.elementIds[0]);
+    // MEP rows know where the problem is: the 3D camera zooms to it
+    if (c.at) useApp.getState().lookFrom([c.at[0] + 2.5, c.at[1] - 3, c.at[2] + 2.2], c.at);
   };
   return (
     <section className={'checks' + (open ? ' open' : '')} aria-label="Checks">

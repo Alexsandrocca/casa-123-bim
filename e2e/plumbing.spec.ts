@@ -13,9 +13,10 @@ test('plumbing on the plan: moving the kitchen sink 1 m re-routes its branch and
   const before = await branch();
   await page.locator('[data-fixture="fx-kitchen-sink-01"]').click();
   await expect(page.locator('.props h3')).toHaveText('Kitchen sink');
-  await page.getByTestId('fx-y').fill('7.30');
+  // (spec 04b: the sink snaps to its wall; the kitchen ends at 7.60, so it moves 0.5 m)
+  await page.getByTestId('fx-y').fill('6.80');
   await page.getByTestId('fx-y').press('Enter');
-  await expect(page.getByTestId('fx-y')).toHaveValue('7.30');
+  await expect(page.getByTestId('fx-y')).toHaveValue('6.80');
   expect(await branch()).not.toBe(before);
   await page.getByTestId('checks-toggle').click();
   await page.getByRole('button', { name: 'Whole house' }).click();

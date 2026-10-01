@@ -21,6 +21,8 @@ export interface CheckResult {
   source: string;
   level?: string;
   elementIds: string[];
+  /** Where the problem is (MEP rows): a click zooms the 3D view to it. */
+  at?: [number, number, number];
 }
 
 const SANITARY = 'SP sanitary code, Decreto 12.342/78';

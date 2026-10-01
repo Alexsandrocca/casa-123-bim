@@ -20,8 +20,11 @@ const COLORS: Record<Mat, string> = {
   marking: '#F6F6F2', solarGhost: '#23395B', device: '#2E3A40', planter: '#6F8F4E',
   camera: '#7A3FB0', conduit: '#E07A2E', cone: '#9B6BD0', pvModule: '#1F2E45',
   pCold: '#2F7FB5', pHot: '#C8412E', pSewage: '#8A5A2B', pVent: '#8C9399', pRain: '#25A3A3', fixture: '#F4F4F2', equipment: '#6E7B85', tank: '#4F7FA6',
+  svcShaft: '#2E8B57', svcPlenum: '#2F7FB5', svcCrawl: '#A0522D', hanger: '#3E4A55', clearance: '#E0A030',
+  hWall: '#7C64B8', hShaft: '#2E8B57', hPlenum: '#2F7FB5', hScreed: '#D99A20', hCrawl: '#A0522D', hGround: '#6B7F2A',
+  hRoof: '#3F8F99', hFacade: '#5E6E7A', hSleeve: '#8C9399', hEquip: '#55606A', hExposed: '#E01E1E',
 };
-const TRANSPARENT: Partial<Record<Mat, number>> = { glass: 0.35, guardGlass: 0.25, solarGhost: 0.45, cone: 0.07 };
+const TRANSPARENT: Partial<Record<Mat, number>> = { glass: 0.35, guardGlass: 0.25, solarGhost: 0.45, cone: 0.07, svcShaft: 0.16, svcPlenum: 0.1, svcCrawl: 0.06, clearance: 0.22 };
 
 const materials = new Map<string, THREE.MeshStandardMaterial>();
 function material(mat: Mat, selected: boolean, ghost = false): THREE.MeshStandardMaterial {
@@ -333,10 +336,11 @@ function Content() {
   const selection = useApp((s) => s.selection);
   const walking = useApp((s) => s.walk);
   const cutting = useApp((s) => s.section.v !== 'off' || s.section.h !== 'off');
-  const xray = useApp((s) => s.xray);
+  const xray = useApp((s) => s.xray || s.physics);
   const xrayOn = useApp((s) => s.xray);
   const cones = useApp((s) => s.cones);
-  const scene = useMemo(() => buildScene(p, { doorsOpen, conduits: xrayOn, cones }), [p, doorsOpen, xrayOn, cones]);
+  const physics = useApp((s) => s.physics);
+  const scene = useMemo(() => buildScene(p, { doorsOpen, conduits: xrayOn, cones, physics, selection }), [p, doorsOpen, xrayOn, cones, physics, selection]);
   const groups = useMemo(() => {
     const m = new Map<string, Part[]>();
     for (const part of scene.parts) m.set(part.id, [...(m.get(part.id) ?? []), part]);

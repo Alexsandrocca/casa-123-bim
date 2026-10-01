@@ -21,7 +21,11 @@ export function mepChecks(p: Project): CheckResult[] {
   /* unhosted items */
   const bad = [...rep.items.values()].filter((i) => !i.ok);
   if (!bad.length) out.push({ id: 'mep:hosted', group: G, elementIds: [], title: 'Every fixture and device is hosted', status: 'pass', value: `${rep.items.size} items on a wall face, ceiling, floor, shaft, roof zone or the ground`, rule: 'Every item is attached to a building element that can carry it', source: SRC });
-  for (const i of bad) out.push({ id: `mep:unhosted:${i.id}`, group: G, elementIds: [i.id], level: lvl(i.id), title: `Unhosted · ${i.name}`, status: 'fail', value: i.problem ?? 'unhosted', rule: 'Every item is attached to a building element that can carry it', source: SRC });
+  for (const i of bad) {
+    const e = p.elements.find((x) => x.id === i.id);
+    const at = e && (e.type === 'Device' || e.type === 'Fixture') ? [e.props.at[0], e.props.at[1], e.props.z] as [number, number, number] : undefined;
+    out.push({ id: `mep:unhosted:${i.id}`, group: G, elementIds: [i.id], level: lvl(i.id), title: `Unhosted · ${i.name}`, status: 'fail', value: i.problem ?? 'unhosted', rule: 'Every item is attached to a building element that can carry it', source: SRC, at });
+  }
 
   /* runs outside a service space */
   const segs = [...rep.segs.values()];
@@ -64,7 +68,7 @@ export function mepChecks(p: Project): CheckResult[] {
 
   /* clashes: one row each, so a click zooms to it */
   if (!rep.clashes.length) out.push({ id: 'mep:clash', group: G, elementIds: [], title: 'No clashes', status: 'pass', value: 'no pipe–pipe, pipe–conduit, MEP–structure or MEP–door/window clashes', rule: 'Runs keep clear of each other and of the structure; conduits ≥ 0.20 m from hot water', source: SRC });
-  rep.clashes.forEach((c, i) => out.push({ id: `mep:clash:${i}`, group: G, elementIds: [c.a, c.b], level: lvl(c.a), title: `Clash · ${c.kind}`, status: 'fail', value: c.text, rule: 'Runs keep clear of each other and of the structure; conduits ≥ 0.20 m from hot water (project rule, to verify)', source: SRC }));
+  rep.clashes.forEach((c, i) => out.push({ id: `mep:clash:${i}`, group: G, elementIds: [c.a, c.b], level: lvl(c.a), title: `Clash · ${c.kind}`, status: 'fail', value: c.text, rule: 'Runs keep clear of each other and of the structure; conduits ≥ 0.20 m from hot water (project rule, to verify)', source: SRC, at: c.at }));
 
   /* web holes for the engineer */
   const holes = segs.filter((s) => s.holes.length);
