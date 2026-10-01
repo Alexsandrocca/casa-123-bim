@@ -237,3 +237,8 @@ Spec 02 — 3D model (it is marked ready).
 - Create a **private** GitHub repository `casa-123-bim` under the owner's account (`Alexsandrocca`), add it as `origin`, commit any uncommitted docs/specs (08, 09, 10, roadmap), and push all branches.
 - If the `gh` CLI or GitHub login is missing on this Mac, guide the owner step by step (`gh auth login` in the browser) and wait for them.
 - Keep `.env.local` out of git. From now on, push after every finished spec (the next-spec skill already says so).
+
+## 2026-10-01 — Manager review of 03 and 04: accepted, with spec 04b added
+- The owner likes plumbing and electrical, but they float and pass through the wrong places: L-shaped routing without obstacles, items without hosts, the pump in the hall, condensers hanging on the facade.
+- New spec **04b** (ready) fixes this before anything else. Order: **04b → 08 → 09 → 10**.
+- GitHub setup (request above) is still to do. Do it first, before 04b.
