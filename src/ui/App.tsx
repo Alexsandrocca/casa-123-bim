@@ -1,5 +1,6 @@
 import { Suspense, lazy, useEffect, useRef, type ReactNode } from 'react';
 import { deleteOpening, resetLevel } from '../model/commands';
+import { deleteFeature } from '../model/eng/commands';
 import { getEl } from '../model/geometry';
 import { PLAN_LEVELS } from '../model/schema';
 import { BASES, VERSION_IDS, useApp, useProject, type Tool } from '../store';
@@ -7,6 +8,8 @@ import { AboutDialog, ChecksBar, PropertiesPanel } from './Panels';
 import { PlanView } from './PlanView';
 import { PlumbingDialog } from './PlumbingDialog';
 import { ElectricalDialog } from './ElectricalDialog';
+import { EngineeringDialog } from './EngineeringDialog';
+import { FEATURE_TYPES } from '../model/eng/features';
 
 const Scene3D = lazy(() => import('./Scene3D'));
 
@@ -31,12 +34,15 @@ const ICONS = {
   outlet: icon('M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM9 9v3M15 9v3M9 16h6'),
   electrical: icon('M13 2L4 14h7l-1 8 9-12h-7z'),
   plumbing: icon('M5 4v6a4 4 0 0 0 4 4h6a4 4 0 0 1 4 4v2M3 4h4M17 20h4'),
+  engineering: icon('M4 20h16M6 20V9l6-5 6 5v11M9 20v-6h6v6M6 12h12'),
+  features: icon('M4 8h16M4 12h16M4 16h16M8 4v16'),
 };
 
 export function App() {
   const active = useApp((s) => s.active);
   const level = useApp((s) => s.level);
   const tool = useApp((s) => s.tool);
+  const featureKind = useApp((s) => s.featureKind);
   const message = useApp((s) => s.message);
   const view = useApp((s) => s.view);
   const plumbing2d = useApp((s) => s.plumbing2d);
@@ -59,6 +65,7 @@ export function App() {
       if ((e.key === 'Delete' || e.key === 'Backspace') && s.selection) {
         const el = getEl(s.versions[s.active].present, s.selection);
         if (el?.type === 'Opening') { e.preventDefault(); if (s.run(deleteOpening(el.id))) s.select(null); }
+        if (el?.type === 'Feature') { e.preventDefault(); if (s.run(deleteFeature(el.id))) s.select(null); }
       }
       if (e.key === 'Escape') { s.select(null); s.setTool('select'); }
     };
@@ -111,6 +118,8 @@ export function App() {
         <hr />
         <ToolButton label="Plumbing" onClick={() => st.set3d({ plumbingOpen: true })} testId="plumbing">{ICONS.plumbing}</ToolButton>
         <ToolButton label="Electrical" onClick={() => st.set3d({ electricalOpen: true })} testId="electrical">{ICONS.electrical}</ToolButton>
+        <ToolButton label="Engineering" onClick={() => st.set3d({ engineeringOpen: true })} testId="engineering">{ICONS.engineering}</ToolButton>
+        <ToolButton label="Features" pressed={tool === 'feature'} onClick={() => st.placeFeature(tool === 'feature' ? null : featureKind ?? 'brise')} testId="features">{ICONS.features}</ToolButton>
         <hr />
         <ToolButton label="Reset floor" onClick={() => {
           if (st.run(resetLevel(level, BASES[active]))) st.flash(`This floor is back to the original ${BASES[active].meta.version}. Undo brings your edits back.`);
@@ -147,9 +156,16 @@ export function App() {
             </label>
           )}
           <span className="hint">
-            {tool === 'door' ? 'Click a wall to add a door.' : tool === 'window' ? 'Click an outside wall to add a window.' : tool === 'outlet' ? 'Click in a room to add an outlet on its nearest wall.' : 'Drag inside walls, doors and windows. Double-click a wall to add an opening.'}
+            {tool === 'feature' && featureKind ? `${FEATURE_TYPES.find((f) => f.kind === featureKind)!.label}: ${FEATURE_TYPES.find((f) => f.kind === featureKind)!.hint} (works in 2D and 3D; Esc to stop)` : tool === 'door' ? 'Click a wall to add a door.' : tool === 'window' ? 'Click an outside wall to add a window.' : tool === 'outlet' ? 'Click in a room to add an outlet on its nearest wall.' : 'Drag inside walls, doors and windows. Double-click a wall to add an opening.'}
           </span>
         </div>
+        {tool === 'feature' && (
+          <div className="palette" role="toolbar" aria-label="Features" data-testid="feature-palette">
+            {FEATURE_TYPES.map((f) => (
+              <button key={f.kind} className="small" aria-pressed={featureKind === f.kind} onClick={() => st.placeFeature(f.kind)} title={f.effect} data-testid={`feature-${f.kind}`}>{f.label}</button>
+            ))}
+          </div>
+        )}
         <div className={'views ' + view}>
           {view !== '3d' && <PlanView />}
           {view !== '2d' && <Suspense fallback={<div className="scene3d loading">Loading 3D…</div>}><Scene3D /></Suspense>}
@@ -162,6 +178,7 @@ export function App() {
       <AboutDialog />
       <PlumbingDialog />
       <ElectricalDialog />
+      <EngineeringDialog />
     </div>
   );
 }

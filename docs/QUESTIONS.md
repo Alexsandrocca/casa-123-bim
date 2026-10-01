@@ -111,3 +111,33 @@ Spec 04b asks for 2.70 m in living rooms and bedrooms and 2.50 m in wet rooms an
 
 ## Q10 — answer used for now (spec 04b)
 The cistern is now buried at the front of the south passage, with its lid on a riser. Its overflow runs by gravity along the passage to the garden infiltration trench (option c). Nothing goes to the street gutter. **The manager confirms or changes it.**
+
+## Q19 (2026-10-01, spec 08) — Bath 3: the outlet is placed, the shower was not moved
+The answer to Q16 was option (a), moving the shower. While doing it I found the real cause: a bug. A bedroom door's swing was being tested *through* the wall into Bath 3. With the bug fixed, the basin outlet has a legal place beside the basin (x 3.29, y 7.80), with the shower where it was.
+I did **not** move the shower to x 4.2–5.0: at y 6.6–7.4 it would sit in the swing of the Bath 3 door (y 7.2–7.9 on the same wall). **Keep the shower where it is?**
+
+## Q20 (2026-10-01, spec 08) — The placeholder frame is too small, and the proposed one does not fit the 0.40 m structure depth
+The pre-sizing estimates find **10 beams and 5 footings over capacity** in Version 3. The beams were all W250×32.7 and the footings all 1.0 × 1.0 m (spec 02 placeholders). The worst cases:
+- the 5.40 m beams that carry walls;
+- the 8.60 m edge beam under the 1 m rear overhang of the upper floor (it needs about a W410).
+
+"Use the proposed sizes" (Engineering → Structure) fixes the frame, but the deeper beams and bigger footings leave no room for 7 pipe routes in the crawlspace and the lower-level ceiling (3 clashes with footings). So the committed model keeps the placeholders, and the checks show the two pre-sizing rows as fails. Options:
+- (a) deepen the structure zone (floor-to-floor 3.10 → about 3.25 m);
+- (b) add columns or secondary beams to shorten the 5.40 m spans and the overhang edge;
+- (c) let the structural engineer decide, and keep the estimate rows as they are.
+
+**Which one?**
+
+## Q21 (2026-10-01, spec 08) — CUB: R8-N used, R1-N not found
+Sinduscon-SP publishes R8-N for September 2026: **R$ 2,238.58/m²** (read 2026-10-01). I could not find the R1-N value (single house), which is usually higher. The cost uses R8-N, marked TO CONFIRM; the field can be emptied, and the area method then shows "CUB TO CONFIRM". **Confirm R8-N, or give the R1-N value.**
+
+## Q22 (2026-10-01, spec 08) — Thermal limits and zone
+- Zone 2 is the spec's default (TO CONFIRM against NBR 15220-3:2024).
+- The exterior-wall limits for zones 3–8 match published summaries of NBR 15575-4:2021 (U ≤ 3.7 or 2.5, CT ≥ 130).
+- The zone 1–2 wall limit (U ≤ 2.7) and all the roof limits (NBR 15575-5) are marked "verify".
+- Light steel frame passes on U (0.51) but fails CT (≈ 47 < 130): the standard then needs the simulation method.
+
+**Please confirm the zone and the limits.**
+
+## Q23 (2026-10-01, spec 08) — Every floor bay needs props during the pour
+With a 0.95 mm MF-75 deck (2.70 m without props, an assumption), every bay longer than 2.70 m is amber: "needs props". That covers the 3.20–4.10 m spans of all floors and both roofs. That is normal for steel deck, but it is a building cost and a schedule item. **Plan for props, or ask for a 1.25 mm deck (about 3.1 m without props)?**

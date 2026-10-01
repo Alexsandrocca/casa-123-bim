@@ -26,7 +26,10 @@ test('opens Version 2 on the street level with the prototype room areas', async 
   await expect(area(page, 'Dining')).toHaveText('10.8 m²');
   await expect(area(page, 'Living')).toHaveText('16.2 m²');
   await expect(area(page, 'Garage')).toHaveText('27.0 m²');
-  await expect(page.getByTestId('checks-fail')).toHaveText('0 fail');
+  // spec 08: the only fails are the pre-sizing estimates of the placeholder frame (Q20); Version 2 also has its 5 m garage-roof deck span
+  await page.getByTestId('checks-toggle').click();
+  for (const t of await page.locator('.checklist tr.fail').allTextContents()) expect(t).toMatch(/pre-sizing|Steel deck spans/);
+  await page.getByTestId('checks-toggle').click();
   await page.evaluate(() => document.fonts.ready);
   await page.screenshot({ path: 'docs/screens/01.png' });
 });

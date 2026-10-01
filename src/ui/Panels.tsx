@@ -12,6 +12,13 @@ import { byLevel, getEl, glassArea, openingSegIn, spaceArea, wallLength, wallSeg
 import { cameraFov, cameraRange, deviceType } from '../model/electrical/library';
 import type { Beam, Carport, Circuit, Column, Conduit, Device, Element, Fixture, PipeSegment, ServiceSpace, SolarArray, Footing, Opening, PlanLevel, Project, Slab, Space, Stair, Wall } from '../model/schema';
 import { useApp, useProject } from '../store';
+import { EstRow } from './Estimate';
+import { assemblyOf, optionsFor, useOf } from '../model/eng/assemblies';
+import { deleteFeature, setAssembly, setFeature } from '../model/eng/commands';
+import { beamEstimates, columnEstimates, featureEstimates, footingEstimates, slabEstimates, wallEstimates } from '../model/eng/estimates';
+import { featureType } from '../model/eng/features';
+import { DISCLAIMER, frameOf } from '../model/eng';
+import type { Feature } from '../model/schema';
 import { ZONE_COLOR } from './PlanView';
 
 const m = (v: number) => v.toFixed(2);
@@ -92,6 +99,8 @@ export function PropertiesPanel() {
       {el?.type === 'Beam' && <BeamProps b={el} />}
       {el?.type === 'Slab' && <SlabProps s={el} />}
       {el?.type === 'Footing' && <FootingProps f={el} />}
+      {el?.type === 'Feature' && <FeatureProps f={el} />}
+      {el && ['Wall', 'Slab', 'Beam', 'Column', 'Footing', 'Feature'].includes(el.type) && <Estimates el={el} />}
       {el?.type === 'Stair' && <StairProps st={el} />}
       {el?.type === 'Carport' && <CarportProps c={el} />}
       {el?.type === 'Fixture' && <FixtureProps f={el} />}
@@ -108,7 +117,7 @@ export function PropertiesPanel() {
           {el.notes.map((n, i) => <p key={i}>{n}</p>)}
         </div>
       ) : null}
-      {el && !['Space', 'Wall', 'Opening', 'Column', 'Beam', 'Slab', 'Footing', 'Stair', 'Carport', 'Fixture', 'PipeSegment', 'Device', 'Circuit', 'SolarArray', 'ServiceSpace', 'Conduit'].includes(el.type) && <GenericProps el={el} />}
+      {el && !['Space', 'Wall', 'Opening', 'Column', 'Beam', 'Slab', 'Footing', 'Stair', 'Carport', 'Fixture', 'PipeSegment', 'Device', 'Circuit', 'SolarArray', 'ServiceSpace', 'Conduit', 'Feature'].includes(el.type) && <GenericProps el={el} />}
     </aside>
   );
 }
@@ -185,7 +194,8 @@ function WallProps({ p, w }: { p: Project; w: Wall }) {
   return (
     <>
       <Header title={WALL_NAME[w.props.wallType]!} sub={`Wall · ${w.id}`} />
-      <NumberField label="Thickness" value={w.props.thickness} step={0.01} min={0.05} onCommit={(v) => run(setWallThickness(w.id, v))} />
+      <AssemblySelect p={p} el={w} />
+      <NumberField label="Thickness" value={w.props.thickness} step={0.01} min={0.05} onCommit={(v) => run(setWallThickness(w.id, v))} testId="wall-thickness" />
       <div className="kvs">
         <Row k="Length" v={`${m(wallLength(w))} m`} />
         <Row k="Height" v={`${m(w.props.height)} m`} />
@@ -257,8 +267,27 @@ function ColumnProps({ c }: { c: Column }) {
         <Row k="To" v={`${lvl(c.props.topElevation)} (under the beams)`} />
         <Row k="Height" v={`${m(c.props.topElevation - c.props.baseElevation)} m`} />
       </div>
+      <Proposed id={c.id} kind="column" current={c.props.profile} />
       <p className="hint">Sizes are for design only. The structural engineer sizes the real frame (NBR 8800).</p>
     </>
+  );
+}
+
+/** The lightest section that passes, with a button to use it (spec 08). */
+function Proposed({ id, kind, current }: { id: string; kind: 'beam' | 'column'; current: string }) {
+  const p = useProject();
+  const run = useApp((st) => st.run);
+  const f = frameOf(p);
+  const r = kind === 'beam' ? f.beams.find((b) => b.beam.id === id) : f.columns.find((c) => c.col.id === id);
+  if (!r) return null;
+  const cls = r.check.status === 'red' ? 'bad' : r.check.status === 'amber' ? 'warn' : 'ok';
+  return (
+    <div className="proposed" data-testid="proposed">
+      <p><b className={cls}>Utilisation {r.check.util.toFixed(2)}</b> · {r.check.governing}</p>
+      {r.proposed && r.proposed.name !== current && (
+        <button className="small" onClick={() => run(setElementProps(id, { profile: r.proposed!.name }, `Use ${r.proposed!.name}`))}>Use {r.proposed.name} (lightest that passes)</button>
+      )}
+    </div>
   );
 }
 
@@ -277,15 +306,18 @@ function BeamProps({ b }: { b: Beam }) {
         <Row k="Top of steel" v={lvl(b.props.elevation)} />
         <Row k="From → to" v={`(${m(b.props.start[0])}, ${m(b.props.start[1])}) → (${m(b.props.end[0])}, ${m(b.props.end[1])})`} />
       </div>
+      <Proposed id={b.id} kind="beam" current={b.props.profile} />
     </>
   );
 }
 
 function SlabProps({ s }: { s: Slab }) {
   const run = useApp((st) => st.run);
+  const p = useProject();
   return (
     <>
       <Header title={s.props.name} sub={`Slab · ${s.id}${s.props.onGrade ? ' · on the ground' : ' · steel deck'}`} />
+      <AssemblySelect p={p} el={s} />
       {s.props.eaves !== undefined && <NumberField label="Eaves" value={s.props.eaves} onCommit={(v) => run(setElementProps(s.id, { eaves: Math.max(0, v) }, 'Change eaves'))} />}
       {s.props.parapet !== undefined && <NumberField label="Parapet" value={s.props.parapet} onCommit={(v) => run(setElementProps(s.id, { parapet: Math.max(0, v) }, 'Change parapet'))} />}
       <div className="kvs">
@@ -308,7 +340,7 @@ function FootingProps({ f }: { f: Footing }) {
         <Row k="Top" v={lvl(f.props.topElevation)} />
         <Row k="Depth" v={`${m(f.props.depth)} m`} />
       </div>
-      <p className="hint">Placeholder sizes. Real footings come from the soil borings (SPT) and NBR 6122.</p>
+      <p className="hint">Drawn sizes are placeholders; the estimate below sizes them on the loads. Real footings come from the soil borings (SPT) and NBR 6122.</p>
     </>
   );
 }
@@ -474,6 +506,62 @@ function SolarProps({ a }: { a: SolarArray }) {
   );
 }
 
+/* ---------- spec 08 ---------- */
+
+function AssemblySelect({ p, el }: { p: Project; el: Wall | Slab }) {
+  const run = useApp((st) => st.run);
+  const flash = useApp((st) => st.flash);
+  const a = assemblyOf(p, el);
+  const opts = optionsFor(useOf(el));
+  return (
+    <label className="field">
+      <span>Assembly</span>
+      <select value={a.id} data-testid="assembly" onChange={(e) => { if (run(setAssembly(el.id, e.target.value))) flash(el.type === 'Wall' ? 'Assembly changed: thickness, weight, U-value, loads and cost follow.' : 'Assembly changed: weight, U-value, loads and cost follow.'); }}>
+        {opts.map((o) => <option key={o.id} value={o.id}>{o.name}</option>)}
+      </select>
+    </label>
+  );
+}
+
+function Estimates({ el }: { el: Element }) {
+  const p = useProject();
+  const list = el.type === 'Wall' ? wallEstimates(p, el) : el.type === 'Slab' ? slabEstimates(p, el) : el.type === 'Beam' ? beamEstimates(p, el)
+    : el.type === 'Column' ? columnEstimates(p, el) : el.type === 'Footing' ? footingEstimates(p, el) : el.type === 'Feature' ? featureEstimates(p, el) : [];
+  if (!list.length) return null;
+  return (
+    <div className="kvs" data-testid="estimates">
+      <h4>Estimates</h4>
+      {list.map((e) => <EstRow key={e.label} e={e} testId={`est-${e.label.replace(/\W+/g, '-').toLowerCase()}`} />)}
+      <p className="hint">{DISCLAIMER}</p>
+    </div>
+  );
+}
+
+function FeatureProps({ f }: { f: Feature }) {
+  const run = useApp((st) => st.run);
+  const select = useApp((st) => st.select);
+  const t = featureType(f.props.kind);
+  return (
+    <>
+      <Header title={t.label} sub={`Feature · ${f.id}${f.props.host ? ` · on ${f.props.host}` : ''}`} />
+      {Object.entries(f.props.params).map(([k, v]) => {
+        const label = k.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase());
+        if (typeof v === 'boolean') return (
+          <label key={k} className="check"><input type="checkbox" checked={v} onChange={(e) => run(setFeature(f.id, { params: { [k]: e.target.checked } }))} data-testid={`feat-${k}`} /> {label}</label>
+        );
+        if (typeof v === 'string') return (
+          <ProfileSelect key={k} label={label} value={v} options={t.choices?.[k] ?? [v]} onChange={(nv) => run(setFeature(f.id, { params: { [k]: nv } }))} />
+        );
+        return <NumberField key={k} label={label} value={v} step={k === 'angle' || k === 'open' || k === 'tank' ? 5 : 0.05} unit={t.units?.[k] ?? ''} onCommit={(nv) => run(setFeature(f.id, { params: { [k]: nv } }))} testId={`feat-${k}`} />;
+      })}
+      {f.props.width !== undefined && <NumberField label="Width" value={f.props.width} onCommit={(v) => run(setFeature(f.id, { width: Math.max(0.3, v) }))} />}
+      {f.props.offset !== undefined && <NumberField label="From wall start" value={f.props.offset} onCommit={(v) => run(setFeature(f.id, { offset: Math.max(0, v) }))} />}
+      <p className="hint">{t.effect}</p>
+      <div className="btnrow"><button className="danger" onClick={() => { if (run(deleteFeature(f.id))) select(null); }}>Delete</button></div>
+    </>
+  );
+}
+
 /* ---------- spec 04b ---------- */
 
 /** One line: what holds this item or run, why it goes this way, and the rule. */
@@ -620,6 +708,7 @@ export function AboutDialog() {
         <p>This is a <b>design and decision tool</b> for the family's house at {p.site.address}. It helps us try layouts, check them against the main code rules and share one precise model with the professionals.</p>
         <p><b>It does not replace the official project.</b> The permit drawings and the executive designs (architecture, structure, plumbing, electrical) must be made and signed by licensed professionals, with their ART/RRT. They receive this model through the IFC export.</p>
         <p>The checks cover the rules we know (São Paulo sanitary code, Civil Code art. 1.301, stair comfort, setbacks). They are a guide, not an approval.</p>
+        <p className="disclaimer" data-testid="about-disclaimer">{DISCLAIMER}</p>
         <h4>Still to confirm</h4>
         <ul>{p.site.toConfirm.map((t) => <li key={t}>{t}</li>)}</ul>
         <p className="hint">Units are metres. Plan axes: x from the south wall to the north, y from the street to the rear.</p>

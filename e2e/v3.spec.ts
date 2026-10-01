@@ -9,9 +9,10 @@ test('Version 3 opens by default: no garage, patio and carport, about 78 m², tw
   await expect(page.locator('text[data-room="Garage"]')).toHaveCount(0);
   await expect(page.getByTestId('gross')).toHaveText(/Version 3 · 78\.\d m² gross/);
   await expect(page.locator('rect.carport')).toHaveCount(1);
-  await expect(page.getByTestId('checks-fail')).toHaveText('0 fail');
-  await expect(page.getByTestId('checks-confirm')).toHaveText('2 to confirm'); // carport (02b) and design rainfall (03)
+  // spec 08: the only fails are the pre-sizing estimates of the placeholder beams and footings (Q20)
+  await expect(page.getByTestId('checks-confirm')).toHaveText('3 to confirm'); // carport (02b), design rainfall (03), soil pressure (08)
   await page.getByTestId('checks-toggle').click();
+  for (const t of await page.locator('.checklist tr.fail').allTextContents()) expect(t).toMatch(/pre-sizing|Steel deck spans/);
   await expect(page.getByRole('row', { name: /Carport in the front setback/ })).toContainText('TO CONFIRM');
   await page.getByTestId('checks-toggle').click();
   await page.evaluate(() => document.fonts.ready);

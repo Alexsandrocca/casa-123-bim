@@ -448,11 +448,8 @@ export function frame(p: Project): Frame {
     const col = columns.find((c) => c.col.id === f.props.carries);
     if (!col) continue;
     const r = f.props.rect, side = Math.min(r.x1 - r.x0, r.y1 - r.y0);
-    // service load plus the footing's own weight (about 10 %)
     const N = col.N * 1.1;
-    const B = Math.max(0.6, Math.ceil(Math.sqrt(N / sigma) / 0.05 - 1e-9) * 0.05);
-    const cb = col.current ? Math.max(col.current.d, col.current.bf) : 0.3;
-    const h = Math.max(minH, Math.ceil(((B - cb) / 3) / 0.05 - 1e-9) * 0.05);
+    const { B, h } = sizeFooting(col.N, sigma, minH, col.current ? Math.max(col.current.d, col.current.bf) : 0.3);
     const pressure = N / ((r.x1 - r.x0) * (r.y1 - r.y0));
     const u = pressure / sigma;
     footings.push({
@@ -466,6 +463,14 @@ export function frame(p: Project): Frame {
     retaining: retainingWalls(p), lintels: lintels(p), bracing: bracing(p), wind: wind(p),
     quantities: quantities(p, beams, columns, footings),
   };
+}
+
+/** Square pad: area = service load (+10 % for the footing) / allowable pressure, side rounded up to 5 cm (min 0.60 m);
+ *  depth ≥ (side − column) / 3 for a rigid pad, rounded up to 5 cm, and at least the minimum depth. */
+export function sizeFooting(Nservice: number, sigma: number, minH: number, column: number): { B: number; h: number } {
+  const up = (v: number) => Math.round(Math.ceil(v / 0.05 - 1e-9) * 0.05 * 1000) / 1000;
+  const B = Math.max(0.6, up(Math.sqrt((Nservice * 1.1) / sigma)));
+  return { B, h: Math.max(minH, up((B - column) / 3)) };
 }
 
 /* ---------------- retaining walls, lintels, bracing, wind ---------------- */
@@ -502,7 +507,7 @@ function lintels(p: Project): Lintel[] {
     const w = p.elements.find((e): e is Wall => e.type === 'Wall' && e.id === o.props.host);
     if (!w || w.props.wallType === 'retaining') continue;
     const masonry = assemblyOf(p, w).layers.some((l) => /block/i.test(l.material));
-    out.push({ opening: o, wall: w, span: o.props.width, kind: masonry ? 'concrete lintel' : 'steel header', depth: Math.max(0.1, Math.ceil((o.props.width / 10) / 0.05 - 1e-9) * 0.05) });
+    out.push({ opening: o, wall: w, span: o.props.width, kind: masonry ? 'concrete lintel' : 'steel header', depth: Math.round(Math.max(0.1, Math.ceil((o.props.width / 10) / 0.05 - 1e-9) * 0.05) * 100) / 100 });
   }
   return out;
 }

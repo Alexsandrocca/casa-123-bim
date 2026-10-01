@@ -10,6 +10,9 @@ import { cameraFov, cameraRange, deviceType } from '../model/electrical/library'
 import { layoutModules } from '../model/electrical/solar';
 import { mepReport } from '../model/mep/analysis';
 import { mepContext } from '../model/mep/spaces';
+import { featureBoxes, type FeatureMat } from '../model/eng/features';
+import { frameOf } from '../model/eng';
+import type { Status } from '../model/eng/frame';
 
 export type V3 = [number, number, number];
 export type Mat =
@@ -22,7 +25,18 @@ export type Mat =
   | 'camera' | 'conduit' | 'pvModule' | 'cone'
   // spec 04b: service-space volumes, hangers, maintenance clearance, and runs coloured by their host
   | 'svcShaft' | 'svcPlenum' | 'svcCrawl' | 'hanger' | 'clearance'
-  | 'hWall' | 'hShaft' | 'hPlenum' | 'hScreed' | 'hCrawl' | 'hGround' | 'hRoof' | 'hFacade' | 'hSleeve' | 'hEquip' | 'hExposed';
+  | 'hWall' | 'hShaft' | 'hPlenum' | 'hScreed' | 'hCrawl' | 'hGround' | 'hRoof' | 'hFacade' | 'hSleeve' | 'hEquip' | 'hExposed'
+  // spec 08: features, utilisation colours and the load path
+  | 'fBrise' | 'fTimber' | 'fConcrete' | 'fPergola' | 'fCover' | 'fGreen' | 'fSkyGlass' | 'fPlanter' | 'fGutter' | 'fShutter' | 'fAwning' | 'fSolar' | 'fEave'
+  | 'uOk' | 'uAmber' | 'uRed' | 'loadPath';
+
+export const FEATURE_MAT: Record<FeatureMat, Mat> = {
+  brise: 'fBrise', timber: 'fTimber', concreteScreen: 'fConcrete', pergola: 'fPergola', cover: 'fCover', greenRoof: 'fGreen', skyGlass: 'fSkyGlass',
+  planter: 'fPlanter', gutter: 'fGutter', shutter: 'fShutter', awning: 'fAwning', solarHeater: 'fSolar', eave: 'fEave',
+};
+export const UTIL_MAT: Record<Status, Mat> = { ok: 'uOk', amber: 'uAmber', red: 'uRed' };
+/** Spec 08 structure view: what stays solid (the rest is ghosted). */
+export const STRUCTURE_MATS = new Set<Mat>(['uOk', 'uAmber', 'uRed', 'loadPath']);
 
 /** A box: centre c, size s (along x, y, z), optional rotation about x (pitch) then z (yaw), in radians. */
 export interface BoxPart { kind: 'box'; id: string; mat: Mat; c: V3; s: V3; rx?: number; rz?: number; solid?: boolean }
@@ -50,6 +64,7 @@ export interface BuildOptions {
   /** camera view cones */ cones?: boolean;
   /** spec 04b: colour runs by host, show service spaces and hangers */ physics?: boolean;
   /** the selected element (its maintenance clearance is shown) */ selection?: string | null;
+  /** spec 08: utilisation colours on the frame and the deck bays, and the load path */ structure?: boolean;
 }
 
 /** A walkable surface: a rectangle or convex polygon whose height is z0 + dzdy·(y − y0). */
@@ -125,9 +140,13 @@ function wallParts(p: Project, w: Wall, openings: Opening[], opt: BuildOptions, 
   const exterior = w.props.wallType === 'exterior' || w.props.wallType === 'retaining';
   const ext = exterior ? t / 2 : 0;
   const mat: Mat = w.props.wallType === 'exterior' ? 'wallExt' : w.props.wallType === 'retaining' ? 'retaining' : w.props.wallType === 'wet' ? 'wallWet' : 'wallInt';
+  // spec 08: a cobogó screen replaces the wall where it stands
+  const screens = p.elements.flatMap((f) => (f.type === 'Feature' && f.props.kind === 'cobogo' && f.props.host === w.id
+    ? [{ s: { ...s, a: s.a + (f.props.offset ?? 0), b: s.a + (f.props.offset ?? 0) + (f.props.width ?? 1.2) }, z: [span.base + (f.props.sill ?? 0), span.base + (f.props.sill ?? 0) + (f.props.height ?? 2.1)] as [number, number] }] : []));
   const holes: { op?: Opening; s: Seg; z: [number, number] }[] = [
     ...openings.map((op) => ({ op, s: openingSeg(op, w), z: openingZ(p, op, span) })),
     ...stairNotches(p, s, span),
+    ...screens,
   ].sort((u, v) => u.s.a - v.s.a);
   let cursor = s.a - ext;
   for (const h of holes) {
@@ -223,7 +242,9 @@ function slabParts(p: Project, s: Slab, out: Part[], surfaces: Surface[]) {
     rects = rectMinus(slabRect(p, s), steps);
   } else {
     const r = slabRect(p, s);
-    rects = rectMinus({ x0: r.x0 - e, y0: r.y0 - e, x1: r.x1 + e, y1: r.y1 + e }, slabVoids(p, s));
+    // spec 08: skylights cut the roof slab
+    const sky = p.elements.flatMap((f) => (f.type === 'Feature' && f.props.kind === 'skylight' && f.props.host === s.id && f.props.rect ? [f.props.rect] : []));
+    rects = rectMinus({ x0: r.x0 - e, y0: r.y0 - e, x1: r.x1 + e, y1: r.y1 + e }, [...slabVoids(p, s), ...sky]);
   }
   for (const r of rects) {
     out.push(box(s.id, mat, r.x0, r.y0, bot, r.x1, r.y1, top));
@@ -617,10 +638,61 @@ export function buildScene(p: Project, opt: BuildOptions = { doorsOpen: false })
       }
     }
   }
+  for (const f of byType('Feature')) {
+    for (const b of featureBoxes(p, f)) {
+      if (f.props.kind === 'cobogo') {
+        // a lattice: frame, horizontal and vertical bars
+        const o: 'v' | 'h' = b.x1 - b.x0 < b.y1 - b.y0 ? 'v' : 'h';
+        const [a0, a1] = o === 'v' ? [b.y0, b.y1] : [b.x0, b.x1];
+        const [c0, c1] = o === 'v' ? [b.x0, b.x1] : [b.y0, b.y1];
+        const bar = (u0: number, u1: number, z0: number, z1: number) => parts.push(o === 'v' ? box(f.id, 'fConcrete', c0, u0, z0, c1, u1, z1) : box(f.id, 'fConcrete', u0, c0, z0, u1, c1, z1));
+        const step = f.props.params.pattern === 'diamond' ? 0.15 : 0.2, t = 0.035;
+        for (let u = a0; u <= a1 + 1e-6; u += step) bar(Math.min(u, a1 - t), Math.min(u + t, a1), b.z0, b.z1);
+        for (let z = b.z0; z <= b.z1 + 1e-6; z += step) bar(a0, a1, Math.min(z, b.z1 - t), Math.min(z + t, b.z1));
+        continue;
+      }
+      parts.push(box(f.id, FEATURE_MAT[b.mat], b.x0, b.y0, b.z0, b.x1, b.y1, b.z1, !['skyGlass', 'cover'].includes(b.mat)));
+    }
+  }
+  if (opt.structure) structureOverlay(p, parts);
   sitePartsAndSurfaces(p, parts, surfaces);
   const wallBoxes = parts.filter((x): x is BoxPart => x.kind === 'box' && ['wallExt', 'wallInt', 'wallWet', 'retaining', 'parapet'].includes(x.mat));
   guardParts(p, surfaces, wallBoxes, parts);
   return { parts, surfaces };
+}
+
+/* ---------------- spec 08: structure view ---------------- */
+
+/** Utilisation colours (green < 0.7, amber 0.7–1, red > 1) on beams, columns, footings and the deck bays, and the load path:
+ *  each bay to the beams it rests on, each column down to its footing. The kN labels are drawn by the 3D view. */
+function structureOverlay(p: Project, parts: Part[]) {
+  const f = frameOf(p);
+  const status = new Map<string, Status>();
+  for (const b of f.beams) status.set(b.beam.id, b.check.status);
+  for (const c of f.columns) status.set(c.col.id, c.check.status);
+  for (const x of f.footings) status.set(x.footing.id, x.check.status);
+  for (const r of f.retaining) status.set(r.wall.id, r.check.status);
+  for (const part of parts) {
+    if (part.kind !== 'box') continue;
+    const st = status.get(part.id);
+    if (st && ['steel', 'concrete', 'footing', 'retaining'].includes(part.mat)) part.mat = UTIL_MAT[st];
+  }
+  for (const b of f.bays) {
+    const sl = p.elements.find((e) => e.id === b.slabId);
+    if (sl?.type !== 'Slab') continue;
+    const top = sl.props.topElevation, r = b.rect;
+    parts.push(box(`bay:${b.id}`, UTIL_MAT[b.deck?.status ?? 'ok'], r.x0 + 0.04, r.y0 + 0.04, top + 0.01, r.x1 - 0.04, r.y1 - 0.04, top + 0.05, false));
+    if (!b.spanDir) continue;
+    const cx = (r.x0 + r.x1) / 2, cy = (r.y0 + r.y1) / 2, z = top + 0.08, zb = top - sl.props.thickness;
+    for (const c of [b.lo, b.hi]) {
+      const end: V3 = b.spanDir === 'x' ? [c, cy, zb] : [cx, c, zb];
+      parts.push({ kind: 'line', id: `path:${b.id}:${c}`, mat: 'loadPath', pts: [[cx, cy, z], end] });
+    }
+  }
+  for (const c of f.columns) {
+    const [x, y] = c.col.props.at;
+    parts.push({ kind: 'line', id: `path:${c.col.id}`, mat: 'loadPath', pts: [[x + 0.25, y + 0.25, c.col.props.topElevation], [x + 0.25, y + 0.25, c.col.props.baseElevation], [x + 0.15, y + 0.25, c.col.props.baseElevation + 0.25], [x + 0.25, y + 0.25, c.col.props.baseElevation], [x + 0.35, y + 0.25, c.col.props.baseElevation + 0.25]] });
+  }
 }
 
 /** Space ids never get 3D parts; this helps the UI map a picked part back to a model element. */

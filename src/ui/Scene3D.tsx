@@ -3,11 +3,14 @@ import { Line, OrbitControls } from '@react-three/drei';
 import { Canvas, useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { SERVICE_MATS, buildScene, pocheCaps, type BoxPart, type Mat, type Part, type ConePart, type LinePart, type PipePart, type PolyPart, type V3 } from '../scene/build3d';
+import { SERVICE_MATS, STRUCTURE_MATS, buildScene, pocheCaps, type BoxPart, type Mat, type Part, type ConePart, type LinePart, type PipePart, type PolyPart, type V3 } from '../scene/build3d';
 import { sunPosition } from '../scene/sun';
 import { EYE, startAt, walkStep, walkWorld, type WalkState, type WalkWorld } from '../scene/walk';
 import { useApp, useProject, type CameraPreset } from '../store';
 import { Controls3D, walkKeys } from './Controls3D';
+import { addFeature } from '../model/eng/commands';
+import { featureType } from '../model/eng/features';
+import { frameOf } from '../model/eng';
 
 /** House coordinates (x north, y rear, z up) → three.js (y up). */
 export const T = ([x, y, z]: V3): [number, number, number] => [x, z, -y];
@@ -23,8 +26,11 @@ const COLORS: Record<Mat, string> = {
   svcShaft: '#2E8B57', svcPlenum: '#2F7FB5', svcCrawl: '#A0522D', hanger: '#3E4A55', clearance: '#E0A030',
   hWall: '#7C64B8', hShaft: '#2E8B57', hPlenum: '#2F7FB5', hScreed: '#D99A20', hCrawl: '#A0522D', hGround: '#6B7F2A',
   hRoof: '#3F8F99', hFacade: '#5E6E7A', hSleeve: '#8C9399', hEquip: '#55606A', hExposed: '#E01E1E',
+  fBrise: '#B7BEC4', fTimber: '#A0703F', fConcrete: '#C9C3B6', fPergola: '#8A6239', fCover: '#BFD9E6', fGreen: '#5F8F45', fSkyGlass: '#8FB8D2',
+  fPlanter: '#6F8F4E', fGutter: '#6E7B85', fShutter: '#C9CED1', fAwning: '#9DB8C8', fSolar: '#23395B', fEave: '#D8D5CE',
+  uOk: '#3F8F4F', uAmber: '#D99A20', uRed: '#C8412E', loadPath: '#7A3FB0',
 };
-const TRANSPARENT: Partial<Record<Mat, number>> = { glass: 0.35, guardGlass: 0.25, solarGhost: 0.45, cone: 0.07, svcShaft: 0.16, svcPlenum: 0.1, svcCrawl: 0.06, clearance: 0.22 };
+const TRANSPARENT: Partial<Record<Mat, number>> = { fSkyGlass: 0.4, fCover: 0.35, glass: 0.35, guardGlass: 0.25, solarGhost: 0.45, cone: 0.07, svcShaft: 0.16, svcPlenum: 0.1, svcCrawl: 0.06, clearance: 0.22 };
 
 const materials = new Map<string, THREE.MeshStandardMaterial>();
 function material(mat: Mat, selected: boolean, ghost = false): THREE.MeshStandardMaterial {
@@ -95,26 +101,80 @@ function Poly({ part, ghost }: { part: PolyPart; ghost: boolean }) {
   return <mesh geometry={geo} material={material(part.mat, false, ghost)} receiveShadow raycast={() => null} />;
 }
 
-const Group = memo(function Group({ id, parts, selected, pickable, xray }: { id: string; parts: Part[]; selected: boolean; pickable: boolean; sig: string; xray: boolean }) {
+/** Spec 08: with the feature tool on, a click on a window, wall, roof or floor places the feature there. */
+function placeIn3d(id: string, pt: THREE.Vector3): boolean {
+  const st = useApp.getState();
+  if (st.tool !== 'feature' || !st.featureKind) return false;
+  const p = st.versions[st.active].present;
+  const el = p.elements.find((e) => e.id === id);
+  const at: [number, number] = [pt.x, -pt.z];
+  const z = pt.y;
+  const level = [...p.levels].filter((l) => l.plan && l.elevation <= z + 0.3).sort((a, b) => b.elevation - a.elevation)[0]?.id ?? 'SL';
+  const target = el?.type === 'Opening' ? { opening: id } : el?.type === 'Wall' ? { wall: id, at } : el?.type === 'Slab' ? { slab: id, at, level } : { at, level };
+  const before = new Set(p.elements.map((e) => e.id));
+  if (st.run(addFeature(st.featureKind, target))) {
+    const now = useApp.getState();
+    const added = now.versions[now.active].present.elements.find((e) => !before.has(e.id));
+    if (added) { st.select(added.id); st.flash(`${featureType(st.featureKind).label} placed. ${featureType(st.featureKind).effect}`); }
+  }
+  return true;
+}
+
+const Group = memo(function Group({ id, parts, selected, pickable, xray, structure }: { id: string; parts: Part[]; selected: boolean; pickable: boolean; sig: string; xray: boolean; structure: boolean }) {
   const pick = useApp((s) => s.pick);
   const onClick = (e: ThreeEvent<MouseEvent>) => {
     if (e.delta > 5) return;
     e.stopPropagation();
-    pick(id);
+    if (placeIn3d(id, e.point)) return;
+    pick(id.startsWith('bay:') ? id.split(':')[1]! : id);
   };
   return (
     <group onClick={pickable ? onClick : undefined} raycast={pickable ? undefined : () => null} name={id}>
       {parts.map((p, i) => {
-        const ghost = xray && !SERVICE_MATS.has(p.mat);
+        const ghost = structure ? !STRUCTURE_MATS.has(p.mat) : xray && !SERVICE_MATS.has(p.mat);
         if (p.kind === 'box') return pickable ? <Box key={i} b={p} selected={selected} ghost={ghost} /> : <mesh key={i} geometry={unitBox} material={material(p.mat, false, ghost)} position={T(p.c)} scale={[p.s[0], p.s[2], p.s[1]]} castShadow={!ghost} receiveShadow raycast={() => null} />;
         if (p.kind === 'poly') return <Poly key={i} part={p} ghost={ghost} />;
-        if (p.kind === 'pipe') return <Pipe key={i} part={p} selected={selected} />;
-        if (p.kind === 'cone') return <Cone key={i} part={p} />;
+        if (p.kind === 'pipe') return structure ? null : <Pipe key={i} part={p} selected={selected} />;
+        if (p.kind === 'cone') return structure ? null : <Cone key={i} part={p} />;
         return <Line key={i} points={(p as LinePart).pts.map(T)} color={COLORS[p.mat]} lineWidth={2} dashed dashSize={0.6} gapSize={0.3} raycast={() => null} />;
       })}
     </group>
   );
-}, (a, b) => a.sig === b.sig && a.selected === b.selected && a.id === b.id && a.xray === b.xray);
+}, (a, b) => a.sig === b.sig && a.selected === b.selected && a.id === b.id && a.xray === b.xray && a.structure === b.structure);
+
+/** A text label drawn on a canvas, always facing the camera (no DOM, so it never fights React's renderer). */
+const labelCache = new Map<string, THREE.SpriteMaterial>();
+function labelMaterial(text: string, color: string): THREE.SpriteMaterial {
+  const key = text + color;
+  let m = labelCache.get(key);
+  if (!m) {
+    const c = document.createElement('canvas');
+    c.width = 256; c.height = 64;
+    const g = c.getContext('2d')!;
+    g.fillStyle = 'rgba(251,252,250,0.94)'; g.strokeStyle = color; g.lineWidth = 5;
+    g.beginPath(); g.roundRect(4, 4, 248, 56, 10); g.fill(); g.stroke();
+    g.fillStyle = '#1D2A2F'; g.font = '600 34px ui-monospace, Menlo, monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText(text, 128, 34);
+    m = new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false, transparent: true });
+    labelCache.set(key, m);
+  }
+  return m;
+}
+const LABEL_COLOR = { ok: '#7A3FB0', amber: '#D99A20', red: '#C8412E' } as const;
+
+/** Spec 08: the load at the base of each column and pier, in kN (service). */
+function LoadLabels() {
+  const p = useProject();
+  const f = useMemo(() => frameOf(p), [p]);
+  return (
+    <group raycast={() => null}>
+      {f.columns.map((c) => (
+        <sprite key={c.col.id} material={labelMaterial(`${c.N.toFixed(0)} kN`, LABEL_COLOR[c.check.status])} renderOrder={10}
+          position={T([c.col.props.at[0] + 0.25, c.col.props.at[1] + 0.25, c.col.props.baseElevation + 0.35])} scale={[1.3, 0.33, 1]} raycast={() => null} />
+      ))}
+    </group>
+  );
+}
 
 /* ---------- camera presets ---------- */
 
@@ -340,7 +400,8 @@ function Content() {
   const xrayOn = useApp((s) => s.xray);
   const cones = useApp((s) => s.cones);
   const physics = useApp((s) => s.physics);
-  const scene = useMemo(() => buildScene(p, { doorsOpen, conduits: xrayOn, cones, physics, selection }), [p, doorsOpen, xrayOn, cones, physics, selection]);
+  const structure = useApp((s) => s.structure);
+  const scene = useMemo(() => buildScene(p, { doorsOpen, conduits: xrayOn, cones, physics, selection, structure }), [p, doorsOpen, xrayOn, cones, physics, selection, structure]);
   const groups = useMemo(() => {
     const m = new Map<string, Part[]>();
     for (const part of scene.parts) m.set(part.id, [...(m.get(part.id) ?? []), part]);
@@ -355,8 +416,9 @@ function Content() {
       <Sun />
       <SectionClip />
       <group onPointerMissed={() => pick(null)}>
-        {groups.filter((g) => !(cutting && g.id === 'site:setback')).map((g) => <Group key={g.id} id={g.id} parts={g.parts} sig={g.sig} selected={g.id === selection} pickable={!g.id.startsWith('site:')} xray={xray} />)}
+        {groups.filter((g) => !(cutting && g.id === 'site:setback')).map((g) => <Group key={g.id} id={g.id} parts={g.parts} sig={g.sig} selected={g.id === selection} pickable={!g.id.startsWith('site:') && !g.id.startsWith('path:')} xray={xray} structure={structure} />)}
       </group>
+      {structure && <LoadLabels />}
       <CameraRig />
       {walking && <Walker world={world} />}
       <TestHook />

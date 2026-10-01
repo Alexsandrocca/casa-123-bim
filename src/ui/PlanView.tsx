@@ -12,6 +12,8 @@ import type { Carport, Opening, Rect, Space, Wall } from '../model/schema';
 import { useApp, useProject } from '../store';
 import { mepReport } from '../model/mep/analysis';
 import { mepContext } from '../model/mep/spaces';
+import { addFeature } from '../model/eng/commands';
+import { featureBoxes, featureType } from '../model/eng/features';
 
 const S = 40; // px per metre, same drawing scale as the prototype
 
@@ -114,6 +116,19 @@ export function PlanView() {
       const at = nearestWallPoint(room, [x, y]);
       const id = nextDeviceId(st.versions[st.active].present, 'outlet');
       if (st.run(addDevice(id, 'outlet', level, at, `Outlet · ${room.props.name}`))) { st.select(id); st.flash(`Outlet added to ${room.props.name}; its circuit, cable and schedule are updated.`); }
+      return;
+    }
+    if (tool === 'feature') {
+      const kind = st.featureKind;
+      if (!kind) return;
+      const og = (ev.target as Element).closest('[data-opening]');
+      const w = nearestWall(x, y, 0.4);
+      const before = st.versions[st.active].present;
+      if (st.run(addFeature(kind, { opening: og?.getAttribute('data-opening') ?? undefined, wall: w?.id, at: [x, y], level }))) {
+        const now = useApp.getState();
+        const added = now.versions[now.active].present.elements.find((e) => e.type === 'Feature' && !before.elements.some((b) => b.id === e.id));
+        if (added) { st.select(added.id); st.flash(`${featureType(kind).label} placed. ${featureType(kind).effect}`); }
+      }
       return;
     }
     if (tool !== 'select') { addAt(x, y, tool); return; }
@@ -285,6 +300,17 @@ export function PlanView() {
   if (physics && (elec2d || plumbing2d)) out.push(<ServiceSpacesOverlay key="svc" p={p} level={level} rect={rect} />);
   if (elec2d) out.push(<ElectricalOverlay key="elec" p={p} level={level} selection={selection} line={line} rect={rect} px={px} py={py} physics={physics} />);
   if (plumbing2d) out.push(<PlumbingOverlay key="plumbing" p={p} level={level} selection={selection} line={line} rect={rect} px={px} py={py} physics={physics} />);
+
+  // Spec 08 features: their plan footprint (roof features on the upper floor plan)
+  for (const fe of p.elements) {
+    if (fe.type !== 'Feature' || !onPlan(fe.level, level)) continue;
+    const boxes = featureBoxes(p, fe);
+    if (!boxes.length) continue;
+    const r = { x0: Math.min(...boxes.map((b) => b.x0)), y0: Math.min(...boxes.map((b) => b.y0)), x1: Math.max(...boxes.map((b) => b.x1)), y1: Math.max(...boxes.map((b) => b.y1)) };
+    out.push(rect(r, 'feat2d k-' + fe.props.kind + (selection === fe.id ? ' sel' : ''), fe.id, { 'data-el': fe.id }));
+    if (fe.props.kind === 'brise' || fe.props.kind === 'pergola') for (const [i, b] of boxes.entries()) if (b.x1 - b.x0 < 0.2 || b.y1 - b.y0 < 0.2) out.push(rect(b, 'feat2d-slat', `${fe.id}s${i}`));
+    out.push(<text key={fe.id + 't'} x={px((r.x0 + r.x1) / 2)} y={py(Math.max(r.y0, r.y1)) - 3} className="featt" textAnchor="middle">{featureType(fe.props.kind).label}</text>);
+  }
 
   // Room names and areas.
   for (const s of spaces) {

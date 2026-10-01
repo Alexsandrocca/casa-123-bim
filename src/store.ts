@@ -6,11 +6,12 @@ import v3json from '../model/casa-123-v3.json';
 import { CommandError, replaceProject, type Command } from './model/commands';
 import { migrate, upgradeRaw } from './model/migrate';
 import { commit, initHist, redo, runCmd, undo, type Hist } from './model/history';
-import { PLAN_LEVELS, parseProject, type PlanLevel, type Project } from './model/schema';
+import { PLAN_LEVELS, parseProject, type FeatureKind, type PlanLevel, type Project } from './model/schema';
 
 export type VersionId = 'v1' | 'v2' | 'v3';
 export const VERSION_IDS: VersionId[] = ['v1', 'v2', 'v3'];
-export type Tool = 'select' | 'door' | 'window' | 'outlet';
+export type Tool = 'select' | 'door' | 'window' | 'outlet' | 'feature';
+export type EngTab = 'assumptions' | 'loads' | 'structure' | 'assemblies' | 'thermal' | 'environment' | 'cost';
 export type ViewMode = '2d' | '3d' | 'split';
 export type CameraPreset = 'street' | 'garden' | 'ramp' | 'top';
 export interface Section { h: 'off' | 'LL' | 'SL' | 'UF'; v: 'off' | 'across' | 'along'; pos: number }
@@ -64,6 +65,11 @@ export interface AppState {
   electricalOpen: boolean;
   /** Spec 04b: colour every pipe and conduit by the space that holds it (red = floating), show shafts and plenums. */
   physics: boolean;
+  /** Spec 08: Engineering window and its tab, 3D structure overlay (utilisation colours, load path), feature being placed. */
+  engineeringOpen: boolean;
+  engTab: EngTab;
+  structure: boolean;
+  featureKind: FeatureKind | null;
   walk: boolean;
   camera: { preset: CameraPreset; n: number; pos?: [number, number, number]; target?: [number, number, number] };
   section: Section;
@@ -85,7 +91,9 @@ export interface AppState {
   setChecksScope(s: 'level' | 'all'): void;
   setAbout(open: boolean): void;
   setView(v: ViewMode): void;
-  set3d(patch: Partial<Pick<AppState, 'doorsOpen' | 'walk' | 'section' | 'sun' | 'xray' | 'plumbing2d' | 'plumbingOpen' | 'elec2d' | 'cones' | 'electricalOpen' | 'physics'>>): void;
+  set3d(patch: Partial<Pick<AppState, 'doorsOpen' | 'walk' | 'section' | 'sun' | 'xray' | 'plumbing2d' | 'plumbingOpen' | 'elec2d' | 'cones' | 'electricalOpen' | 'physics' | 'engineeringOpen' | 'engTab' | 'structure'>>): void;
+  /** Spec 08: pick a feature to place (null: back to selecting). */
+  placeFeature(kind: FeatureKind | null): void;
   goCamera(preset: CameraPreset): void;
   /** Point the camera from pos to target (house coordinates). */
   lookFrom(pos: [number, number, number], target: [number, number, number]): void;
@@ -125,6 +133,10 @@ export const useApp = create<AppState>((set, get) => {
     cones: false,
     electricalOpen: false,
     physics: false,
+    engineeringOpen: false,
+    engTab: 'structure',
+    structure: false,
+    featureKind: null,
     walk: false,
     camera: { preset: 'street', n: 0 },
     section: { h: 'off', v: 'off', pos: 6 },
@@ -161,7 +173,8 @@ export const useApp = create<AppState>((set, get) => {
     },
     setLevel(l) { set({ level: l, selection: null, preview: null }); },
     select(id) { set({ selection: id }); },
-    setTool(t) { set({ tool: t }); },
+    setTool(t) { set({ tool: t, featureKind: t === 'feature' ? get().featureKind : null }); },
+    placeFeature(kind) { set({ featureKind: kind, tool: kind ? 'feature' : 'select' }); },
     flash(msg) {
       set({ message: msg });
       clearTimeout(flashTimer);

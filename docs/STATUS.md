@@ -2,6 +2,71 @@
 
 _Updated by Claude Code after every spec. The manager reads this file._
 
+## 2026-10-01 — Spec 08 done: architectural features and engineering estimates
+
+### What was built
+Every number below is an **estimate** with an "Estimate" badge. The badge opens the rule used, the assumptions with their values, the source and the confidence. All these screens say: *preliminary estimates; licensed professionals must confirm (ART/RRT).*
+
+- **Engineering window** (new left-toolbar button), with seven tabs:
+  - **Assumptions:** one list of about 50 values (soil, loads, steel, deck, thermal zone, wind, unit costs). Changing one updates everything at once. Empty fields are TO CONFIRM.
+  - **Loads:** dead and live loads for every bay of every slab, plus the equipment on the roofs.
+  - **Structure:** the frame's quantities (steel, concrete, rebar, formwork, excavation), then:
+    - beams, columns and footings with their utilisation and the lightest section that passes;
+    - retaining walls, lintels, wind and proposed braced bays;
+    - an editable structural grid, and a "Use the proposed sizes" button.
+  - **Assemblies:** 17 build-ups (walls, floors, roofs) with thickness, kg/m², U-value, CT, Rw, fire note and cost. A default per use, and each wall or slab can have its own.
+  - **Thermal:** NBR 15575 simplified check.
+  - **Environment:** cross-ventilation, openable area, sun on each window (21 Dec / 21 Jun), daylight factor, and an energy card (heat pump vs electric showers, PV).
+  - **Cost:** the cost card (by quantities and by area, ±25 %), the biggest items, the difference against a saved snapshot and the other versions, and the full list.
+- **3D Structure view:** members coloured by utilisation (green, amber, red), deck bays coloured by span, the load path as purple arrows, and the kN at every column base.
+- **Features palette** (left toolbar): brise-soleil, pergola, cobogó, skylight, eave, green roof, facade planter, gutter with rain chain, louvred shutters, awning and solar water heater. Each one:
+  - is placed by a click in 2D or 3D;
+  - has its own properties, 3D model, plan symbol and cost;
+  - affects the checks (shade, ventilation, daylight, roof load, eave limit).
+- **CSV:** assemblies schedule, structure schedule, cost estimate.
+- **Carry-overs from 04b:**
+  - **Q16 (Bath 3 outlet):** fixed, but not by moving the shower (see Q19). The real cause was a door-swing bug.
+  - **Q8 (patio steps):** the steps now come down into a 0.80 m gap between the parking bays, not at the north end. There, the ramp is 1.25 m below the patio.
+  - **Q12 (roof loads):** the heat-pump heater and the tanks are checked on their roofs. Both rows are amber only because the deck needs props.
+
+### Results on Version 3 now
+- **Structure:**
+  - 10 beams and 5 footings are over capacity with the spec 02 placeholder sections (W250 and 1.0 m pads); columns are fine.
+  - The proposed sections fix that, but they do not fit the 0.40 m structure zone without re-routing pipes (**Q20**).
+  - Steel: 62 kg/m² with the placeholders.
+  - All deck bays over 2.70 m need props (**Q23**).
+- **Thermal:** the ceramic walls (U 2.30, CT 211) and the inverted roof (U 0.55) pass in zone 2. Light steel frame fails on thermal capacity (**Q22**).
+- **Environment:**
+  - every long-stay room has cross-ventilation and enough openable area;
+  - daylight is 2.2–9.9 %;
+  - seven west windows get more than 2 h of December sun (a brise on the living slider takes it from 4.3 h to 1.5 h).
+- **Cost:** about **R$ 1.07 M by quantities** against **R$ 0.68 M by CUB** (R8-N; see **Q21**). The steel frame is the biggest item (R$ 232 k with the placeholders).
+- **Checks on Version 3 (whole house):** 3 fails. Two are the beam and footing pre-sizing rows; the third is the lower-level gravity drain, which fails on purpose as before. 3 to confirm: carport, rainfall, soil.
+
+### How to see it
+- Double-click **`Open Casa 123.command`**.
+- Click **Engineering** in the left toolbar. In 3D, click **Structure**.
+- Click **Features**, pick one, then click a window, wall or roof.
+- Click any wall, slab, beam, column, footing or feature to see its estimates; click a badge to see how each was made.
+- Screenshots: `docs/screens/08.png`, `08-structure.png`, `08-assemblies.png`, `08-cost.png`.
+
+### Tests
+- `npm test`: 103 unit tests (15 new). They check U-value, load takedown, beam bending and deflection, section selection and footing sizing against hand calculations written in the tests. Plus the acceptance cases:
+  - exterior walls to LSF;
+  - a deck span past the limit turning red;
+  - a brise cutting December sun;
+  - the CUB never invented.
+- `npm run e2e`: 31 browser tests (4 new). `npm run build` passes.
+
+### Not done yet / known gaps
+- The committed model keeps the placeholder frame until Q20 is answered.
+- Trees (spec 06) do not shade windows yet.
+- Colours and absorptance come with spec 05 (α = 0.5 for now).
+- The R1-N CUB and the SINAPI unit costs are still to update.
+
+### Next
+Spec 09 (reference images and AI assistant) is marked ready.
+
 ## 2026-10-01 — Spec 04b done: plumbing and electrical obey the building (Version 3)
 
 ### What was built
