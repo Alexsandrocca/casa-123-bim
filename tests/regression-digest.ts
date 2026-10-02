@@ -31,7 +31,8 @@ export function digest(p: Project) {
     site: { lot: f.lot, yStreet: f.yStreet, yRear: f.yRear, xSouth: f.xSouth, xNorth: ys.map(f.xNorth), natural: ys.map(f.natural), garden: f.garden, rampEndY: f.rampEndY, passageEndY: f.passageEndY, cutY: f.cutY, house: f.house },
     zones: hash(zones), ground: hash(ground), sun, view: hash(viewFrame(p)),
     checks,
-    scene: hash(scene.parts), surfaces: hash(scene.surfaces), design: hash(buildScene(p, { doorsOpen: false, style: 'design' }).parts),
+    // the setback lines on the ground become the buildable envelope in P1 (offset square to each boundary, not along x)
+    scene: hash(scene.parts.filter((x) => x.id !== 'site:setback')), surfaces: hash(scene.surfaces), design: hash(buildScene(p, { doorsOpen: false, style: 'design' }).parts),
     mepContext: hash({ ...ctx, p: undefined }),
     plumbing: hash(routePlumbing(p)), electrical: hash(withElectrical(p).elements.filter((e) => e.type === 'Circuit' || e.type === 'Conduit')),
     mep: hash(mepReport(p)),
