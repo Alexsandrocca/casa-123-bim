@@ -3,6 +3,7 @@
 import type { CheckResult } from '../checks';
 import type { Project } from '../schema';
 import { slabRect } from '../structure';
+import { cityCode } from '../region';
 import { A, valueOf } from './assumptions';
 import { featureEaves } from './features';
 import { type Status } from './frame';
@@ -69,7 +70,7 @@ export function engineeringChecks(p: Project): CheckResult[] {
   }
   out.push({
     id: 'eng:bracing', group: 'Structure', elementIds: [], title: 'Lateral bracing (wind)', status: f.bracing.length ? 'pass' : 'warn',
-    value: f.bracing.length ? `wind ≈ ${f.wind.q.toFixed(2)} kN/m² (V0 ${A(p, 'v0')} m/s): ${f.wind.Fx.toFixed(0)} kN along x, ${f.wind.Fy.toFixed(0)} kN along y · ${f.bracing.length} braced bays proposed (Engineering → Structure)` : 'no bay found for bracing',
+    value: f.bracing.length ? `${Number.isFinite(f.wind.q) ? `wind ≈ ${f.wind.q.toFixed(2)} kN/m² (V0 ${A(p, 'v0')} m/s)` : 'wind: V0 TO CONFIRM'}: ${Number.isFinite(f.wind.q) ? `${f.wind.Fx.toFixed(0)} kN along x, ${f.wind.Fy.toFixed(0)} kN along y` : 'forces not computed'} · ${f.bracing.length} braced bays proposed (Engineering → Structure)` : 'no bay found for bracing',
     rule: 'Each grid direction needs at least one braced bay or moment frame per storey', source: 'NBR 6123 (V0 TO CONFIRM); NBR 8800',
   });
   out.push({
@@ -78,15 +79,15 @@ export function engineeringChecks(p: Project): CheckResult[] {
   });
 
   // eaves added as features
-  const limit = p.site.eavesLimit ?? 0.7;
+  const limit = p.site.eavesLimit ?? NaN;
   for (const e of p.elements) {
     if (e.type !== 'Feature' || e.props.kind !== 'eave') continue;
     const sl = p.elements.find((x) => x.id === e.props.host);
     const base = sl?.type === 'Slab' ? sl.props.eaves ?? 0 : 0;
     const total = base + (sl?.type === 'Slab' ? featureEaves(p, sl, e.props.side ?? '') : 0);
     out.push({
-      id: `eng:eave:${e.id}`, group: 'Site', elementIds: [e.id], title: `${e.props.name} (${e.props.side})`, status: total <= limit + 1e-9 ? 'pass' : 'fail',
-      value: `${total.toFixed(2)} m from the wall (limit ${limit.toFixed(2)} m)`, rule: `Eaves up to ${limit.toFixed(2)} m are not counted in site coverage`, source: 'Piracicaba LC 474/2025',
+      id: `eng:eave:${e.id}`, group: 'Site', elementIds: [e.id], title: `${e.props.name} (${e.props.side})`, status: Number.isNaN(limit) ? 'confirm' : total <= limit + 1e-9 ? 'pass' : 'fail',
+      value: `${total.toFixed(2)} m from the wall (limit ${Number.isNaN(limit) ? 'TO CONFIRM' : `${limit.toFixed(2)} m`})`, rule: 'Eaves up to the city limit are not counted in site coverage', source: cityCode(p),
     });
     void slabRect;
   }
@@ -96,7 +97,7 @@ export function engineeringChecks(p: Project): CheckResult[] {
     out.push({
       id: `eng:thermal:${r.kind}:${r.assembly.id}`, group: 'Thermal', elementIds: r.elements.map((e) => e.id), title: `${r.kind === 'roof' ? 'Roof' : 'Exterior walls'} · ${r.assembly.name}`,
       status: r.status, value: r.why,
-      rule: `NBR 15575 simplified method, ${r.limit.text}`, source: `NBR 15575-${r.kind === 'roof' ? '5' : '4'}:2021 (zone ${A(p, 'zone')} TO CONFIRM against NBR 15220-3:2024)${r.limit.verify ? '; limit to verify' : ''}`,
+      rule: `NBR 15575 simplified method, ${r.limit.text}`, source: `NBR 15575-${r.kind === 'roof' ? '5' : '4'}:2021 (zone ${valueOf(p, 'zone') ?? '—'} TO CONFIRM against NBR 15220-3:2024)${r.limit.verify ? '; limit to verify' : ''}`,
     });
   }
 

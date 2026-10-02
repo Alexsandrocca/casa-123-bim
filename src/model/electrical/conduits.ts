@@ -3,7 +3,7 @@
 // through the roof zones, garden and carport points through the ground; the electrical shaft joins the floors.
 // Every wall point gets its conduit up or down inside the wall behind it.
 import { q } from '../geometry';
-import type { Conduit, Device, PipeSegment, Project, ServiceSpace } from '../schema';
+import { isPlanLevel, type Conduit, type Device, type PipeSegment, type Project, type ServiceSpace } from '../schema';
 import { Layer, growTree, type TNode } from '../mep/grid';
 import { cavityPoint, ceilingHost, mountOf, roomOf } from '../mep/hosting';
 import { buildLayer, stepAtStart, type LayerReq, type Occ } from '../mep/layers';
@@ -13,7 +13,6 @@ import type { NoRoute } from '../plumbing/route';
 
 type P2 = [number, number];
 type P3 = [number, number, number];
-const PLAN = ['LL', 'SL', 'UF'];
 
 export interface ConduitResult { conduits: Conduit[]; lengths: Map<string, number>; noRoute: NoRoute[]; notes: string[] }
 
@@ -27,9 +26,9 @@ export function zoneOf(p: Project, d: Device): string {
     if (zone?.type === 'ServiceSpace' && Math.abs((zone.props.z0 ?? 0) - uf) < 0.05) return 'F:UF';
     return 'R';
   }
-  if (!PLAN.includes(d.level)) return 'G';
+  if (!isPlanLevel(p, d.level)) return 'G';
   if (m === 'equipment' || m === 'site') return d.level === 'LL' ? 'G' : 'G';
-  if (m === 'ceiling') return roomOf(p, d) || (PLAN.includes(d.level) && ceilingHost(p, d.level, d.props.at)) ? `C:${d.level}` : 'G';
+  if (m === 'ceiling') return roomOf(p, d) || (isPlanLevel(p, d.level) && ceilingHost(p, d.level, d.props.at)) ? `C:${d.level}` : 'G';
   if (d.props.hostWallId) return `F:${d.level}`;
   return roomOf(p, d) ? `F:${d.level}` : 'G';
 }

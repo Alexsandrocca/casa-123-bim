@@ -127,14 +127,14 @@ const Module = ({ w, cls, children, title }: { w: number; cls: string; children:
   <div className={'dmod ' + cls} style={{ flexBasis: `${w * 54}px` }} title={title}>{children}</div>
 );
 
-function SingleLine({ circuits, main, sub, pv, inverter, battery, essential }: { p: Project; circuits: Circuit[]; main?: Device; sub?: Device; pv: string; inverter: number; battery: number; essential: boolean }) {
+function SingleLine({ p, circuits, main, sub, pv, inverter, battery, essential }: { p: Project; circuits: Circuit[]; main?: Device; sub?: Device; pv: string; inverter: number; battery: number; essential: boolean }) {
   const mainC = circuits.filter((c) => c.props.panel === main?.id), subC = circuits.filter((c) => c.props.panel === sub?.id);
   const rowH = 17, W = 1000;
   const H = 140 + Math.max(mainC.length, subC.length) * rowH;
   const busX1 = 300, busX2 = 700;
   const o: ReactNode[] = [];
   const t = (x: number, y: number, s: string, cls = 'sll', anchor: 'start' | 'middle' | 'end' = 'start') => <text key={`${x},${y},${s}`} x={x} y={y} className={cls} textAnchor={anchor}>{s}</text>;
-  o.push(<rect key="cpfl" x={20} y={20} width={120} height={30} className="slbox" />, t(80, 40, 'CPFL 127/220 V 3φ', 'sll', 'middle'));
+  o.push(<rect key="cpfl" x={20} y={20} width={120} height={30} className="slbox" />, t(80, 40, `${p.site.region.supply.utility ?? 'Supply (TO CONFIRM)'} ${p.site.region.supply.phaseV}/${p.site.region.supply.lineV} V ${p.site.region.supply.phases}φ`, 'sll', 'middle'));
   o.push(<line key="l1" x1={140} y1={35} x2={180} y2={35} className="slw" />, <rect key="m" x={180} y={22} width={60} height={26} className="slbox" />, t(210, 39, 'meter ⇄', 'sll', 'middle'));
   o.push(<line key="l2" x1={240} y1={35} x2={busX1} y2={35} className="slw" />, t(244, 62, 'main 63 A + DPS', 'sls'));
   o.push(<line key="bus1" x1={busX1} y1={35} x2={busX1} y2={60 + mainC.length * rowH} className="slbus" />, t(busX1 + 6, 30, main?.props.name ?? 'Main panel', 'slt'));
@@ -219,7 +219,7 @@ function Solar({ p }: { p: Project }) {
             )}
           </svg>
           <table className="rooms mini"><tbody><tr>{MONTHS.map((m, i) => <td key={m} title={m}>{m}<br />{est.monthly[i]}</td>)}</tr></tbody></table>
-          <p className="hint">{est.kwp.toFixed(1)} kWp → about {Math.round(est.year / 12)} kWh/month, {est.year} kWh/year. Shade loss {(est.loss * 100).toFixed(1)} %. PVGIS-like values for Piracicaba — an ESTIMATE, to confirm with the installer.</p>
+          <p className="hint">{est.kwp.toFixed(1)} kWp → about {Math.round(est.year / 12)} kWh/month, {est.year} kWh/year. Shade loss {(est.loss * 100).toFixed(1)} %. {p.site.region.pvYield ? `${p.site.region.pvYield.source} for ${p.site.region.city}` : 'Generic Brazilian yield (no value for this city yet, TO CONFIRM)'} — an ESTIMATE, to confirm with the installer.</p>
         </figure>
       </div>
       <div className="ctlrow">
@@ -252,9 +252,9 @@ function Cameras({ p }: { p: Project }) {
           {cov.blind.map(([x, y], i) => <rect key={`b${i}`} x={X(x - cov.cell / 2)} y={Y(y + cov.cell / 2)} width={cov.cell * S} height={cov.cell * S} className="lm-blind" />)}
           {cams.map((c) => {
             const [cx, cy] = c.props.at, lens = c.props.lensMm ?? 2.8;
-            const b = ((c.props.bearing ?? 0) * Math.PI) / 180, half = ((cameraFov(lens) / 2) * Math.PI) / 180, r = cameraRange(lens);
-            const pt = (a: number) => [X(cx + Math.cos(a) * r), Y(cy - Math.sin(a) * r)];
-            const [ax, ay] = pt(b - half), [bx, by] = pt(b + half);
+            const b = ((p.site.region.xBearing - (c.props.bearing ?? 0)) * Math.PI) / 180, half = ((cameraFov(lens) / 2) * Math.PI) / 180, r = cameraRange(lens);
+            const pt = (a: number) => [X(cx + Math.cos(a) * r), Y(cy + Math.sin(a) * r)];
+            const [ax, ay] = pt(b + half), [bx, by] = pt(b - half);
             return (
               <g key={c.id} onClick={() => select(c.id)} className="lm-cam">
                 <path d={`M${X(cx)},${Y(cy)} L${ax},${ay} A${r * S},${r * S} 0 0 0 ${bx},${by} Z`} className="lm-fov" />

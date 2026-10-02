@@ -1,7 +1,8 @@
 // Electrical checks (NBR 5410), solar and cameras.
 import type { CheckResult } from '../checks';
 import { spaceArea, spacesOn } from '../geometry';
-import type { Circuit, Device, Project } from '../schema';
+import { planLevels, type Circuit, type Device, type Project } from '../schema';
+import { bearingDir, compassOf } from '../orientation';
 import { coverage, nvrDays, poeBudget } from './cameras';
 import { mainPanel, phaseBalance, subPanel } from './design';
 import { MAX_DROP, capacity, deviceType, minLightingVA, minOutlets } from './library';
@@ -9,6 +10,7 @@ import { roomKind, roomPerimeter } from './place';
 import { energyEstimate, solarArray } from './solar';
 
 const S5410 = 'NBR 5410 (low-voltage installations)';
+const COMPASS_NAME = { N: 'north', E: 'east', S: 'south', W: 'west' } as const;
 
 /** Devices whose position is inside a room. */
 export function devicesIn(p: Project, spaceId: string): Device[] {
@@ -24,7 +26,7 @@ export function electricalChecks(p: Project): CheckResult[] {
   const out: CheckResult[] = [];
 
   /* minimum points per room (§9.5.2) */
-  for (const L of ['LL', 'SL', 'UF'] as const) {
+  for (const L of planLevels(p)) {
     for (const s of spacesOn(p, L)) {
       const kind = roomKind(s);
       if (kind === 'none') continue;
@@ -85,7 +87,7 @@ export function electricalChecks(p: Project): CheckResult[] {
         id: `elec:phases:${panel.id}`, group: 'Electrical', elementIds: [panel.id], level: panel.level, title: `Phase balance · ${deviceType(panel.props.kind).label}`,
         status: b.imbalance <= 15 ? 'pass' : 'warn',
         value: `A ${(b.loads.A / 1000).toFixed(1)} kW · B ${(b.loads.B / 1000).toFixed(1)} kW · C ${(b.loads.C / 1000).toFixed(1)} kW — imbalance ${b.imbalance.toFixed(1)} %`,
-        rule: 'Spread the circuits so the three phases carry similar loads (target ≤ 15 %)', source: `${S5410}; CPFL supply rules (to confirm)`,
+        rule: 'Spread the circuits so the three phases carry similar loads (target ≤ 15 %)', source: `${S5410}; ${p.site.region.supply.utility ?? 'electricity company'} supply rules (to confirm)`,
       });
     }
     const unassigned = devices.filter((d) => ['outlet', 'light', 'dedicated'].includes(deviceType(d.props.kind).group) && !circuits.some((c) => c.id === d.props.circuit));
@@ -103,7 +105,7 @@ export function electricalChecks(p: Project): CheckResult[] {
     out.push({
       id: 'solar:fit', group: 'Solar', elementIds: [arr.id], level: 'roof', title: 'Solar modules fit on the roof',
       status: est.placed >= arr.props.modules ? 'pass' : 'fail',
-      value: `${est.placed} of ${arr.props.modules} modules, ${est.kwp.toFixed(1)} kWp, ${arr.props.tilt}° facing north, ${arr.props.setback.toFixed(2)} m from the parapet`,
+      value: `${est.placed} of ${arr.props.modules} modules, ${est.kwp.toFixed(1)} kWp, ${arr.props.tilt}° facing ${COMPASS_NAME[compassOf(p, ...bearingDir(p, arr.props.bearing))]}, ${arr.props.setback.toFixed(2)} m from the parapet`,
       rule: 'Rows spaced so they do not shade each other at winter noon; clear of tanks, pump and vents', source: 'Design rule (owner brief)',
     });
     out.push({
@@ -119,7 +121,7 @@ export function electricalChecks(p: Project): CheckResult[] {
     out.push({
       id: 'solar:energy', group: 'Solar', elementIds: [arr.id], level: 'roof', title: 'Solar energy (estimate)',
       status: 'pass', value: `about ${Math.round(est.year / 12)} kWh per month, ${est.year} kWh per year — ESTIMATE`,
-      rule: 'Monthly yield for Piracicaba at 20° facing north (PVGIS-like values)', source: 'Estimate, to confirm with the installer',
+      rule: `Monthly yield for ${p.site.region.city || 'the site'} (${p.site.region.pvYield?.source ?? 'generic Brazilian value, TO CONFIRM for the city'})`, source: 'Estimate, to confirm with the installer',
     });
   }
 

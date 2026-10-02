@@ -17,7 +17,8 @@ import { kindOf, minSewageSlope, rainCapacity, rainFlow, sewageDnFor, waterDnFor
 type P2 = [number, number];
 type P3 = [number, number, number];
 
-export const UTILITIES_DEFAULT = { sewerDepth: 3.0, sewerOffset: 6.5, waterMainDepth: 1.5, rainIntensity: 150 };
+/** Typical street services until the project has its own (site.utilities): all TO CONFIRM with the water company. */
+export const UTILITIES_DEFAULT = { sewerDepth: 1.5, sewerOffset: 5, waterMainDepth: 0.8, rainIntensity: 150 };
 export const utilities = (p: Project) => p.site.utilities ?? UTILITIES_DEFAULT;
 
 export interface NoRoute { system: string; network: string; item: string; reason: string }
@@ -800,6 +801,9 @@ export function routePlumbing(p: Project): { pipes: PipeSegment[]; auto: Fixture
       }
     }
   }
+  // P0: a project without the roots the router works from says so for every fixture, instead of drawing nothing quietly.
+  if (!stacks.length) for (const f of fx) if (DRAINS(f)) out.fail('sewage', 'sewage', f.id, 'no soil stack in this project yet: add a stack in a shaft (P5 lays out new projects)');
+  if (!tanks.length && !meter) for (const f of fx) if (kindOf(f.props.kind).weight) out.fail('cold', 'cold', f.id, 'no water source in this project yet: add a water meter or a tank (P5 lays out new projects)');
   return out;
 }
 

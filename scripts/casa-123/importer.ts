@@ -1,8 +1,9 @@
-// Converts the prototype's cell plans (plan-v2.json, BASE1) into the building model.
-import { WALL_THICKNESS, deriveInteriorSegs, eq, q, segToWallEnds, wallSeg, type Seg } from './geometry';
-import { DECK_SLAB } from './profiles';
-import { generateStructure } from './structure';
-import { parseProject, type Deck, type Element, type Opening, type Project, type Slab, type Space, type Stair, type Wall, type WallType, type Zone } from './schema';
+// Casa 123 only: converts the prototype's cell plans (plan-v2.json, BASE1) into the building model of each version.
+// The app never imports this file; the results live in projects/casa-123/.
+import { WALL_THICKNESS, boundarySegs, deriveInteriorSegs, eq, fmtLevel, q, segToWallEnds, wallSeg, type Seg } from '../../src/model/geometry';
+import { DECK_SLAB } from '../../src/model/profiles';
+import { generateStructure } from '../../src/model/structure';
+import { parseProject, type Deck, type Element, type Opening, type Project, type Slab, type Space, type Stair, type Wall, type WallType, type Zone } from '../../src/model/schema';
 
 export interface SourceCell { room: string; zone: string; x0: number; y0: number; x1: number; y1: number; lock?: boolean; kind?: string }
 export interface SourceDoor { o: 'h' | 'v'; c: number; p: number; w: number; s: number; k?: string }
@@ -39,6 +40,18 @@ export interface SourceLevels {
   garden: { level: number; from_house_y: number };
 }
 
+/** Where Casa 123 is: Piracicaba/SP, the street to the east (house +x is north). */
+export const CASA_REGION: Project['site']['region'] = {
+  city: 'Piracicaba', state: 'SP', lat: -22.72, lon: -47.65, utcOffset: -3, xBearing: 0,
+  supply: { utility: 'CPFL', phaseV: 127, lineV: 220, phases: 3, confirmed: false },
+  water: 'SEMAE',
+  rules: { code: 'Piracicaba LC 474/2025', sanitary: 'SP sanitary code, Decreto 12.342/78' },
+  pvYield: { monthly: [130, 120, 128, 120, 112, 104, 114, 128, 124, 132, 130, 128], source: 'PVGIS-like values, 20° facing north' },
+  solarHeaterShare: 0.7,
+};
+/** Casa 123 engineering values that are TO CONFIRM for Piracicaba (spec 08). */
+export const CASA_ASSUMPTIONS = { zone: 2, v0: 40 };
+
 export const SITE: Project['site'] = {
   address: 'Rua Alceu Maynardi Araújo, 123, Nova Piracicaba, Piracicaba/SP',
   lot: { front: 14, rear: 15, sides: 25 },
@@ -50,6 +63,7 @@ export const SITE: Project['site'] = {
   cut: { lineY: 8.5, gardenLevel: -2.55, retainingSouthToY: 10.5, retainingNorthToY: 8.9 },
   ramp: { width: 4, slope: 0.125 },
   eavesLimit: 0.7,
+  region: CASA_REGION,
   toConfirm: [
     'Topographic survey',
     'SPT soil borings',
@@ -62,7 +76,6 @@ export const SITE: Project['site'] = {
   ],
 };
 
-export const fmtLevel = (v: number) => `${v < 0 ? '−' : '+'}${Math.abs(v).toFixed(2)}`;
 
 const DOOR_HEIGHT: Record<string, number> = { door: 2.1, slider: 2.2, garage: 2.4 };
 
@@ -86,35 +99,6 @@ const fillsOutline = (src: SourceLevel) => {
   const [x0, y0, x1, y1] = src.outline;
   return Math.abs(src.cells.reduce((a, c) => a + (c.x1 - c.x0) * (c.y1 - c.y0), 0) - (x1 - x0) * (y1 - y0)) < 1e-6;
 };
-
-/** Outer edges of a set of cells: every cell edge that no other cell touches from the other side, merged into runs. */
-export function boundarySegs(cells: { x0: number; y0: number; x1: number; y1: number }[]): Seg[] {
-  const raw: Seg[] = [];
-  const subtract = (iv: [number, number][], a: number, b: number) =>
-    iv.flatMap(([u, v]) => (b <= u || a >= v ? [[u, v]] : [...(a > u ? [[u, a]] : []), ...(b < v ? [[b, v]] : [])]) as [number, number][]);
-  for (const c of cells) {
-    const edges: [Seg['o'], number, number, number, 'lo' | 'hi'][] = [
-      ['h', c.y0, c.x0, c.x1, 'lo'], ['h', c.y1, c.x0, c.x1, 'hi'], ['v', c.x0, c.y0, c.y1, 'lo'], ['v', c.x1, c.y0, c.y1, 'hi'],
-    ];
-    for (const [o, at, a, b, side] of edges) {
-      let iv: [number, number][] = [[a, b]];
-      for (const d of cells) {
-        if (d === c) continue;
-        const touches = o === 'h' ? (side === 'lo' ? eq(d.y1, at) : eq(d.y0, at)) : (side === 'lo' ? eq(d.x1, at) : eq(d.x0, at));
-        if (touches) iv = subtract(iv, o === 'h' ? d.x0 : d.y0, o === 'h' ? d.x1 : d.y1);
-      }
-      for (const [u, v] of iv) if (v - u > 1e-4) raw.push({ o, c: at, a: u, b: v });
-    }
-  }
-  const sorted = raw.sort((u, v) => (u.o === v.o ? (u.c === v.c ? u.a - v.a : u.c - v.c) : u.o < v.o ? -1 : 1));
-  const out: Seg[] = [];
-  for (const x of sorted) {
-    const last = out[out.length - 1];
-    if (last && last.o === x.o && eq(last.c, x.c) && x.a <= last.b + 1e-4) last.b = Math.max(last.b, x.b);
-    else out.push({ ...x });
-  }
-  return out;
-}
 
 function findHost(walls: Wall[], o: 'h' | 'v', c: number, a: number, b: number): Wall {
   const onLine = walls.filter((w) => { const s = wallSeg(w); return s.o === o && eq(s.c, c); });
@@ -297,6 +281,7 @@ export function importPlan(plan: SourcePlan, opt: ImportOptions): Project {
       { id: 'roof', name: `Roof ${fmtLevel(opt.levels.roof.top_of_slab)} (parapet ${fmtLevel(opt.levels.roof.parapet_top)})`, shortName: 'Roof', elevation: opt.levels.roof.top_of_slab, plan: false, outline: outline('UF') },
     ],
     grid: { x: opt.gridX, y: opt.gridY },
+    assumptions: { ...CASA_ASSUMPTIONS },
     elements,
   };
   project.elements.push(...generateStructure(project));

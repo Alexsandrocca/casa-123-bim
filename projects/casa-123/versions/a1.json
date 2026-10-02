@@ -2,8 +2,8 @@
  "schema": "casa123-bim/1",
  "meta": {
   "project": "Casa 123",
-  "version": "Version 3",
-  "versionId": "v3",
+  "version": "Approved 1 — Version 3",
+  "versionId": "a1",
   "units": "m",
   "source": "Version 2 (docs/reference/plan-v2.json) with spec 02b: garage out, carport in front",
   "note": "Version 3: Version 2 without the garage. The street level starts 1 m further back (5 m from the street), the old garage area is an open front patio at +0.60 in front of the kitchen, and two cars park under a light carport in the front setback. South side passage 1.50 m."
@@ -54,6 +54,44 @@
    "slope": 0.125
   },
   "eavesLimit": 0.7,
+  "region": {
+   "city": "Piracicaba",
+   "state": "SP",
+   "lat": -22.72,
+   "lon": -47.65,
+   "utcOffset": -3,
+   "xBearing": 0,
+   "supply": {
+    "utility": "CPFL",
+    "phaseV": 127,
+    "lineV": 220,
+    "phases": 3,
+    "confirmed": false
+   },
+   "water": "SEMAE",
+   "rules": {
+    "code": "Piracicaba LC 474/2025",
+    "sanitary": "SP sanitary code, Decreto 12.342/78"
+   },
+   "pvYield": {
+    "monthly": [
+     130,
+     120,
+     128,
+     120,
+     112,
+     104,
+     114,
+     128,
+     124,
+     132,
+     130,
+     128
+    ],
+    "source": "PVGIS-like values, 20° facing north"
+   },
+   "solarHeaterShare": 0.7
+  },
   "toConfirm": [
    "Topographic survey",
    "SPT soil borings",
@@ -143,6 +181,10 @@
    12.6,
    15
   ]
+ },
+ "assumptions": {
+  "zone": 2,
+  "v0": 40
  },
  "elements": [
   {

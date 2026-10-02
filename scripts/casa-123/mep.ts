@@ -1,10 +1,11 @@
+// Casa 123 only (the app never imports this file; the results live in projects/casa-123/).
 // Spec 04b: the service spaces of Version 3 — shafts at the stacks, the water riser and the electrical riser,
 // lowered ceilings (plenums) in the wet rooms, halls, kitchen and service rooms plus the strips under the upper
 // wet rooms, and the roof zones (tanks and equipment to the south, the solar array keeps the north).
-import { q } from '../geometry';
-import type { Project, Rect, ServiceSpace, Space } from '../schema';
-import { ceilingHost, withHosts } from './hosting';
-import { mepContext } from './spaces';
+import { q } from '../../src/model/geometry';
+import type { Project, Rect, ServiceSpace, Space } from '../../src/model/schema';
+import { ceilingHost, withHosts } from '../../src/model/mep/hosting';
+import { mepContext } from '../../src/model/mep/spaces';
 
 const R = (x0: number, y0: number, x1: number, y1: number): Rect => ({ x0, y0, x1, y1 });
 

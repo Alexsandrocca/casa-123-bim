@@ -1,5 +1,6 @@
-// Sun position (NOAA solar calculator). Piracicaba: lat −22.72, lon −47.65, UTC−3 all year.
-export const PIRACICABA = { lat: -22.72, lon: -47.65, utcOffset: -3 };
+// Sun position (NOAA solar calculator) for the project's place (site.region: latitude, longitude, UTC offset, north).
+import { enuToHouse } from '../model/orientation';
+import type { Project } from '../model/schema';
 
 const rad = Math.PI / 180;
 
@@ -8,12 +9,13 @@ export interface SunPos {
   altitude: number;
   /** Degrees clockwise from north. */
   azimuth: number;
-  /** Unit vector towards the sun in house coordinates (x north, y rear = west, z up). */
+  /** Unit vector towards the sun in house coordinates (x, y as the house axes, z up). */
   dir: [number, number, number];
 }
 
 /** month 1–12, hour in local time (decimal). */
-export function sunPosition(year: number, month: number, day: number, hour: number, site = PIRACICABA): SunPos {
+export function sunPosition(year: number, month: number, day: number, hour: number, p: Pick<Project, 'site'>): SunPos {
+  const site = p.site.region;
   const utcHours = hour - site.utcOffset;
   const jd0 = Date.UTC(year, month - 1, day) / 86400000 + 2440587.5;
   const jd = jd0 + utcHours / 24;
@@ -40,7 +42,7 @@ export function sunPosition(year: number, month: number, day: number, hour: numb
   azimuth = ((azimuth % 360) + 360) % 360;
   const alt = altitude * rad, az = azimuth * rad;
   const east = Math.sin(az) * Math.cos(alt), north = Math.cos(az) * Math.cos(alt), up = Math.sin(alt);
-  return { altitude, azimuth, dir: [north, -east, up] };
+  return { altitude, azimuth, dir: enuToHouse(p, [east, north, up]) };
 }
 
 export const SUN_PRESETS = [

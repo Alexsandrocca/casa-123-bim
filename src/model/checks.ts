@@ -2,8 +2,9 @@
 import {
   distSegSeg, getEl, glassArea, openingSegIn, pointInRect, spaceArea, spacesOn, toLot,
 } from './geometry';
-import { PLAN_LEVELS, type Project, type Space, type Stair } from './schema';
-import { EAVES_LIMIT_DEFAULT } from './site';
+import { planLevels, type Project, type Space, type Stair } from './schema';
+import { compassOf } from './orientation';
+import { cityCode, sanitary } from './region';
 import { checkSupport } from './support';
 import { plumbingChecks } from './plumbing/checks';
 import { electricalChecks } from './electrical/checks';
@@ -26,7 +27,7 @@ export interface CheckResult {
   at?: [number, number, number];
 }
 
-const SANITARY = 'SP sanitary code, Decreto 12.342/78';
+const SIDE = { N: 'North', E: 'East', S: 'South', W: 'West' } as const;
 const TOL = 0.005;
 
 /** Minimum floor area, same table as the prototype. */
@@ -48,7 +49,7 @@ const m = (v: number) => `${v.toFixed(2)} m`;
 
 function roomChecks(p: Project): CheckResult[] {
   const out: CheckResult[] = [];
-  for (const L of PLAN_LEVELS) {
+  for (const L of planLevels(p)) {
     for (const s of spacesOn(p, L)) {
       if (s.props.zone === 'stair') continue;
       const a = spaceArea(s);
@@ -63,7 +64,7 @@ function roomChecks(p: Project): CheckResult[] {
             ? 'Bedrooms: 10 m² for the first (master), 8 m² for the others'
             : s.props.zone === 'wet' ? 'Bathrooms and WCs: at least 2.5 m²'
               : s.props.name === 'Kitchen' ? 'Kitchen: at least 4 m²' : 'Living rooms and work rooms: at least 8 m²',
-          source: SANITARY,
+          source: sanitary(p),
         });
       }
       if (needsDaylight(s)) {
@@ -75,7 +76,7 @@ function roomChecks(p: Project): CheckResult[] {
           status: g >= a / 8 - TOL ? (g >= a / 6 - TOL ? 'pass' : 'warn') : 'fail',
           value: g > 0 ? `glass ${m2(g)} = 1/${Math.max(1, Math.round(a / g))} of the floor${ratio < 1 / 6 && g >= a / 8 - TOL ? ' (below the 1/6 target)' : ''}` : 'no window',
           rule: 'Window glass at least 1/8 of the floor area (design target 1/6)',
-          source: SANITARY,
+          source: sanitary(p),
         });
       }
     }
@@ -85,7 +86,7 @@ function roomChecks(p: Project): CheckResult[] {
 
 function circulationChecks(p: Project): CheckResult[] {
   const out: CheckResult[] = [];
-  for (const L of PLAN_LEVELS) {
+  for (const L of planLevels(p)) {
     for (const s of spacesOn(p, L)) {
       if (s.props.zone !== 'circ') continue;
       const w = Math.min(...s.props.cells.map((c) => Math.min(c.x1 - c.x0, c.y1 - c.y0)));
@@ -93,7 +94,7 @@ function circulationChecks(p: Project): CheckResult[] {
         id: `corridor:${s.id}`, group: 'Circulation', level: L, elementIds: [s.id],
         title: `${s.props.name} width`, status: w >= 0.9 - TOL ? 'pass' : 'fail',
         value: `narrowest part ${m(w)}`,
-        rule: 'Corridors and halls at least 0.90 m wide', source: SANITARY,
+        rule: 'Corridors and halls at least 0.90 m wide', source: sanitary(p),
       });
     }
   }
@@ -159,7 +160,7 @@ function stairChecks(p: Project): CheckResult[] {
     out.push({
       id: `stairwidth:${e.id}`, group: 'Stairs', elementIds: [e.id], level: e.level,
       title: `${name}: width`, status: narrow >= 0.9 - TOL ? 'pass' : 'fail',
-      value: m(narrow), rule: 'Stairs at least 0.90 m wide', source: SANITARY,
+      value: m(narrow), rule: 'Stairs at least 0.90 m wide', source: sanitary(p),
     });
   }
   return out;
@@ -180,7 +181,7 @@ function siteChecks(p: Project): CheckResult[] {
   const bounds = neighbourBoundaries(p);
 
   // Civil Code 1.301: no window within 1.50 m of a neighbour boundary.
-  for (const L of PLAN_LEVELS) {
+  for (const L of planLevels(p)) {
     for (const e of p.elements) {
       if (e.type !== 'Opening' || e.level !== L) continue;
       if (e.props.role !== 'window' && e.props.kind !== 'slider') continue;
@@ -225,7 +226,7 @@ function siteChecks(p: Project): CheckResult[] {
     title: `${label} setback`, status: value >= need - TOL ? 'pass' : 'fail',
     value: `${m(value)} (min ${need.toFixed(2)} m)`,
     rule: `Building footprint at least ${need.toFixed(2)} m from the ${label.toLowerCase()} boundary`,
-    source: 'Setbacks given by the owner (Piracicaba zoning to be confirmed)',
+    source: `Setbacks given by the owner (${cityCode(p)})`,
   });
   setback('front', 'Front', front, sb.front);
   const carports = p.elements.filter((e) => e.type === 'Carport');
@@ -235,8 +236,17 @@ function siteChecks(p: Project): CheckResult[] {
     r.elementIds = carports.map((c) => c.id);
   }
   setback('rear', 'Rear', rear, sb.rear);
-  setback('south', 'South side', south, sb.sides);
-  setback('north', 'North side', north, sb.sides);
+  // the two side boundaries, named by the compass point they face
+  const s0 = SIDE[compassOf(p, -1, 0)], s1 = SIDE[compassOf(p, 1, 0)];
+  setback(s0.toLowerCase(), `${s0} side`, south, sb.sides);
+  setback(s1.toLowerCase(), `${s1} side`, north, sb.sides);
+  if (!p.site.region.rules.code) {
+    out.push({
+      id: 'site:city-rules', group: 'Site', elementIds: [], title: `City rules for ${p.site.region.city || 'this lot'}`, status: 'confirm',
+      value: 'TO CONFIRM: setbacks, site coverage, eaves and height limits are not known for this city yet',
+      rule: 'The lot must follow the city zoning and building code', source: cityCode(p),
+    });
+  }
   return out;
 }
 
@@ -257,14 +267,17 @@ function structureChecks(p: Project): CheckResult[] {
       rule: 'Nothing may float', source: 'Project rule (spec 02)',
     });
   }
-  const limit = p.site.eavesLimit ?? EAVES_LIMIT_DEFAULT;
+  const limit = p.site.eavesLimit;
   for (const e of p.elements) {
     if (e.type !== 'Slab' || e.props.eaves === undefined) continue;
-    out.push({
+    out.push(limit === undefined ? {
+      id: `eaves:${e.id}`, group: 'Site', elementIds: [e.id], title: `${e.props.name} eaves`, status: 'confirm',
+      value: `${e.props.eaves.toFixed(2)} m (limit TO CONFIRM)`, rule: 'Eaves up to the city limit are not counted in site coverage', source: cityCode(p),
+    } : {
       id: `eaves:${e.id}`, group: 'Site', elementIds: [e.id], title: `${e.props.name} eaves`,
       status: e.props.eaves <= limit + 1e-9 ? 'pass' : 'fail',
       value: `${e.props.eaves.toFixed(2)} m (limit ${limit.toFixed(2)} m)`,
-      rule: `Eaves up to ${limit.toFixed(2)} m are not counted in site coverage`, source: 'Piracicaba LC 474/2025',
+      rule: `Eaves up to ${limit.toFixed(2)} m are not counted in site coverage`, source: cityCode(p),
     });
   }
   return out;
@@ -302,9 +315,9 @@ function parkingChecks(p: Project): CheckResult[] {
     out.push({
       id: `carport-setback:${c.id}`, group: 'Site', elementIds: [c.id], title: 'Carport in the front setback',
       status: 'confirm',
-      value: 'TO CONFIRM with the Prefeitura',
-      rule: 'A covered carport in the 4 m front setback, and how much of it counts in site coverage',
-      source: 'Piracicaba LC 474/2025 and the Piracicaba building code (to confirm)',
+      value: 'TO CONFIRM with the city hall (Prefeitura)',
+      rule: `A covered carport in the ${p.site.setbacks.front.toFixed(0)} m front setback, and how much of it counts in site coverage`,
+      source: `${cityCode(p)} (to confirm)`,
     });
   }
   return out;

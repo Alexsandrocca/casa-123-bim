@@ -26,7 +26,8 @@ export interface ThermalRow {
   area: number;
   U: number; CT: number;
   limit: ThermalLimit;
-  status: 'pass' | 'fail';
+  /** confirm: the bioclimatic zone is not set yet. */
+  status: 'pass' | 'fail' | 'confirm';
   why: string;
 }
 
@@ -49,7 +50,9 @@ export function thermalRows(p: Project): ThermalRow[] {
         `U ${v.U.toFixed(2)} ${okU ? '≤' : '>'} ${limit.U.toFixed(1)} W/m²K`,
         ...(use === 'roof' ? [] : [limit.CT === null ? `CT ${v.CT.toFixed(0)} kJ/m²K (no limit)` : `CT ${v.CT.toFixed(0)} ${okCT ? '≥' : '<'} ${limit.CT} kJ/m²K`]),
       ].join(' · ') + (okU && okCT ? '' : ' → the simplified method fails: the simulation method of NBR 15575-1 is needed');
-      row = { assembly: a, kind: use === 'roof' ? 'roof' : 'wall', elements: [], area: 0, U: v.U, CT: v.CT, limit, status: okU && okCT ? 'pass' : 'fail', why };
+      row = Number.isFinite(zone)
+        ? { assembly: a, kind: use === 'roof' ? 'roof' : 'wall', elements: [], area: 0, U: v.U, CT: v.CT, limit, status: okU && okCT ? 'pass' : 'fail', why }
+        : { assembly: a, kind: use === 'roof' ? 'roof' : 'wall', elements: [], area: 0, U: v.U, CT: v.CT, limit: { U: NaN, CT: null, verify: true, text: 'bioclimatic zone TO CONFIRM' }, status: 'confirm', why: `U ${v.U.toFixed(2)} W/m²K · CT ${v.CT.toFixed(0)} kJ/m²K · set the bioclimatic zone (Engineering → Assumptions) to check` };
       groups.set(key, row);
     }
     row.elements.push(e);

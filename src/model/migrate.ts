@@ -39,12 +39,18 @@ export function migrate(p: Project, base: Project): Project {
   return p;
 }
 
-/** Before validation: reshape data saved by older versions of the app (spec 02b devices had at = [x, y, z]). */
-export function upgradeRaw(data: unknown): unknown {
-  const d = data as { elements?: { type?: string; props?: Record<string, unknown> }[] };
+/** Before validation: reshape data saved by older versions of the app (spec 02b devices had at = [x, y, z];
+ *  before P0 the place facts were in the code: a model without site.region takes the base model's). */
+export function upgradeRaw(data: unknown, base?: Project): unknown {
+  const d = data as { site?: Record<string, unknown>; assumptions?: Record<string, unknown>; elements?: { type?: string; props?: Record<string, unknown> }[] };
   if (!d || !Array.isArray(d.elements)) return data;
+  const site = d.site && !d.site.region && base ? { ...d.site, region: base.site.region } : d.site;
+  // before P0 the zone and V0 had code defaults; an old model keeps the values it was computed with
+  const assumptions = d.site && !d.site.region && base?.assumptions ? { ...base.assumptions, ...(d.assumptions ?? {}) } : d.assumptions;
   return {
     ...d,
+    ...(site ? { site } : {}),
+    ...(assumptions ? { assumptions } : {}),
     elements: d.elements.map((e) => {
       if (e.type !== 'Device' || !e.props || !Array.isArray(e.props.at) || e.props.at.length !== 3) return e;
       const [x, y, z] = e.props.at as number[];

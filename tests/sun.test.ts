@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { sunPosition } from '../src/scene/sun';
+import { sunPosition as sun } from '../src/scene/sun';
+import { load } from './helpers';
+
+const casa = load('casa-123-v3.json');
+const sunPosition = (y: number, m: number, d: number, h: number) => sun(y, m, d, h, casa);
 
 describe('sun position for Piracicaba', () => {
   it('winter noon: sun low in the north (about 44° up)', () => {

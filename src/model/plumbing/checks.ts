@@ -1,4 +1,5 @@
 // Plumbing checks: NBR 8160 (sewage), 5626/7198 (water), 10844/15527 (rain).
+import { waterCompany } from '../region';
 import type { CheckResult } from '../checks';
 import { pointInRect } from '../geometry';
 import type { Fixture, PipeSegment, Project } from '../schema';
@@ -140,7 +141,7 @@ export function plumbingChecks(p: Project): CheckResult[] {
       status: g.ok ? 'pass' : 'fail',
       value: `leaves the house at ${g.leaves.toFixed(2)}, ${g.run.toFixed(1)} m at 1 % → arrives ${g.arrives.toFixed(2)}; the sewer (${g.depth.toFixed(2)} m deep) needs ≥ ${g.needs.toFixed(2)}`
         + (g.ok ? ' — gravity works' : ' — no: the lift station is needed'),
-      rule: 'A side connection must come in at least 0.30 m above the bottom of the public sewer', source: `${S8160}; sewer depth from SEMAE (to confirm)`,
+      rule: 'A side connection must come in at least 0.30 m above the bottom of the public sewer', source: `${S8160}; sewer depth from ${waterCompany(p)} (to confirm)`,
     });
     out.push({
       id: 'sewage:lift', group: 'Plumbing', elementIds: ls ? [ls.id] : [], level: 'LL', title: 'Lower-level lift station',
@@ -208,7 +209,7 @@ export function plumbingChecks(p: Project): CheckResult[] {
       rule: `Flow Q = I·A/60 at ${u.rainIntensity} mm/h within the pipe capacity`, source: S10844,
     });
     out.push({
-      id: 'rain:intensity', group: 'Plumbing', elementIds: [], title: 'Design rainfall for Piracicaba',
+      id: 'rain:intensity', group: 'Plumbing', elementIds: [], title: `Design rainfall for ${p.site.region.city || 'the site'}`,
       status: 'confirm', value: `${u.rainIntensity} mm/h, 5-minute storm — TO CONFIRM`,
       rule: 'Rainfall intensity from the local rainfall curve (return period 5 years)', source: S10844,
     });

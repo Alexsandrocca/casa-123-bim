@@ -1,6 +1,6 @@
-// The Casa 123 building model. Every view, check and schedule reads this.
-// Units are metres. House-local axes: x from the south wall (0) to the north,
-// y from the front building line (0) to the rear, z up.
+// The building model of one version of a project. Every view, check and schedule reads this.
+// Units are metres. House-local axes: y from the front building line (0) to the rear (away from the street),
+// x to the right when standing in the street looking at the lot, z up. Compass directions come from site.region.xBearing.
 import { z } from 'zod';
 
 export const LevelId = z.string().min(1);
@@ -301,7 +301,8 @@ export const Circuit = z.object({
     name: z.string(),
     panel: z.string(),
     purpose: z.enum(['lighting', 'outlets', 'dedicated', 'feeder']),
-    voltage: z.union([z.literal(127), z.literal(220)]),
+    /** Phase-to-neutral or phase-to-phase voltage of the project's supply (site.region.supply). */
+    voltage: z.number().positive(),
     phases: z.array(z.enum(['A', 'B', 'C'])),
     load: z.number(),
     current: z.number(),
@@ -416,12 +417,43 @@ export const Level = z.object({
 });
 export type Level = z.infer<typeof Level>;
 
+/** The place facts every engine reads (P0: nothing about the place is hard-coded). null = not known yet, TO CONFIRM. */
+export const Region = z.object({
+  city: z.string(),
+  /** State (UF). */
+  state: z.string(),
+  lat: z.number().min(-90).max(90),
+  lon: z.number().min(-180).max(180),
+  /** Hours from UTC (Brazil has no daylight saving). */
+  utcOffset: z.number(),
+  /** Compass bearing of the house +x axis (0 = north, 90 = east). The street side (−y) is 90° clockwise from it. */
+  xBearing: z.number(),
+  supply: z.object({
+    /** Electricity company, if known. */
+    utility: z.string().nullable(),
+    /** Phase-to-neutral and phase-to-phase voltages, e.g. 127/220 or 220/380. */
+    phaseV: z.number().positive(),
+    lineV: z.number().positive(),
+    phases: z.number().int().min(1).max(3),
+    confirmed: z.boolean(),
+  }),
+  /** Water and sewer company, if known. */
+  water: z.string().nullable(),
+  /** City rules we know: the code that sets the eaves limit and the zoning. null = TO CONFIRM. */
+  rules: z.object({ code: z.string().nullable(), sanitary: z.string().nullable() }),
+  /** PV specific yield for the place, kWh per kWp per month (12 values), with its source. null = TO CONFIRM. */
+  pvYield: z.object({ monthly: z.array(z.number()).length(12), source: z.string() }).nullable(),
+  /** Share of the year's hot water a solar heater covers here (0–1). null = TO CONFIRM. */
+  solarHeaterShare: z.number().min(0).max(1).nullable(),
+});
+export type Region = z.infer<typeof Region>;
+
 export const Project = z.object({
   schema: z.literal('casa123-bim/1'),
   meta: z.object({
     project: z.string(),
     version: z.string(),
-    versionId: z.enum(['v1', 'v2', 'v3']),
+    versionId: z.string().min(1),
     units: z.literal('m'),
     source: z.string(),
     note: z.string(),
@@ -443,16 +475,18 @@ export const Project = z.object({
     }),
     /** North side walking ramp from the street down to the garden. */
     ramp: z.object({ width: z.number(), slope: z.number() }).optional(),
-    /** Eaves limit not counted in site coverage (Piracicaba LC 474/2025). */
+    /** Eaves limit not counted in site coverage (from the city rules in region.rules). */
     eavesLimit: z.number().optional(),
+    /** Where the lot is: city, coordinates, orientation, electricity supply and the city rules we know. */
+    region: Region,
     /** Public services in the street (spec 03). */
     utilities: z.object({
-      /** Depth of the public sewer below the street (SEMAE to confirm). */
+      /** Depth of the public sewer below the street (water company to confirm). */
       sewerDepth: z.number(),
       /** Distance from the lot boundary to the sewer main in the street. */
       sewerOffset: z.number(),
       waterMainDepth: z.number(),
-      /** 5-minute design rainfall, mm/h (to confirm for Piracicaba). */
+      /** 5-minute design rainfall, mm/h (to confirm for the city). */
       rainIntensity: z.number(),
     }).optional(),
     toConfirm: z.array(z.string()),
@@ -480,5 +514,16 @@ export function parseProject(data: unknown): Project {
   return Project.parse(data);
 }
 
-export const PLAN_LEVELS = ['LL', 'SL', 'UF'] as const;
-export type PlanLevel = (typeof PLAN_LEVELS)[number];
+/** Level ids are the project's own. By convention LL is below the entry level, SL the entry level, UF above it, roof the roof. */
+export type PlanLevel = string;
+/** The levels edited in plan, from the lowest up. */
+export const planLevels = (p: Pick<Project, 'levels'>): string[] =>
+  p.levels.filter((l) => l.plan).sort((a, b) => a.elevation - b.elevation).map((l) => l.id);
+export const isPlanLevel = (p: Pick<Project, 'levels'>, id: string) => p.levels.some((l) => l.plan && l.id === id);
+/** The plan level people enter from the street: the one closest to the street level (0.00). */
+export const entryLevel = (p: Pick<Project, 'levels'>): string => {
+  const ls = p.levels.filter((l) => l.plan);
+  return [...ls].sort((a, b) => Math.abs(a.elevation) - Math.abs(b.elevation))[0]?.id ?? ls[0]?.id ?? '';
+};
+/** The highest plan level (its plan also shows the roof equipment). */
+export const topLevel = (p: Pick<Project, 'levels'>): string => planLevels(p).at(-1) ?? '';

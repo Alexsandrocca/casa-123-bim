@@ -50,10 +50,10 @@ export const ASSUMPTIONS: Assumption[] = [
   { key: 'rebarWall', label: 'Rebar in retaining walls', unit: 'kg/m³', group: 'Concrete', value: 90, source: RULE, min: 0, max: 200, step: 5 },
   { key: 'rebarSlab', label: 'Rebar in slabs (mesh and bars)', unit: 'kg/m³', group: 'Concrete', value: 35, source: RULE, min: 0, max: 200, step: 5 },
   // thermal
-  { key: 'zone', label: 'Bioclimatic zone', unit: '1–8', group: 'Thermal', value: 2, source: 'TO CONFIRM against NBR 15220-3:2024 for Piracicaba', toConfirm: true, min: 1, max: 8, step: 1 },
+  { key: 'zone', label: 'Bioclimatic zone', unit: '1–8', group: 'Thermal', value: null, source: 'NBR 15220-3:2024 table of cities, TO CONFIRM for the project city', toConfirm: true, min: 1, max: 8, step: 1 },
   { key: 'absorptance', label: 'Solar absorptance α of the outside colour', unit: '0–1', group: 'Thermal', value: 0.5, source: 'Spec 05 sets the colours; light colours ≈ 0.3, mid ≈ 0.5, dark ≈ 0.8', min: 0.1, max: 1, step: 0.05 },
   // wind
-  { key: 'v0', label: 'Basic wind speed V0', unit: 'm/s', group: 'Wind', value: 40, source: 'NBR 6123 isopleth map, TO CONFIRM for Piracicaba', toConfirm: true, min: 30, max: 50, step: 1 },
+  { key: 'v0', label: 'Basic wind speed V0', unit: 'm/s', group: 'Wind', value: null, source: 'NBR 6123 isopleth map, TO CONFIRM for the project city', toConfirm: true, min: 30, max: 50, step: 1 },
   { key: 's2', label: 'Terrain and height factor S2', unit: '×', group: 'Wind', value: 0.88, source: 'NBR 6123, category IV, class A, z ≈ 7 m (verify)', min: 0.6, max: 1.2, step: 0.01 },
   // cost
   { key: 'cub', label: 'CUB (R8-N, Sinduscon-SP, Sep 2026)', unit: 'R$/m²', group: 'Cost', value: 2238.58, source: 'Sinduscon-SP, CUB R8-N, reference Sep 2026 (read 2026-10-01). R1-N (single house) not found: TO CONFIRM', toConfirm: true, min: 0, max: 20000, step: 10 },

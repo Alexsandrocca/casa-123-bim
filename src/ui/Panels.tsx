@@ -12,6 +12,9 @@ import { byLevel, getEl, glassArea, openingSegIn, spaceArea, wallLength, wallSeg
 import { cameraFov, cameraRange, deviceType } from '../model/electrical/library';
 import type { Beam, Carport, Circuit, Column, Conduit, Device, Element, Fixture, PipeSegment, ServiceSpace, SolarArray, Footing, Opening, PlanLevel, Project, Slab, Space, Stair, Wall } from '../model/schema';
 import { useApp, useProject } from '../store';
+import { bearingDir, compassOf } from '../model/orientation';
+import { cityCode, sanitary } from '../model/region';
+import { isPlanLevel } from '../model/schema';
 import { EstRow } from './Estimate';
 import { assemblyOf, optionsFor, useOf } from '../model/eng/assemblies';
 import { deleteFeature, setAssembly, setFeature } from '../model/eng/commands';
@@ -325,7 +328,7 @@ function SlabProps({ s }: { s: Slab }) {
         <Row k="Thickness" v={`${m(s.props.thickness)} m`} />
         {s.props.parapet !== undefined && <Row k="Parapet top" v={lvl(s.props.topElevation + s.props.parapet)} />}
       </div>
-      {s.props.eaves !== undefined && <p className="hint">Eaves up to 0.70 m are not counted in site coverage (Piracicaba LC 474/2025).</p>}
+      {s.props.eaves !== undefined && <p className="hint">{p.site.eavesLimit !== undefined ? `Eaves up to ${p.site.eavesLimit.toFixed(2)} m are not counted in site coverage (${cityCode(p)}).` : `The eaves limit is TO CONFIRM (${cityCode(p)}).`}</p>}
     </>
   );
 }
@@ -363,6 +366,7 @@ function StairProps({ st }: { st: Stair }) {
 }
 
 function CarportProps({ c }: { c: Carport }) {
+  const p = useProject();
   const r = c.props.rect;
   const rear = c.props.roofFront + c.props.slope * (r.y1 - r.y0);
   return (
@@ -376,7 +380,7 @@ function CarportProps({ c }: { c: Carport }) {
         <Row k="Solar" v={`${c.props.solarModules} modules reserved (moved from the old garage roof)`} />
         <Row k="EV charger" v="7 kW on a carport column" />
       </div>
-      <p className="hint">A covered carport in the front setback must be confirmed with the Prefeitura (LC 474/2025 and the building code).</p>
+      <p className="hint">A covered carport in the front setback must be confirmed with the city hall (Prefeitura) ({cityCode(p)}).</p>
     </>
   );
 }
@@ -450,7 +454,7 @@ function DeviceProps({ d, p }: { d: Device; p: Project }) {
       )}
       {cam && (
         <>
-          <NumberField label="Bearing" unit="° (0 N, 90 street)" step={5} value={d.props.bearing ?? 0} onCommit={(v) => run(setDevice(d.id, { bearing: ((v % 360) + 360) % 360 }))} testId="cam-bearing" />
+          <NumberField label="Bearing" unit="° (0 N, 90 E)" step={5} value={d.props.bearing ?? 0} onCommit={(v) => run(setDevice(d.id, { bearing: ((v % 360) + 360) % 360 }))} testId="cam-bearing" />
           <NumberField label="Lens" unit="mm" step={0.1} value={d.props.lensMm ?? 2.8} onCommit={(v) => run(setDevice(d.id, { lensMm: v }))} testId="cam-lens" />
           <NumberField label="Tilt down" unit="°" step={1} value={d.props.tilt ?? 15} onCommit={(v) => run(setDevice(d.id, { tilt: v }))} />
         </>
@@ -494,6 +498,7 @@ function CircuitProps({ c, p }: { c: Circuit; p: Project }) {
 
 function SolarProps({ a }: { a: SolarArray }) {
   const run = useApp((st) => st.run);
+  const p = useProject();
   return (
     <>
       <Header title={a.props.name} sub={`Solar array · ${a.id}`} />
@@ -501,7 +506,7 @@ function SolarProps({ a }: { a: SolarArray }) {
       <NumberField label="Tilt" unit="°" step={1} value={a.props.tilt} onCommit={(v) => run(setSolar({ tilt: v }))} />
       <NumberField label="Inverter" unit="kW" step={0.5} value={a.props.inverterKw} onCommit={(v) => run(setSolar({ inverterKw: v }))} />
       <NumberField label="Battery" unit="kWh" step={5} value={a.props.batteryKwh} onCommit={(v) => run(setSolar({ batteryKwh: Math.max(0, v) }))} />
-      <p className="hint">Facing north, {a.props.setback.toFixed(2)} m from the parapet. Open Electrical → Solar for the layout and the monthly estimate.</p>
+      <p className="hint">Facing {({ N: 'north', E: 'east', S: 'south', W: 'west' } as const)[compassOf(p, ...bearingDir(p, a.props.bearing))]}, {a.props.setback.toFixed(2)} m from the parapet. Open Electrical → Solar for the layout and the monthly estimate.</p>
     </>
   );
 }
@@ -645,7 +650,7 @@ export function ChecksBar() {
   const order = { fail: 0, confirm: 1, warn: 2, pass: 3 };
   const sorted = [...shown].sort((a, b) => order[a.status] - order[b.status]);
   const go = (c: CheckResult) => {
-    if (c.level && c.level !== level && ['LL', 'SL', 'UF'].includes(c.level)) setLevel(c.level as PlanLevel);
+    if (c.level && c.level !== level && isPlanLevel(p, c.level)) setLevel(c.level);
     if (c.elementIds[0]) select(c.elementIds[0]);
     // MEP rows know where the problem is: the 3D camera zooms to it
     if (c.at) useApp.getState().lookFrom([c.at[0] + 2.5, c.at[1] - 3, c.at[2] + 2.2], c.at);
@@ -704,14 +709,14 @@ export function AboutDialog() {
   return (
     <div className="modal" role="dialog" aria-modal="true" aria-labelledby="about-title" onClick={() => setAbout(false)}>
       <div className="box" onClick={(e) => e.stopPropagation()}>
-        <h2 id="about-title">About Casa 123 BIM</h2>
+        <h2 id="about-title">About {p.meta.project}</h2>
         <p>This is a <b>design and decision tool</b> for the family's house at {p.site.address}. It helps us try layouts, check them against the main code rules and share one precise model with the professionals.</p>
         <p><b>It does not replace the official project.</b> The permit drawings and the executive designs (architecture, structure, plumbing, electrical) must be made and signed by licensed professionals, with their ART/RRT. They receive this model through the IFC export.</p>
-        <p>The checks cover the rules we know (São Paulo sanitary code, Civil Code art. 1.301, stair comfort, setbacks). They are a guide, not an approval.</p>
+        <p>The checks cover the rules we know ({sanitary(p)}, Civil Code art. 1.301, stair comfort, setbacks; {cityCode(p)}). They are a guide, not an approval.</p>
         <p className="disclaimer" data-testid="about-disclaimer">{DISCLAIMER}</p>
         <h4>Still to confirm</h4>
         <ul>{p.site.toConfirm.map((t) => <li key={t}>{t}</li>)}</ul>
-        <p className="hint">Units are metres. Plan axes: x from the south wall to the north, y from the street to the rear.</p>
+        <p className="hint">Units are metres. Plan axes: y from the street to the rear, x to the right seen from the street (towards the {({ N: 'north', E: 'east', S: 'south', W: 'west' } as const)[compassOf(p, 1, 0)]}).</p>
         <button onClick={() => setAbout(false)} autoFocus>Close</button>
       </div>
     </div>

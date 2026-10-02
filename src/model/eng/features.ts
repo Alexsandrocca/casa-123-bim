@@ -1,8 +1,9 @@
 // Architectural features (spec 08): placeable parametric elements. Each has its properties, its geometry (the same
 // boxes feed the 3D view, the 2D symbol and the sun check), its weight on the structure, its cost and its effect on the checks.
 import { eq, openingSeg, pointInRect, q, wallSeg } from '../geometry';
-import type { Feature, FeatureKind, Opening, Project, Rect, Slab, Wall } from '../schema';
+import { entryLevel, type Feature, type FeatureKind, type Opening, type Project, type Rect, type Slab, type Wall } from '../schema';
 import { slabRect } from '../structure';
+import { axisOf, compassOf, type Compass } from '../orientation';
 
 export interface Box3 { x0: number; x1: number; y0: number; y1: number; z0: number; z1: number; mat: FeatureMat }
 export type FeatureMat = 'brise' | 'timber' | 'concreteScreen' | 'pergola' | 'cover' | 'greenRoof' | 'skyGlass' | 'planter' | 'gutter' | 'shutter' | 'awning' | 'solarHeater' | 'eave';
@@ -54,9 +55,9 @@ export function outward(p: Project, w: Wall): 1 | -1 | 0 {
   return 0;
 }
 
-/** Compass side a wall faces (house x = north, y = west/garden, −y = east/street). */
-export function facadeOf(o: 'v' | 'h', out: 1 | -1): 'N' | 'S' | 'E' | 'W' {
-  return o === 'v' ? (out > 0 ? 'N' : 'S') : (out > 0 ? 'W' : 'E');
+/** Compass side a wall faces (from the project's orientation). */
+export function facadeOf(p: Project, o: 'v' | 'h', out: 1 | -1): Compass {
+  return o === 'v' ? compassOf(p, out, 0) : compassOf(p, 0, out);
 }
 
 function hostOpening(p: Project, f: Feature): { op: Opening; wall: Wall } | null {
@@ -74,11 +75,11 @@ function outBox(o: 'v' | 'h', c: number, out: number, a: number, b: number, from
 }
 
 /** The roof slab whose edge runs along a wall's line (eave and gutter hosts). */
-export function roofEdgeFor(p: Project, w: Wall): { slab: Slab; side: 'N' | 'S' | 'E' | 'W' } | null {
+export function roofEdgeFor(p: Project, w: Wall): { slab: Slab; side: Compass } | null {
   const s = wallSeg(w), out = outward(p, w);
   if (!out) return null;
   const top = elevOf(p, w.level) + w.props.height;
-  let best: { slab: Slab; side: 'N' | 'S' | 'E' | 'W'; dz: number } | null = null;
+  let best: { slab: Slab; side: Compass; dz: number } | null = null;
   for (const sl of p.elements) {
     if (sl.type !== 'Slab' || sl.props.onGrade) continue;
     const r = slabRect(p, sl);
@@ -86,7 +87,7 @@ export function roofEdgeFor(p: Project, w: Wall): { slab: Slab; side: 'N' | 'S' 
     if (!eq(edge, s.c)) continue;
     const dz = Math.abs(sl.props.topElevation - sl.props.thickness - top);
     if (dz > 0.6) continue;
-    if (!best || dz < best.dz) best = { slab: sl, side: facadeOf(s.o, out), dz };
+    if (!best || dz < best.dz) best = { slab: sl, side: facadeOf(p, s.o, out), dz };
   }
   return best;
 }
@@ -135,15 +136,14 @@ export function featureBoxes(p: Project, f: Feature): Box3[] {
     if (!sl || !f.props.side) return [];
     const r = slabRect(p, sl), e0 = sl.props.eaves ?? 0, top = sl.props.topElevation;
     const side = f.props.side;
-    const o: 'v' | 'h' = side === 'N' || side === 'S' ? 'v' : 'h';
-    const out = side === 'N' || side === 'W' ? 1 : -1;
+    const { o, out } = axisOf(p, side);
     const c = o === 'v' ? (out > 0 ? r.x1 : r.x0) : (out > 0 ? r.y1 : r.y0);
     const [a, b] = o === 'v' ? [r.y0 - e0, r.y1 + e0] : [r.x0 - e0, r.x1 + e0];
     if (k === 'eave') return [outBox(o, c, out, a, b, e0, e0 + num(f, 'depth', 0.5), top - 0.12, top, 'eave')];
     const reach = e0 + featureEaves(p, sl, side);
     const boxes = [outBox(o, c, out, a, b, reach, reach + 0.15, top - 0.15, top, 'gutter')];
     if (bool(f, 'chain')) {
-      const ground = Math.min(elevOf(p, 'SL'), top - 3);
+      const ground = Math.min(elevOf(p, entryLevel(p)), top - 3);
       boxes.push(outBox(o, c, out, b - 0.25, b - 0.2, reach + 0.05, reach + 0.1, ground, top - 0.15, 'gutter'));
     }
     return boxes;
@@ -201,7 +201,7 @@ export function featureCost(p: Project, f: Feature): { value: number; how: strin
     const sl = p.elements.find((e): e is Slab => e.type === 'Slab' && e.id === f.props.host);
     if (!sl) return 0;
     const rr = slabRect(p, sl);
-    return f.props.side === 'N' || f.props.side === 'S' ? rr.y1 - rr.y0 : rr.x1 - rr.x0;
+    return f.props.side && axisOf(p, f.props.side).o === 'v' ? rr.y1 - rr.y0 : rr.x1 - rr.x0;
   })();
   switch (k) {
     case 'brise': { const u = { aluminium: 950, wood: 750, concrete: 650 }[str(f, 'material', 'aluminium')] ?? 950; return { value: u * (winArea + 0.4), how: `${(winArea + 0.4).toFixed(2)} m² × R$ ${u}/m²` }; }
@@ -251,15 +251,16 @@ export function makeFeature(p: Project, kind: FeatureKind, t: PlaceTarget): Feat
     return { ...base, level: op.level, props: { ...base.props, host: op.id } };
   }
   if (kind === 'eave' || kind === 'gutter') {
-    let slab: Slab | undefined, side: 'N' | 'S' | 'E' | 'W' | undefined;
+    let slab: Slab | undefined, side: Compass | undefined;
     const wall = p.elements.find((e): e is Wall => e.type === 'Wall' && e.id === t.wall);
     if (wall) { const r = roofEdgeFor(p, wall); slab = r?.slab; side = r?.side; }
     if (!slab && t.slab && t.at) {
       slab = p.elements.find((e): e is Slab => e.type === 'Slab' && e.id === t.slab);
       if (slab) {
         const r = slabRect(p, slab), [x, y] = t.at;
-        const d = { S: x - r.x0, N: r.x1 - x, E: y - r.y0, W: r.y1 - y } as const;
-        side = (Object.keys(d) as ('N' | 'S' | 'E' | 'W')[]).reduce((a, b) => (d[b] < d[a] ? b : a));
+        // the nearest edge of the roof, named by the compass point it faces
+        const edges: [number, Compass][] = [[x - r.x0, compassOf(p, -1, 0)], [r.x1 - x, compassOf(p, 1, 0)], [y - r.y0, compassOf(p, 0, -1)], [r.y1 - y, compassOf(p, 0, 1)]];
+        side = edges.reduce((a, b) => (b[0] < a[0] ? b : a))[1];
       }
     }
     if (!slab || !side) return 'Click an outside wall that has a roof edge right above it (the top floor walls), or a roof in 3D.';

@@ -1,5 +1,5 @@
 # P0 — Two tabs (DESIGN / BIM), projects, generalisation, AI server
-Status: ready
+Status: in progress
 
 ## Context
 The owner approved `docs/product/ROADMAP-v2.md` on 2026-10-01: **family first, commercial later**, and **an Anthropic API key is available**. P0 is the foundation for P1–P8. It adds no new design features. It restructures the app so that:

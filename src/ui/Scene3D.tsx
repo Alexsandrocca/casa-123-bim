@@ -5,8 +5,10 @@ import { memo, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { SERVICE_MATS, STRUCTURE_MATS, buildScene, pocheCaps, type BoxPart, type Mat, type Part, type ConePart, type LinePart, type PipePart, type PolyPart, type V3 } from '../scene/build3d';
 import { sunPosition } from '../scene/sun';
+import { viewFrame } from '../scene/frame';
 import { EYE, startAt, walkStep, walkWorld, type WalkState, type WalkWorld } from '../scene/walk';
-import { useApp, useProject, type CameraPreset } from '../store';
+import { useApp, useProject } from '../store';
+import { entryLevel } from '../model/schema';
 import { Controls3D, walkKeys } from './Controls3D';
 import { addFeature } from '../model/eng/commands';
 import { featureType } from '../model/eng/features';
@@ -105,16 +107,16 @@ function Poly({ part, ghost }: { part: PolyPart; ghost: boolean }) {
 function placeIn3d(id: string, pt: THREE.Vector3): boolean {
   const st = useApp.getState();
   if (st.tool !== 'feature' || !st.featureKind) return false;
-  const p = st.versions[st.active].present;
+  const p = st.versions[st.active]!.present;
   const el = p.elements.find((e) => e.id === id);
   const at: [number, number] = [pt.x, -pt.z];
   const z = pt.y;
-  const level = [...p.levels].filter((l) => l.plan && l.elevation <= z + 0.3).sort((a, b) => b.elevation - a.elevation)[0]?.id ?? 'SL';
+  const level = [...p.levels].filter((l) => l.plan && l.elevation <= z + 0.3).sort((a, b) => b.elevation - a.elevation)[0]?.id ?? entryLevel(p);
   const target = el?.type === 'Opening' ? { opening: id } : el?.type === 'Wall' ? { wall: id, at } : el?.type === 'Slab' ? { slab: id, at, level } : { at, level };
   const before = new Set(p.elements.map((e) => e.id));
   if (st.run(addFeature(st.featureKind, target))) {
     const now = useApp.getState();
-    const added = now.versions[now.active].present.elements.find((e) => !before.has(e.id));
+    const added = now.versions[now.active]!.present.elements.find((e) => !before.has(e.id));
     if (added) { st.select(added.id); st.flash(`${featureType(st.featureKind).label} placed. ${featureType(st.featureKind).effect}`); }
   }
   return true;
@@ -178,19 +180,13 @@ function LoadLabels() {
 
 /* ---------- camera presets ---------- */
 
-const PRESETS: Record<CameraPreset, { pos: V3; target: V3 }> = {
-  street: { pos: [4.3, -15.5, 3.4], target: [4.3, 6, 2.0] },
-  garden: { pos: [4.6, 26.5, 2.4], target: [4.3, 13, -0.2] },
-  ramp: { pos: [11.4, -3.2, 1.8], target: [9.6, 12, -1.4] },
-  top: { pos: [4.3, 7.0, 42], target: [4.3, 7.5, 0] },
-};
-
 function CameraRig() {
   const req = useApp((s) => s.camera);
+  const presets = viewFrame(useProject()).presets;
   const walking = useApp((s) => s.walk);
   const { camera, controls } = useThree() as unknown as { camera: THREE.PerspectiveCamera; controls: { target: THREE.Vector3; update(): void } | null };
   useEffect(() => {
-    const p = req.pos && req.target ? { pos: req.pos, target: req.target } : PRESETS[req.preset];
+    const p = req.pos && req.target ? { pos: req.pos, target: req.target } : presets[req.preset] ?? presets.street!;
     // Presets are framed for a wide view; step back when the view is narrow (split view, tablet).
     const k = Math.max(1, 1.5 / Math.max(camera.aspect, 0.3));
     const pos: V3 = [0, 1, 2].map((i) => p.target[i]! + (p.pos[i]! - p.target[i]!) * k) as V3;
@@ -253,9 +249,10 @@ function Walker({ world }: { world: WalkWorld }) {
 function Sun() {
   const sun = useApp((s) => s.sun);
   const light = useRef<THREE.DirectionalLight>(null);
-  const pos = sunPosition(2026, sun.month, sun.day, sun.hour);
+  const p = useProject();
+  const pos = sunPosition(2026, sun.month, sun.day, sun.hour, p);
   const up = pos.altitude > 0;
-  const center: V3 = [4.3, 7.5, 0];
+  const center = viewFrame(p).center;
   const at = T([center[0] + pos.dir[0] * 60, center[1] + pos.dir[1] * 60, center[2] + pos.dir[2] * 60]);
   const { scene } = useThree();
   useEffect(() => {
@@ -335,13 +332,15 @@ function SectionHandle() {
   const section = useApp((s) => s.section);
   const { controls } = useThree() as unknown as { controls: { enabled: boolean } | null };
   const drag = useRef(false);
+  const fr = viewFrame(useProject());
   const across = section.v === 'across';
+  const [ax0, ax1] = [fr.across.from, fr.across.to], [ay0, ay1] = [fr.along.from, fr.along.to];
   const quad: [number, number, number][] = across
-    ? [T([-3, section.pos, -4]), T([13, section.pos, -4]), T([13, section.pos, HANDLE_Z]), T([-3, section.pos, HANDLE_Z]), T([-3, section.pos, -4])]
-    : [T([section.pos, -5, -4]), T([section.pos, 22, -4]), T([section.pos, 22, HANDLE_Z]), T([section.pos, -5, HANDLE_Z]), T([section.pos, -5, -4])];
+    ? [T([ax0, section.pos, -4]), T([ax1, section.pos, -4]), T([ax1, section.pos, HANDLE_Z]), T([ax0, section.pos, HANDLE_Z]), T([ax0, section.pos, -4])]
+    : [T([section.pos, ay0, -4]), T([section.pos, ay1, -4]), T([section.pos, ay1, HANDLE_Z]), T([section.pos, ay0, HANDLE_Z]), T([section.pos, ay0, -4])];
   const bar: BoxPart = across
-    ? { kind: 'box', id: 'handle', mat: 'rail', c: [5, section.pos, HANDLE_Z], s: [16, 0.2, 0.2] }
-    : { kind: 'box', id: 'handle', mat: 'rail', c: [section.pos, 8.5, HANDLE_Z], s: [0.2, 27, 0.2] };
+    ? { kind: 'box', id: 'handle', mat: 'rail', c: [(ax0 + ax1) / 2, section.pos, HANDLE_Z], s: [ax1 - ax0, 0.2, 0.2] }
+    : { kind: 'box', id: 'handle', mat: 'rail', c: [section.pos, (ay0 + ay1) / 2, HANDLE_Z], s: [0.2, ay1 - ay0, 0.2] };
   const onMove = (e: ThreeEvent<PointerEvent>) => {
     if (!drag.current) return;
     e.stopPropagation();
@@ -390,18 +389,20 @@ function TestHook() {
 
 /* ---------- the view ---------- */
 
-function Content() {
+function Content({ style }: { style: 'design' | 'bim' }) {
   const p = useProject();
+  const bim = style === 'bim';
   const doorsOpen = useApp((s) => s.doorsOpen);
   const selection = useApp((s) => s.selection);
   const walking = useApp((s) => s.walk);
   const cutting = useApp((s) => s.section.v !== 'off' || s.section.h !== 'off');
-  const xray = useApp((s) => s.xray || s.physics);
-  const xrayOn = useApp((s) => s.xray);
-  const cones = useApp((s) => s.cones);
-  const physics = useApp((s) => s.physics);
-  const structure = useApp((s) => s.structure);
-  const scene = useMemo(() => buildScene(p, { doorsOpen, conduits: xrayOn, cones, physics, selection, structure }), [p, doorsOpen, xrayOn, cones, physics, selection, structure]);
+  // the DESIGN tab draws the same model in its simple style: no x-ray, systems or structure colours
+  const xray = useApp((s) => s.xray || s.physics) && bim;
+  const xrayOn = useApp((s) => s.xray) && bim;
+  const cones = useApp((s) => s.cones) && bim;
+  const physics = useApp((s) => s.physics) && bim;
+  const structure = useApp((s) => s.structure) && bim;
+  const scene = useMemo(() => buildScene(p, { doorsOpen, conduits: xrayOn, cones, physics, selection, structure, style }), [p, doorsOpen, xrayOn, cones, physics, selection, structure, style]);
   const groups = useMemo(() => {
     const m = new Map<string, Part[]>();
     for (const part of scene.parts) m.set(part.id, [...(m.get(part.id) ?? []), part]);
@@ -426,18 +427,19 @@ function Content() {
   );
 }
 
-export default function Scene3D() {
+export default function Scene3D({ style = 'bim' }: { style?: 'design' | 'bim' }) {
+  const start = viewFrame(useProject()).presets.street!;
   return (
     <div className="scene3d" data-testid="scene3d">
       <Canvas
         shadows
-        camera={{ fov: 50, near: 0.1, far: 400, position: T(PRESETS.street.pos) }}
+        camera={{ fov: 50, near: 0.1, far: 400, position: T(start.pos) }}
         gl={{ preserveDrawingBuffer: true, antialias: true }}
         onPointerMissed={() => useApp.getState().pick(null)}
       >
-        <Content />
+        <Content style={style} />
       </Canvas>
-      <Controls3D />
+      <Controls3D style={style} />
     </div>
   );
 }

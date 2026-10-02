@@ -2,11 +2,11 @@
  "schema": "casa123-bim/1",
  "meta": {
   "project": "Casa 123",
-  "version": "Version 2",
-  "versionId": "v2",
+  "version": "Version 1",
+  "versionId": "v1",
   "units": "m",
-  "source": "docs/reference/plan-v2.json (Casa 123 studio export, 2026-09-29)",
-  "note": "Version 2: one service spine along the south wall (entry, WC, storage, pantry, stairs, laundry), all living rooms along the north side for the best light, a 20 m² veranda shaded by the upper floor, and two straight stair flights side by side: down goes west straight to the garden door, up lands at the rear with the master bedroom next to it."
+  "source": "docs/reference/prototype-studio.html (BASE1)",
+  "note": "Version 1: U-stair in the middle of the south side, living room on the west (garden) side, three suites upstairs reached from the rear landing."
  },
  "site": {
   "address": "Rua Alceu Maynardi Araújo, 123, Nova Piracicaba, Piracicaba/SP",
@@ -54,6 +54,44 @@
    "slope": 0.125
   },
   "eavesLimit": 0.7,
+  "region": {
+   "city": "Piracicaba",
+   "state": "SP",
+   "lat": -22.72,
+   "lon": -47.65,
+   "utcOffset": -3,
+   "xBearing": 0,
+   "supply": {
+    "utility": "CPFL",
+    "phaseV": 127,
+    "lineV": 220,
+    "phases": 3,
+    "confirmed": false
+   },
+   "water": "SEMAE",
+   "rules": {
+    "code": "Piracicaba LC 474/2025",
+    "sanitary": "SP sanitary code, Decreto 12.342/78"
+   },
+   "pvYield": {
+    "monthly": [
+     130,
+     120,
+     128,
+     120,
+     112,
+     104,
+     114,
+     128,
+     124,
+     132,
+     130,
+     128
+    ],
+    "source": "PVGIS-like values, 20° facing north"
+   },
+   "solarHeaterShare": 0.7
+  },
   "toConfirm": [
    "Topographic survey",
    "SPT soil borings",
@@ -101,7 +139,7 @@
     "x0": 0,
     "y0": 0,
     "x1": 8.6,
-    "y1": 12.6
+    "y1": 13.1
    }
   },
   {
@@ -114,7 +152,7 @@
     "x0": 0,
     "y0": 5,
     "x1": 8.6,
-    "y1": 13.6
+    "y1": 13.1
    }
   },
   {
@@ -127,23 +165,28 @@
     "x0": 0,
     "y0": 5,
     "x1": 8.6,
-    "y1": 13.6
+    "y1": 13.1
    }
   }
  ],
  "grid": {
   "x": [
    0,
-   3.2,
+   2.4,
+   5.4,
    8.6
   ],
   "y": [
    0,
    5,
    8.5,
-   12.6,
+   13.1,
    15
   ]
+ },
+ "assumptions": {
+  "zone": 2,
+  "v0": 40
  },
  "elements": [
   {
@@ -156,14 +199,14 @@
     "zone": "stair",
     "cells": [
      {
-      "x0": 1.6,
+      "x0": 0,
       "y0": 8.5,
-      "x1": 3.2,
-      "y1": 12.5
+      "x1": 2.4,
+      "y1": 11.9
      }
     ],
     "lock": true,
-    "stairKind": "lane"
+    "stairKind": "u"
    }
   },
   {
@@ -172,14 +215,20 @@
    "tags": [],
    "type": "Space",
    "props": {
-    "name": "Storage",
-    "zone": "service",
+    "name": "Hall",
+    "zone": "circ",
     "cells": [
      {
       "x0": 0,
-      "y0": 8.5,
-      "x1": 1.6,
-      "y1": 10.5
+      "y0": 11.9,
+      "x1": 2.4,
+      "y1": 15
+     },
+     {
+      "x0": 2.4,
+      "y0": 11.9,
+      "x1": 4.4,
+      "y1": 13.1
      }
     ],
     "lock": false
@@ -195,10 +244,10 @@
     "zone": "service",
     "cells": [
      {
-      "x0": 0,
-      "y0": 10.5,
-      "x1": 1.6,
-      "y1": 12.5
+      "x0": 2.4,
+      "y0": 10.2,
+      "x1": 4.4,
+      "y1": 11.9
      }
     ],
     "lock": false
@@ -210,14 +259,14 @@
    "tags": [],
    "type": "Space",
    "props": {
-    "name": "Hall",
-    "zone": "circ",
+    "name": "Storage",
+    "zone": "service",
     "cells": [
      {
-      "x0": 0,
-      "y0": 12.5,
-      "x1": 3.2,
-      "y1": 15
+      "x0": 2.4,
+      "y0": 8.5,
+      "x1": 4.4,
+      "y1": 10.2
      }
     ],
     "lock": false
@@ -233,9 +282,9 @@
     "zone": "wet",
     "cells": [
      {
-      "x0": 3.2,
-      "y0": 13.3,
-      "x1": 4.8,
+      "x0": 2.4,
+      "y0": 13.1,
+      "x1": 4.4,
       "y1": 15
      }
     ],
@@ -252,16 +301,10 @@
     "zone": "work",
     "cells": [
      {
-      "x0": 4.8,
+      "x0": 4.4,
       "y0": 8.5,
       "x1": 8.6,
       "y1": 15
-     },
-     {
-      "x0": 3.2,
-      "y0": 8.5,
-      "x1": 4.8,
-      "y1": 13.3
      }
     ],
     "lock": false
@@ -271,9 +314,6 @@
    "id": "LL-wall-01",
    "level": "LL",
    "tags": [],
-   "notes": [
-    "Stair and retaining wall: the down flight LL → SL passes over the cut line (y 8.50), x 1.70–3.20. The ground there is at about -1.00, so the retained soil stays well below the flight (tread about +0.23 at y 8.50). Under the stair opening the lower-level front wall stops under the flight soffit, with a lintel beam over it. To be detailed by the structural engineer."
-   ],
    "type": "Wall",
    "props": {
     "start": [
@@ -391,12 +431,12 @@
    "type": "Wall",
    "props": {
     "start": [
-     0,
-     10.5
+     2.4,
+     10.2
     ],
     "end": [
-     1.6,
-     10.5
+     4.4,
+     10.2
     ],
     "thickness": 0.12,
     "height": 2.7,
@@ -410,12 +450,12 @@
    "type": "Wall",
    "props": {
     "start": [
-     0,
-     12.5
+     2.4,
+     11.9
     ],
     "end": [
-     1.6,
-     12.5
+     4.4,
+     11.9
     ],
     "thickness": 0.12,
     "height": 2.7,
@@ -429,12 +469,12 @@
    "type": "Wall",
    "props": {
     "start": [
-     3.2,
-     13.3
+     2.4,
+     13.1
     ],
     "end": [
-     4.8,
-     13.3
+     4.4,
+     13.1
     ],
     "thickness": 0.15,
     "height": 2.7,
@@ -448,12 +488,12 @@
    "type": "Wall",
    "props": {
     "start": [
-     1.6,
+     2.4,
      8.5
     ],
     "end": [
-     1.6,
-     12.5
+     2.4,
+     11.9
     ],
     "thickness": 0.12,
     "height": 2.7,
@@ -467,16 +507,16 @@
    "type": "Wall",
    "props": {
     "start": [
-     3.2,
-     8.5
+     2.4,
+     13.1
     ],
     "end": [
-     3.2,
-     13.3
+     2.4,
+     15
     ],
-    "thickness": 0.12,
+    "thickness": 0.15,
     "height": 2.7,
-    "wallType": "interior"
+    "wallType": "wet"
    }
   },
   {
@@ -486,16 +526,16 @@
    "type": "Wall",
    "props": {
     "start": [
-     3.2,
-     13.3
+     4.4,
+     8.5
     ],
     "end": [
-     3.2,
-     15
+     4.4,
+     13.1
     ],
-    "thickness": 0.15,
+    "thickness": 0.12,
     "height": 2.7,
-    "wallType": "wet"
+    "wallType": "interior"
    }
   },
   {
@@ -505,11 +545,11 @@
    "type": "Wall",
    "props": {
     "start": [
-     4.8,
-     13.3
+     4.4,
+     13.1
     ],
     "end": [
-     4.8,
+     4.4,
      15
     ],
     "thickness": 0.15,
@@ -526,7 +566,7 @@
     "host": "LL-wall-08",
     "role": "door",
     "kind": "door",
-    "offset": 0.4,
+    "offset": 0.5,
     "width": 0.8,
     "height": 2.1,
     "sill": 0,
@@ -542,8 +582,8 @@
     "host": "LL-wall-07",
     "role": "door",
     "kind": "door",
-    "offset": 0.4,
-    "width": 0.7,
+    "offset": 0.5,
+    "width": 0.8,
     "height": 2.1,
     "sill": 0,
     "swing": -1
@@ -555,10 +595,10 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "LL-wall-12",
+    "host": "LL-wall-11",
     "role": "door",
     "kind": "door",
-    "offset": 0.35,
+    "offset": 0.4,
     "width": 0.7,
     "height": 2.1,
     "sill": 0,
@@ -571,11 +611,11 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "LL-wall-11",
+    "host": "LL-wall-12",
     "role": "door",
     "kind": "door",
-    "offset": 4.05,
-    "width": 0.7,
+    "offset": 3.6,
+    "width": 0.9,
     "height": 2.1,
     "sill": 0,
     "swing": 1
@@ -590,8 +630,8 @@
     "host": "LL-wall-04",
     "role": "door",
     "kind": "slider",
-    "offset": 0.4,
-    "width": 2.4,
+    "offset": 0.3,
+    "width": 1.8,
     "height": 2.2,
     "sill": 0,
     "swing": 1
@@ -603,13 +643,14 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "LL-wall-06",
+    "host": "LL-wall-04",
     "role": "window",
     "kind": "window",
-    "offset": 0.3,
-    "width": 1.4,
-    "height": 1.3,
-    "sill": 1,
+    "high": true,
+    "offset": 2.8,
+    "width": 1.2,
+    "height": 0.6,
+    "sill": 1.7,
     "swing": 1
    }
   },
@@ -621,33 +662,16 @@
    "props": {
     "host": "LL-wall-04",
     "role": "window",
-    "kind": "window",
-    "high": true,
-    "offset": 3.5,
-    "width": 1,
-    "height": 0.6,
-    "sill": 1.7,
-    "swing": 1
-   }
-  },
-  {
-   "id": "LL-win-03",
-   "level": "LL",
-   "tags": [],
-   "type": "Opening",
-   "props": {
-    "host": "LL-wall-04",
-    "role": "window",
     "kind": "slider",
-    "offset": 5.1,
-    "width": 3.2,
+    "offset": 4.8,
+    "width": 3.4,
     "height": 2.2,
     "sill": 0,
     "swing": 1
    }
   },
   {
-   "id": "LL-win-04",
+   "id": "LL-win-03",
    "level": "LL",
    "tags": [],
    "type": "Opening",
@@ -672,9 +696,9 @@
     "zone": "garage",
     "cells": [
      {
-      "x0": 3.2,
+      "x0": 0,
       "y0": 0,
-      "x1": 8.6,
+      "x1": 5.4,
       "y1": 5
      }
     ],
@@ -688,26 +712,20 @@
    "tags": [],
    "type": "Space",
    "props": {
-    "name": "Entry · hall",
+    "name": "Entry",
     "zone": "circ",
     "cells": [
      {
-      "x0": 0,
+      "x0": 5.4,
       "y0": 0,
-      "x1": 3.2,
-      "y1": 2
+      "x1": 8.6,
+      "y1": 3.4
      },
      {
-      "x0": 2,
-      "y0": 2,
-      "x1": 3.2,
-      "y1": 7
-     },
-     {
-      "x0": 0,
-      "y0": 7,
-      "x1": 3.2,
-      "y1": 8.2
+      "x0": 7,
+      "y0": 3.4,
+      "x1": 8.6,
+      "y1": 5
      }
     ],
     "lock": false
@@ -723,10 +741,10 @@
     "zone": "wet",
     "cells": [
      {
-      "x0": 0,
-      "y0": 2,
-      "x1": 2,
-      "y1": 3.8
+      "x0": 5.4,
+      "y0": 3.4,
+      "x1": 7,
+      "y1": 5
      }
     ],
     "lock": false
@@ -738,14 +756,14 @@
    "tags": [],
    "type": "Space",
    "props": {
-    "name": "Storage",
-    "zone": "service",
+    "name": "Kitchen",
+    "zone": "social",
     "cells": [
      {
       "x0": 0,
-      "y0": 3.8,
-      "x1": 2,
-      "y1": 5
+      "y0": 5,
+      "x1": 5.4,
+      "y1": 8.5
      }
     ],
     "lock": false
@@ -757,14 +775,14 @@
    "tags": [],
    "type": "Space",
    "props": {
-    "name": "Pantry",
-    "zone": "service",
+    "name": "Dining",
+    "zone": "social",
     "cells": [
      {
-      "x0": 0,
+      "x0": 5.4,
       "y0": 5,
-      "x1": 2,
-      "y1": 7
+      "x1": 8.6,
+      "y1": 8.5
      }
     ],
     "lock": false
@@ -776,14 +794,20 @@
    "tags": [],
    "type": "Space",
    "props": {
-    "name": "Kitchen",
+    "name": "Living",
     "zone": "social",
     "cells": [
      {
-      "x0": 3.2,
-      "y0": 5,
+      "x0": 2.4,
+      "y0": 8.5,
       "x1": 8.6,
-      "y1": 7.6
+      "y1": 13.1
+     },
+     {
+      "x0": 0,
+      "y0": 11.9,
+      "x1": 2.4,
+      "y1": 13.1
      }
     ],
     "lock": false
@@ -795,56 +819,18 @@
    "tags": [],
    "type": "Space",
    "props": {
-    "name": "Dining",
-    "zone": "social",
-    "cells": [
-     {
-      "x0": 3.2,
-      "y0": 7.6,
-      "x1": 8.6,
-      "y1": 9.6
-     }
-    ],
-    "lock": false
-   }
-  },
-  {
-   "id": "SL-space-08",
-   "level": "SL",
-   "tags": [],
-   "type": "Space",
-   "props": {
-    "name": "Living",
-    "zone": "social",
-    "cells": [
-     {
-      "x0": 3.2,
-      "y0": 9.6,
-      "x1": 8.6,
-      "y1": 12.6
-     }
-    ],
-    "lock": false
-   }
-  },
-  {
-   "id": "SL-space-09",
-   "level": "SL",
-   "tags": [],
-   "type": "Space",
-   "props": {
     "name": "Stair",
     "zone": "stair",
     "cells": [
      {
       "x0": 0,
-      "y0": 8.2,
-      "x1": 3.2,
-      "y1": 12.6
+      "y0": 8.5,
+      "x1": 2.4,
+      "y1": 11.9
      }
     ],
     "lock": true,
-    "stairKind": "dual"
+    "stairKind": "u"
    }
   },
   {
@@ -878,7 +864,7 @@
     ],
     "end": [
      8.6,
-     12.6
+     13.1
     ],
     "thickness": 0.2,
     "height": 3.1,
@@ -893,11 +879,11 @@
    "props": {
     "start": [
      0,
-     12.6
+     13.1
     ],
     "end": [
      8.6,
-     12.6
+     13.1
     ],
     "thickness": 0.2,
     "height": 3.1,
@@ -916,7 +902,7 @@
     ],
     "end": [
      0,
-     12.6
+     13.1
     ],
     "thickness": 0.2,
     "height": 3.1,
@@ -930,12 +916,12 @@
    "type": "Wall",
    "props": {
     "start": [
-     0,
-     2
+     5.4,
+     3.4
     ],
     "end": [
-     2,
-     2
+     7,
+     3.4
     ],
     "thickness": 0.15,
     "height": 2.7,
@@ -950,15 +936,15 @@
    "props": {
     "start": [
      0,
-     3.8
+     5
     ],
     "end": [
-     2,
-     3.8
+     5.4,
+     5
     ],
-    "thickness": 0.15,
+    "thickness": 0.12,
     "height": 2.7,
-    "wallType": "wet"
+    "wallType": "interior"
    }
   },
   {
@@ -968,16 +954,16 @@
    "type": "Wall",
    "props": {
     "start": [
-     0,
+     5.4,
      5
     ],
     "end": [
-     2,
+     7,
      5
     ],
-    "thickness": 0.12,
+    "thickness": 0.15,
     "height": 2.7,
-    "wallType": "interior"
+    "wallType": "wet"
    }
   },
   {
@@ -987,12 +973,12 @@
    "type": "Wall",
    "props": {
     "start": [
-     3.2,
-     5
+     5.4,
+     0
     ],
     "end": [
-     8.6,
-     5
+     5.4,
+     3.4
     ],
     "thickness": 0.12,
     "height": 2.7,
@@ -1006,16 +992,16 @@
    "type": "Wall",
    "props": {
     "start": [
-     0,
-     7
+     5.4,
+     3.4
     ],
     "end": [
-     2,
-     7
+     5.4,
+     5
     ],
-    "thickness": 0.12,
+    "thickness": 0.15,
     "height": 2.7,
-    "wallType": "interior"
+    "wallType": "wet"
    }
   },
   {
@@ -1025,54 +1011,16 @@
    "type": "Wall",
    "props": {
     "start": [
-     2,
-     3.8
+     7,
+     3.4
     ],
     "end": [
-     2,
-     7
-    ],
-    "thickness": 0.12,
-    "height": 2.7,
-    "wallType": "interior"
-   }
-  },
-  {
-   "id": "SL-wall-11",
-   "level": "SL",
-   "tags": [],
-   "type": "Wall",
-   "props": {
-    "start": [
-     2,
-     2
-    ],
-    "end": [
-     2,
-     3.8
+     7,
+     5
     ],
     "thickness": 0.15,
     "height": 2.7,
     "wallType": "wet"
-   }
-  },
-  {
-   "id": "SL-wall-12",
-   "level": "SL",
-   "tags": [],
-   "type": "Wall",
-   "props": {
-    "start": [
-     3.2,
-     0
-    ],
-    "end": [
-     3.2,
-     5
-    ],
-    "thickness": 0.12,
-    "height": 2.7,
-    "wallType": "interior"
    }
   },
   {
@@ -1084,7 +1032,7 @@
     "host": "SL-wall-01",
     "role": "door",
     "kind": "door",
-    "offset": 0.9,
+    "offset": 6.5,
     "width": 1,
     "height": 2.1,
     "sill": 0,
@@ -1097,14 +1045,14 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "SL-wall-01",
+    "host": "SL-wall-08",
     "role": "door",
-    "kind": "garage",
-    "offset": 3.4,
-    "width": 5,
-    "height": 2.4,
+    "kind": "door",
+    "offset": 1.2,
+    "width": 0.9,
+    "height": 2.1,
     "sill": 0,
-    "swing": 1
+    "swing": -1
    }
   },
   {
@@ -1113,10 +1061,10 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "SL-wall-08",
+    "host": "SL-wall-06",
     "role": "door",
     "kind": "door",
-    "offset": 0.2,
+    "offset": 0.5,
     "width": 0.8,
     "height": 2.1,
     "sill": 0,
@@ -1129,14 +1077,14 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "SL-wall-11",
+    "host": "SL-wall-05",
     "role": "door",
     "kind": "door",
-    "offset": 0.5,
+    "offset": 0.4,
     "width": 0.7,
     "height": 2.1,
     "sill": 0,
-    "swing": -1
+    "swing": 1
    }
   },
   {
@@ -1145,30 +1093,14 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "SL-wall-10",
+    "host": "SL-wall-01",
     "role": "door",
-    "kind": "door",
-    "offset": 0.25,
-    "width": 0.8,
-    "height": 2.1,
+    "kind": "garage",
+    "offset": 0.2,
+    "width": 5,
+    "height": 2.4,
     "sill": 0,
-    "swing": -1
-   }
-  },
-  {
-   "id": "SL-door-06",
-   "level": "SL",
-   "tags": [],
-   "type": "Opening",
-   "props": {
-    "host": "SL-wall-10",
-    "role": "door",
-    "kind": "door",
-    "offset": 1.8,
-    "width": 0.8,
-    "height": 2.1,
-    "sill": 0,
-    "swing": -1
+    "swing": 1
    }
   },
   {
@@ -1177,11 +1109,11 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "SL-wall-01",
+    "host": "SL-wall-04",
     "role": "window",
     "kind": "window",
-    "offset": 2.1,
-    "width": 0.8,
+    "offset": 5.5,
+    "width": 2.6,
     "height": 1.3,
     "sill": 1,
     "swing": 1
@@ -1193,14 +1125,13 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "SL-wall-04",
+    "host": "SL-wall-02",
     "role": "window",
     "kind": "window",
-    "high": true,
-    "offset": 2.4,
-    "width": 1,
-    "height": 0.6,
-    "sill": 1.7,
+    "offset": 5.4,
+    "width": 2.8,
+    "height": 1.3,
+    "sill": 1,
     "swing": 1
    }
   },
@@ -1210,14 +1141,13 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "SL-wall-04",
+    "host": "SL-wall-02",
     "role": "window",
-    "kind": "window",
-    "high": true,
-    "offset": 5.4,
-    "width": 1.2,
-    "height": 0.6,
-    "sill": 1.7,
+    "kind": "slider",
+    "offset": 8.9,
+    "width": 3.9,
+    "height": 2.2,
+    "sill": 0,
     "swing": 1
    }
   },
@@ -1227,13 +1157,13 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "SL-wall-02",
+    "host": "SL-wall-03",
     "role": "window",
-    "kind": "window",
-    "offset": 5.3,
-    "width": 2,
-    "height": 1.3,
-    "sill": 1,
+    "kind": "slider",
+    "offset": 2.7,
+    "width": 5.6,
+    "height": 2.2,
+    "sill": 0,
     "swing": 1
    }
   },
@@ -1243,11 +1173,11 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "SL-wall-02",
+    "host": "SL-wall-03",
     "role": "window",
     "kind": "window",
-    "offset": 7.8,
-    "width": 1.6,
+    "offset": 0.3,
+    "width": 1.8,
     "height": 1.3,
     "sill": 1,
     "swing": 1
@@ -1261,11 +1191,11 @@
    "props": {
     "host": "SL-wall-02",
     "role": "window",
-    "kind": "slider",
-    "offset": 9.9,
-    "width": 2.4,
-    "height": 2.2,
-    "sill": 0,
+    "kind": "window",
+    "offset": 3.6,
+    "width": 1.2,
+    "height": 1.3,
+    "sill": 1,
     "swing": 1
    }
   },
@@ -1275,43 +1205,11 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "SL-wall-03",
-    "role": "window",
-    "kind": "slider",
-    "offset": 3.4,
-    "width": 5,
-    "height": 2.2,
-    "sill": 0,
-    "swing": 1
-   }
-  },
-  {
-   "id": "SL-win-08",
-   "level": "SL",
-   "tags": [],
-   "type": "Opening",
-   "props": {
-    "host": "SL-wall-04",
+    "host": "SL-wall-01",
     "role": "window",
     "kind": "window",
-    "offset": 8.6,
-    "width": 3.6,
-    "height": 1.3,
-    "sill": 1,
-    "swing": 1
-   }
-  },
-  {
-   "id": "SL-win-09",
-   "level": "SL",
-   "tags": [],
-   "type": "Opening",
-   "props": {
-    "host": "SL-wall-03",
-    "role": "window",
-    "kind": "window",
-    "offset": 0.3,
-    "width": 2.6,
+    "offset": 7.8,
+    "width": 0.6,
     "height": 1.3,
     "sill": 1,
     "swing": 1
@@ -1329,8 +1227,8 @@
      {
       "x0": 0,
       "y0": 5,
-      "x1": 3.2,
-      "y1": 8.2
+      "x1": 3.6,
+      "y1": 8.5
      }
     ],
     "lock": false
@@ -1346,10 +1244,10 @@
     "zone": "wet",
     "cells": [
      {
-      "x0": 3.2,
+      "x0": 3.6,
       "y0": 5,
-      "x1": 5,
-      "y1": 6.6
+      "x1": 5.4,
+      "y1": 6.75
      }
     ],
     "lock": false
@@ -1365,10 +1263,10 @@
     "zone": "wet",
     "cells": [
      {
-      "x0": 3.2,
-      "y0": 6.6,
-      "x1": 5,
-      "y1": 8.2
+      "x0": 3.6,
+      "y0": 6.75,
+      "x1": 5.4,
+      "y1": 8.5
      }
     ],
     "lock": false
@@ -1384,16 +1282,10 @@
     "zone": "private",
     "cells": [
      {
-      "x0": 5,
+      "x0": 5.4,
       "y0": 5,
       "x1": 8.6,
-      "y1": 9
-     },
-     {
-      "x0": 3.2,
-      "y0": 8.2,
-      "x1": 5,
-      "y1": 9
+      "y1": 8.5
      }
     ],
     "lock": false
@@ -1405,20 +1297,26 @@
    "tags": [],
    "type": "Space",
    "props": {
-    "name": "Master bedroom",
-    "zone": "private",
+    "name": "Hall",
+    "zone": "circ",
     "cells": [
      {
-      "x0": 5,
-      "y0": 9,
+      "x0": 2.4,
+      "y0": 8.5,
       "x1": 8.6,
-      "y1": 13.6
+      "y1": 9.7
      },
      {
-      "x0": 3.2,
-      "y0": 9,
-      "x1": 5,
-      "y1": 10
+      "x0": 2.4,
+      "y0": 9.7,
+      "x1": 3.6,
+      "y1": 11.9
+     },
+     {
+      "x0": 0,
+      "y0": 11.9,
+      "x1": 3.6,
+      "y1": 13.1
      }
     ],
     "lock": false
@@ -1430,17 +1328,18 @@
    "tags": [],
    "type": "Space",
    "props": {
-    "name": "Master bath",
-    "zone": "wet",
+    "name": "Stair",
+    "zone": "stair",
     "cells": [
      {
-      "x0": 3.2,
-      "y0": 10,
-      "x1": 5,
-      "y1": 12.2
+      "x0": 0,
+      "y0": 8.5,
+      "x1": 2.4,
+      "y1": 11.9
      }
     ],
-    "lock": false
+    "lock": true,
+    "stairKind": "u"
    }
   },
   {
@@ -1449,14 +1348,14 @@
    "tags": [],
    "type": "Space",
    "props": {
-    "name": "Closet",
-    "zone": "private",
+    "name": "Master bath",
+    "zone": "wet",
     "cells": [
      {
-      "x0": 3.2,
-      "y0": 12.2,
-      "x1": 5,
-      "y1": 13.6
+      "x0": 3.6,
+      "y0": 9.7,
+      "x1": 5.6,
+      "y1": 11.9
      }
     ],
     "lock": false
@@ -1468,20 +1367,14 @@
    "tags": [],
    "type": "Space",
    "props": {
-    "name": "Hall",
-    "zone": "circ",
+    "name": "Closet",
+    "zone": "private",
     "cells": [
      {
-      "x0": 1.6,
-      "y0": 8.2,
-      "x1": 3.2,
-      "y1": 12.5
-     },
-     {
-      "x0": 0,
-      "y0": 12.5,
-      "x1": 3.2,
-      "y1": 13.6
+      "x0": 3.6,
+      "y0": 11.9,
+      "x1": 5.6,
+      "y1": 13.1
      }
     ],
     "lock": false
@@ -1493,18 +1386,17 @@
    "tags": [],
    "type": "Space",
    "props": {
-    "name": "Stair",
-    "zone": "stair",
+    "name": "Master bedroom",
+    "zone": "private",
     "cells": [
      {
-      "x0": 0,
-      "y0": 8.2,
-      "x1": 1.6,
-      "y1": 12.5
+      "x0": 5.6,
+      "y0": 9.7,
+      "x1": 8.6,
+      "y1": 13.1
      }
     ],
-    "lock": true,
-    "stairKind": "void"
+    "lock": false
    }
   },
   {
@@ -1538,7 +1430,7 @@
     ],
     "end": [
      8.6,
-     13.6
+     13.1
     ],
     "thickness": 0.2,
     "height": 3.1,
@@ -1553,11 +1445,11 @@
    "props": {
     "start": [
      0,
-     13.6
+     13.1
     ],
     "end": [
      8.6,
-     13.6
+     13.1
     ],
     "thickness": 0.2,
     "height": 3.1,
@@ -1576,7 +1468,7 @@
     ],
     "end": [
      0,
-     13.6
+     13.1
     ],
     "thickness": 0.2,
     "height": 3.1,
@@ -1590,12 +1482,12 @@
    "type": "Wall",
    "props": {
     "start": [
-     3.2,
-     6.6
+     3.6,
+     6.75
     ],
     "end": [
-     5,
-     6.6
+     5.4,
+     6.75
     ],
     "thickness": 0.15,
     "height": 2.7,
@@ -1610,11 +1502,11 @@
    "props": {
     "start": [
      0,
-     8.2
+     8.5
     ],
     "end": [
-     3.2,
-     8.2
+     3.6,
+     8.5
     ],
     "thickness": 0.12,
     "height": 2.7,
@@ -1628,16 +1520,16 @@
    "type": "Wall",
    "props": {
     "start": [
-     3.2,
-     8.2
+     5.4,
+     8.5
     ],
     "end": [
-     5,
-     8.2
+     8.6,
+     8.5
     ],
-    "thickness": 0.15,
+    "thickness": 0.12,
     "height": 2.7,
-    "wallType": "wet"
+    "wallType": "interior"
    }
   },
   {
@@ -1647,16 +1539,16 @@
    "type": "Wall",
    "props": {
     "start": [
-     3.2,
-     9
+     3.6,
+     8.5
     ],
     "end": [
-     8.6,
-     9
+     5.4,
+     8.5
     ],
-    "thickness": 0.12,
+    "thickness": 0.15,
     "height": 2.7,
-    "wallType": "interior"
+    "wallType": "wet"
    }
   },
   {
@@ -1666,16 +1558,16 @@
    "type": "Wall",
    "props": {
     "start": [
-     3.2,
-     10
+     5.6,
+     9.7
     ],
     "end": [
-     5,
-     10
+     8.6,
+     9.7
     ],
-    "thickness": 0.15,
+    "thickness": 0.12,
     "height": 2.7,
-    "wallType": "wet"
+    "wallType": "interior"
    }
   },
   {
@@ -1685,12 +1577,12 @@
    "type": "Wall",
    "props": {
     "start": [
-     3.2,
-     12.2
+     3.6,
+     9.7
     ],
     "end": [
-     5,
-     12.2
+     5.6,
+     9.7
     ],
     "thickness": 0.15,
     "height": 2.7,
@@ -1704,16 +1596,16 @@
    "type": "Wall",
    "props": {
     "start": [
-     3.2,
-     8.2
+     3.6,
+     11.9
     ],
     "end": [
-     3.2,
-     10
+     5.6,
+     11.9
     ],
-    "thickness": 0.12,
+    "thickness": 0.15,
     "height": 2.7,
-    "wallType": "interior"
+    "wallType": "wet"
    }
   },
   {
@@ -1723,12 +1615,12 @@
    "type": "Wall",
    "props": {
     "start": [
-     3.2,
-     12.2
+     3.6,
+     11.9
     ],
     "end": [
-     3.2,
-     13.6
+     3.6,
+     13.1
     ],
     "thickness": 0.12,
     "height": 2.7,
@@ -1742,12 +1634,12 @@
    "type": "Wall",
    "props": {
     "start": [
-     3.2,
+     3.6,
      5
     ],
     "end": [
-     3.2,
-     8.2
+     3.6,
+     8.5
     ],
     "thickness": 0.15,
     "height": 2.7,
@@ -1761,12 +1653,12 @@
    "type": "Wall",
    "props": {
     "start": [
-     3.2,
-     10
+     3.6,
+     9.7
     ],
     "end": [
-     3.2,
-     12.2
+     3.6,
+     11.9
     ],
     "thickness": 0.15,
     "height": 2.7,
@@ -1780,16 +1672,16 @@
    "type": "Wall",
    "props": {
     "start": [
-     5,
-     12.2
+     5.4,
+     5
     ],
     "end": [
-     5,
-     13.6
+     5.4,
+     8.5
     ],
-    "thickness": 0.12,
+    "thickness": 0.15,
     "height": 2.7,
-    "wallType": "interior"
+    "wallType": "wet"
    }
   },
   {
@@ -1799,16 +1691,16 @@
    "type": "Wall",
    "props": {
     "start": [
-     5,
-     5
+     5.6,
+     11.9
     ],
     "end": [
-     5,
-     8.2
+     5.6,
+     13.1
     ],
-    "thickness": 0.15,
+    "thickness": 0.12,
     "height": 2.7,
-    "wallType": "wet"
+    "wallType": "interior"
    }
   },
   {
@@ -1818,12 +1710,12 @@
    "type": "Wall",
    "props": {
     "start": [
-     5,
-     10
+     5.6,
+     9.7
     ],
     "end": [
-     5,
-     12.2
+     5.6,
+     11.9
     ],
     "thickness": 0.15,
     "height": 2.7,
@@ -1839,7 +1731,7 @@
     "host": "UF-wall-06",
     "role": "door",
     "kind": "door",
-    "offset": 1.9,
+    "offset": 2.6,
     "width": 0.8,
     "height": 2.1,
     "sill": 0,
@@ -1852,14 +1744,14 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "UF-wall-13",
+    "host": "UF-wall-07",
     "role": "door",
     "kind": "door",
-    "offset": 0.5,
-    "width": 0.7,
+    "offset": 0.8,
+    "width": 0.8,
     "height": 2.1,
     "sill": 0,
-    "swing": 1
+    "swing": -1
    }
   },
   {
@@ -1868,14 +1760,14 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "UF-wall-16",
+    "host": "UF-wall-13",
     "role": "door",
     "kind": "door",
-    "offset": 2.2,
+    "offset": 0.3,
     "width": 0.7,
     "height": 2.1,
     "sill": 0,
-    "swing": -1
+    "swing": 1
    }
   },
   {
@@ -1884,14 +1776,14 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "UF-wall-11",
+    "host": "UF-wall-15",
     "role": "door",
     "kind": "door",
-    "offset": 0.05,
+    "offset": 2.4,
     "width": 0.7,
     "height": 2.1,
     "sill": 0,
-    "swing": 1
+    "swing": -1
    }
   },
   {
@@ -1900,10 +1792,10 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "UF-wall-11",
+    "host": "UF-wall-12",
     "role": "door",
     "kind": "door",
-    "offset": 0.9,
+    "offset": 0.2,
     "width": 0.8,
     "height": 2.1,
     "sill": 0,
@@ -1916,10 +1808,10 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "UF-wall-17",
+    "host": "UF-wall-11",
     "role": "door",
     "kind": "door",
-    "offset": 0.4,
+    "offset": 0.6,
     "width": 0.7,
     "height": 2.1,
     "sill": 0,
@@ -1932,14 +1824,14 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "UF-wall-15",
+    "host": "UF-wall-16",
     "role": "door",
     "kind": "door",
     "offset": 0.2,
     "width": 0.8,
     "height": 2.1,
     "sill": 0,
-    "swing": -1
+    "swing": 1
    }
   },
   {
@@ -1951,8 +1843,8 @@
     "host": "UF-wall-01",
     "role": "window",
     "kind": "window",
-    "offset": 0.4,
-    "width": 2.4,
+    "offset": 0.5,
+    "width": 2.6,
     "height": 1.3,
     "sill": 1,
     "swing": 1
@@ -1967,8 +1859,8 @@
     "host": "UF-wall-04",
     "role": "window",
     "kind": "window",
-    "offset": 0.5,
-    "width": 2.2,
+    "offset": 0.6,
+    "width": 2.4,
     "height": 1.3,
     "sill": 1,
     "swing": 1
@@ -1984,7 +1876,7 @@
     "role": "window",
     "kind": "window",
     "high": true,
-    "offset": 3.5,
+    "offset": 3.9,
     "width": 1.2,
     "height": 0.6,
     "sill": 1.7,
@@ -2000,8 +1892,8 @@
     "host": "UF-wall-01",
     "role": "window",
     "kind": "window",
-    "offset": 5.4,
-    "width": 2.8,
+    "offset": 5.8,
+    "width": 2.4,
     "height": 1.3,
     "sill": 1,
     "swing": 1
@@ -2032,8 +1924,8 @@
     "host": "UF-wall-02",
     "role": "window",
     "kind": "window",
-    "offset": 4.2,
-    "width": 3.8,
+    "offset": 3.7,
+    "width": 0.8,
     "height": 1.3,
     "sill": 1,
     "swing": 1
@@ -2045,10 +1937,10 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "UF-wall-03",
+    "host": "UF-wall-02",
     "role": "window",
     "kind": "window",
-    "offset": 5.4,
+    "offset": 5,
     "width": 2.8,
     "height": 1.3,
     "sill": 1,
@@ -2064,8 +1956,8 @@
     "host": "UF-wall-03",
     "role": "window",
     "kind": "window",
-    "offset": 0.3,
-    "width": 2.6,
+    "offset": 5.9,
+    "width": 2.4,
     "height": 1.3,
     "sill": 1,
     "swing": 1
@@ -2077,11 +1969,11 @@
    "tags": [],
    "type": "Opening",
    "props": {
-    "host": "UF-wall-04",
+    "host": "UF-wall-03",
     "role": "window",
     "kind": "window",
-    "offset": 3.6,
-    "width": 3.5,
+    "offset": 0.3,
+    "width": 3,
     "height": 1.3,
     "sill": 1,
     "swing": 1
@@ -2117,10 +2009,10 @@
      "x0": 0,
      "y0": 0,
      "x1": 8.6,
-     "y1": 12.6
+     "y1": 13.1
     },
     "voidSpaces": [
-     "SL-space-09",
+     "SL-space-07",
      "SL-space-01"
     ],
     "topElevation": 0.6,
@@ -2156,10 +2048,10 @@
      "x0": 0,
      "y0": 5,
      "x1": 8.6,
-     "y1": 13.6
+     "y1": 13.1
     },
     "voidSpaces": [
-     "UF-space-09"
+     "UF-space-06"
     ],
     "topElevation": 3.7,
     "thickness": 0.14
@@ -2176,7 +2068,7 @@
      "x0": 0,
      "y0": 5,
      "x1": 8.6,
-     "y1": 13.6
+     "y1": 13.1
     },
     "voidSpaces": [],
     "topElevation": 6.8,
@@ -2193,16 +2085,17 @@
    ],
    "type": "Slab",
    "props": {
-    "name": "Veranda slab (roof of the lower level)",
+    "name": "Roof of the lower level",
     "rect": {
      "x0": 0,
-     "y0": 12.6,
+     "y0": 13.1,
      "x1": 8.6,
      "y1": 15
     },
     "voidSpaces": [],
     "topElevation": 0.6,
-    "thickness": 0.14
+    "thickness": 0.14,
+    "parapet": 0.3
    }
   },
   {
@@ -2229,87 +2122,78 @@
   },
   {
    "id": "stair-01",
-   "level": "SL",
-   "tags": [],
-   "type": "Stair",
-   "props": {
-    "name": "Up flight SL → UF",
-    "fromLevel": "SL",
-    "toLevel": "UF",
-    "riser": 0.182,
-    "tread": 0.27,
-    "width": 1.5,
-    "flights": [
-     {
-      "x0": 0,
-      "x1": 1.5,
-      "yBottom": 8.2,
-      "yTop": 12.52,
-      "risers": 17
-     }
-    ],
-    "landings": []
-   }
-  },
-  {
-   "id": "stair-02",
    "level": "LL",
    "tags": [],
-   "notes": [
-    "Stair and retaining wall: the down flight LL → SL passes over the cut line (y 8.50), x 1.70–3.20. The ground there is at about -1.00, so the retained soil stays well below the flight (tread about +0.23 at y 8.50). Under the stair opening the lower-level front wall stops under the flight soffit, with a lintel beam over it. To be detailed by the structural engineer."
-   ],
    "type": "Stair",
    "props": {
-    "name": "Down flight LL → SL",
+    "name": "U-stair LL → SL",
     "fromLevel": "LL",
     "toLevel": "SL",
     "riser": 0.182,
     "tread": 0.27,
-    "width": 1.5,
+    "width": 1.15,
     "flights": [
      {
-      "x0": 1.7,
-      "x1": 3.2,
-      "yBottom": 12.52,
-      "yTop": 8.2,
-      "risers": 17
+      "x0": 1.25,
+      "x1": 2.4,
+      "yBottom": 12.17,
+      "yTop": 10.01,
+      "risers": 9
+     },
+     {
+      "x0": 0,
+      "x1": 1.15,
+      "yBottom": 10.01,
+      "yTop": 11.9,
+      "risers": 8
      }
     ],
-    "landings": []
+    "landings": [
+     {
+      "x0": 0,
+      "y0": 8.5,
+      "x1": 2.4,
+      "y1": 10.01
+     }
+    ]
    }
   },
   {
-   "id": "LL-deck-01",
-   "level": "LL",
-   "tags": [],
-   "type": "Deck",
-   "props": {
-    "name": "Garden",
-    "label": "garden −2.55 →",
-    "rect": {
-     "x0": 0,
-     "y0": 15,
-     "x1": 8.6,
-     "y1": 16.2
-    },
-    "elevation": -2.55
-   }
-  },
-  {
-   "id": "SL-deck-01",
+   "id": "stair-02",
    "level": "SL",
    "tags": [],
-   "type": "Deck",
+   "type": "Stair",
    "props": {
-    "name": "Veranda",
-    "label": "Veranda 20.6 m² · roof of the lower level",
-    "rect": {
-     "x0": 0,
-     "y0": 12.6,
-     "x1": 8.6,
-     "y1": 15
-    },
-    "elevation": 0.6
+    "name": "U-stair SL → UF",
+    "fromLevel": "SL",
+    "toLevel": "UF",
+    "riser": 0.182,
+    "tread": 0.27,
+    "width": 1.15,
+    "flights": [
+     {
+      "x0": 1.25,
+      "x1": 2.4,
+      "yBottom": 12.17,
+      "yTop": 10.01,
+      "risers": 9
+     },
+     {
+      "x0": 0,
+      "x1": 1.15,
+      "yBottom": 10.01,
+      "yTop": 11.9,
+      "risers": 8
+     }
+    ],
+    "landings": [
+     {
+      "x0": 0,
+      "y0": 8.5,
+      "x1": 2.4,
+      "y1": 10.01
+     }
+    ]
    }
   },
   {
@@ -2321,11 +2205,11 @@
    "type": "Beam",
    "props": {
     "start": [
-     0,
+     5.4,
      0
     ],
     "end": [
-     3.2,
+     8.6,
      0
     ],
     "profile": "W250×32.7",
@@ -2342,11 +2226,11 @@
    "props": {
     "start": [
      0,
-     12.6
+     11.9
     ],
     "end": [
-     8.6,
-     12.6
+     2.4,
+     11.9
     ],
     "profile": "W250×32.7",
     "elevation": 0.46
@@ -2362,11 +2246,11 @@
    "props": {
     "start": [
      0,
-     15
+     13.1
     ],
     "end": [
      8.6,
-     15
+     13.1
     ],
     "profile": "W250×32.7",
     "elevation": 0.46
@@ -2382,11 +2266,11 @@
    "props": {
     "start": [
      0,
-     5
+     15
     ],
     "end": [
      8.6,
-     5
+     15
     ],
     "profile": "W250×32.7",
     "elevation": 0.46
@@ -2402,11 +2286,11 @@
    "props": {
     "start": [
      0,
-     8.2
+     5
     ],
     "end": [
-     3.2,
-     8.2
+     8.6,
+     5
     ],
     "profile": "W250×32.7",
     "elevation": 0.46
@@ -2421,7 +2305,7 @@
    "type": "Beam",
    "props": {
     "start": [
-     3.2,
+     0,
      8.5
     ],
     "end": [
@@ -2462,11 +2346,11 @@
    "props": {
     "start": [
      0,
-     12.5
+     11.9
     ],
     "end": [
-     1.6,
-     12.5
+     2.4,
+     11.9
     ],
     "profile": "W250×32.7",
     "elevation": 3.56
@@ -2482,11 +2366,11 @@
    "props": {
     "start": [
      0,
-     12.6
+     13.1
     ],
     "end": [
      8.6,
-     12.6
+     13.1
     ],
     "profile": "W250×32.7",
     "elevation": 3.56
@@ -2502,11 +2386,11 @@
    "props": {
     "start": [
      0,
-     13.6
+     5
     ],
     "end": [
      8.6,
-     13.6
+     5
     ],
     "profile": "W250×32.7",
     "elevation": 3.56
@@ -2522,11 +2406,11 @@
    "props": {
     "start": [
      0,
-     5
+     8.5
     ],
     "end": [
      8.6,
-     5
+     8.5
     ],
     "profile": "W250×32.7",
     "elevation": 3.56
@@ -2534,7 +2418,7 @@
   },
   {
    "id": "beam-12",
-   "level": "UF",
+   "level": "roof",
    "tags": [
     "generated"
    ],
@@ -2542,34 +2426,34 @@
    "props": {
     "start": [
      0,
-     8.2
+     13.1
     ],
     "end": [
-     1.6,
-     8.2
+     8.6,
+     13.1
     ],
     "profile": "W250×32.7",
-    "elevation": 3.56
+    "elevation": 6.66
    }
   },
   {
    "id": "beam-13",
-   "level": "UF",
+   "level": "roof",
    "tags": [
     "generated"
    ],
    "type": "Beam",
    "props": {
     "start": [
-     1.6,
-     8.5
+     0,
+     5
     ],
     "end": [
      8.6,
-     8.5
+     5
     ],
     "profile": "W250×32.7",
-    "elevation": 3.56
+    "elevation": 6.66
    }
   },
   {
@@ -2582,11 +2466,11 @@
    "props": {
     "start": [
      0,
-     12.6
+     8.5
     ],
     "end": [
      8.6,
-     12.6
+     8.5
     ],
     "profile": "W250×32.7",
     "elevation": 6.66
@@ -2594,7 +2478,7 @@
   },
   {
    "id": "beam-15",
-   "level": "roof",
+   "level": "SL",
    "tags": [
     "generated"
    ],
@@ -2602,54 +2486,54 @@
    "props": {
     "start": [
      0,
-     13.6
+     5
     ],
     "end": [
-     8.6,
-     13.6
+     0,
+     15
     ],
     "profile": "W250×32.7",
-    "elevation": 6.66
+    "elevation": 0.46
    }
   },
   {
    "id": "beam-16",
-   "level": "roof",
+   "level": "SL",
    "tags": [
     "generated"
    ],
    "type": "Beam",
    "props": {
     "start": [
-     0,
+     2.4,
      5
     ],
     "end": [
-     8.6,
-     5
+     2.4,
+     15
     ],
     "profile": "W250×32.7",
-    "elevation": 6.66
+    "elevation": 0.46
    }
   },
   {
    "id": "beam-17",
-   "level": "roof",
+   "level": "SL",
    "tags": [
     "generated"
    ],
    "type": "Beam",
    "props": {
     "start": [
-     0,
-     8.5
+     5.4,
+     0
     ],
     "end": [
-     8.6,
-     8.5
+     5.4,
+     15
     ],
     "profile": "W250×32.7",
-    "elevation": 6.66
+    "elevation": 0.46
    }
   },
   {
@@ -2661,11 +2545,11 @@
    "type": "Beam",
    "props": {
     "start": [
-     0,
+     8.6,
      0
     ],
     "end": [
-     0,
+     8.6,
      15
     ],
     "profile": "W250×32.7",
@@ -2674,46 +2558,6 @@
   },
   {
    "id": "beam-19",
-   "level": "SL",
-   "tags": [
-    "generated"
-   ],
-   "type": "Beam",
-   "props": {
-    "start": [
-     3.2,
-     0
-    ],
-    "end": [
-     3.2,
-     15
-    ],
-    "profile": "W250×32.7",
-    "elevation": 0.46
-   }
-  },
-  {
-   "id": "beam-20",
-   "level": "SL",
-   "tags": [
-    "generated"
-   ],
-   "type": "Beam",
-   "props": {
-    "start": [
-     8.6,
-     5
-    ],
-    "end": [
-     8.6,
-     15
-    ],
-    "profile": "W250×32.7",
-    "elevation": 0.46
-   }
-  },
-  {
-   "id": "beam-21",
    "level": "UF",
    "tags": [
     "generated"
@@ -2726,7 +2570,47 @@
     ],
     "end": [
      0,
-     13.6
+     13.1
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.56
+   }
+  },
+  {
+   "id": "beam-20",
+   "level": "UF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     2.4,
+     0
+    ],
+    "end": [
+     2.4,
+     13.1
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.56
+   }
+  },
+  {
+   "id": "beam-21",
+   "level": "UF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     5.4,
+     0
+    ],
+    "end": [
+     5.4,
+     13.1
     ],
     "profile": "W250×32.7",
     "elevation": 3.56
@@ -2741,12 +2625,12 @@
    "type": "Beam",
    "props": {
     "start": [
-     1.6,
-     8.2
+     8.6,
+     0
     ],
     "end": [
-     1.6,
-     12.5
+     8.6,
+     13.1
     ],
     "profile": "W250×32.7",
     "elevation": 3.56
@@ -2754,46 +2638,6 @@
   },
   {
    "id": "beam-23",
-   "level": "UF",
-   "tags": [
-    "generated"
-   ],
-   "type": "Beam",
-   "props": {
-    "start": [
-     3.2,
-     0
-    ],
-    "end": [
-     3.2,
-     13.6
-    ],
-    "profile": "W250×32.7",
-    "elevation": 3.56
-   }
-  },
-  {
-   "id": "beam-24",
-   "level": "UF",
-   "tags": [
-    "generated"
-   ],
-   "type": "Beam",
-   "props": {
-    "start": [
-     8.6,
-     0
-    ],
-    "end": [
-     8.6,
-     13.6
-    ],
-    "profile": "W250×32.7",
-    "elevation": 3.56
-   }
-  },
-  {
-   "id": "beam-25",
    "level": "roof",
    "tags": [
     "generated"
@@ -2806,7 +2650,47 @@
     ],
     "end": [
      0,
-     13.6
+     13.1
+    ],
+    "profile": "W250×32.7",
+    "elevation": 6.66
+   }
+  },
+  {
+   "id": "beam-24",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     2.4,
+     5
+    ],
+    "end": [
+     2.4,
+     13.1
+    ],
+    "profile": "W250×32.7",
+    "elevation": 6.66
+   }
+  },
+  {
+   "id": "beam-25",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     5.4,
+     5
+    ],
+    "end": [
+     5.4,
+     13.1
     ],
     "profile": "W250×32.7",
     "elevation": 6.66
@@ -2821,32 +2705,12 @@
    "type": "Beam",
    "props": {
     "start": [
-     3.2,
-     5
-    ],
-    "end": [
-     3.2,
-     13.6
-    ],
-    "profile": "W250×32.7",
-    "elevation": 6.66
-   }
-  },
-  {
-   "id": "beam-27",
-   "level": "roof",
-   "tags": [
-    "generated"
-   ],
-   "type": "Beam",
-   "props": {
-    "start": [
      8.6,
      5
     ],
     "end": [
      8.6,
-     13.6
+     13.1
     ],
     "profile": "W250×32.7",
     "elevation": 6.66
@@ -2866,7 +2730,7 @@
     ],
     "profile": "W200×46.1",
     "kind": "column",
-    "baseElevation": -0.62,
+    "baseElevation": -0.2,
     "topElevation": 3.56
    }
   },
@@ -2885,7 +2749,7 @@
      "x1": 0.5,
      "y1": 0.5
     },
-    "topElevation": -0.62,
+    "topElevation": -0.2,
     "depth": 0.5,
     "carries": "col-01"
    }
@@ -2899,7 +2763,7 @@
    "type": "Column",
    "props": {
     "at": [
-     3.2,
+     2.4,
      0
     ],
     "profile": "W200×46.1",
@@ -2918,9 +2782,9 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": 2.7,
+     "x0": 1.9,
      "y0": -0.5,
-     "x1": 3.7,
+     "x1": 2.9,
      "y1": 0.5
     },
     "topElevation": -0.2,
@@ -2937,7 +2801,7 @@
    "type": "Column",
    "props": {
     "at": [
-     8.6,
+     5.4,
      0
     ],
     "profile": "W200×46.1",
@@ -2956,9 +2820,9 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": 8.1,
+     "x0": 4.9,
      "y0": -0.5,
-     "x1": 9.1,
+     "x1": 5.9,
      "y1": 0.5
     },
     "topElevation": -0.2,
@@ -2975,13 +2839,13 @@
    "type": "Column",
    "props": {
     "at": [
-     0,
-     5
+     8.6,
+     0
     ],
     "profile": "W200×46.1",
     "kind": "column",
-    "baseElevation": -1.02,
-    "topElevation": 6.66
+    "baseElevation": -0.2,
+    "topElevation": 3.56
    }
   },
   {
@@ -2994,12 +2858,12 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": -0.5,
-     "y0": 4.5,
-     "x1": 0.5,
-     "y1": 5.5
+     "x0": 8.1,
+     "y0": -0.5,
+     "x1": 9.1,
+     "y1": 0.5
     },
-    "topElevation": -1.02,
+    "topElevation": -0.2,
     "depth": 0.5,
     "carries": "col-04"
    }
@@ -3013,7 +2877,7 @@
    "type": "Column",
    "props": {
     "at": [
-     3.2,
+     0,
      5
     ],
     "profile": "W200×46.1",
@@ -3032,9 +2896,9 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": 2.7,
+     "x0": -0.5,
      "y0": 4.5,
-     "x1": 3.7,
+     "x1": 0.5,
      "y1": 5.5
     },
     "topElevation": -1.02,
@@ -3051,7 +2915,7 @@
    "type": "Column",
    "props": {
     "at": [
-     8.6,
+     2.4,
      5
     ],
     "profile": "W200×46.1",
@@ -3070,9 +2934,9 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": 8.1,
+     "x0": 1.9,
      "y0": 4.5,
-     "x1": 9.1,
+     "x1": 2.9,
      "y1": 5.5
     },
     "topElevation": -1.02,
@@ -3082,25 +2946,25 @@
   },
   {
    "id": "col-07",
-   "level": "LL",
+   "level": "SL",
    "tags": [
     "generated"
    ],
    "type": "Column",
    "props": {
     "at": [
-     0,
-     8.5
+     5.4,
+     5
     ],
     "profile": "W200×46.1",
     "kind": "column",
-    "baseElevation": -2.65,
+    "baseElevation": -1.02,
     "topElevation": 6.66
    }
   },
   {
    "id": "footing-07",
-   "level": "LL",
+   "level": "SL",
    "tags": [
     "generated"
    ],
@@ -3108,37 +2972,37 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": -0.5,
-     "y0": 8,
-     "x1": 0.5,
-     "y1": 9
+     "x0": 4.9,
+     "y0": 4.5,
+     "x1": 5.9,
+     "y1": 5.5
     },
-    "topElevation": -2.65,
+    "topElevation": -1.02,
     "depth": 0.5,
     "carries": "col-07"
    }
   },
   {
    "id": "col-08",
-   "level": "LL",
+   "level": "SL",
    "tags": [
     "generated"
    ],
    "type": "Column",
    "props": {
     "at": [
-     3.2,
-     8.5
+     8.6,
+     5
     ],
     "profile": "W200×46.1",
     "kind": "column",
-    "baseElevation": -2.65,
+    "baseElevation": -1.02,
     "topElevation": 6.66
    }
   },
   {
    "id": "footing-08",
-   "level": "LL",
+   "level": "SL",
    "tags": [
     "generated"
    ],
@@ -3146,12 +3010,12 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": 2.7,
-     "y0": 8,
-     "x1": 3.7,
-     "y1": 9
+     "x0": 8.1,
+     "y0": 4.5,
+     "x1": 9.1,
+     "y1": 5.5
     },
-    "topElevation": -2.65,
+    "topElevation": -1.02,
     "depth": 0.5,
     "carries": "col-08"
    }
@@ -3165,7 +3029,7 @@
    "type": "Column",
    "props": {
     "at": [
-     8.6,
+     0,
      8.5
     ],
     "profile": "W200×46.1",
@@ -3184,9 +3048,9 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": 8.1,
+     "x0": -0.5,
      "y0": 8,
-     "x1": 9.1,
+     "x1": 0.5,
      "y1": 9
     },
     "topElevation": -2.65,
@@ -3203,8 +3067,8 @@
    "type": "Column",
    "props": {
     "at": [
-     0,
-     12.6
+     2.4,
+     8.5
     ],
     "profile": "W200×46.1",
     "kind": "column",
@@ -3222,10 +3086,10 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": -0.5,
-     "y0": 12.1,
-     "x1": 0.5,
-     "y1": 13.1
+     "x0": 1.9,
+     "y0": 8,
+     "x1": 2.9,
+     "y1": 9
     },
     "topElevation": -2.65,
     "depth": 0.5,
@@ -3241,8 +3105,8 @@
    "type": "Column",
    "props": {
     "at": [
-     3.2,
-     12.6
+     5.4,
+     8.5
     ],
     "profile": "W200×46.1",
     "kind": "column",
@@ -3260,10 +3124,10 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": 2.7,
-     "y0": 12.1,
-     "x1": 3.7,
-     "y1": 13.1
+     "x0": 4.9,
+     "y0": 8,
+     "x1": 5.9,
+     "y1": 9
     },
     "topElevation": -2.65,
     "depth": 0.5,
@@ -3280,7 +3144,7 @@
    "props": {
     "at": [
      8.6,
-     12.6
+     8.5
     ],
     "profile": "W200×46.1",
     "kind": "column",
@@ -3299,9 +3163,9 @@
     "kind": "pad",
     "rect": {
      "x0": 8.1,
-     "y0": 12.1,
+     "y0": 8,
      "x1": 9.1,
-     "y1": 13.1
+     "y1": 9
     },
     "topElevation": -2.65,
     "depth": 0.5,
@@ -3310,6 +3174,158 @@
   },
   {
    "id": "col-13",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     0,
+     13.1
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 6.66
+   }
+  },
+  {
+   "id": "footing-13",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": -0.5,
+     "y0": 12.6,
+     "x1": 0.5,
+     "y1": 13.6
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-13"
+   }
+  },
+  {
+   "id": "col-14",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     2.4,
+     13.1
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 6.66
+   }
+  },
+  {
+   "id": "footing-14",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 1.9,
+     "y0": 12.6,
+     "x1": 2.9,
+     "y1": 13.6
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-14"
+   }
+  },
+  {
+   "id": "col-15",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     5.4,
+     13.1
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 6.66
+   }
+  },
+  {
+   "id": "footing-15",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 4.9,
+     "y0": 12.6,
+     "x1": 5.9,
+     "y1": 13.6
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-15"
+   }
+  },
+  {
+   "id": "col-16",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     8.6,
+     13.1
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 6.66
+   }
+  },
+  {
+   "id": "footing-16",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 8.1,
+     "y0": 12.6,
+     "x1": 9.1,
+     "y1": 13.6
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-16"
+   }
+  },
+  {
+   "id": "col-17",
    "level": "LL",
    "tags": [
     "generated"
@@ -3327,7 +3343,7 @@
    }
   },
   {
-   "id": "footing-13",
+   "id": "footing-17",
    "level": "LL",
    "tags": [
     "generated"
@@ -3343,11 +3359,11 @@
     },
     "topElevation": -2.65,
     "depth": 0.5,
-    "carries": "col-13"
+    "carries": "col-17"
    }
   },
   {
-   "id": "col-14",
+   "id": "col-18",
    "level": "LL",
    "tags": [
     "generated"
@@ -3355,7 +3371,7 @@
    "type": "Column",
    "props": {
     "at": [
-     3.2,
+     2.4,
      15
     ],
     "profile": "W200×46.1",
@@ -3365,7 +3381,7 @@
    }
   },
   {
-   "id": "footing-14",
+   "id": "footing-18",
    "level": "LL",
    "tags": [
     "generated"
@@ -3374,18 +3390,56 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": 2.7,
+     "x0": 1.9,
      "y0": 14.5,
-     "x1": 3.7,
+     "x1": 2.9,
      "y1": 15.5
     },
     "topElevation": -2.65,
     "depth": 0.5,
-    "carries": "col-14"
+    "carries": "col-18"
    }
   },
   {
-   "id": "col-15",
+   "id": "col-19",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     5.4,
+     15
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 0.46
+   }
+  },
+  {
+   "id": "footing-19",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 4.9,
+     "y0": 14.5,
+     "x1": 5.9,
+     "y1": 15.5
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-19"
+   }
+  },
+  {
+   "id": "col-20",
    "level": "LL",
    "tags": [
     "generated"
@@ -3403,7 +3457,7 @@
    }
   },
   {
-   "id": "footing-15",
+   "id": "footing-20",
    "level": "LL",
    "tags": [
     "generated"
@@ -3419,7 +3473,7 @@
     },
     "topElevation": -2.65,
     "depth": 0.5,
-    "carries": "col-15"
+    "carries": "col-20"
    }
   },
   {
@@ -3431,7 +3485,7 @@
    "type": "Column",
    "props": {
     "at": [
-     0,
+     5.4,
      2.5
     ],
     "profile": "Concrete 30×30",
@@ -3441,7 +3495,7 @@
    }
   },
   {
-   "id": "footing-16",
+   "id": "footing-21",
    "level": "SL",
    "tags": [
     "generated"
@@ -3450,9 +3504,9 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": -0.35,
+     "x0": 5.05,
      "y0": 2.15,
-     "x1": 0.35,
+     "x1": 5.75,
      "y1": 2.85
     },
     "topElevation": -0.82,
@@ -3469,7 +3523,7 @@
    "type": "Column",
    "props": {
     "at": [
-     3.2,
+     8.6,
      2.5
     ],
     "profile": "Concrete 30×30",
@@ -3479,7 +3533,7 @@
    }
   },
   {
-   "id": "footing-17",
+   "id": "footing-22",
    "level": "SL",
    "tags": [
     "generated"
@@ -3488,9 +3542,9 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": 2.85,
+     "x0": 8.25,
      "y0": 2.15,
-     "x1": 3.55,
+     "x1": 8.95,
      "y1": 2.85
     },
     "topElevation": -0.82,
@@ -3517,7 +3571,7 @@
    }
   },
   {
-   "id": "footing-18",
+   "id": "footing-23",
    "level": "SL",
    "tags": [
     "generated"
@@ -3545,7 +3599,7 @@
    "type": "Column",
    "props": {
     "at": [
-     3.2,
+     2.4,
      6.75
     ],
     "profile": "Concrete 30×30",
@@ -3555,7 +3609,7 @@
    }
   },
   {
-   "id": "footing-19",
+   "id": "footing-24",
    "level": "SL",
    "tags": [
     "generated"
@@ -3564,9 +3618,9 @@
    "props": {
     "kind": "pad",
     "rect": {
-     "x0": 2.85,
+     "x0": 2.05,
      "y0": 6.4,
-     "x1": 3.55,
+     "x1": 2.75,
      "y1": 7.1
     },
     "topElevation": -1.16,
@@ -3576,6 +3630,44 @@
   },
   {
    "id": "pier-05",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     5.4,
+     6.75
+    ],
+    "profile": "Concrete 30×30",
+    "kind": "pier",
+    "baseElevation": -1.16,
+    "topElevation": 0.46
+   }
+  },
+  {
+   "id": "footing-25",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 5.05,
+     "y0": 6.4,
+     "x1": 5.75,
+     "y1": 7.1
+    },
+    "topElevation": -1.16,
+    "depth": 0.3,
+    "carries": "pier-05"
+   }
+  },
+  {
+   "id": "pier-06",
    "level": "SL",
    "tags": [
     "generated"
@@ -3593,7 +3685,7 @@
    }
   },
   {
-   "id": "footing-20",
+   "id": "footing-26",
    "level": "SL",
    "tags": [
     "generated"
@@ -3609,11 +3701,11 @@
     },
     "topElevation": -1.16,
     "depth": 0.3,
-    "carries": "pier-05"
+    "carries": "pier-06"
    }
   },
   {
-   "id": "footing-21",
+   "id": "footing-27",
    "level": "LL",
    "tags": [
     "generated"
@@ -3633,7 +3725,7 @@
    }
   },
   {
-   "id": "footing-22",
+   "id": "footing-28",
    "level": "LL",
    "tags": [
     "generated"
@@ -3653,7 +3745,7 @@
    }
   },
   {
-   "id": "footing-23",
+   "id": "footing-29",
    "level": "LL",
    "tags": [
     "generated"

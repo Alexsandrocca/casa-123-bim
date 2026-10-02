@@ -3,7 +3,7 @@
 import {
   E, MIN_ROOM_WIDTH, eq, findHandle, getEl, q, snap, spacesOn, wallSeg, type Orient,
 } from './geometry';
-import { Element as ElementSchema, type Device, type Element, type Opening, type Project, type Rect, type SolarArray, type Wall } from './schema';
+import { Element as ElementSchema, isPlanLevel, planLevels, type Device, type Element, type Opening, type Project, type Rect, type SolarArray, type Wall } from './schema';
 import { clampToHost, nextId, rebuildLevel } from './walls';
 import { UTILITIES_DEFAULT, withPlumbing } from './plumbing/route';
 import { withElectrical } from './electrical/design';
@@ -278,7 +278,7 @@ export function moveFixture(id: string, x: number, y: number): Command {
       // snap only what moved, so a fixture moved along one axis keeps its other coordinate
       const at: [number, number] = [eq(x, f.props.at[0]) ? f.props.at[0] : snap(x), eq(y, f.props.at[1]) ? f.props.at[1] : snap(y)];
       if (eq(at[0], f.props.at[0]) && eq(at[1], f.props.at[1])) return p;
-      if (['LL', 'SL', 'UF'].includes(f.level) && LIBRARY_ROOM_KINDS.has(f.props.kind)
+      if (isPlanLevel(p, f.level) && LIBRARY_ROOM_KINDS.has(f.props.kind)
         && !spacesOn(p, f.level).some((s) => s.props.cells.some((c) => at[0] > c.x0 && at[0] < c.x1 && at[1] > c.y0 && at[1] < c.y1))) {
         throw new CommandError('A fixture has to stay inside a room.');
       }
@@ -307,7 +307,7 @@ export function setPipe(id: string, patch: { dn?: number; material?: 'PVC' | 'PP
   };
 }
 
-/** Street services: sewer depth (from SEMAE), rainfall intensity… The checks recompute; the pipes re-route. */
+/** Street services: sewer depth (from the water company), rainfall intensity… The checks recompute; the pipes re-route. */
 export function setUtilities(patch: Partial<NonNullable<Project['site']['utilities']>>): Command {
   return {
     label: 'Change street services',
@@ -334,7 +334,7 @@ export function addDevice(id: string, kind: string, level: string, at: [number, 
       const t = deviceType(kind);
       const floor = p.levels.find((l) => l.id === level)?.elevation ?? 0;
       const room = spacesOn(p, level).find((s) => s.props.cells.some((c) => at[0] >= c.x0 && at[0] <= c.x1 && at[1] >= c.y0 && at[1] <= c.y1));
-      if (!room && ['LL', 'SL', 'UF'].includes(level)) throw new CommandError('Put the point inside a room.');
+      if (!room && isPlanLevel(p, level)) throw new CommandError('Put the point inside a room.');
       const d: Device = {
         id, type: 'Device', level, tags: [],
         props: { kind, name: name ?? `${t.label} · ${room?.props.name ?? level}`, at: [snap(at[0]), snap(at[1])], z: q(floor + t.height), power: t.power },
@@ -416,7 +416,7 @@ export function setSolar(patch: Partial<Pick<SolarArray['props'], 'batteryKwh' |
       if (hasBattery) {
         const sub = next.elements.find((e): e is Device => e.type === 'Device' && e.props.kind === 'sub-panel');
         const at: [number, number] = sub ? [sub.props.at[0], sub.props.at[1] - 0.6] : [0.12, 9.0];
-        const level = sub?.level ?? 'LL';
+        const level = sub?.level ?? planLevels(p)[0]!;
         const floor = next.levels.find((l) => l.id === level)?.elevation ?? 0;
         next = {
           ...next,

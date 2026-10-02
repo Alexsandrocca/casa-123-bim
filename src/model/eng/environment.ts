@@ -1,7 +1,7 @@
 // Environmental principle checks (spec 08), as estimates: cross-ventilation, openable area, sun on glass, daylight,
 // and the energy card for water heating and solar.
 import { isOpen, openingSeg, sharedEdges, spaceArea } from '../geometry';
-import type { Feature, Opening, Project, Space, Wall } from '../schema';
+import { isPlanLevel, type Feature, type Opening, type Project, type Space, type Wall } from '../schema';
 import { buildScene, type BoxPart } from '../../scene/build3d';
 import { sunPosition } from '../../scene/sun';
 import { energyEstimate } from '../electrical/solar';
@@ -39,7 +39,7 @@ export function roomOpenings(p: Project, s: Space): RoomOpening[] {
     const glazed = op.props.role === 'window' || op.props.kind === 'slider' || op.tags.includes('glazed');
     if (!glazed) continue;
     const area = len * op.props.height;
-    out.push({ id: op.id, side: facadeOf(g.o, dir), glass: op.props.role === 'window' ? area : 0, openable: area * OPENABLE, label: op.props.kind === 'slider' ? 'glass door' : 'window', op, wall });
+    out.push({ id: op.id, side: facadeOf(p, g.o, dir), glass: op.props.role === 'window' ? area : 0, openable: area * OPENABLE, label: op.props.kind === 'slider' ? 'glass door' : 'window', op, wall });
   }
   for (const f of p.elements) {
     if (f.type !== 'Feature') continue;
@@ -50,7 +50,7 @@ export function roomOpenings(p: Project, s: Space): RoomOpening[] {
       if (!dir) continue;
       let len = 0;
       for (const c of s.props.cells) if (edgeAt(c, g.o, g.c)) len += g.o === 'v' ? ov(g.a, g.b, c.y0, c.y1) : ov(g.a, g.b, c.x0, c.x1);
-      if (len > 0.01) out.push({ id: f.id, side: facadeOf(g.o, dir), glass: 0, openable: len * (f.props.height ?? 2.1) * (Number(f.props.params.open ?? 50) / 100), label: 'cobogó' });
+      if (len > 0.01) out.push({ id: f.id, side: facadeOf(p, g.o, dir), glass: 0, openable: len * (f.props.height ?? 2.1) * (Number(f.props.params.open ?? 50) / 100), label: 'cobogó' });
     }
     if (f.props.kind === 'skylight' && f.props.rect) {
       const r = f.props.rect;
@@ -99,7 +99,7 @@ function neighbours(p: Project, s: Space): Space[] {
 export function ventilation(p: Project): VentRow[] {
   const out: VentRow[] = [];
   for (const s of p.elements) {
-    if (s.type !== 'Space' || !['LL', 'SL', 'UF'].includes(s.level) || !needsDaylight(s)) continue;
+    if (s.type !== 'Space' || !isPlanLevel(p, s.level) || !needsDaylight(s)) continue;
     const own = roomOpenings(p, s);
     const sides = [...new Set(own.filter((o) => o.openable > 0).map((o) => o.side))];
     const openable = own.reduce((a, o) => a + o.openable, 0);
@@ -173,7 +173,7 @@ function glassPanes(p: Project, all: Box[]): Glass[] {
     // only what stands in front of the glass can shade it
     const face = g.c + dir * (wall.props.thickness / 2);
     const boxes = all.filter((b) => b.id !== op.id && (g.o === 'v' ? (dir > 0 ? b.x1 > face + 0.005 : b.x0 < face - 0.005) : (dir > 0 ? b.y1 > face + 0.005 : b.y0 < face - 0.005)));
-    out.push({ op, wall, side: facadeOf(g.o, dir), n, pts, boxes });
+    out.push({ op, wall, side: facadeOf(p, g.o, dir), n, pts, boxes });
   }
   return out;
 }
@@ -184,7 +184,7 @@ export interface SunRow { op: Opening; side: Side; dec: number; jun: number; sha
 export function sunOnGlass(p: Project, panes: Glass[] = glassPanes(p, occluders(p))): SunRow[] {
   const times: { m: number; h: number; dir: [number, number, number] }[] = [];
   for (const m of [12, 6]) for (let h = 5.5; h <= 19; h += 0.5) {
-    const s = sunPosition(2026, m, 21, h);
+    const s = sunPosition(2026, m, 21, h, p);
     if (s.altitude > 1) times.push({ m, h, dir: s.dir });
   }
   const out: SunRow[] = [];
@@ -218,7 +218,7 @@ export function daylight(p: Project, panes: Glass[] = glassPanes(p, occluders(p)
   const rays: [number, number][] = [];
   for (const az of [-60, -30, 0, 30, 60]) for (let el = 5; el < 90; el += 10) rays.push([az, el]);
   for (const s of p.elements) {
-    if (s.type !== 'Space' || !['LL', 'SL', 'UF'].includes(s.level) || !needsDaylight(s)) continue;
+    if (s.type !== 'Space' || !isPlanLevel(p, s.level) || !needsDaylight(s)) continue;
     const floor = spaceArea(s);
     const h = p.structure.clearHeight;
     // perimeter of the room: cell edges not shared with another cell of the same room
@@ -273,15 +273,17 @@ export function energyCard(p: Project): EnergyCard {
   const demandKwh = (people * litres * 4.186 * 25 * 365) / 3600;
   const heatPumpKwh = demandKwh / cop, showerKwh = demandKwh / 0.95;
   const solar = p.elements.some((e) => e.type === 'Feature' && e.props.kind === 'solar-heater');
-  // a solar heater covers about 70 % of the year's hot water in Piracicaba; the rest is electric backup
-  const solarHeaterKwh = solar ? (demandKwh * 0.3) / 0.95 : null;
+  // a solar heater covers part of the year's hot water (share for the place in site.region); the rest is electric backup
+  const share = p.site.region.solarHeaterShare;
+  const solarHeaterKwh = solar && share !== null ? (demandKwh * (1 - share)) / 0.95 : null;
   const pv = energyEstimate(p);
   return {
     demandKwh, heatPumpKwh, showerKwh, solarHeaterKwh, pvKwh: pv?.year ?? null, pvKwp: pv?.kwp ?? null,
     text: [
       `Hot water for ${people} people × ${litres} L/day ≈ ${demandKwh.toFixed(0)} kWh of heat a year.`,
       `Heat pump (COP ${cop}): about ${heatPumpKwh.toFixed(0)} kWh of electricity a year, against ${showerKwh.toFixed(0)} kWh with electric showers.`,
-      ...(solarHeaterKwh !== null ? [`With the solar water heater (≈ 70 % solar): about ${solarHeaterKwh.toFixed(0)} kWh a year of electric backup.`] : []),
+      ...(solarHeaterKwh !== null ? [`With the solar water heater (≈ ${Math.round((share ?? 0) * 100)} % solar): about ${solarHeaterKwh.toFixed(0)} kWh a year of electric backup.`] : []),
+      ...(solar && share === null ? ['Solar water heater: the solar share for this city is TO CONFIRM.'] : []),
       ...(pv ? [`The ${pv.kwp.toFixed(1)} kWp PV array makes about ${pv.year.toFixed(0)} kWh a year (estimate).`] : []),
     ],
   };

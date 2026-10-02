@@ -2,7 +2,7 @@
 // crosses, what it clashes with, whether it falls, what holds it up, and whether equipment can be serviced.
 // Pure and cached per project; the checks, the "Physics" colour mode and the "Why here?" line all read it.
 import { getEl, pointInRect, wallSeg } from '../geometry';
-import type { Conduit, Device, Element, Fixture, PipeSegment, Project, Rect, ServiceSpace, Space } from '../schema';
+import { entryLevel, isPlanLevel, type Conduit, type Device, type Element, type Fixture, type PipeSegment, type Project, type Rect, type ServiceSpace, type Space } from '../schema';
 import { deviceType } from '../electrical/library';
 import { kindOf, minSewageSlope } from '../plumbing/library';
 import { CLEARANCE, CLEAR_HEIGHT, CRAWL_GAP, ELEC_HOT_GAP, EQUIPMENT_ROOMS, SCREED, WALL_RUN_MAX, WEB_HOLE, hangerSpacing, outerD } from './library';
@@ -214,8 +214,8 @@ function analyse(p: Project): MepReport {
     for (let i = 0; i < n; i++) {
       const t = (i + 0.5) / n;
       const pt: P3 = [s.a[0] + (s.b[0] - s.a[0]) * t, s.a[1] + (s.b[1] - s.a[1]) * t, s.a[2] + (s.b[2] - s.a[2]) * t];
-      const level = s.host === 'crawlspace' ? 'LL' : ctx.volumes.find((v) => v.id === s.hostId)?.level ?? 'SL';
-      const top = s.host === 'crawlspace' ? ctx.soffit('LL', pt[0], pt[1]) ?? slabUnder(ctx, 'SL', pt) : ctx.soffit(level, pt[0], pt[1]);
+      const level = s.host === 'crawlspace' ? 'LL' : ctx.volumes.find((v) => v.id === s.hostId)?.level ?? entryLevel(p);
+      const top = s.host === 'crawlspace' ? ctx.soffit('LL', pt[0], pt[1]) ?? slabUnder(ctx, entryLevel(p), pt) : ctx.soffit(level, pt[0], pt[1]);
       if (top === null || top < pt[2]) missing++;
       pts.push(pt); tops.push(top ?? pt[2] + 0.1);
     }
@@ -276,7 +276,6 @@ export function segDist(p1: P3, q1: P3, p2: P3, q2: P3): { d: number; pt: P3 } {
   return { d: Math.hypot(c1[0] - c2[0], c1[1] - c2[1], c1[2] - c2[2]), pt: c1 };
 }
 
-const PLAN = ['LL', 'SL', 'UF'];
 
 function hostInfo(p: Project, ctx: MepContext, e: Fixture | Device, rep: MepReport): ItemInfo {
   const m = mountOf(e);
@@ -308,7 +307,7 @@ function hostInfo(p: Project, ctx: MepContext, e: Fixture | Device, rep: MepRepo
     return { ...base, hostName: `${w.props.wallType} wall ${w.id}, ${face.room ? `${face.room.props.name} side` : 'outside face'}, ${(along - s.a).toFixed(2)} m from its start`, ok: true };
   }
   if (m === 'ceiling') {
-    if (!PLAN.includes(e.level)) return { ...base, hostName: e.props.hostId ?? 'carport roof', ok: !!e.props.hostId || e.level === 'site', problem: e.props.hostId || e.level === 'site' ? undefined : 'unhosted' };
+    if (!isPlanLevel(p, e.level)) return { ...base, hostName: e.props.hostId ?? 'carport roof', ok: !!e.props.hostId || e.level === 'site', problem: e.props.hostId || e.level === 'site' ? undefined : 'unhosted' };
     const h = ceilingHost(p, e.level, e.props.at);
     if (!h) return { ...base, hostName: 'nothing', ok: false, problem: 'unhosted: no slab or plenum above (a stair void?)' };
     const name = h.plenum ? (getEl(p, h.id) as ServiceSpace | undefined)?.props.name ?? h.id : `the slab above (${h.id})`;
@@ -316,7 +315,7 @@ function hostInfo(p: Project, ctx: MepContext, e: Fixture | Device, rep: MepRepo
     return { ...base, hostName: name, ok: true };
   }
   if (m === 'floor') {
-    if (!PLAN.includes(e.level)) return { ...base, hostName: e.level === 'roof' ? 'the roof slab' : 'the ground', ok: true };
+    if (!isPlanLevel(p, e.level)) return { ...base, hostName: e.level === 'roof' ? 'the roof slab' : 'the ground', ok: true };
     const top = ctx.floorTop(e.level, e.props.at[0], e.props.at[1]);
     if (top === null) return { ...base, hostName: 'nothing', ok: false, problem: 'unhosted: no floor under it' };
     if (isFx && kind === 'lift-station') {
@@ -340,7 +339,7 @@ function hostInfo(p: Project, ctx: MepContext, e: Fixture | Device, rep: MepRepo
     const onPath = path && polyHit(path.poly, footprint(e));
     const carport = p.elements.find((x) => x.type === 'Carport');
     const onBay = carport?.type === 'Carport' && carport.props.parking.some((b) => overlap(b, footprint(e)));
-    const front = e.props.at[1] < (p.levels.find((l) => l.id === 'SL')?.outline?.y0 ?? 0);
+    const front = e.props.at[1] < (p.levels.find((l) => l.id === entryLevel(p))?.outline?.y0 ?? 0);
     const ok = !onPath && !onBay && front;
     rep.access.push({ id: e.id, ok, text: `Cistern ${front ? 'in the front setback' : 'NOT in the front setback'}${onPath ? ', under the entry path' : ''}${onBay ? ', under a car bay (needs a vehicle-load design)' : ''}; lid reachable from the side passage` });
     return { ...base, hostName: 'the ground (front setback)', ok: true };

@@ -229,7 +229,7 @@ function Services({ p }: { p: Project }) {
   return (
     <div className="pl-tab">
       <div className="services">
-        {field('Street sewer depth', 'sewerDepth', 'm below the street (SEMAE to confirm)', 0.05)}
+        {field('Street sewer depth', 'sewerDepth', `m below the street (${p.site.region.water ?? 'water company'} to confirm)`, 0.05)}
         {field('Sewer distance from the lot', 'sewerOffset', 'm into the street', 0.5)}
         {field('Water main depth', 'waterMainDepth', 'm', 0.1)}
         {field('Design rainfall', 'rainIntensity', 'mm/h, 5-minute storm (to confirm)', 5)}

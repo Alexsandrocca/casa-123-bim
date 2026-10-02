@@ -1,0 +1,3053 @@
+{
+ "schema": "casa123-bim/1",
+ "meta": {
+  "project": "Flat lot test",
+  "version": "Version 1",
+  "versionId": "v1",
+  "units": "m",
+  "source": "Starter model (P0)",
+  "note": "A simple single-storey starting point. P2 adds the house catalogue."
+ },
+ "site": {
+  "address": "Rua de Teste, 10, Florianópolis/SC",
+  "lot": {
+   "front": 12,
+   "rear": 12,
+   "sides": 30
+  },
+  "lotPolygon": [
+   [
+    0,
+    0
+   ],
+   [
+    12,
+    0
+   ],
+   [
+    12,
+    30
+   ],
+   [
+    0,
+    30
+   ]
+  ],
+  "houseOrigin": {
+   "x": 1.5,
+   "y": 4
+  },
+  "fallStreetToRear": 0,
+  "setbacks": {
+   "front": 4,
+   "rear": 3,
+   "sides": 1.5
+  },
+  "cut": {
+   "lineY": 8,
+   "gardenLevel": 0,
+   "retainingSouthToY": 0,
+   "retainingNorthToY": 0
+  },
+  "region": {
+   "city": "Florianópolis",
+   "state": "SC",
+   "lat": -27.59,
+   "lon": -48.55,
+   "utcOffset": -3,
+   "xBearing": 180,
+   "supply": {
+    "utility": null,
+    "phaseV": 220,
+    "lineV": 380,
+    "phases": 3,
+    "confirmed": false
+   },
+   "water": null,
+   "rules": {
+    "code": null,
+    "sanitary": null
+   },
+   "pvYield": null,
+   "solarHeaterShare": null
+  },
+  "utilities": {
+   "sewerDepth": 1.2,
+   "sewerOffset": 4,
+   "waterMainDepth": 0.8,
+   "rainIntensity": 150
+  },
+  "toConfirm": [
+   "Topographic survey",
+   "Soil borings",
+   "City zoning and building rules",
+   "Sewer depth",
+   "Electricity supply"
+  ]
+ },
+ "structure": {
+  "floorToFloor": 3,
+  "clearHeight": 2.7,
+  "structureDepth": 0.3
+ },
+ "levels": [
+  {
+   "id": "GF",
+   "name": "Ground floor +0.15",
+   "shortName": "Ground floor",
+   "elevation": 0.15,
+   "plan": true,
+   "outline": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 9,
+    "y1": 8
+   }
+  },
+  {
+   "id": "roof",
+   "name": "Roof +3.15",
+   "shortName": "Roof",
+   "elevation": 3.15,
+   "plan": false,
+   "outline": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 9,
+    "y1": 8
+   }
+  }
+ ],
+ "grid": {
+  "x": [
+   0,
+   4.95,
+   9
+  ],
+  "y": [
+   0,
+   4.64,
+   8
+  ]
+ },
+ "elements": [
+  {
+   "id": "GF-space-01",
+   "level": "GF",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Living and kitchen",
+    "zone": "social",
+    "cells": [
+     {
+      "x0": 0,
+      "y0": 0,
+      "x1": 4.95,
+      "y1": 8
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "GF-space-02",
+   "level": "GF",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Bedroom",
+    "zone": "private",
+    "cells": [
+     {
+      "x0": 4.95,
+      "y0": 0,
+      "x1": 9,
+      "y1": 4.64
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "GF-space-03",
+   "level": "GF",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Bathroom",
+    "zone": "wet",
+    "cells": [
+     {
+      "x0": 4.95,
+      "y0": 4.64,
+      "x1": 9,
+      "y1": 8
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "GF-wall-01",
+   "level": "GF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     0
+    ],
+    "end": [
+     9,
+     0
+    ],
+    "thickness": 0.2,
+    "height": 3,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "GF-wall-02",
+   "level": "GF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     8
+    ],
+    "end": [
+     9,
+     8
+    ],
+    "thickness": 0.2,
+    "height": 3,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "GF-wall-03",
+   "level": "GF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     0
+    ],
+    "end": [
+     0,
+     8
+    ],
+    "thickness": 0.2,
+    "height": 3,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "GF-wall-04",
+   "level": "GF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     9,
+     0
+    ],
+    "end": [
+     9,
+     8
+    ],
+    "thickness": 0.2,
+    "height": 3,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "GF-wall-05",
+   "level": "GF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     4.95,
+     4.64
+    ],
+    "end": [
+     9,
+     4.64
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "GF-wall-06",
+   "level": "GF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     4.95,
+     0
+    ],
+    "end": [
+     4.95,
+     4.64
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "GF-wall-07",
+   "level": "GF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     4.95,
+     4.64
+    ],
+    "end": [
+     4.95,
+     8
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "GF-door-01",
+   "level": "GF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "GF-wall-01",
+    "role": "door",
+    "kind": "door",
+    "offset": 0.8,
+    "width": 1,
+    "height": 2.1,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "GF-door-02",
+   "level": "GF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "GF-wall-06",
+    "role": "door",
+    "kind": "door",
+    "offset": 1.92,
+    "width": 0.8,
+    "height": 2.1,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "GF-door-03",
+   "level": "GF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "GF-wall-07",
+    "role": "door",
+    "kind": "door",
+    "offset": 1.33,
+    "width": 0.7,
+    "height": 2.1,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "GF-win-01",
+   "level": "GF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "GF-wall-01",
+    "role": "window",
+    "kind": "window",
+    "offset": 2.55,
+    "width": 1.6,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "GF-win-02",
+   "level": "GF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "GF-wall-02",
+    "role": "window",
+    "kind": "slider",
+    "offset": 1.475,
+    "width": 2,
+    "height": 2.2,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "GF-win-03",
+   "level": "GF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "GF-wall-01",
+    "role": "window",
+    "kind": "window",
+    "offset": 6.225,
+    "width": 1.5,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "GF-win-04",
+   "level": "GF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "GF-wall-04",
+    "role": "window",
+    "kind": "window",
+    "high": true,
+    "offset": 6.02,
+    "width": 0.6,
+    "height": 0.6,
+    "sill": 1.6,
+    "swing": 1
+   }
+  },
+  {
+   "id": "GF-slab-01",
+   "level": "GF",
+   "tags": [],
+   "type": "Slab",
+   "props": {
+    "name": "Ground floor slab",
+    "rect": {
+     "x0": 0,
+     "y0": 0,
+     "x1": 9,
+     "y1": 8
+    },
+    "voidSpaces": [],
+    "topElevation": 0.15,
+    "thickness": 0.12,
+    "onGrade": true
+   }
+  },
+  {
+   "id": "roof-slab-01",
+   "level": "roof",
+   "tags": [],
+   "type": "Slab",
+   "props": {
+    "name": "Flat roof",
+    "rect": {
+     "x0": 0,
+     "y0": 0,
+     "x1": 9,
+     "y1": 8
+    },
+    "voidSpaces": [],
+    "topElevation": 3.15,
+    "thickness": 0.12,
+    "parapet": 0.3,
+    "eaves": 0.5
+   }
+  },
+  {
+   "id": "beam-01",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     0
+    ],
+    "end": [
+     9,
+     0
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.03
+   }
+  },
+  {
+   "id": "beam-02",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     4.64
+    ],
+    "end": [
+     9,
+     4.64
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.03
+   }
+  },
+  {
+   "id": "beam-03",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     8
+    ],
+    "end": [
+     9,
+     8
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.03
+   }
+  },
+  {
+   "id": "beam-04",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     0
+    ],
+    "end": [
+     0,
+     8
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.03
+   }
+  },
+  {
+   "id": "beam-05",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     4.95,
+     0
+    ],
+    "end": [
+     4.95,
+     8
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.03
+   }
+  },
+  {
+   "id": "beam-06",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     9,
+     0
+    ],
+    "end": [
+     9,
+     8
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.03
+   }
+  },
+  {
+   "id": "col-01",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     0,
+     0
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": 0.03,
+    "topElevation": 3.03
+   }
+  },
+  {
+   "id": "footing-01",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": -0.5,
+     "y0": -0.5,
+     "x1": 0.5,
+     "y1": 0.5
+    },
+    "topElevation": 0.03,
+    "depth": 0.5,
+    "carries": "col-01"
+   }
+  },
+  {
+   "id": "col-02",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     4.95,
+     0
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": 0.03,
+    "topElevation": 3.03
+   }
+  },
+  {
+   "id": "footing-02",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 4.45,
+     "y0": -0.5,
+     "x1": 5.45,
+     "y1": 0.5
+    },
+    "topElevation": 0.03,
+    "depth": 0.5,
+    "carries": "col-02"
+   }
+  },
+  {
+   "id": "col-03",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     9,
+     0
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": 0.03,
+    "topElevation": 3.03
+   }
+  },
+  {
+   "id": "footing-03",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 8.5,
+     "y0": -0.5,
+     "x1": 9.5,
+     "y1": 0.5
+    },
+    "topElevation": 0.03,
+    "depth": 0.5,
+    "carries": "col-03"
+   }
+  },
+  {
+   "id": "col-04",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     0,
+     4.64
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": 0.03,
+    "topElevation": 3.03
+   }
+  },
+  {
+   "id": "footing-04",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": -0.5,
+     "y0": 4.14,
+     "x1": 0.5,
+     "y1": 5.14
+    },
+    "topElevation": 0.03,
+    "depth": 0.5,
+    "carries": "col-04"
+   }
+  },
+  {
+   "id": "col-05",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     4.95,
+     4.64
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": 0.03,
+    "topElevation": 3.03
+   }
+  },
+  {
+   "id": "footing-05",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 4.45,
+     "y0": 4.14,
+     "x1": 5.45,
+     "y1": 5.14
+    },
+    "topElevation": 0.03,
+    "depth": 0.5,
+    "carries": "col-05"
+   }
+  },
+  {
+   "id": "col-06",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     9,
+     4.64
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": 0.03,
+    "topElevation": 3.03
+   }
+  },
+  {
+   "id": "footing-06",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 8.5,
+     "y0": 4.14,
+     "x1": 9.5,
+     "y1": 5.14
+    },
+    "topElevation": 0.03,
+    "depth": 0.5,
+    "carries": "col-06"
+   }
+  },
+  {
+   "id": "col-07",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     0,
+     8
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": 0.03,
+    "topElevation": 3.03
+   }
+  },
+  {
+   "id": "footing-07",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": -0.5,
+     "y0": 7.5,
+     "x1": 0.5,
+     "y1": 8.5
+    },
+    "topElevation": 0.03,
+    "depth": 0.5,
+    "carries": "col-07"
+   }
+  },
+  {
+   "id": "col-08",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     4.95,
+     8
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": 0.03,
+    "topElevation": 3.03
+   }
+  },
+  {
+   "id": "footing-08",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 4.45,
+     "y0": 7.5,
+     "x1": 5.45,
+     "y1": 8.5
+    },
+    "topElevation": 0.03,
+    "depth": 0.5,
+    "carries": "col-08"
+   }
+  },
+  {
+   "id": "col-09",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     9,
+     8
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": 0.03,
+    "topElevation": 3.03
+   }
+  },
+  {
+   "id": "footing-09",
+   "level": "GF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 8.5,
+     "y0": 7.5,
+     "x1": 9.5,
+     "y1": 8.5
+    },
+    "topElevation": 0.03,
+    "depth": 0.5,
+    "carries": "col-09"
+   }
+  },
+  {
+   "id": "fx-toilet-01",
+   "type": "Fixture",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "toilet",
+    "name": "Toilet (WC)",
+    "at": [
+     8.55,
+     7.575
+    ],
+    "z": 0.15,
+    "hostWallId": "GF-wall-02",
+    "face": -1,
+    "offset": 8.55
+   }
+  },
+  {
+   "id": "fx-basin-01",
+   "type": "Fixture",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "basin",
+    "name": "Basin",
+    "at": [
+     7.6,
+     7.7
+    ],
+    "z": 0.15,
+    "hostWallId": "GF-wall-02",
+    "face": -1,
+    "offset": 7.6
+   }
+  },
+  {
+   "id": "fx-shower-01",
+   "type": "Fixture",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "shower",
+    "name": "Shower drain",
+    "at": [
+     8.5,
+     5.19
+    ],
+    "z": 0.15,
+    "hostId": "GF-slab-01"
+   }
+  },
+  {
+   "id": "fx-kitchen-sink-01",
+   "type": "Fixture",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "kitchen-sink",
+    "name": "Kitchen sink",
+    "at": [
+     0.375,
+     6.5
+    ],
+    "z": 0.15,
+    "hostWallId": "GF-wall-03",
+    "face": 1,
+    "offset": 6.5
+   }
+  },
+  {
+   "id": "dev-ceiling-light-01",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Living and kitchen",
+    "at": [
+     2.475,
+     2.665
+    ],
+    "z": 3.005,
+    "power": 290,
+    "hostId": "roof-slab-01",
+    "circuit": "ckt-light-GF"
+   }
+  },
+  {
+   "id": "dev-ceiling-light-02",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Living and kitchen",
+    "at": [
+     2.475,
+     5.335
+    ],
+    "z": 3.005,
+    "power": 290,
+    "hostId": "roof-slab-01",
+    "circuit": "ckt-light-GF"
+   }
+  },
+  {
+   "id": "dev-switch-01",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Living and kitchen",
+    "at": [
+     1.95,
+     0.11
+    ],
+    "z": 1.25,
+    "power": 0,
+    "hostWallId": "GF-wall-01",
+    "face": 1,
+    "offset": 1.95,
+    "height": 1.1
+   }
+  },
+  {
+   "id": "dev-outlet-01",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Living and kitchen",
+    "at": [
+     2.16,
+     0.11
+    ],
+    "z": 0.45,
+    "power": 100,
+    "hostWallId": "GF-wall-01",
+    "face": 1,
+    "offset": 2.16,
+    "height": 0.3,
+    "circuit": "ckt-out-GF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-02",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Living and kitchen",
+    "at": [
+     1.375,
+     7.89
+    ],
+    "z": 0.45,
+    "power": 100,
+    "hostWallId": "GF-wall-02",
+    "face": -1,
+    "offset": 1.375,
+    "height": 0.3,
+    "circuit": "ckt-out-GF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-03",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Living and kitchen",
+    "at": [
+     0.11,
+     0.89
+    ],
+    "z": 0.45,
+    "power": 100,
+    "hostWallId": "GF-wall-03",
+    "face": 1,
+    "offset": 0.89,
+    "height": 0.3,
+    "circuit": "ckt-out-GF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-04",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Living and kitchen",
+    "at": [
+     0.11,
+     5.21
+    ],
+    "z": 0.45,
+    "power": 100,
+    "hostWallId": "GF-wall-03",
+    "face": 1,
+    "offset": 5.21,
+    "height": 0.3,
+    "circuit": "ckt-out-GF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-05",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Living and kitchen",
+    "at": [
+     4.88,
+     1.525
+    ],
+    "z": 0.45,
+    "power": 100,
+    "hostWallId": "GF-wall-06",
+    "face": -1,
+    "offset": 1.525,
+    "height": 0.3,
+    "circuit": "ckt-out-GF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-06",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Living and kitchen",
+    "at": [
+     4.865,
+     7.04
+    ],
+    "z": 0.45,
+    "power": 100,
+    "hostWallId": "GF-wall-07",
+    "face": -1,
+    "offset": 2.4,
+    "height": 0.3,
+    "circuit": "ckt-out-GF-general-1"
+   }
+  },
+  {
+   "id": "dev-network-outlet-01",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "network-outlet",
+    "name": "Network · Living and kitchen",
+    "at": [
+     4.88,
+     1.675
+    ],
+    "z": 0.45,
+    "power": 0,
+    "hostWallId": "GF-wall-06",
+    "face": -1,
+    "offset": 1.675,
+    "height": 0.3
+   }
+  },
+  {
+   "id": "dev-ceiling-light-03",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Bedroom",
+    "at": [
+     6.975,
+     2.32
+    ],
+    "z": 3.005,
+    "power": 280,
+    "hostId": "roof-slab-01",
+    "circuit": "ckt-light-GF"
+   }
+  },
+  {
+   "id": "dev-switch-02",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Bedroom",
+    "at": [
+     5.02,
+     2.87
+    ],
+    "z": 1.25,
+    "power": 0,
+    "hostWallId": "GF-wall-06",
+    "face": 1,
+    "offset": 2.87,
+    "height": 1.1
+   }
+  },
+  {
+   "id": "dev-outlet-07",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bedroom",
+    "at": [
+     7.125,
+     0.11
+    ],
+    "z": 0.45,
+    "power": 100,
+    "hostWallId": "GF-wall-01",
+    "face": 1,
+    "offset": 7.125,
+    "height": 0.3,
+    "circuit": "ckt-out-GF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-08",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bedroom",
+    "at": [
+     7.42,
+     4.555
+    ],
+    "z": 0.45,
+    "power": 100,
+    "hostWallId": "GF-wall-05",
+    "face": -1,
+    "offset": 2.47,
+    "height": 0.3,
+    "circuit": "ckt-out-GF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-09",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bedroom",
+    "at": [
+     5.02,
+     3.36
+    ],
+    "z": 0.45,
+    "power": 100,
+    "hostWallId": "GF-wall-06",
+    "face": 1,
+    "offset": 3.36,
+    "height": 0.3,
+    "circuit": "ckt-out-GF-general-1"
+   }
+  },
+  {
+   "id": "dev-outlet-10",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bedroom",
+    "at": [
+     8.89,
+     2.47
+    ],
+    "z": 0.45,
+    "power": 100,
+    "hostWallId": "GF-wall-04",
+    "face": -1,
+    "offset": 2.47,
+    "height": 0.3,
+    "circuit": "ckt-out-GF-general-1"
+   }
+  },
+  {
+   "id": "dev-network-outlet-02",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "network-outlet",
+    "name": "Network · Bedroom",
+    "at": [
+     8.89,
+     0.295
+    ],
+    "z": 0.45,
+    "power": 0,
+    "hostWallId": "GF-wall-04",
+    "face": -1,
+    "offset": 0.295,
+    "height": 0.3
+   }
+  },
+  {
+   "id": "dev-ceiling-light-04",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "ceiling-light",
+    "name": "Ceiling light · Bathroom",
+    "at": [
+     6.975,
+     6.32
+    ],
+    "z": 3.005,
+    "power": 160,
+    "hostId": "roof-slab-01",
+    "circuit": "ckt-light-GF"
+   }
+  },
+  {
+   "id": "dev-switch-03",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "switch",
+    "name": "Switch · Bathroom",
+    "at": [
+     5.035,
+     6.82
+    ],
+    "z": 1.25,
+    "power": 0,
+    "hostWallId": "GF-wall-07",
+    "face": 1,
+    "offset": 2.18,
+    "height": 1.1
+   }
+  },
+  {
+   "id": "dev-outlet-11",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "outlet",
+    "name": "Outlet · Bathroom (basin)",
+    "at": [
+     8.16,
+     7.89
+    ],
+    "z": 1.25,
+    "power": 600,
+    "hostWallId": "GF-wall-02",
+    "face": -1,
+    "offset": 8.16,
+    "height": 1.1,
+    "circuit": "ckt-out-GF-wet-1"
+   }
+  },
+  {
+   "id": "dev-panel-01",
+   "type": "Device",
+   "level": "GF",
+   "tags": [],
+   "props": {
+    "kind": "panel",
+    "name": "Main electrical panel",
+    "at": [
+     0.11,
+     1
+    ],
+    "z": 1.65,
+    "power": 0,
+    "hostWallId": "GF-wall-03",
+    "face": 1,
+    "offset": 1,
+    "height": 1.5
+   }
+  },
+  {
+   "id": "ckt-light-GF",
+   "type": "Circuit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Lighting GF",
+    "panel": "dev-panel-01",
+    "purpose": "lighting",
+    "voltage": 220,
+    "phases": [
+     "A"
+    ],
+    "load": 1020,
+    "current": 4.6,
+    "section": 1.5,
+    "breaker": 10,
+    "rcd": true,
+    "length": 13.89,
+    "drop": 0.69
+   }
+  },
+  {
+   "id": "ckt-out-GF-general-1",
+   "type": "Circuit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Outlets GF general",
+    "panel": "dev-panel-01",
+    "purpose": "outlets",
+    "voltage": 220,
+    "phases": [
+     "B"
+    ],
+    "load": 1000,
+    "current": 4.5,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 13.73,
+    "drop": 0.4
+   }
+  },
+  {
+   "id": "ckt-out-GF-wet-1",
+   "type": "Circuit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "name": "Outlets GF wet",
+    "panel": "dev-panel-01",
+    "purpose": "outlets",
+    "voltage": 220,
+    "phases": [
+     "C"
+    ],
+    "load": 600,
+    "current": 2.7,
+    "section": 2.5,
+    "breaker": 16,
+    "rcd": true,
+    "length": 17.81,
+    "drop": 0.31
+   }
+  },
+  {
+   "id": "cnd-light-GF-001",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     0,
+     1,
+     1.65
+    ],
+    "end": [
+     0,
+     1,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-002",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     0,
+     1,
+     1.65
+    ],
+    "end": [
+     0,
+     1,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-003",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     0,
+     1,
+     3.125
+    ],
+    "end": [
+     0,
+     2.65,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-004",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     0,
+     2.65,
+     3.125
+    ],
+    "end": [
+     2.45,
+     2.65,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-005",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     2.45,
+     2.65,
+     3.125
+    ],
+    "end": [
+     2.475,
+     2.65,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-006",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     2.475,
+     2.65,
+     3.125
+    ],
+    "end": [
+     2.475,
+     2.665,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-007",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     2.45,
+     2.65,
+     3.125
+    ],
+    "end": [
+     2.45,
+     5.35,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-008",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     2.45,
+     5.35,
+     3.125
+    ],
+    "end": [
+     2.475,
+     5.35,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-009",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     2.475,
+     5.35,
+     3.125
+    ],
+    "end": [
+     2.475,
+     5.335,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-010",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     2.45,
+     2.65,
+     3.125
+    ],
+    "end": [
+     6.95,
+     2.65,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-011",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     6.95,
+     2.65,
+     3.125
+    ],
+    "end": [
+     6.95,
+     2.3,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-012",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     6.95,
+     2.3,
+     3.125
+    ],
+    "end": [
+     6.975,
+     2.3,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-013",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     6.975,
+     2.3,
+     3.125
+    ],
+    "end": [
+     6.975,
+     2.32,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-014",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     6.95,
+     2.65,
+     3.125
+    ],
+    "end": [
+     6.95,
+     6.3,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-015",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     6.95,
+     6.3,
+     3.125
+    ],
+    "end": [
+     6.975,
+     6.3,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-016",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     6.975,
+     6.3,
+     3.125
+    ],
+    "end": [
+     6.975,
+     6.32,
+     3.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-017",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     2.475,
+     2.665,
+     3.125
+    ],
+    "end": [
+     2.475,
+     2.665,
+     3.005
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-018",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     2.475,
+     5.335,
+     3.125
+    ],
+    "end": [
+     2.475,
+     5.335,
+     3.005
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-019",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     6.975,
+     2.32,
+     3.125
+    ],
+    "end": [
+     6.975,
+     2.32,
+     3.005
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-light-GF-020",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-light-GF",
+    "start": [
+     6.975,
+     6.32,
+     3.125
+    ],
+    "end": [
+     6.975,
+     6.32,
+     3.005
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-001",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     0,
+     1,
+     1.65
+    ],
+    "end": [
+     0,
+     1,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-002",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     0,
+     1,
+     0.125
+    ],
+    "end": [
+     0,
+     0.9,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-003",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     0,
+     0.9,
+     0.125
+    ],
+    "end": [
+     0,
+     0.89,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-004",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     0.15,
+     0.9,
+     0.125
+    ],
+    "end": [
+     2.15,
+     0.9,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-005",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     2.15,
+     0.9,
+     0.125
+    ],
+    "end": [
+     2.15,
+     0,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-006",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     2.15,
+     0,
+     0.125
+    ],
+    "end": [
+     2.16,
+     0,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-007",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     0,
+     0.9,
+     0.125
+    ],
+    "end": [
+     0.15,
+     0.9,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-008",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     0.15,
+     0.9,
+     0.125
+    ],
+    "end": [
+     0.15,
+     5.2,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-009",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     0.15,
+     5.2,
+     0.125
+    ],
+    "end": [
+     0,
+     5.2,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-010",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     0,
+     5.2,
+     0.125
+    ],
+    "end": [
+     0,
+     5.21,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-011",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     2.15,
+     0.9,
+     0.125
+    ],
+    "end": [
+     4.95,
+     0.9,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-012",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.95,
+     0.9,
+     0.125
+    ],
+    "end": [
+     4.95,
+     1.55,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-013",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.95,
+     1.55,
+     0.125
+    ],
+    "end": [
+     4.95,
+     1.525,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-014",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.95,
+     1.55,
+     0.125
+    ],
+    "end": [
+     4.95,
+     3.35,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-015",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.95,
+     3.35,
+     0.125
+    ],
+    "end": [
+     4.95,
+     3.36,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-016",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     0.15,
+     5.2,
+     0.125
+    ],
+    "end": [
+     0.15,
+     8,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-017",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     0.15,
+     8,
+     0.125
+    ],
+    "end": [
+     1.35,
+     8,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-018",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     1.35,
+     8,
+     0.125
+    ],
+    "end": [
+     1.375,
+     8,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-019",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.95,
+     0.9,
+     0.125
+    ],
+    "end": [
+     7.15,
+     0.9,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-020",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     7.15,
+     0.9,
+     0.125
+    ],
+    "end": [
+     7.15,
+     0,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-021",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     7.15,
+     0,
+     0.125
+    ],
+    "end": [
+     7.125,
+     0,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-022",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.95,
+     3.35,
+     0.125
+    ],
+    "end": [
+     4.8,
+     3.35,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-023",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.8,
+     4.8,
+     0.125
+    ],
+    "end": [
+     4.8,
+     7.05,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-024",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.8,
+     7.05,
+     0.125
+    ],
+    "end": [
+     4.95,
+     7.05,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-025",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.95,
+     7.05,
+     0.125
+    ],
+    "end": [
+     4.95,
+     7.04,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-026",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.8,
+     3.35,
+     0.125
+    ],
+    "end": [
+     4.8,
+     4.8,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-027",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.8,
+     4.8,
+     0.125
+    ],
+    "end": [
+     7.4,
+     4.8,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-028",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     7.4,
+     4.8,
+     0.125
+    ],
+    "end": [
+     7.4,
+     4.65,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-029",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     7.4,
+     4.65,
+     0.125
+    ],
+    "end": [
+     7.42,
+     4.65,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-030",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     7.42,
+     4.65,
+     0.125
+    ],
+    "end": [
+     7.42,
+     4.64,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-031",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     7.15,
+     0.9,
+     0.125
+    ],
+    "end": [
+     9,
+     0.9,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-032",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     9,
+     0.9,
+     0.125
+    ],
+    "end": [
+     9,
+     2.45,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-033",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     9,
+     2.45,
+     0.125
+    ],
+    "end": [
+     9,
+     2.47,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-034",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     0,
+     0.89,
+     0.125
+    ],
+    "end": [
+     0,
+     0.89,
+     0.45
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-035",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     2.16,
+     0,
+     0.125
+    ],
+    "end": [
+     2.16,
+     0,
+     0.45
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-036",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     0,
+     5.21,
+     0.125
+    ],
+    "end": [
+     0,
+     5.21,
+     0.45
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-037",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.95,
+     1.525,
+     0.125
+    ],
+    "end": [
+     4.95,
+     1.525,
+     0.45
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-038",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.95,
+     3.36,
+     0.125
+    ],
+    "end": [
+     4.95,
+     3.36,
+     0.45
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-039",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     1.375,
+     8,
+     0.125
+    ],
+    "end": [
+     1.375,
+     8,
+     0.45
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-040",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     7.125,
+     0,
+     0.125
+    ],
+    "end": [
+     7.125,
+     0,
+     0.45
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-041",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     4.95,
+     7.04,
+     0.125
+    ],
+    "end": [
+     4.95,
+     7.04,
+     0.45
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-042",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     7.42,
+     4.64,
+     0.125
+    ],
+    "end": [
+     7.42,
+     4.64,
+     0.45
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-general-1-043",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-general-1",
+    "start": [
+     9,
+     2.47,
+     0.125
+    ],
+    "end": [
+     9,
+     2.47,
+     0.45
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-wet-1-001",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-wet-1",
+    "start": [
+     0,
+     1,
+     1.65
+    ],
+    "end": [
+     0,
+     1,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-wet-1-002",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-wet-1",
+    "start": [
+     0,
+     1,
+     0.125
+    ],
+    "end": [
+     8.15,
+     1,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-wet-1-003",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-wet-1",
+    "start": [
+     8.15,
+     1,
+     0.125
+    ],
+    "end": [
+     8.15,
+     8,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-wet-1-004",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-wet-1",
+    "start": [
+     8.15,
+     8,
+     0.125
+    ],
+    "end": [
+     8.16,
+     8,
+     0.125
+    ],
+    "dn": 20
+   }
+  },
+  {
+   "id": "cnd-out-GF-wet-1-005",
+   "type": "Conduit",
+   "level": "GF",
+   "tags": [
+    "auto"
+   ],
+   "props": {
+    "circuit": "ckt-out-GF-wet-1",
+    "start": [
+     8.16,
+     8,
+     0.125
+    ],
+    "end": [
+     8.16,
+     8,
+     1.25
+    ],
+    "dn": 20
+   }
+  }
+ ],
+ "mep": {
+  "noRoute": [
+   {
+    "system": "sewage",
+    "network": "sewage",
+    "item": "fx-toilet-01",
+    "reason": "no soil stack in this project yet: add a stack in a shaft (P5 lays out new projects)"
+   },
+   {
+    "system": "sewage",
+    "network": "sewage",
+    "item": "fx-basin-01",
+    "reason": "no soil stack in this project yet: add a stack in a shaft (P5 lays out new projects)"
+   },
+   {
+    "system": "sewage",
+    "network": "sewage",
+    "item": "fx-shower-01",
+    "reason": "no soil stack in this project yet: add a stack in a shaft (P5 lays out new projects)"
+   },
+   {
+    "system": "sewage",
+    "network": "sewage",
+    "item": "fx-kitchen-sink-01",
+    "reason": "no soil stack in this project yet: add a stack in a shaft (P5 lays out new projects)"
+   },
+   {
+    "system": "cold",
+    "network": "cold",
+    "item": "fx-toilet-01",
+    "reason": "no water source in this project yet: add a water meter or a tank (P5 lays out new projects)"
+   },
+   {
+    "system": "cold",
+    "network": "cold",
+    "item": "fx-basin-01",
+    "reason": "no water source in this project yet: add a water meter or a tank (P5 lays out new projects)"
+   },
+   {
+    "system": "cold",
+    "network": "cold",
+    "item": "fx-shower-01",
+    "reason": "no water source in this project yet: add a water meter or a tank (P5 lays out new projects)"
+   },
+   {
+    "system": "cold",
+    "network": "cold",
+    "item": "fx-kitchen-sink-01",
+    "reason": "no water source in this project yet: add a water meter or a tank (P5 lays out new projects)"
+   }
+  ],
+  "notes": []
+ }
+}

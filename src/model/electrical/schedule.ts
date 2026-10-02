@@ -5,8 +5,8 @@ import { deviceType } from './library';
 const csvCell = (v: string | number) => (typeof v === 'number' ? String(v) : /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
 const len = (c: Conduit) => Math.hypot(c.props.end[0] - c.props.start[0], c.props.end[1] - c.props.start[1], c.props.end[2] - c.props.start[2]);
 
-/** Conductors in a circuit's cable: phase(s) + neutral when 127 V + protective earth. */
-export const conductors = (c: Circuit) => (c.props.purpose === 'feeder' ? 5 : c.props.voltage === 127 ? 3 : 3);
+/** Conductors in a circuit's cable: 3 phases + neutral + earth for a feeder; otherwise phase + neutral (or two phases) + earth. */
+export const conductors = (c: Circuit) => (c.props.purpose === 'feeder' ? 5 : 3);
 export const poles = (c: Circuit) => c.props.phases.length;
 
 export function circuitRows(p: Project) {

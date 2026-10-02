@@ -1,4 +1,4 @@
-// Electrical devices, cables and breakers (NBR 5410, simplified for design). Supply: CPFL 127/220 V three-phase (to confirm).
+// Electrical devices, cables and breakers (NBR 5410, simplified for design). The supply voltages come from the project (site.region.supply).
 
 export type DeviceGroup = 'outlet' | 'light' | 'switch' | 'dedicated' | 'panel' | 'low-voltage' | 'camera' | 'solar';
 
@@ -8,8 +8,8 @@ export interface DeviceType {
   group: DeviceGroup;
   /** Default design power: VA for outlets/lights, W for appliances. */
   power: number;
-  /** Supply voltage of a dedicated point. */
-  voltage?: 127 | 220;
+  /** Dedicated points: 'high' needs about 220 V, 'low' runs on the phase voltage (electrical/design.ts voltageFor). */
+  voltage?: 'low' | 'high';
   /** Mounting height above the floor (Brazilian defaults). */
   height: number;
   /** Needs a 30 mA RCD. */
@@ -24,18 +24,18 @@ export const DEVICES: Record<string, DeviceType> = {
   'ceiling-light': { label: 'Ceiling light', short: 'L', group: 'light', power: 100, height: 2.65, size: [0.3, 0.3, 0.05] },
   'wall-light': { label: 'Wall light', short: 'WL', group: 'light', power: 60, height: 2.2, size: [0.15, 0.1, 0.2] },
   'led-strip': { label: 'LED strip', short: 'LED', group: 'light', power: 60, height: 2.6, size: [1.5, 0.03, 0.03] },
-  hob: { label: 'Induction hob 7 kW', short: 'HOB', group: 'dedicated', power: 7000, voltage: 220, height: 0.9, size: [0.6, 0.5, 0.05] },
-  oven: { label: 'Oven', short: 'OV', group: 'dedicated', power: 2500, voltage: 220, height: 0.6, size: [0.6, 0.55, 0.6] },
-  dishwasher: { label: 'Dishwasher point', short: 'DW', group: 'dedicated', power: 1500, voltage: 127, height: 0.3, rcd: true, size: [0.08, 0.04, 0.12] },
-  'washer-dryer': { label: 'Washer/dryer point', short: 'WD', group: 'dedicated', power: 2500, voltage: 220, height: 1.1, rcd: true, size: [0.08, 0.04, 0.12] },
-  'heat-pump': { label: 'Heat-pump water heater', short: 'HP', group: 'dedicated', power: 1500, voltage: 220, height: 1.2, rcd: true, size: [0.1, 0.06, 0.15] },
+  hob: { label: 'Induction hob 7 kW', short: 'HOB', group: 'dedicated', power: 7000, voltage: 'high', height: 0.9, size: [0.6, 0.5, 0.05] },
+  oven: { label: 'Oven', short: 'OV', group: 'dedicated', power: 2500, voltage: 'high', height: 0.6, size: [0.6, 0.55, 0.6] },
+  dishwasher: { label: 'Dishwasher point', short: 'DW', group: 'dedicated', power: 1500, voltage: 'low', height: 0.3, rcd: true, size: [0.08, 0.04, 0.12] },
+  'washer-dryer': { label: 'Washer/dryer point', short: 'WD', group: 'dedicated', power: 2500, voltage: 'high', height: 1.1, rcd: true, size: [0.08, 0.04, 0.12] },
+  'heat-pump': { label: 'Heat-pump water heater', short: 'HP', group: 'dedicated', power: 1500, voltage: 'high', height: 1.2, rcd: true, size: [0.1, 0.06, 0.15] },
   'ac-indoor': { label: 'Air conditioner, indoor unit', short: 'AC', group: 'low-voltage', power: 0, height: 2.3, size: [0.9, 0.22, 0.3] },
-  'ac-outdoor': { label: 'Air conditioner, outdoor unit 12,000 BTU', short: 'ACo', group: 'dedicated', power: 1200, voltage: 220, height: 0.4, size: [0.8, 0.3, 0.55] },
-  'ev-charger': { label: 'EV charger 7 kW', short: 'EV', group: 'dedicated', power: 7000, voltage: 220, height: 1.3, rcd: true, size: [0.08, 0.25, 0.35] },
-  'pump-pressure': { label: 'Pressure pump', short: 'PP', group: 'dedicated', power: 750, voltage: 220, height: 0.3, rcd: true, size: [0.08, 0.04, 0.12] },
-  'pump-lift': { label: 'Lift-station pump', short: 'LP', group: 'dedicated', power: 1100, voltage: 220, height: 0.6, rcd: true, size: [0.08, 0.04, 0.12] },
-  'pump-sump': { label: 'Garden sump pump', short: 'SP', group: 'dedicated', power: 750, voltage: 220, height: 0.6, rcd: true, size: [0.08, 0.04, 0.12] },
-  rack: { label: 'Rack: NVR, PoE switch, UPS 1.5 kVA', short: 'RACK', group: 'dedicated', power: 900, voltage: 127, height: 1.0, size: [0.6, 0.6, 1.2] },
+  'ac-outdoor': { label: 'Air conditioner, outdoor unit 12,000 BTU', short: 'ACo', group: 'dedicated', power: 1200, voltage: 'high', height: 0.4, size: [0.8, 0.3, 0.55] },
+  'ev-charger': { label: 'EV charger 7 kW', short: 'EV', group: 'dedicated', power: 7000, voltage: 'high', height: 1.3, rcd: true, size: [0.08, 0.25, 0.35] },
+  'pump-pressure': { label: 'Pressure pump', short: 'PP', group: 'dedicated', power: 750, voltage: 'high', height: 0.3, rcd: true, size: [0.08, 0.04, 0.12] },
+  'pump-lift': { label: 'Lift-station pump', short: 'LP', group: 'dedicated', power: 1100, voltage: 'high', height: 0.6, rcd: true, size: [0.08, 0.04, 0.12] },
+  'pump-sump': { label: 'Garden sump pump', short: 'SP', group: 'dedicated', power: 750, voltage: 'high', height: 0.6, rcd: true, size: [0.08, 0.04, 0.12] },
+  rack: { label: 'Rack: NVR, PoE switch, UPS 1.5 kVA', short: 'RACK', group: 'dedicated', power: 900, voltage: 'low', height: 1.0, size: [0.6, 0.6, 1.2] },
   'network-outlet': { label: 'Network outlet (Cat 6)', short: 'NET', group: 'low-voltage', power: 0, height: 0.3, size: [0.08, 0.04, 0.12] },
   camera: { label: 'IP camera 4 MP PoE', short: 'CAM', group: 'camera', power: 0, height: 2.6, size: [0.12, 0.12, 0.12] },
   doorbell: { label: 'Video doorbell (PoE)', short: 'DB', group: 'camera', power: 0, height: 1.5, size: [0.05, 0.03, 0.14] },

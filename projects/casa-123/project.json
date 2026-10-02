@@ -1,0 +1,64 @@
+{
+ "schema": "casabim-project/1",
+ "id": "casa-123",
+ "name": "Casa 123",
+ "address": "Rua Alceu Maynardi Araújo, 123, Nova Piracicaba, Piracicaba/SP",
+ "lot": {
+  "city": "Piracicaba",
+  "state": "SP",
+  "front": 14,
+  "depth": 25,
+  "area": 362.5
+ },
+ "program": {},
+ "style": {},
+ "versions": [
+  {
+   "id": "v1",
+   "name": "Version 1",
+   "kind": "design",
+   "file": "versions/v1.json",
+   "original": "originals/v1.json",
+   "edits": 0
+  },
+  {
+   "id": "v2",
+   "name": "Version 2",
+   "kind": "design",
+   "file": "versions/v2.json",
+   "original": "originals/v2.json",
+   "edits": 0
+  },
+  {
+   "id": "v3",
+   "name": "Version 3",
+   "kind": "design",
+   "file": "versions/v3.json",
+   "original": "originals/v3.json",
+   "edits": 0
+  },
+  {
+   "id": "a1",
+   "name": "Approved 1 — 2026-10-02",
+   "kind": "approved",
+   "file": "versions/a1.json",
+   "from": "v3",
+   "date": "2026-10-02",
+   "fromEdits": 0
+  },
+  {
+   "id": "bim",
+   "name": "Version 3 · BIM",
+   "kind": "bim",
+   "file": "versions/bim.json",
+   "from": "a1"
+  }
+ ],
+ "designVersionId": "v3",
+ "approvedVersionId": "a1",
+ "stage": "bim",
+ "language": "pt-BR",
+ "includeInGit": true,
+ "created": "2026-09-28T00:00:00.000Z",
+ "updated": "2026-10-02T00:00:00.000Z"
+}

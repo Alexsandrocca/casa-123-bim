@@ -5,9 +5,10 @@ import { profile } from '../model/profiles';
 import type { Carport, Column, Deck, Device, Element, Opening, Project, Rect, Slab, Space, Stair, Wall } from '../model/schema';
 import { groundAt, groundZones, inPoly, siteFrame, zoneZ, type GroundZone } from '../model/site';
 import { slabRect, slabVoids } from '../model/structure';
+import { bearingDir } from '../model/orientation';
 import { kindOf } from '../model/plumbing/library';
 import { cameraFov, cameraRange, deviceType } from '../model/electrical/library';
-import { layoutModules } from '../model/electrical/solar';
+import { layoutModules, moduleDepth } from '../model/electrical/solar';
 import { mepReport } from '../model/mep/analysis';
 import { mepContext } from '../model/mep/spaces';
 import { featureBoxes, type FeatureMat } from '../model/eng/features';
@@ -65,6 +66,8 @@ export interface BuildOptions {
   /** spec 04b: colour runs by host, show service spaces and hangers */ physics?: boolean;
   /** the selected element (its maintenance clearance is shown) */ selection?: string | null;
   /** spec 08: utilisation colours on the frame and the deck bays, and the load path */ structure?: boolean;
+  /** P0: 'design' draws the shell, roof and site only (no pipes, fixtures, devices or overlays); 'bim' draws everything. */
+  style?: 'design' | 'bim';
 }
 
 /** A walkable surface: a rectangle or convex polygon whose height is z0 + dzdy·(y − y0). */
@@ -592,9 +595,10 @@ export function buildScene(p: Project, opt: BuildOptions = { doorsOpen: false })
   for (const st of byType('Stair')) stairParts(p, st, parts, surfaces);
   for (const d of byType('Deck')) deckParts(p, d, parts, surfaces);
   for (const c of byType('Carport')) carportParts(p, c, parts);
-  const rep = opt.physics || opt.selection ? mepReport(p) : null;
+  const design = opt.style === 'design';
+  const rep = !design && (opt.physics || opt.selection) ? mepReport(p) : null;
   const hostMat = (id: string, fallback: Mat): Mat => (opt.physics && rep ? HOST_MAT[rep.segs.get(id)?.host ?? ''] ?? fallback : fallback);
-  for (const x of byType('PipeSegment')) {
+  if (!design) for (const x of byType('PipeSegment')) {
     parts.push({ kind: 'pipe', id: x.id, mat: hostMat(x.id, PIPE_MAT[x.props.system]!), a: x.props.start, b: x.props.end, r: Math.max(0.012, x.props.dn / 2000) });
   }
   if (opt.physics && rep) {
@@ -610,7 +614,7 @@ export function buildScene(p: Project, opt: BuildOptions = { doorsOpen: false })
   }
   const clear = opt.selection && rep ? rep.items.get(opt.selection)?.clearance : undefined;
   if (clear) parts.push(box('site:clearance', 'clearance', clear.x0, clear.y0, clear.z0, clear.x1, clear.y1, clear.z1, false));
-  for (const fx of byType('Fixture')) {
+  if (!design) for (const fx of byType('Fixture')) {
     const t = kindOf(fx.props.kind);
     if (fx.props.kind === 'stack') continue; // the stack is its pipes
     const [sx, sy, sz] = t.size;
@@ -618,23 +622,25 @@ export function buildScene(p: Project, opt: BuildOptions = { doorsOpen: false })
     const mat: Mat = t.group === 'fixture' ? 'fixture' : fx.props.kind === 'roof-tank' || fx.props.kind === 'rain-cistern' ? 'tank' : 'equipment';
     parts.push({ kind: 'box', id: fx.id, mat, c: [fx.props.at[0], fx.props.at[1], base + sz / 2], s: [sx, sy, sz], solid: false });
   }
-  for (const d of byType('Device')) {
+  if (!design) for (const d of byType('Device')) {
     devicePart(d, parts);
     if (opt.cones && (d.props.kind === 'camera' || d.props.kind === 'doorbell')) {
-      const lens = d.props.lensMm ?? 2.8, b = ((d.props.bearing ?? 0) * Math.PI) / 180, t = ((d.props.tilt ?? 15) * Math.PI) / 180;
+      const lens = d.props.lensMm ?? 2.8, [ux, uy] = bearingDir(p, d.props.bearing ?? 0), t = ((d.props.tilt ?? 15) * Math.PI) / 180;
       const range = cameraRange(lens);
-      parts.push({ kind: 'cone', id: d.id, mat: 'cone', apex: [d.props.at[0], d.props.at[1], d.props.z], dir: [Math.cos(b) * Math.cos(t), -Math.sin(b) * Math.cos(t), -Math.sin(t)], length: range, radius: range * Math.tan(((cameraFov(lens) / 2) * Math.PI) / 180) });
+      parts.push({ kind: 'cone', id: d.id, mat: 'cone', apex: [d.props.at[0], d.props.at[1], d.props.z], dir: [ux * Math.cos(t), uy * Math.cos(t), -Math.sin(t)], length: range, radius: range * Math.tan(((cameraFov(lens) / 2) * Math.PI) / 180) });
     }
   }
-  if (opt.conduits || opt.physics) for (const c of byType('Conduit')) parts.push({ kind: 'pipe', id: c.id, mat: hostMat(c.id, 'conduit'), a: c.props.start, b: c.props.end, r: c.props.dn / 2000 });
+  if (!design && (opt.conduits || opt.physics)) for (const c of byType('Conduit')) parts.push({ kind: 'pipe', id: c.id, mat: hostMat(c.id, 'conduit'), a: c.props.start, b: c.props.end, r: c.props.dn / 2000 });
   for (const a of byType('SolarArray')) {
     const t = (a.props.tilt * Math.PI) / 180;
     for (const m of layoutModules(p, a)) {
-      const up = (m.x1 - m.x0) / Math.cos(t);
-      // tilted up towards the south (facing north): pitch about x, then turned 90° so the slope runs along −x
-      parts.push({ kind: 'box', id: a.id, mat: 'pvModule', c: [m.x, m.y, m.z], s: [m.y1 - m.y0, up, 0.04], rx: t, rz: Math.PI / 2, solid: false });
-      for (const [x, h] of [[m.x0 + 0.1, m.zTop - a.props.roofTop], [m.x1 - 0.1, m.z - (m.zTop - m.z) - a.props.roofTop]] as [number, number][]) {
-        parts.push({ kind: 'box', id: a.id, mat: 'steel', c: [x, m.y, a.props.roofTop + h / 2], s: [0.04, m.y1 - m.y0 - 0.2, Math.max(0.05, h)], solid: false });
+      const [fx, fy] = m.face, along = Math.abs(fx) > 0.5, depth = moduleDepth(m), width = along ? m.y1 - m.y0 : m.x1 - m.x0;
+      const up = depth / Math.cos(t);
+      // tilted up away from the side it faces: turned so its slope runs along the facing axis, then pitched
+      parts.push({ kind: 'box', id: a.id, mat: 'pvModule', c: [m.x, m.y, m.z], s: [width, up, 0.04], rx: t, rz: Math.atan2(fx, -fy), solid: false });
+      const back = depth / 2 - 0.1;
+      for (const [k, h] of [[-back, m.zTop - a.props.roofTop], [back, m.z - (m.zTop - m.z) - a.props.roofTop]] as [number, number][]) {
+        parts.push({ kind: 'box', id: a.id, mat: 'steel', c: [m.x + fx * k, m.y + fy * k, a.props.roofTop + h / 2], s: along ? [0.04, width - 0.2, Math.max(0.05, h)] : [width - 0.2, 0.04, Math.max(0.05, h)], solid: false });
       }
     }
   }
@@ -654,7 +660,7 @@ export function buildScene(p: Project, opt: BuildOptions = { doorsOpen: false })
       parts.push(box(f.id, FEATURE_MAT[b.mat], b.x0, b.y0, b.z0, b.x1, b.y1, b.z1, !['skyGlass', 'cover'].includes(b.mat)));
     }
   }
-  if (opt.structure) structureOverlay(p, parts);
+  if (opt.structure && !design) structureOverlay(p, parts);
   sitePartsAndSurfaces(p, parts, surfaces);
   const wallBoxes = parts.filter((x): x is BoxPart => x.kind === 'box' && ['wallExt', 'wallInt', 'wallWet', 'retaining', 'parapet'].includes(x.mat));
   guardParts(p, surfaces, wallBoxes, parts);

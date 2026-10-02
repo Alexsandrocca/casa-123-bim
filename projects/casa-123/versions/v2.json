@@ -1,0 +1,3718 @@
+{
+ "schema": "casa123-bim/1",
+ "meta": {
+  "project": "Casa 123",
+  "version": "Version 2",
+  "versionId": "v2",
+  "units": "m",
+  "source": "docs/reference/plan-v2.json (Casa 123 studio export, 2026-09-29)",
+  "note": "Version 2: one service spine along the south wall (entry, WC, storage, pantry, stairs, laundry), all living rooms along the north side for the best light, a 20 m² veranda shaded by the upper floor, and two straight stair flights side by side: down goes west straight to the garden door, up lands at the rear with the master bedroom next to it."
+ },
+ "site": {
+  "address": "Rua Alceu Maynardi Araújo, 123, Nova Piracicaba, Piracicaba/SP",
+  "lot": {
+   "front": 14,
+   "rear": 15,
+   "sides": 25
+  },
+  "lotPolygon": [
+   [
+    0,
+    0
+   ],
+   [
+    14,
+    0
+   ],
+   [
+    15,
+    25
+   ],
+   [
+    0,
+    25
+   ]
+  ],
+  "houseOrigin": {
+   "x": 1.92,
+   "y": 4
+  },
+  "fallStreetToRear": 2,
+  "setbacks": {
+   "front": 4,
+   "rear": 6,
+   "sides": 1.2
+  },
+  "cut": {
+   "lineY": 8.5,
+   "gardenLevel": -2.55,
+   "retainingSouthToY": 10.5,
+   "retainingNorthToY": 8.9
+  },
+  "ramp": {
+   "width": 4,
+   "slope": 0.125
+  },
+  "eavesLimit": 0.7,
+  "region": {
+   "city": "Piracicaba",
+   "state": "SP",
+   "lat": -22.72,
+   "lon": -47.65,
+   "utcOffset": -3,
+   "xBearing": 0,
+   "supply": {
+    "utility": "CPFL",
+    "phaseV": 127,
+    "lineV": 220,
+    "phases": 3,
+    "confirmed": false
+   },
+   "water": "SEMAE",
+   "rules": {
+    "code": "Piracicaba LC 474/2025",
+    "sanitary": "SP sanitary code, Decreto 12.342/78"
+   },
+   "pvYield": {
+    "monthly": [
+     130,
+     120,
+     128,
+     120,
+     112,
+     104,
+     114,
+     128,
+     124,
+     132,
+     130,
+     128
+    ],
+    "source": "PVGIS-like values, 20° facing north"
+   },
+   "solarHeaterShare": 0.7
+  },
+  "toConfirm": [
+   "Topographic survey",
+   "SPT soil borings",
+   "SEMAE sewer depth",
+   "Lot zone and height limit",
+   "Climate zone (NBR 15220-3)",
+   "Whether decks are allowed in the setbacks",
+   "CPFL supply type",
+   "Which side boundary takes the extra 1 m at the rear"
+  ]
+ },
+ "structure": {
+  "floorToFloor": 3.1,
+  "clearHeight": 2.7,
+  "structureDepth": 0.4
+ },
+ "levels": [
+  {
+   "id": "LL",
+   "name": "Lower level −2.50",
+   "shortName": "Lower −2.50",
+   "elevation": -2.5,
+   "plan": true,
+   "outline": {
+    "x0": 0,
+    "y0": 8.5,
+    "x1": 8.6,
+    "y1": 15
+   }
+  },
+  {
+   "id": "garage",
+   "name": "Garage +0.10",
+   "shortName": "Garage",
+   "elevation": 0.1,
+   "plan": false
+  },
+  {
+   "id": "SL",
+   "name": "Street level +0.60",
+   "shortName": "Street +0.60",
+   "elevation": 0.6,
+   "plan": true,
+   "outline": {
+    "x0": 0,
+    "y0": 0,
+    "x1": 8.6,
+    "y1": 12.6
+   }
+  },
+  {
+   "id": "UF",
+   "name": "Upper level +3.70",
+   "shortName": "Upper +3.70",
+   "elevation": 3.7,
+   "plan": true,
+   "outline": {
+    "x0": 0,
+    "y0": 5,
+    "x1": 8.6,
+    "y1": 13.6
+   }
+  },
+  {
+   "id": "roof",
+   "name": "Roof +6.80 (parapet +7.10)",
+   "shortName": "Roof",
+   "elevation": 6.8,
+   "plan": false,
+   "outline": {
+    "x0": 0,
+    "y0": 5,
+    "x1": 8.6,
+    "y1": 13.6
+   }
+  }
+ ],
+ "grid": {
+  "x": [
+   0,
+   3.2,
+   8.6
+  ],
+  "y": [
+   0,
+   5,
+   8.5,
+   12.6,
+   15
+  ]
+ },
+ "assumptions": {
+  "zone": 2,
+  "v0": 40
+ },
+ "elements": [
+  {
+   "id": "LL-space-01",
+   "level": "LL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Stair",
+    "zone": "stair",
+    "cells": [
+     {
+      "x0": 1.6,
+      "y0": 8.5,
+      "x1": 3.2,
+      "y1": 12.5
+     }
+    ],
+    "lock": true,
+    "stairKind": "lane"
+   }
+  },
+  {
+   "id": "LL-space-02",
+   "level": "LL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Storage",
+    "zone": "service",
+    "cells": [
+     {
+      "x0": 0,
+      "y0": 8.5,
+      "x1": 1.6,
+      "y1": 10.5
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "LL-space-03",
+   "level": "LL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Laundry",
+    "zone": "service",
+    "cells": [
+     {
+      "x0": 0,
+      "y0": 10.5,
+      "x1": 1.6,
+      "y1": 12.5
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "LL-space-04",
+   "level": "LL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Hall",
+    "zone": "circ",
+    "cells": [
+     {
+      "x0": 0,
+      "y0": 12.5,
+      "x1": 3.2,
+      "y1": 15
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "LL-space-05",
+   "level": "LL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "WC",
+    "zone": "wet",
+    "cells": [
+     {
+      "x0": 3.2,
+      "y0": 13.3,
+      "x1": 4.8,
+      "y1": 15
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "LL-space-06",
+   "level": "LL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Studio · office",
+    "zone": "work",
+    "cells": [
+     {
+      "x0": 4.8,
+      "y0": 8.5,
+      "x1": 8.6,
+      "y1": 15
+     },
+     {
+      "x0": 3.2,
+      "y0": 8.5,
+      "x1": 4.8,
+      "y1": 13.3
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "LL-wall-01",
+   "level": "LL",
+   "tags": [],
+   "notes": [
+    "Stair and retaining wall: the down flight LL → SL passes over the cut line (y 8.50), x 1.70–3.20. The ground there is at about -1.00, so the retained soil stays well below the flight (tread about +0.23 at y 8.50). Under the stair opening the lower-level front wall stops under the flight soffit, with a lintel beam over it. To be detailed by the structural engineer."
+   ],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     8.5
+    ],
+    "end": [
+     8.6,
+     8.5
+    ],
+    "thickness": 0.26,
+    "height": 3.1,
+    "wallType": "retaining"
+   }
+  },
+  {
+   "id": "LL-wall-02",
+   "level": "LL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     8.6,
+     8.5
+    ],
+    "end": [
+     8.6,
+     8.9
+    ],
+    "thickness": 0.26,
+    "height": 3.1,
+    "wallType": "retaining"
+   }
+  },
+  {
+   "id": "LL-wall-03",
+   "level": "LL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     8.6,
+     8.9
+    ],
+    "end": [
+     8.6,
+     15
+    ],
+    "thickness": 0.2,
+    "height": 3.1,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "LL-wall-04",
+   "level": "LL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     15
+    ],
+    "end": [
+     8.6,
+     15
+    ],
+    "thickness": 0.2,
+    "height": 3.1,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "LL-wall-05",
+   "level": "LL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     8.5
+    ],
+    "end": [
+     0,
+     10.5
+    ],
+    "thickness": 0.26,
+    "height": 3.1,
+    "wallType": "retaining"
+   }
+  },
+  {
+   "id": "LL-wall-06",
+   "level": "LL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     10.5
+    ],
+    "end": [
+     0,
+     15
+    ],
+    "thickness": 0.2,
+    "height": 3.1,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "LL-wall-07",
+   "level": "LL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     10.5
+    ],
+    "end": [
+     1.6,
+     10.5
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "LL-wall-08",
+   "level": "LL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     12.5
+    ],
+    "end": [
+     1.6,
+     12.5
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "LL-wall-09",
+   "level": "LL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     13.3
+    ],
+    "end": [
+     4.8,
+     13.3
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "LL-wall-10",
+   "level": "LL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     1.6,
+     8.5
+    ],
+    "end": [
+     1.6,
+     12.5
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "LL-wall-11",
+   "level": "LL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     8.5
+    ],
+    "end": [
+     3.2,
+     13.3
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "LL-wall-12",
+   "level": "LL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     13.3
+    ],
+    "end": [
+     3.2,
+     15
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "LL-wall-13",
+   "level": "LL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     4.8,
+     13.3
+    ],
+    "end": [
+     4.8,
+     15
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "LL-door-01",
+   "level": "LL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "LL-wall-08",
+    "role": "door",
+    "kind": "door",
+    "offset": 0.4,
+    "width": 0.8,
+    "height": 2.1,
+    "sill": 0,
+    "swing": -1
+   }
+  },
+  {
+   "id": "LL-door-02",
+   "level": "LL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "LL-wall-07",
+    "role": "door",
+    "kind": "door",
+    "offset": 0.4,
+    "width": 0.7,
+    "height": 2.1,
+    "sill": 0,
+    "swing": -1
+   }
+  },
+  {
+   "id": "LL-door-03",
+   "level": "LL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "LL-wall-12",
+    "role": "door",
+    "kind": "door",
+    "offset": 0.35,
+    "width": 0.7,
+    "height": 2.1,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "LL-door-04",
+   "level": "LL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "LL-wall-11",
+    "role": "door",
+    "kind": "door",
+    "offset": 4.05,
+    "width": 0.7,
+    "height": 2.1,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "LL-door-05",
+   "level": "LL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "LL-wall-04",
+    "role": "door",
+    "kind": "slider",
+    "offset": 0.4,
+    "width": 2.4,
+    "height": 2.2,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "LL-win-01",
+   "level": "LL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "LL-wall-06",
+    "role": "window",
+    "kind": "window",
+    "offset": 0.3,
+    "width": 1.4,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "LL-win-02",
+   "level": "LL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "LL-wall-04",
+    "role": "window",
+    "kind": "window",
+    "high": true,
+    "offset": 3.5,
+    "width": 1,
+    "height": 0.6,
+    "sill": 1.7,
+    "swing": 1
+   }
+  },
+  {
+   "id": "LL-win-03",
+   "level": "LL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "LL-wall-04",
+    "role": "window",
+    "kind": "slider",
+    "offset": 5.1,
+    "width": 3.2,
+    "height": 2.2,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "LL-win-04",
+   "level": "LL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "LL-wall-03",
+    "role": "window",
+    "kind": "window",
+    "offset": 0.1,
+    "width": 5.6,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "SL-space-01",
+   "level": "SL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Garage",
+    "zone": "garage",
+    "cells": [
+     {
+      "x0": 3.2,
+      "y0": 0,
+      "x1": 8.6,
+      "y1": 5
+     }
+    ],
+    "lock": false,
+    "floorElevation": 0.1
+   }
+  },
+  {
+   "id": "SL-space-02",
+   "level": "SL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Entry · hall",
+    "zone": "circ",
+    "cells": [
+     {
+      "x0": 0,
+      "y0": 0,
+      "x1": 3.2,
+      "y1": 2
+     },
+     {
+      "x0": 2,
+      "y0": 2,
+      "x1": 3.2,
+      "y1": 7
+     },
+     {
+      "x0": 0,
+      "y0": 7,
+      "x1": 3.2,
+      "y1": 8.2
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "SL-space-03",
+   "level": "SL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "WC",
+    "zone": "wet",
+    "cells": [
+     {
+      "x0": 0,
+      "y0": 2,
+      "x1": 2,
+      "y1": 3.8
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "SL-space-04",
+   "level": "SL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Storage",
+    "zone": "service",
+    "cells": [
+     {
+      "x0": 0,
+      "y0": 3.8,
+      "x1": 2,
+      "y1": 5
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "SL-space-05",
+   "level": "SL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Pantry",
+    "zone": "service",
+    "cells": [
+     {
+      "x0": 0,
+      "y0": 5,
+      "x1": 2,
+      "y1": 7
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "SL-space-06",
+   "level": "SL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Kitchen",
+    "zone": "social",
+    "cells": [
+     {
+      "x0": 3.2,
+      "y0": 5,
+      "x1": 8.6,
+      "y1": 7.6
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "SL-space-07",
+   "level": "SL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Dining",
+    "zone": "social",
+    "cells": [
+     {
+      "x0": 3.2,
+      "y0": 7.6,
+      "x1": 8.6,
+      "y1": 9.6
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "SL-space-08",
+   "level": "SL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Living",
+    "zone": "social",
+    "cells": [
+     {
+      "x0": 3.2,
+      "y0": 9.6,
+      "x1": 8.6,
+      "y1": 12.6
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "SL-space-09",
+   "level": "SL",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Stair",
+    "zone": "stair",
+    "cells": [
+     {
+      "x0": 0,
+      "y0": 8.2,
+      "x1": 3.2,
+      "y1": 12.6
+     }
+    ],
+    "lock": true,
+    "stairKind": "dual"
+   }
+  },
+  {
+   "id": "SL-wall-01",
+   "level": "SL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     0
+    ],
+    "end": [
+     8.6,
+     0
+    ],
+    "thickness": 0.2,
+    "height": 3.1,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "SL-wall-02",
+   "level": "SL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     8.6,
+     0
+    ],
+    "end": [
+     8.6,
+     12.6
+    ],
+    "thickness": 0.2,
+    "height": 3.1,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "SL-wall-03",
+   "level": "SL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     12.6
+    ],
+    "end": [
+     8.6,
+     12.6
+    ],
+    "thickness": 0.2,
+    "height": 3.1,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "SL-wall-04",
+   "level": "SL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     0
+    ],
+    "end": [
+     0,
+     12.6
+    ],
+    "thickness": 0.2,
+    "height": 3.1,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "SL-wall-05",
+   "level": "SL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     2
+    ],
+    "end": [
+     2,
+     2
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "SL-wall-06",
+   "level": "SL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     3.8
+    ],
+    "end": [
+     2,
+     3.8
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "SL-wall-07",
+   "level": "SL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     5
+    ],
+    "end": [
+     2,
+     5
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "SL-wall-08",
+   "level": "SL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     5
+    ],
+    "end": [
+     8.6,
+     5
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "SL-wall-09",
+   "level": "SL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     7
+    ],
+    "end": [
+     2,
+     7
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "SL-wall-10",
+   "level": "SL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     2,
+     3.8
+    ],
+    "end": [
+     2,
+     7
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "SL-wall-11",
+   "level": "SL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     2,
+     2
+    ],
+    "end": [
+     2,
+     3.8
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "SL-wall-12",
+   "level": "SL",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     0
+    ],
+    "end": [
+     3.2,
+     5
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "SL-door-01",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-01",
+    "role": "door",
+    "kind": "door",
+    "offset": 0.9,
+    "width": 1,
+    "height": 2.1,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "SL-door-02",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-01",
+    "role": "door",
+    "kind": "garage",
+    "offset": 3.4,
+    "width": 5,
+    "height": 2.4,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "SL-door-03",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-08",
+    "role": "door",
+    "kind": "door",
+    "offset": 0.2,
+    "width": 0.8,
+    "height": 2.1,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "SL-door-04",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-11",
+    "role": "door",
+    "kind": "door",
+    "offset": 0.5,
+    "width": 0.7,
+    "height": 2.1,
+    "sill": 0,
+    "swing": -1
+   }
+  },
+  {
+   "id": "SL-door-05",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-10",
+    "role": "door",
+    "kind": "door",
+    "offset": 0.25,
+    "width": 0.8,
+    "height": 2.1,
+    "sill": 0,
+    "swing": -1
+   }
+  },
+  {
+   "id": "SL-door-06",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-10",
+    "role": "door",
+    "kind": "door",
+    "offset": 1.8,
+    "width": 0.8,
+    "height": 2.1,
+    "sill": 0,
+    "swing": -1
+   }
+  },
+  {
+   "id": "SL-win-01",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-01",
+    "role": "window",
+    "kind": "window",
+    "offset": 2.1,
+    "width": 0.8,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "SL-win-02",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-04",
+    "role": "window",
+    "kind": "window",
+    "high": true,
+    "offset": 2.4,
+    "width": 1,
+    "height": 0.6,
+    "sill": 1.7,
+    "swing": 1
+   }
+  },
+  {
+   "id": "SL-win-03",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-04",
+    "role": "window",
+    "kind": "window",
+    "high": true,
+    "offset": 5.4,
+    "width": 1.2,
+    "height": 0.6,
+    "sill": 1.7,
+    "swing": 1
+   }
+  },
+  {
+   "id": "SL-win-04",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-02",
+    "role": "window",
+    "kind": "window",
+    "offset": 5.3,
+    "width": 2,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "SL-win-05",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-02",
+    "role": "window",
+    "kind": "window",
+    "offset": 7.8,
+    "width": 1.6,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "SL-win-06",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-02",
+    "role": "window",
+    "kind": "slider",
+    "offset": 9.9,
+    "width": 2.4,
+    "height": 2.2,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "SL-win-07",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-03",
+    "role": "window",
+    "kind": "slider",
+    "offset": 3.4,
+    "width": 5,
+    "height": 2.2,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "SL-win-08",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-04",
+    "role": "window",
+    "kind": "window",
+    "offset": 8.6,
+    "width": 3.6,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "SL-win-09",
+   "level": "SL",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "SL-wall-03",
+    "role": "window",
+    "kind": "window",
+    "offset": 0.3,
+    "width": 2.6,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "UF-space-01",
+   "level": "UF",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Bedroom 2",
+    "zone": "private",
+    "cells": [
+     {
+      "x0": 0,
+      "y0": 5,
+      "x1": 3.2,
+      "y1": 8.2
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "UF-space-02",
+   "level": "UF",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Bath 2",
+    "zone": "wet",
+    "cells": [
+     {
+      "x0": 3.2,
+      "y0": 5,
+      "x1": 5,
+      "y1": 6.6
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "UF-space-03",
+   "level": "UF",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Bath 3",
+    "zone": "wet",
+    "cells": [
+     {
+      "x0": 3.2,
+      "y0": 6.6,
+      "x1": 5,
+      "y1": 8.2
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "UF-space-04",
+   "level": "UF",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Bedroom 3",
+    "zone": "private",
+    "cells": [
+     {
+      "x0": 5,
+      "y0": 5,
+      "x1": 8.6,
+      "y1": 9
+     },
+     {
+      "x0": 3.2,
+      "y0": 8.2,
+      "x1": 5,
+      "y1": 9
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "UF-space-05",
+   "level": "UF",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Master bedroom",
+    "zone": "private",
+    "cells": [
+     {
+      "x0": 5,
+      "y0": 9,
+      "x1": 8.6,
+      "y1": 13.6
+     },
+     {
+      "x0": 3.2,
+      "y0": 9,
+      "x1": 5,
+      "y1": 10
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "UF-space-06",
+   "level": "UF",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Master bath",
+    "zone": "wet",
+    "cells": [
+     {
+      "x0": 3.2,
+      "y0": 10,
+      "x1": 5,
+      "y1": 12.2
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "UF-space-07",
+   "level": "UF",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Closet",
+    "zone": "private",
+    "cells": [
+     {
+      "x0": 3.2,
+      "y0": 12.2,
+      "x1": 5,
+      "y1": 13.6
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "UF-space-08",
+   "level": "UF",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Hall",
+    "zone": "circ",
+    "cells": [
+     {
+      "x0": 1.6,
+      "y0": 8.2,
+      "x1": 3.2,
+      "y1": 12.5
+     },
+     {
+      "x0": 0,
+      "y0": 12.5,
+      "x1": 3.2,
+      "y1": 13.6
+     }
+    ],
+    "lock": false
+   }
+  },
+  {
+   "id": "UF-space-09",
+   "level": "UF",
+   "tags": [],
+   "type": "Space",
+   "props": {
+    "name": "Stair",
+    "zone": "stair",
+    "cells": [
+     {
+      "x0": 0,
+      "y0": 8.2,
+      "x1": 1.6,
+      "y1": 12.5
+     }
+    ],
+    "lock": true,
+    "stairKind": "void"
+   }
+  },
+  {
+   "id": "UF-wall-01",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     5
+    ],
+    "end": [
+     8.6,
+     5
+    ],
+    "thickness": 0.2,
+    "height": 3.1,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "UF-wall-02",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     8.6,
+     5
+    ],
+    "end": [
+     8.6,
+     13.6
+    ],
+    "thickness": 0.2,
+    "height": 3.1,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "UF-wall-03",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     13.6
+    ],
+    "end": [
+     8.6,
+     13.6
+    ],
+    "thickness": 0.2,
+    "height": 3.1,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "UF-wall-04",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     5
+    ],
+    "end": [
+     0,
+     13.6
+    ],
+    "thickness": 0.2,
+    "height": 3.1,
+    "wallType": "exterior"
+   }
+  },
+  {
+   "id": "UF-wall-05",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     6.6
+    ],
+    "end": [
+     5,
+     6.6
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "UF-wall-06",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     0,
+     8.2
+    ],
+    "end": [
+     3.2,
+     8.2
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "UF-wall-07",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     8.2
+    ],
+    "end": [
+     5,
+     8.2
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "UF-wall-08",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     9
+    ],
+    "end": [
+     8.6,
+     9
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "UF-wall-09",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     10
+    ],
+    "end": [
+     5,
+     10
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "UF-wall-10",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     12.2
+    ],
+    "end": [
+     5,
+     12.2
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "UF-wall-11",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     8.2
+    ],
+    "end": [
+     3.2,
+     10
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "UF-wall-12",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     12.2
+    ],
+    "end": [
+     3.2,
+     13.6
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "UF-wall-13",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     5
+    ],
+    "end": [
+     3.2,
+     8.2
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "UF-wall-14",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     3.2,
+     10
+    ],
+    "end": [
+     3.2,
+     12.2
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "UF-wall-15",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     5,
+     12.2
+    ],
+    "end": [
+     5,
+     13.6
+    ],
+    "thickness": 0.12,
+    "height": 2.7,
+    "wallType": "interior"
+   }
+  },
+  {
+   "id": "UF-wall-16",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     5,
+     5
+    ],
+    "end": [
+     5,
+     8.2
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "UF-wall-17",
+   "level": "UF",
+   "tags": [],
+   "type": "Wall",
+   "props": {
+    "start": [
+     5,
+     10
+    ],
+    "end": [
+     5,
+     12.2
+    ],
+    "thickness": 0.15,
+    "height": 2.7,
+    "wallType": "wet"
+   }
+  },
+  {
+   "id": "UF-door-01",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-06",
+    "role": "door",
+    "kind": "door",
+    "offset": 1.9,
+    "width": 0.8,
+    "height": 2.1,
+    "sill": 0,
+    "swing": -1
+   }
+  },
+  {
+   "id": "UF-door-02",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-13",
+    "role": "door",
+    "kind": "door",
+    "offset": 0.5,
+    "width": 0.7,
+    "height": 2.1,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "UF-door-03",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-16",
+    "role": "door",
+    "kind": "door",
+    "offset": 2.2,
+    "width": 0.7,
+    "height": 2.1,
+    "sill": 0,
+    "swing": -1
+   }
+  },
+  {
+   "id": "UF-door-04",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-11",
+    "role": "door",
+    "kind": "door",
+    "offset": 0.05,
+    "width": 0.7,
+    "height": 2.1,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "UF-door-05",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-11",
+    "role": "door",
+    "kind": "door",
+    "offset": 0.9,
+    "width": 0.8,
+    "height": 2.1,
+    "sill": 0,
+    "swing": 1
+   }
+  },
+  {
+   "id": "UF-door-06",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-17",
+    "role": "door",
+    "kind": "door",
+    "offset": 0.4,
+    "width": 0.7,
+    "height": 2.1,
+    "sill": 0,
+    "swing": -1
+   }
+  },
+  {
+   "id": "UF-door-07",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-15",
+    "role": "door",
+    "kind": "door",
+    "offset": 0.2,
+    "width": 0.8,
+    "height": 2.1,
+    "sill": 0,
+    "swing": -1
+   }
+  },
+  {
+   "id": "UF-win-01",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-01",
+    "role": "window",
+    "kind": "window",
+    "offset": 0.4,
+    "width": 2.4,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "UF-win-02",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-04",
+    "role": "window",
+    "kind": "window",
+    "offset": 0.5,
+    "width": 2.2,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "UF-win-03",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-01",
+    "role": "window",
+    "kind": "window",
+    "high": true,
+    "offset": 3.5,
+    "width": 1.2,
+    "height": 0.6,
+    "sill": 1.7,
+    "swing": 1
+   }
+  },
+  {
+   "id": "UF-win-04",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-01",
+    "role": "window",
+    "kind": "window",
+    "offset": 5.4,
+    "width": 2.8,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "UF-win-05",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-02",
+    "role": "window",
+    "kind": "window",
+    "offset": 0.5,
+    "width": 2.6,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "UF-win-06",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-02",
+    "role": "window",
+    "kind": "window",
+    "offset": 4.2,
+    "width": 3.8,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "UF-win-07",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-03",
+    "role": "window",
+    "kind": "window",
+    "offset": 5.4,
+    "width": 2.8,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "UF-win-08",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-03",
+    "role": "window",
+    "kind": "window",
+    "offset": 0.3,
+    "width": 2.6,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "UF-win-09",
+   "level": "UF",
+   "tags": [],
+   "type": "Opening",
+   "props": {
+    "host": "UF-wall-04",
+    "role": "window",
+    "kind": "window",
+    "offset": 3.6,
+    "width": 3.5,
+    "height": 1.3,
+    "sill": 1,
+    "swing": 1
+   }
+  },
+  {
+   "id": "LL-slab-01",
+   "level": "LL",
+   "tags": [],
+   "type": "Slab",
+   "props": {
+    "name": "Lower level ground slab",
+    "rect": {
+     "x0": 0,
+     "y0": 8.5,
+     "x1": 8.6,
+     "y1": 15
+    },
+    "voidSpaces": [],
+    "topElevation": -2.5,
+    "thickness": 0.15,
+    "onGrade": true
+   }
+  },
+  {
+   "id": "SL-slab-01",
+   "level": "SL",
+   "tags": [],
+   "type": "Slab",
+   "props": {
+    "name": "Street level +0.60 floor",
+    "rect": {
+     "x0": 0,
+     "y0": 0,
+     "x1": 8.6,
+     "y1": 12.6
+    },
+    "voidSpaces": [
+     "SL-space-09",
+     "SL-space-01"
+    ],
+    "topElevation": 0.6,
+    "thickness": 0.14
+   }
+  },
+  {
+   "id": "SL-slab-02",
+   "level": "SL",
+   "tags": [
+    "garage"
+   ],
+   "type": "Slab",
+   "props": {
+    "name": "Garage slab on grade",
+    "spaces": [
+     "SL-space-01"
+    ],
+    "voidSpaces": [],
+    "topElevation": 0.1,
+    "thickness": 0.15,
+    "onGrade": true
+   }
+  },
+  {
+   "id": "UF-slab-01",
+   "level": "UF",
+   "tags": [],
+   "type": "Slab",
+   "props": {
+    "name": "Upper level +3.70 floor",
+    "rect": {
+     "x0": 0,
+     "y0": 5,
+     "x1": 8.6,
+     "y1": 13.6
+    },
+    "voidSpaces": [
+     "UF-space-09"
+    ],
+    "topElevation": 3.7,
+    "thickness": 0.14
+   }
+  },
+  {
+   "id": "roof-slab-01",
+   "level": "roof",
+   "tags": [],
+   "type": "Slab",
+   "props": {
+    "name": "Flat roof",
+    "rect": {
+     "x0": 0,
+     "y0": 5,
+     "x1": 8.6,
+     "y1": 13.6
+    },
+    "voidSpaces": [],
+    "topElevation": 6.8,
+    "thickness": 0.14,
+    "parapet": 0.3,
+    "eaves": 0.4
+   }
+  },
+  {
+   "id": "SL-slab-03",
+   "level": "SL",
+   "tags": [
+    "lower-roof"
+   ],
+   "type": "Slab",
+   "props": {
+    "name": "Veranda slab (roof of the lower level)",
+    "rect": {
+     "x0": 0,
+     "y0": 12.6,
+     "x1": 8.6,
+     "y1": 15
+    },
+    "voidSpaces": [],
+    "topElevation": 0.6,
+    "thickness": 0.14
+   }
+  },
+  {
+   "id": "UF-slab-02",
+   "level": "UF",
+   "tags": [
+    "garage-roof"
+   ],
+   "type": "Slab",
+   "props": {
+    "name": "Garage roof",
+    "rect": {
+     "x0": 0,
+     "y0": 0,
+     "x1": 8.6,
+     "y1": 5
+    },
+    "voidSpaces": [],
+    "topElevation": 3.7,
+    "thickness": 0.14,
+    "parapet": 0.3,
+    "eaves": 0
+   }
+  },
+  {
+   "id": "stair-01",
+   "level": "SL",
+   "tags": [],
+   "type": "Stair",
+   "props": {
+    "name": "Up flight SL → UF",
+    "fromLevel": "SL",
+    "toLevel": "UF",
+    "riser": 0.182,
+    "tread": 0.27,
+    "width": 1.5,
+    "flights": [
+     {
+      "x0": 0,
+      "x1": 1.5,
+      "yBottom": 8.2,
+      "yTop": 12.52,
+      "risers": 17
+     }
+    ],
+    "landings": []
+   }
+  },
+  {
+   "id": "stair-02",
+   "level": "LL",
+   "tags": [],
+   "notes": [
+    "Stair and retaining wall: the down flight LL → SL passes over the cut line (y 8.50), x 1.70–3.20. The ground there is at about -1.00, so the retained soil stays well below the flight (tread about +0.23 at y 8.50). Under the stair opening the lower-level front wall stops under the flight soffit, with a lintel beam over it. To be detailed by the structural engineer."
+   ],
+   "type": "Stair",
+   "props": {
+    "name": "Down flight LL → SL",
+    "fromLevel": "LL",
+    "toLevel": "SL",
+    "riser": 0.182,
+    "tread": 0.27,
+    "width": 1.5,
+    "flights": [
+     {
+      "x0": 1.7,
+      "x1": 3.2,
+      "yBottom": 12.52,
+      "yTop": 8.2,
+      "risers": 17
+     }
+    ],
+    "landings": []
+   }
+  },
+  {
+   "id": "LL-deck-01",
+   "level": "LL",
+   "tags": [],
+   "type": "Deck",
+   "props": {
+    "name": "Garden",
+    "label": "garden −2.55 →",
+    "rect": {
+     "x0": 0,
+     "y0": 15,
+     "x1": 8.6,
+     "y1": 16.2
+    },
+    "elevation": -2.55
+   }
+  },
+  {
+   "id": "SL-deck-01",
+   "level": "SL",
+   "tags": [],
+   "type": "Deck",
+   "props": {
+    "name": "Veranda",
+    "label": "Veranda 20.6 m² · roof of the lower level",
+    "rect": {
+     "x0": 0,
+     "y0": 12.6,
+     "x1": 8.6,
+     "y1": 15
+    },
+    "elevation": 0.6
+   }
+  },
+  {
+   "id": "beam-01",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     0
+    ],
+    "end": [
+     3.2,
+     0
+    ],
+    "profile": "W250×32.7",
+    "elevation": 0.46
+   }
+  },
+  {
+   "id": "beam-02",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     12.6
+    ],
+    "end": [
+     8.6,
+     12.6
+    ],
+    "profile": "W250×32.7",
+    "elevation": 0.46
+   }
+  },
+  {
+   "id": "beam-03",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     15
+    ],
+    "end": [
+     8.6,
+     15
+    ],
+    "profile": "W250×32.7",
+    "elevation": 0.46
+   }
+  },
+  {
+   "id": "beam-04",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     5
+    ],
+    "end": [
+     8.6,
+     5
+    ],
+    "profile": "W250×32.7",
+    "elevation": 0.46
+   }
+  },
+  {
+   "id": "beam-05",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     8.2
+    ],
+    "end": [
+     3.2,
+     8.2
+    ],
+    "profile": "W250×32.7",
+    "elevation": 0.46
+   }
+  },
+  {
+   "id": "beam-06",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     3.2,
+     8.5
+    ],
+    "end": [
+     8.6,
+     8.5
+    ],
+    "profile": "W250×32.7",
+    "elevation": 0.46
+   }
+  },
+  {
+   "id": "beam-07",
+   "level": "UF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     0
+    ],
+    "end": [
+     8.6,
+     0
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.56
+   }
+  },
+  {
+   "id": "beam-08",
+   "level": "UF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     12.5
+    ],
+    "end": [
+     1.6,
+     12.5
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.56
+   }
+  },
+  {
+   "id": "beam-09",
+   "level": "UF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     12.6
+    ],
+    "end": [
+     8.6,
+     12.6
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.56
+   }
+  },
+  {
+   "id": "beam-10",
+   "level": "UF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     13.6
+    ],
+    "end": [
+     8.6,
+     13.6
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.56
+   }
+  },
+  {
+   "id": "beam-11",
+   "level": "UF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     5
+    ],
+    "end": [
+     8.6,
+     5
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.56
+   }
+  },
+  {
+   "id": "beam-12",
+   "level": "UF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     8.2
+    ],
+    "end": [
+     1.6,
+     8.2
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.56
+   }
+  },
+  {
+   "id": "beam-13",
+   "level": "UF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     1.6,
+     8.5
+    ],
+    "end": [
+     8.6,
+     8.5
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.56
+   }
+  },
+  {
+   "id": "beam-14",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     12.6
+    ],
+    "end": [
+     8.6,
+     12.6
+    ],
+    "profile": "W250×32.7",
+    "elevation": 6.66
+   }
+  },
+  {
+   "id": "beam-15",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     13.6
+    ],
+    "end": [
+     8.6,
+     13.6
+    ],
+    "profile": "W250×32.7",
+    "elevation": 6.66
+   }
+  },
+  {
+   "id": "beam-16",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     5
+    ],
+    "end": [
+     8.6,
+     5
+    ],
+    "profile": "W250×32.7",
+    "elevation": 6.66
+   }
+  },
+  {
+   "id": "beam-17",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     8.5
+    ],
+    "end": [
+     8.6,
+     8.5
+    ],
+    "profile": "W250×32.7",
+    "elevation": 6.66
+   }
+  },
+  {
+   "id": "beam-18",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     0
+    ],
+    "end": [
+     0,
+     15
+    ],
+    "profile": "W250×32.7",
+    "elevation": 0.46
+   }
+  },
+  {
+   "id": "beam-19",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     3.2,
+     0
+    ],
+    "end": [
+     3.2,
+     15
+    ],
+    "profile": "W250×32.7",
+    "elevation": 0.46
+   }
+  },
+  {
+   "id": "beam-20",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     8.6,
+     5
+    ],
+    "end": [
+     8.6,
+     15
+    ],
+    "profile": "W250×32.7",
+    "elevation": 0.46
+   }
+  },
+  {
+   "id": "beam-21",
+   "level": "UF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     0
+    ],
+    "end": [
+     0,
+     13.6
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.56
+   }
+  },
+  {
+   "id": "beam-22",
+   "level": "UF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     1.6,
+     8.2
+    ],
+    "end": [
+     1.6,
+     12.5
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.56
+   }
+  },
+  {
+   "id": "beam-23",
+   "level": "UF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     3.2,
+     0
+    ],
+    "end": [
+     3.2,
+     13.6
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.56
+   }
+  },
+  {
+   "id": "beam-24",
+   "level": "UF",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     8.6,
+     0
+    ],
+    "end": [
+     8.6,
+     13.6
+    ],
+    "profile": "W250×32.7",
+    "elevation": 3.56
+   }
+  },
+  {
+   "id": "beam-25",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     0,
+     5
+    ],
+    "end": [
+     0,
+     13.6
+    ],
+    "profile": "W250×32.7",
+    "elevation": 6.66
+   }
+  },
+  {
+   "id": "beam-26",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     3.2,
+     5
+    ],
+    "end": [
+     3.2,
+     13.6
+    ],
+    "profile": "W250×32.7",
+    "elevation": 6.66
+   }
+  },
+  {
+   "id": "beam-27",
+   "level": "roof",
+   "tags": [
+    "generated"
+   ],
+   "type": "Beam",
+   "props": {
+    "start": [
+     8.6,
+     5
+    ],
+    "end": [
+     8.6,
+     13.6
+    ],
+    "profile": "W250×32.7",
+    "elevation": 6.66
+   }
+  },
+  {
+   "id": "col-01",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     0,
+     0
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -0.62,
+    "topElevation": 3.56
+   }
+  },
+  {
+   "id": "footing-01",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": -0.5,
+     "y0": -0.5,
+     "x1": 0.5,
+     "y1": 0.5
+    },
+    "topElevation": -0.62,
+    "depth": 0.5,
+    "carries": "col-01"
+   }
+  },
+  {
+   "id": "col-02",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     3.2,
+     0
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -0.2,
+    "topElevation": 3.56
+   }
+  },
+  {
+   "id": "footing-02",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 2.7,
+     "y0": -0.5,
+     "x1": 3.7,
+     "y1": 0.5
+    },
+    "topElevation": -0.2,
+    "depth": 0.5,
+    "carries": "col-02"
+   }
+  },
+  {
+   "id": "col-03",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     8.6,
+     0
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -0.2,
+    "topElevation": 3.56
+   }
+  },
+  {
+   "id": "footing-03",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 8.1,
+     "y0": -0.5,
+     "x1": 9.1,
+     "y1": 0.5
+    },
+    "topElevation": -0.2,
+    "depth": 0.5,
+    "carries": "col-03"
+   }
+  },
+  {
+   "id": "col-04",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     0,
+     5
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -1.02,
+    "topElevation": 6.66
+   }
+  },
+  {
+   "id": "footing-04",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": -0.5,
+     "y0": 4.5,
+     "x1": 0.5,
+     "y1": 5.5
+    },
+    "topElevation": -1.02,
+    "depth": 0.5,
+    "carries": "col-04"
+   }
+  },
+  {
+   "id": "col-05",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     3.2,
+     5
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -1.02,
+    "topElevation": 6.66
+   }
+  },
+  {
+   "id": "footing-05",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 2.7,
+     "y0": 4.5,
+     "x1": 3.7,
+     "y1": 5.5
+    },
+    "topElevation": -1.02,
+    "depth": 0.5,
+    "carries": "col-05"
+   }
+  },
+  {
+   "id": "col-06",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     8.6,
+     5
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -1.02,
+    "topElevation": 6.66
+   }
+  },
+  {
+   "id": "footing-06",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 8.1,
+     "y0": 4.5,
+     "x1": 9.1,
+     "y1": 5.5
+    },
+    "topElevation": -1.02,
+    "depth": 0.5,
+    "carries": "col-06"
+   }
+  },
+  {
+   "id": "col-07",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     0,
+     8.5
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 6.66
+   }
+  },
+  {
+   "id": "footing-07",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": -0.5,
+     "y0": 8,
+     "x1": 0.5,
+     "y1": 9
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-07"
+   }
+  },
+  {
+   "id": "col-08",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     3.2,
+     8.5
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 6.66
+   }
+  },
+  {
+   "id": "footing-08",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 2.7,
+     "y0": 8,
+     "x1": 3.7,
+     "y1": 9
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-08"
+   }
+  },
+  {
+   "id": "col-09",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     8.6,
+     8.5
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 6.66
+   }
+  },
+  {
+   "id": "footing-09",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 8.1,
+     "y0": 8,
+     "x1": 9.1,
+     "y1": 9
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-09"
+   }
+  },
+  {
+   "id": "col-10",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     0,
+     12.6
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 6.66
+   }
+  },
+  {
+   "id": "footing-10",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": -0.5,
+     "y0": 12.1,
+     "x1": 0.5,
+     "y1": 13.1
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-10"
+   }
+  },
+  {
+   "id": "col-11",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     3.2,
+     12.6
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 6.66
+   }
+  },
+  {
+   "id": "footing-11",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 2.7,
+     "y0": 12.1,
+     "x1": 3.7,
+     "y1": 13.1
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-11"
+   }
+  },
+  {
+   "id": "col-12",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     8.6,
+     12.6
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 6.66
+   }
+  },
+  {
+   "id": "footing-12",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 8.1,
+     "y0": 12.1,
+     "x1": 9.1,
+     "y1": 13.1
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-12"
+   }
+  },
+  {
+   "id": "col-13",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     0,
+     15
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 0.46
+   }
+  },
+  {
+   "id": "footing-13",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": -0.5,
+     "y0": 14.5,
+     "x1": 0.5,
+     "y1": 15.5
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-13"
+   }
+  },
+  {
+   "id": "col-14",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     3.2,
+     15
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 0.46
+   }
+  },
+  {
+   "id": "footing-14",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 2.7,
+     "y0": 14.5,
+     "x1": 3.7,
+     "y1": 15.5
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-14"
+   }
+  },
+  {
+   "id": "col-15",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     8.6,
+     15
+    ],
+    "profile": "W200×46.1",
+    "kind": "column",
+    "baseElevation": -2.65,
+    "topElevation": 0.46
+   }
+  },
+  {
+   "id": "footing-15",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 8.1,
+     "y0": 14.5,
+     "x1": 9.1,
+     "y1": 15.5
+    },
+    "topElevation": -2.65,
+    "depth": 0.5,
+    "carries": "col-15"
+   }
+  },
+  {
+   "id": "pier-01",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     0,
+     2.5
+    ],
+    "profile": "Concrete 30×30",
+    "kind": "pier",
+    "baseElevation": -0.82,
+    "topElevation": 0.46
+   }
+  },
+  {
+   "id": "footing-16",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": -0.35,
+     "y0": 2.15,
+     "x1": 0.35,
+     "y1": 2.85
+    },
+    "topElevation": -0.82,
+    "depth": 0.3,
+    "carries": "pier-01"
+   }
+  },
+  {
+   "id": "pier-02",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     3.2,
+     2.5
+    ],
+    "profile": "Concrete 30×30",
+    "kind": "pier",
+    "baseElevation": -0.82,
+    "topElevation": 0.46
+   }
+  },
+  {
+   "id": "footing-17",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 2.85,
+     "y0": 2.15,
+     "x1": 3.55,
+     "y1": 2.85
+    },
+    "topElevation": -0.82,
+    "depth": 0.3,
+    "carries": "pier-02"
+   }
+  },
+  {
+   "id": "pier-03",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     0,
+     6.75
+    ],
+    "profile": "Concrete 30×30",
+    "kind": "pier",
+    "baseElevation": -1.16,
+    "topElevation": 0.46
+   }
+  },
+  {
+   "id": "footing-18",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": -0.35,
+     "y0": 6.4,
+     "x1": 0.35,
+     "y1": 7.1
+    },
+    "topElevation": -1.16,
+    "depth": 0.3,
+    "carries": "pier-03"
+   }
+  },
+  {
+   "id": "pier-04",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     3.2,
+     6.75
+    ],
+    "profile": "Concrete 30×30",
+    "kind": "pier",
+    "baseElevation": -1.16,
+    "topElevation": 0.46
+   }
+  },
+  {
+   "id": "footing-19",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 2.85,
+     "y0": 6.4,
+     "x1": 3.55,
+     "y1": 7.1
+    },
+    "topElevation": -1.16,
+    "depth": 0.3,
+    "carries": "pier-04"
+   }
+  },
+  {
+   "id": "pier-05",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Column",
+   "props": {
+    "at": [
+     8.6,
+     6.75
+    ],
+    "profile": "Concrete 30×30",
+    "kind": "pier",
+    "baseElevation": -1.16,
+    "topElevation": 0.46
+   }
+  },
+  {
+   "id": "footing-20",
+   "level": "SL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "pad",
+    "rect": {
+     "x0": 8.25,
+     "y0": 6.4,
+     "x1": 8.95,
+     "y1": 7.1
+    },
+    "topElevation": -1.16,
+    "depth": 0.3,
+    "carries": "pier-05"
+   }
+  },
+  {
+   "id": "footing-21",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "strip",
+    "rect": {
+     "x0": -0.4,
+     "y0": 8.1,
+     "x1": 9,
+     "y1": 8.9
+    },
+    "topElevation": -2.65,
+    "depth": 0.4,
+    "carries": "LL-wall-01"
+   }
+  },
+  {
+   "id": "footing-22",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "strip",
+    "rect": {
+     "x0": 8.2,
+     "y0": 8.1,
+     "x1": 9,
+     "y1": 9.3
+    },
+    "topElevation": -2.65,
+    "depth": 0.4,
+    "carries": "LL-wall-02"
+   }
+  },
+  {
+   "id": "footing-23",
+   "level": "LL",
+   "tags": [
+    "generated"
+   ],
+   "type": "Footing",
+   "props": {
+    "kind": "strip",
+    "rect": {
+     "x0": -0.4,
+     "y0": 8.1,
+     "x1": 0.4,
+     "y1": 10.9
+    },
+    "topElevation": -2.65,
+    "depth": 0.4,
+    "carries": "LL-wall-05"
+   }
+  }
+ ]
+}

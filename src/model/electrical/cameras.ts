@@ -1,13 +1,12 @@
 // Cameras: coverage of the lot (with blind spots), PoE budget and NVR storage.
 import { pointInRect } from '../geometry';
 import type { Device, Project, Rect } from '../schema';
+import { bearingDir } from '../orientation';
 import { inPoly, siteFrame } from '../site';
 import { CAMERA_MBPS, CAMERA_POE_W, NVR, POE_SWITCH, cameraFov, cameraRange } from './library';
 
 export const cameras = (p: Project) => p.elements.filter((e): e is Device => e.type === 'Device' && (e.props.kind === 'camera' || e.props.kind === 'doorbell'));
 
-/** Unit plan vector of a compass bearing (0 north = +x, 90 east = −y). */
-export const bearingDir = (b: number): [number, number] => [Math.cos((b * Math.PI) / 180), -Math.sin((b * Math.PI) / 180)];
 
 /** The house in plan: every room cell of every floor. */
 const footprint = (p: Project): Rect[] => p.elements.flatMap((e) => (e.type === 'Space' ? e.props.cells : []));
@@ -44,7 +43,7 @@ export function coverage(p: Project, cell = 0.5): Coverage {
         const dx = x - cx, dy = y - cy, d = Math.hypot(dx, dy);
         const lens = c.props.lensMm ?? 2.8;
         if (d > cameraRange(lens)) return false;
-        const [ux, uy] = bearingDir(c.props.bearing ?? 0);
+        const [ux, uy] = bearingDir(p, c.props.bearing ?? 0);
         const ang = (Math.acos(Math.max(-1, Math.min(1, (dx * ux + dy * uy) / Math.max(d, 1e-9)))) * 180) / Math.PI;
         if (d > 0.3 && ang > cameraFov(lens) / 2) return false;
         return !rooms.some((r) => !pointInRect(cx, cy, r) && segHitsRect(cx, cy, x, y, r));

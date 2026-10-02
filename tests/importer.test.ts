@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { eq, openingSeg, spaceArea, spacesOn, wallSeg, wallsOn } from '../src/model/geometry';
-import { extractBase1, type SourcePlan } from '../src/model/importer';
+import { extractBase1, type SourcePlan } from '../scripts/casa-123/importer';
 import type { Project } from '../src/model/schema';
 import { load, ref, space } from './helpers';
 

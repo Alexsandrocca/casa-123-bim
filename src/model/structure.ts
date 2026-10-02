@@ -1,7 +1,7 @@
 // Generates the steel frame from the grid and the slabs: columns, piers, beams and footings.
 import { eq, pointInRect, q } from './geometry';
 import { DEFAULT_BEAM, DEFAULT_COLUMN, DEFAULT_PIER, profile } from './profiles';
-import type { Beam, Column, Element, Footing, Project, Rect, Slab, Space } from './schema';
+import { entryLevel, planLevels, type Beam, type Column, type Element, type Footing, type Project, type Rect, type Slab, type Space } from './schema';
 import { groundAt, groundZones } from './site';
 
 export const slabs = (p: Project) => p.elements.filter((e): e is Slab => e.type === 'Slab');
@@ -92,7 +92,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
 export function generateStructure(p: Project): Element[] {
   const all = slabs(p);
   const suspended = all.filter((s) => !s.props.onGrade);
-  const ground = all.find((s) => s.props.onGrade && s.level === 'LL');
+  // the slab on the ground under the lowest floor (Casa 123: the lower level)
+  const lowest = planLevels(p)[0];
+  const ground = all.find((s) => s.props.onGrade && s.level === lowest);
+  const entry = entryLevel(p);
   const zones = groundZones(p);
   const out: Element[] = [];
   let nb = 0, nc = 0, np = 0, nf = 0;
@@ -118,9 +121,9 @@ export function generateStructure(p: Project): Element[] {
   });
   const baseAt = (x: number, y: number) => {
     if (ground && quadrants(x, y).some(([a, b]) => slabCovers(p, ground, a, b))) {
-      return { z: q(ground.props.topElevation - ground.props.thickness), level: 'LL' };
+      return { z: q(ground.props.topElevation - ground.props.thickness), level: ground.level };
     }
-    return { z: q(groundAt(p, x, y, zones) - 0.3), level: 'SL' };
+    return { z: q(groundAt(p, x, y, zones) - 0.3), level: entry };
   };
 
   // Columns at the grid intersections under any suspended slab.
@@ -139,7 +142,8 @@ export function generateStructure(p: Project): Element[] {
   }
 
   // Piers under the raised street-level floor, half way between column rows over the crawlspace.
-  const sl = suspended.find((s) => s.level === 'SL' && eq(s.props.topElevation, p.levels.find((l) => l.id === 'SL')!.elevation) && !s.tags.includes('lower-roof'));
+  const entryElev = p.levels.find((l) => l.id === entry)?.elevation;
+  const sl = suspended.find((s) => s.level === entry && entryElev !== undefined && eq(s.props.topElevation, entryElev) && !s.tags.includes('lower-roof'));
   if (sl) {
     const rows = [...p.grid.y].sort((a, b) => a - b).filter((y) => y < p.site.cut.lineY + 1e-6);
     for (let i = 0; i + 1 < rows.length; i++) {
@@ -148,7 +152,7 @@ export function generateStructure(p: Project): Element[] {
         if (!quadrants(x, y).some(([a, b]) => slabCovers(p, sl, a, b))) continue;
         const base = q(groundAt(p, x, y, zones) - 0.3);
         const pier: Column = {
-          id: `pier-${pad(++np)}`, type: 'Column', level: 'SL', tags: ['generated'],
+          id: `pier-${pad(++np)}`, type: 'Column', level: entry, tags: ['generated'],
           props: { at: [q(x), q(y)], profile: DEFAULT_PIER, kind: 'pier', baseElevation: base, topElevation: q(sl.props.topElevation - sl.props.thickness) },
         };
         out.push(pier, footingFor(pier, 0.7, 0.3));

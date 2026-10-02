@@ -1,16 +1,17 @@
-// Regenerates model/casa-123.json (Version 2) and model/casa-123-v1.json (Version 1)
-// from docs/reference. Run with: npm run import-model
+// Casa 123: regenerates the original models of Versions 1, 2 and 3 (projects/casa-123/originals/v*.json) from
+// docs/reference. Run with: npm run import-model. The versions the family edits (projects/casa-123/versions) are not touched.
 import { readFileSync, writeFileSync } from 'node:fs';
-import { placeV3Plumbing } from '../src/model/plumbing/place';
-import { addSolar, placeV3Electrical } from '../src/model/electrical/place';
+import { placeV3Plumbing } from './casa-123/plumbing';
+import { addSolar, placeV3Electrical } from './casa-123/electrical';
 import { withElectrical } from '../src/model/electrical/design';
 import { withPlumbing } from '../src/model/plumbing/route';
-import { addServiceSpaces, hostV3 } from '../src/model/mep/defaults';
+import { addServiceSpaces, hostV3 } from './casa-123/mep';
 import { syncThickness } from '../src/model/eng/commands';
-import { V1_NOTE, V1_STAIRS, V2_NOTE, V2_STAIRS, V3_NOTE, addV3Front, deriveV3, extractBase1, importPlan, type SourceLevels, type SourcePlan } from '../src/model/importer';
+import { V1_NOTE, V1_STAIRS, V2_NOTE, V2_STAIRS, V3_NOTE, addV3Front, deriveV3, extractBase1, importPlan, type SourceLevels, type SourcePlan } from './casa-123/importer';
 
 const ref = (f: string) => readFileSync(new URL(`../docs/reference/${f}`, import.meta.url), 'utf8');
-const out = (f: string, data: unknown) => writeFileSync(new URL(`../model/${f}`, import.meta.url), JSON.stringify(data, null, 1) + '\n');
+const FILES: Record<string, string> = { 'casa-123.json': 'v2.json', 'casa-123-v1.json': 'v1.json', 'casa-123-v3.json': 'v3.json' };
+const out = (f: string, data: unknown) => writeFileSync(new URL(`../projects/casa-123/originals/${FILES[f]}`, import.meta.url), JSON.stringify(data, null, 1) + '\n');
 
 const v2src = JSON.parse(ref('plan-v2.json')) as {
   plan: SourcePlan;

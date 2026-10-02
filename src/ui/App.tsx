@@ -63,7 +63,7 @@ export function App() {
       if (mod && !typing && e.key.toLowerCase() === 'y') { e.preventDefault(); s.redo(); return; }
       if (typing) return;
       if ((e.key === 'Delete' || e.key === 'Backspace') && s.selection) {
-        const el = getEl(s.versions[s.active].present, s.selection);
+        const el = getEl(s.versions[s.active]!.present, s.selection);
         if (el?.type === 'Opening') { e.preventDefault(); if (s.run(deleteOpening(el.id))) s.select(null); }
         if (el?.type === 'Feature') { e.preventDefault(); if (s.run(deleteFeature(el.id))) s.select(null); }
       }

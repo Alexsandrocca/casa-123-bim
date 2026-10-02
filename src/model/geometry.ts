@@ -217,3 +217,35 @@ export function distSegSeg(a: [number, number], b: [number, number], c: [number,
     distPointToSegment(d[0], d[1], a[0], a[1], b[0], b[1]),
   );
 }
+
+/** Outer edges of a set of cells: every cell edge that no other cell touches from the other side, merged into runs. */
+export function boundarySegs(cells: { x0: number; y0: number; x1: number; y1: number }[]): Seg[] {
+  const raw: Seg[] = [];
+  const subtract = (iv: [number, number][], a: number, b: number) =>
+    iv.flatMap(([u, v]) => (b <= u || a >= v ? [[u, v]] : [...(a > u ? [[u, a]] : []), ...(b < v ? [[b, v]] : [])]) as [number, number][]);
+  for (const c of cells) {
+    const edges: [Seg['o'], number, number, number, 'lo' | 'hi'][] = [
+      ['h', c.y0, c.x0, c.x1, 'lo'], ['h', c.y1, c.x0, c.x1, 'hi'], ['v', c.x0, c.y0, c.y1, 'lo'], ['v', c.x1, c.y0, c.y1, 'hi'],
+    ];
+    for (const [o, at, a, b, side] of edges) {
+      let iv: [number, number][] = [[a, b]];
+      for (const d of cells) {
+        if (d === c) continue;
+        const touches = o === 'h' ? (side === 'lo' ? eq(d.y1, at) : eq(d.y0, at)) : (side === 'lo' ? eq(d.x1, at) : eq(d.x0, at));
+        if (touches) iv = subtract(iv, o === 'h' ? d.x0 : d.y0, o === 'h' ? d.x1 : d.y1);
+      }
+      for (const [u, v] of iv) if (v - u > 1e-4) raw.push({ o, c: at, a: u, b: v });
+    }
+  }
+  const sorted = raw.sort((u, v) => (u.o === v.o ? (u.c === v.c ? u.a - v.a : u.c - v.c) : u.o < v.o ? -1 : 1));
+  const out: Seg[] = [];
+  for (const x of sorted) {
+    const last = out[out.length - 1];
+    if (last && last.o === x.o && eq(last.c, x.c) && x.a <= last.b + 1e-4) last.b = Math.max(last.b, x.b);
+    else out.push({ ...x });
+  }
+  return out;
+}
+
+/** A level elevation as the drawings write it: +0.60, −2.50. */
+export const fmtLevel = (v: number) => `${v < 0 ? '−' : '+'}${Math.abs(v).toFixed(2)}`;

@@ -1,9 +1,11 @@
+// Casa 123 only (the app never imports this file; the results live in projects/casa-123/).
 // Places the Version 3 plumbing fixtures from the prototype's overlays (plan-v2.json) and adds the equipment from the brief.
 // The pipes are routed afterwards (withPlumbing), once the hosts and service spaces are in place.
-import { q } from '../geometry';
-import type { Fixture, Project } from '../schema';
-import { kindOf } from './library';
-import { UTILITIES_DEFAULT } from './route';
+import { q } from '../../src/model/geometry';
+import type { Fixture, Project } from '../../src/model/schema';
+import { kindOf } from '../../src/model/plumbing/library';
+/** Casa 123 street services (SEMAE to confirm). */
+const CASA_UTILITIES = { sewerDepth: 3.0, sewerOffset: 6.5, waterMainDepth: 1.5, rainIntensity: 150 };
 
 /** Overlay entries [room, u, v, kind]: u, v inside the room's first cell, as in the prototype. */
 const OVERLAY_KIND: Record<string, string> = {
@@ -85,5 +87,5 @@ export function placeV3Plumbing(p: Project, overlays: Record<string, { plumb: [s
   add('infiltration-trench', 'LL', [4.3, 19.0], p.site.cut.gardenLevel);
   add('sump-pump', 'LL', [8.0, 16.6], p.site.cut.gardenLevel);
 
-  return { ...p, site: { ...p.site, utilities: UTILITIES_DEFAULT }, elements: [...p.elements, ...fx] };
+  return { ...p, site: { ...p.site, utilities: CASA_UTILITIES }, elements: [...p.elements, ...fx] };
 }

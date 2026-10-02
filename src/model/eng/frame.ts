@@ -2,7 +2,7 @@
 // uses before the real design, so the family can compare options with realistic numbers.
 //   slab bays → beams (line loads) → columns (tributary areas of every floor above) → footings (soil pressure).
 import { eq, openingSeg, pointInRect, wallSeg, type Seg } from '../geometry';
-import type { Beam, Column, Footing, Opening, Project, Rect, Slab, Wall } from '../schema';
+import { isPlanLevel, type Beam, type Column, type Footing, type Opening, type Project, type Rect, type Slab, type Wall } from '../schema';
 import { groundAt, groundZones } from '../site';
 import { slabCovers, slabRect, slabVoids } from '../structure';
 import { layoutModules, solarArray } from '../electrical/solar';
@@ -575,7 +575,7 @@ function quantities(p: Project, beams: BeamResult[], columns: ColumnResult[], fo
   }
   void beams; void columns;
   const steelKg = (steelBeamsKg + steelColumnsKg) * (1 + A(p, 'steelExtra') / 100);
-  const floorArea = p.elements.reduce((a, s) => a + (s.type === 'Space' && ['LL', 'SL', 'UF'].includes(s.level) ? s.props.cells.reduce((t, c) => t + (c.x1 - c.x0) * (c.y1 - c.y0), 0) : 0), 0);
+  const floorArea = p.elements.reduce((a, s) => a + (s.type === 'Space' && isPlanLevel(p, s.level) ? s.props.cells.reduce((t, c) => t + (c.x1 - c.x0) * (c.y1 - c.y0), 0) : 0), 0);
   let fc = 0, form = 0, exc = 0;
   for (const f of p.elements) {
     if (f.type !== 'Footing') continue;

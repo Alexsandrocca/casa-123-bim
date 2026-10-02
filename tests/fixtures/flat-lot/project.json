@@ -1,0 +1,32 @@
+{
+ "schema": "casabim-project/1",
+ "id": "flat-lot",
+ "name": "Flat lot test",
+ "address": "Rua de Teste, 10, Florianópolis/SC",
+ "lot": {
+  "city": "Florianópolis",
+  "state": "SC",
+  "front": 12,
+  "depth": 30,
+  "area": 360
+ },
+ "program": {},
+ "style": {},
+ "versions": [
+  {
+   "id": "v1",
+   "name": "Version 1",
+   "kind": "design",
+   "file": "versions/v1.json",
+   "original": "originals/v1.json",
+   "edits": 0
+  }
+ ],
+ "designVersionId": "v1",
+ "approvedVersionId": null,
+ "stage": "plans",
+ "language": "pt-BR",
+ "includeInGit": false,
+ "created": "2026-10-02T00:00:00.000Z",
+ "updated": "2026-10-02T00:00:00.000Z"
+}

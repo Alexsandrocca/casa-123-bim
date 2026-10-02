@@ -8,7 +8,9 @@ import { kindOf } from '../model/plumbing/library';
 import {
   byLevel, lineHandles, mainCell, openingSeg, snap, spaceArea, wallSeg, type Handle, type Seg,
 } from '../model/geometry';
-import type { Carport, Opening, Rect, Space, Wall } from '../model/schema';
+import { entryLevel, planLevels, topLevel, type Carport, type Opening, type Project, type Rect, type Space, type Wall } from '../model/schema';
+import { bearingDir, streetSide } from '../model/orientation';
+import { useT } from '../i18n/useT';
 import { useApp, useProject } from '../store';
 import { mepReport } from '../model/mep/analysis';
 import { mepContext } from '../model/mep/spaces';
@@ -31,17 +33,27 @@ type Drag =
   | { kind: 'fixture'; id: string; dx: number; dy: number; x0: number; y0: number; moved: boolean }
   | { kind: 'device'; id: string; dx: number; dy: number; x0: number; y0: number; moved: boolean };
 
-/** Fixtures and pipes shown on a floor plan: those of the floor, plus site items on the street level and roof items on the upper floor. */
-export const onPlan = (elLevel: string, level: string) => elLevel === level || (level === 'SL' && elLevel === 'site') || (level === 'UF' && elLevel === 'roof');
+/** Fixtures and pipes shown on a floor plan: those of the floor, plus site items on the entry level and roof items on the top floor. */
+export const onPlan = (p: Project, elLevel: string, level: string) =>
+  elLevel === level || (level === entryLevel(p) && (elLevel === 'site' || elLevel === 'carport')) || (level === topLevel(p) && elLevel === 'roof');
 
-export function PlanView() {
+/** The plan levels below and above a level, for slicing vertical runs (pipes, conduits) between floors. */
+const levelOrder = (p: Project) => [...planLevels(p), ...(p.levels.some((l) => l.id === 'roof') ? ['roof'] : [])];
+
+const ARROW = (x: number, y: number) => (Math.abs(x) >= Math.abs(y) ? (x > 0 ? '→' : '←') : (y > 0 ? '↑' : '↓'));
+const COMPASS_WORD = { N: 'NORTH', E: 'EAST', S: 'SOUTH', W: 'WEST' } as const;
+
+/** style 'design': rooms, names and areas, walls, doors and windows only (no systems, no dimension chains). */
+export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
   const p = useProject();
+  const bimStyle = style === 'bim';
+  const t = useT();
   const level = useApp((s) => s.level);
   const selection = useApp((s) => s.selection);
   const tool = useApp((s) => s.tool);
-  const plumbing2d = useApp((s) => s.plumbing2d);
-  const elec2d = useApp((s) => s.elec2d);
-  const physics = useApp((s) => s.physics);
+  const plumbing2d = useApp((s) => s.plumbing2d) && bimStyle;
+  const elec2d = useApp((s) => s.elec2d) && bimStyle;
+  const physics = useApp((s) => s.physics) && bimStyle;
   const svgRef = useRef<SVGSVGElement>(null);
   const drag = useRef<Drag | null>(null);
   const infoRef = useRef<HTMLDivElement>(null);
@@ -56,11 +68,11 @@ export function PlanView() {
 
   // Each floor fills the view, as in the prototype.
   // The carport sits in front of the street level: draw it there.
-  const carports = level === 'SL' ? p.elements.filter((e): e is Carport => e.type === 'Carport') : [];
+  const carports = level === entryLevel(p) ? p.elements.filter((e): e is Carport => e.type === 'Carport') : [];
   const front = Math.min(outline.y0, ...carports.map((c) => c.props.rect.y0));
   const fr: Frame = {
     XMIN: outline.x0 - 1.3, XMAX: outline.x1 + 1.0, YMIN: front - 1.5,
-    YMAX: Math.max(outline.y1, ...decks.map((d) => d.props.rect.y1), ...(plumbing2d ? p.elements.flatMap((e) => (e.type === 'Fixture' && onPlan(e.level, level) ? [e.props.at[1] + 0.6] : [])) : [])) + 0.5,
+    YMAX: Math.max(outline.y1, ...decks.map((d) => d.props.rect.y1), ...(plumbing2d ? p.elements.flatMap((e) => (e.type === 'Fixture' && onPlan(p, e.level, level) ? [e.props.at[1] + 0.6] : [])) : [])) + 0.5,
   };
   const px = (x: number) => f1((x - fr.XMIN) * S);
   const py = (y: number) => f1((fr.YMAX - y) * S);
@@ -102,7 +114,7 @@ export function PlanView() {
     if (role === 'window' && !exterior) { st.flash('Windows go on outside walls. Use a door for an inside wall.'); return; }
     if (w.props.wallType === 'retaining') { st.flash('That wall holds back the ground (retaining wall), so it cannot have openings.'); return; }
     const s = wallSeg(w);
-    const id = nextOpeningId(st.versions[st.active].present, level, role);
+    const id = nextOpeningId(st.versions[st.active]!.present, level, role);
     if (st.run(addOpening(id, w.id, s.o === 'v' ? y : x, role))) st.select(id);
   };
 
@@ -114,7 +126,7 @@ export function PlanView() {
       const room = spaces.find((sp) => sp.props.cells.some((c) => x > c.x0 && x < c.x1 && y > c.y0 && y < c.y1));
       if (!room) { st.flash('Click inside a room to add an outlet on its nearest wall.'); return; }
       const at = nearestWallPoint(room, [x, y]);
-      const id = nextDeviceId(st.versions[st.active].present, 'outlet');
+      const id = nextDeviceId(st.versions[st.active]!.present, 'outlet');
       if (st.run(addDevice(id, 'outlet', level, at, `Outlet · ${room.props.name}`))) { st.select(id); st.flash(`Outlet added to ${room.props.name}; its circuit, cable and schedule are updated.`); }
       return;
     }
@@ -123,10 +135,10 @@ export function PlanView() {
       if (!kind) return;
       const og = (ev.target as Element).closest('[data-opening]');
       const w = nearestWall(x, y, 0.4);
-      const before = st.versions[st.active].present;
+      const before = st.versions[st.active]!.present;
       if (st.run(addFeature(kind, { opening: og?.getAttribute('data-opening') ?? undefined, wall: w?.id, at: [x, y], level }))) {
         const now = useApp.getState();
-        const added = now.versions[now.active].present.elements.find((e) => e.type === 'Feature' && !before.elements.some((b) => b.id === e.id));
+        const added = now.versions[now.active]!.present.elements.find((e) => e.type === 'Feature' && !before.elements.some((b) => b.id === e.id));
         if (added) { st.select(added.id); st.flash(`${featureType(kind).label} placed. ${featureType(kind).effect}`); }
       }
       return;
@@ -197,7 +209,7 @@ export function PlanView() {
     if (d.kind === 'wall') {
       const to = d.h.o === 'v' ? x : y;
       st.previewCmd(moveWall(level, d.h.o, d.h.c, d.at, to));
-      const lim = wallLimits(st.versions[st.active].present, level, d.h.o, d.h.c, d.at);
+      const lim = wallLimits(st.versions[st.active]!.present, level, d.h.o, d.h.c, d.at);
       if (infoRef.current && lim) {
         const at = Math.min(Math.max(snap(to), lim.lo), lim.hi);
         const edge = at === lim.lo || at === lim.hi ? ' · rooms keep at least 0.80 m' : '';
@@ -270,7 +282,7 @@ export function PlanView() {
     if (s.props.zone === 'stair') continue;
     s.props.cells.forEach((c, i) => out.push(rect(c, 'cell', `${s.id}:${i}`, { style: { fill: ZONE_COLOR[s.props.zone] }, 'data-space': s.id })));
   }
-  for (const s of spaces) if (s.props.zone === 'stair') out.push(<Stair key={s.id} s={s} level={level} rect={rect} line={line} px={px} py={py} />);
+  for (const s of spaces) if (s.props.zone === 'stair') out.push(<Stair key={s.id} p={p} s={s} level={level} rect={rect} line={line} px={px} py={py} />);
   const sel = selection ? p.elements.find((e) => e.id === selection) : undefined;
   if (sel?.type === 'Space' && sel.level === level) sel.props.cells.forEach((c, i) => out.push(rect(c, 'selcell', `sel${i}`)));
 
@@ -303,7 +315,7 @@ export function PlanView() {
 
   // Spec 08 features: their plan footprint (roof features on the upper floor plan)
   for (const fe of p.elements) {
-    if (fe.type !== 'Feature' || !onPlan(fe.level, level)) continue;
+    if (fe.type !== 'Feature' || !onPlan(p, fe.level, level)) continue;
     const boxes = featureBoxes(p, fe);
     if (!boxes.length) continue;
     const r = { x0: Math.min(...boxes.map((b) => b.x0)), y0: Math.min(...boxes.map((b) => b.y0)), x1: Math.max(...boxes.map((b) => b.x1)), y1: Math.max(...boxes.map((b) => b.y1)) };
@@ -322,7 +334,8 @@ export function PlanView() {
     out.push(<text key={s.id + 'a'} x={px(cx)} y={py(cy) + 14} className={'ra' + (bad ? ' bad' : '')} textAnchor="middle" data-room={s.props.name}>{`${a.toFixed(1)} m²${bad ? ' · min ' + m : ''}`}</text>);
   }
 
-  // Live dimension strings along the front and the south side.
+  // Live dimension strings along the front and the x0 side (BIM style only).
+  if (bimStyle) {
   const xs = [...new Set(spaces.flatMap((s) => s.props.cells.flatMap((c) => [c.x0, c.x1])).map((v) => +v.toFixed(2)))].sort((a, b) => a - b);
   const ys = [...new Set(spaces.flatMap((s) => s.props.cells.flatMap((c) => [c.y0, c.y1])).map((v) => +v.toFixed(2)))].sort((a, b) => a - b);
   const yd = front - 0.75, xd = outline.x0 - 0.75;
@@ -339,7 +352,9 @@ export function PlanView() {
       out.push(<text key={`dyt${i}`} x={tx} y={ty} className="dt" textAnchor="middle" transform={`rotate(-90 ${tx} ${ty})`}>{(v - ys[i - 1]!).toFixed(2)}</text>);
     }
   });
-  out.push(<text key="street" x={px((outline.x0 + outline.x1) / 2)} y={py(front - 1.25)} className="street" textAnchor="middle">STREET · EAST ↓ · NORTH →</text>);
+  }
+  const [nx, ny] = bearingDir(p, 0);
+  out.push(<text key="street" x={px((outline.x0 + outline.x1) / 2)} y={py(front - 1.25)} className="street" textAnchor="middle">{`${t('STREET')} · ${t(COMPASS_WORD[streetSide(p)])} ↓ · ${t('NORTH')} ${ARROW(nx, ny)}`}</text>);
 
   return (
     <div className="planwrap">
@@ -388,7 +403,7 @@ function OpeningGlyph({ op, s, selected, line, rect, px, py }: { op: Opening; s:
   return <g data-opening={op.id}>{parts}</g>;
 }
 
-function Stair({ s, level, rect, line, px, py }: { s: Space; level: string } & Draw) {
+function Stair({ p, s, level, rect, line, px, py }: { p: Project; s: Space; level: string } & Draw) {
   const c = s.props.cells[0]!;
   const o: ReactNode[] = [rect(c, 'stairbg', 'bg', { 'data-space': s.id })];
   const chev = (x: number, y: number, k: string) =>
@@ -424,7 +439,7 @@ function Stair({ s, level, rect, line, px, py }: { s: Space; level: string } & D
     o.push(line(c.x0, c.y0 + land, c.x1, c.y0 + land, 'tread', 'land'), rect({ x0: mid - 0.05, y0: c.y0 + land, x1: mid + 0.05, y1: c.y1 }, 'cwall', 'cw'));
     const ax = c.x0 + 0.6, bx = c.x1 - 0.6;
     o.push(<path key="arr" d={`M${px(bx)},${py(c.y1 - 0.2)} L${px(bx)},${py(c.y0 + 0.55)} L${px(ax)},${py(c.y0 + 0.55)} L${px(ax)},${py(c.y1 - 0.25)}`} className="sarrow" />);
-    if (level === 'LL') o.push(note(c.y1 + 0.45, 'to garden ↑'));
+    if (level === planLevels(p)[0] && planLevels(p).length > 1 && p.site.cut.gardenLevel < 0) o.push(note(c.y1 + 0.45, 'to garden ↑'));
   }
   return <g>{o}</g>;
 }
@@ -439,7 +454,7 @@ function ServiceSpacesOverlay({ p, level, rect }: { p: import('../model/schema')
   const ctx = mepContext(p);
   const o: ReactNode[] = [];
   ctx.volumes.forEach((v, i) => {
-    const show = v.kind === 'shaft' || (v.kind === 'plenum' && v.level === level) || (v.kind === 'crawlspace' && level === 'SL');
+    const show = v.kind === 'shaft' || (v.kind === 'plenum' && v.level === level) || (v.kind === 'crawlspace' && level === entryLevel(p));
     if (!show) return;
     o.push(<g key={`${v.id}-${i}`} className={`svc2d svc-${v.kind}`} data-el={v.elementId}>{rect(v.rect, 'svcr', 'r')}</g>);
   });
@@ -455,7 +470,7 @@ const hostClass = (p: import('../model/schema').Project, id: string, physics: bo
 
 function PlumbingOverlay({ p, level, selection, line, rect, px, py, physics }: { p: import('../model/schema').Project; level: string; selection: string | null; physics: boolean } & Draw) {
   const elev = (l: string) => p.levels.find((x) => x.id === l)?.elevation ?? 0;
-  const order = ['LL', 'SL', 'UF', 'roof'];
+  const order = levelOrder(p);
   const i = order.indexOf(level);
   const lo = i <= 0 ? -Infinity : elev(level) - 0.7, hi = i + 1 < order.length ? elev(order[i + 1]!) - 0.5 : Infinity;
   const o: ReactNode[] = [];
@@ -469,12 +484,12 @@ function PlumbingOverlay({ p, level, selection, line, rect, px, py, physics }: {
       const z0 = Math.min(a[2], b[2]), z1 = Math.max(a[2], b[2]);
       if (z1 < lo || z0 > hi) continue;
       o.push(<circle key={e.id} cx={px(a[0])} cy={py(a[1])} r={3.2} className={`pipe2d riser s-${e.props.system}${sel}${hostClass(p, e.id, physics)}`} data-el={e.id} />);
-    } else if (onPlan(e.level, level)) {
+    } else if (onPlan(p, e.level, level)) {
       o.push(line(a[0], a[1], b[0], b[1], `pipe2d s-${e.props.system}${gravity ? ' below' : ''}${sel}${hostClass(p, e.id, physics)}`, e.id, { 'data-el': e.id }));
     }
   }
   for (const e of p.elements) {
-    if (e.type !== 'Fixture' || !onPlan(e.level, level)) continue;
+    if (e.type !== 'Fixture' || !onPlan(p, e.level, level)) continue;
     const t = kindOf(e.props.kind);
     const [x, y] = e.props.at;
     const sel = selection === e.id ? ' sel' : '';
@@ -494,7 +509,7 @@ function PlumbingOverlay({ p, level, selection, line, rect, px, py, physics }: {
 
 function ElectricalOverlay({ p, level, selection, line, rect, px, py, physics }: { p: import('../model/schema').Project; level: string; selection: string | null; physics: boolean } & Draw) {
   const elev = (l: string) => p.levels.find((x) => x.id === l)?.elevation ?? 0;
-  const order = ['LL', 'SL', 'UF', 'roof'];
+  const order = levelOrder(p);
   const i = order.indexOf(level);
   const lo = i <= 0 ? -Infinity : elev(level) - 0.35, hi = i + 1 < order.length ? elev(order[i + 1]!) - 0.35 : Infinity;
   const o: ReactNode[] = [];
@@ -507,7 +522,7 @@ function ElectricalOverlay({ p, level, selection, line, rect, px, py, physics }:
     if (z < lo || z >= hi) continue;
     o.push(line(a[0], a[1], b[0], b[1], 'conduit2d' + (selCircuit === c.props.circuit ? ' sel' : '') + hostClass(p, c.id, physics), c.id));
   }
-  const devOn = (l: string) => l === level || (level === 'SL' && (l === 'site' || l === 'carport')) || (level === 'UF' && l === 'roof');
+  const devOn = (l: string) => onPlan(p, l, level);
   for (const d of p.elements) {
     if (d.type !== 'Device' || !devOn(d.level)) continue;
     const t = deviceType(d.props.kind);
@@ -515,9 +530,9 @@ function ElectricalOverlay({ p, level, selection, line, rect, px, py, physics }:
     const sel = selection === d.id || (selCircuit && d.props.circuit === selCircuit) ? ' sel' : '';
     const parts: ReactNode[] = [];
     if (t.group === 'camera') {
-      const b = ((d.props.bearing ?? 0) * Math.PI) / 180, half = ((cameraFov(d.props.lensMm ?? 2.8) / 2) * Math.PI) / 180, r = cameraRange(d.props.lensMm ?? 2.8);
-      const pt = (ang: number) => [x + Math.cos(ang) * r, y - Math.sin(ang) * r] as const;
-      const [ax, ay] = pt(b - half), [bx, by] = pt(b + half);
+      const b = ((p.site.region.xBearing - (d.props.bearing ?? 0)) * Math.PI) / 180, half = ((cameraFov(d.props.lensMm ?? 2.8) / 2) * Math.PI) / 180, r = cameraRange(d.props.lensMm ?? 2.8);
+      const pt = (ang: number) => [x + Math.cos(ang) * r, y + Math.sin(ang) * r] as const;
+      const [ax, ay] = pt(b + half), [bx, by] = pt(b - half);
       parts.push(<path key="fov" d={`M${px(x)},${py(y)} L${px(ax)},${py(ay)} A${r * 40},${r * 40} 0 0 0 ${px(bx)},${py(by)} Z`} className="fov2d" />);
       parts.push(<circle key="c" cx={px(x)} cy={py(y)} r={5} className="cam2d" />);
     } else if (t.group === 'light') {

@@ -54,6 +54,44 @@
    "slope": 0.125
   },
   "eavesLimit": 0.7,
+  "region": {
+   "city": "Piracicaba",
+   "state": "SP",
+   "lat": -22.72,
+   "lon": -47.65,
+   "utcOffset": -3,
+   "xBearing": 0,
+   "supply": {
+    "utility": "CPFL",
+    "phaseV": 127,
+    "lineV": 220,
+    "phases": 3,
+    "confirmed": false
+   },
+   "water": "SEMAE",
+   "rules": {
+    "code": "Piracicaba LC 474/2025",
+    "sanitary": "SP sanitary code, Decreto 12.342/78"
+   },
+   "pvYield": {
+    "monthly": [
+     130,
+     120,
+     128,
+     120,
+     112,
+     104,
+     114,
+     128,
+     124,
+     132,
+     130,
+     128
+    ],
+    "source": "PVGIS-like values, 20° facing north"
+   },
+   "solarHeaterShare": 0.7
+  },
   "toConfirm": [
    "Topographic survey",
    "SPT soil borings",
@@ -145,6 +183,10 @@
    13.1,
    15
   ]
+ },
+ "assumptions": {
+  "zone": 2,
+  "v0": 40
  },
  "elements": [
   {

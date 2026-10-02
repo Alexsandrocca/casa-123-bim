@@ -3,7 +3,7 @@
 // derived here from the walls, slabs and site, so they always follow the model. Pure and cached per project.
 import { pointInRect, wallSeg } from '../geometry';
 import { profile } from '../profiles';
-import type { Fixture, Opening, Project, Rect, ServiceSpace, Slab, Space, Wall } from '../schema';
+import { entryLevel, planLevels, topLevel, type Fixture, type Opening, type Project, type Rect, type ServiceSpace, type Slab, type Space, type Wall } from '../schema';
 import { groundAt, groundZones, inPoly, type GroundZone } from '../site';
 import { slabCovers, slabRect, slabVoids } from '../structure';
 import { wallSpan } from '../../scene/build3d';
@@ -84,6 +84,7 @@ export function mepContext(p: Project): MepContext {
 function build(p: Project): MepContext {
   const levels = [...p.levels].sort((a, b) => a.elevation - b.elevation);
   const elev = (l: string) => p.levels.find((x) => x.id === l)?.elevation ?? 0;
+  const entry = entryLevel(p);
   const levelAbove = (l: string) => { const i = levels.findIndex((x) => x.id === l); return i >= 0 ? levels[i + 1]?.id : undefined; };
   const slabs = p.elements.filter((e): e is Slab => e.type === 'Slab');
   const spaces = p.elements.filter((e): e is Space => e.type === 'Space');
@@ -103,7 +104,7 @@ function build(p: Project): MepContext {
   const ground = memo((x, y) => groundAt(p, x, y, zones));
   const surface = memo((x: number, y: number) => {
     let z = ground(x, y);
-    for (const r of patio) if (pointInRect(x, y, r)) z = Math.max(z, elev('SL'));
+    for (const r of patio) if (pointInRect(x, y, r)) z = Math.max(z, elev(entry));
     return z;
   });
   const carport = p.elements.find((e) => e.type === 'Carport');
@@ -161,12 +162,12 @@ function build(p: Project): MepContext {
     });
   }
   /* roof screed: conduits for the upper-floor ceiling lights run in the roof slab's topping, under the waterproofing */
-  for (const s of slabs.filter((x) => x.level === 'roof' || (x.level === 'UF' && x.props.parapet !== undefined))) {
+  for (const s of slabs.filter((x) => x.level === 'roof' || (x.level === topLevel(p) && x.props.parapet !== undefined))) {
     const r = slabRect(p, s), top = s.props.topElevation;
     volumes.push({ id: `screed:${s.id}`, kind: 'screed', name: `Roof topping on ${s.props.name}`, level: s.level, rect: r, zLo: flat(top - SCREED.depth), zHi: flat(top), allows: new Set(['conduit']), maxDn: SCREED.maxConduit, elementId: s.id });
   }
   /* crawlspace under the raised street floor, in front of the cut line */
-  const sl = slabs.find((s) => s.level === 'SL' && s.props.spaces);
+  const sl = slabs.find((s) => s.level === entry && !s.props.onGrade && s.props.spaces);
   const crawl: Rect[] = [];
   if (sl) {
     const cut = p.site.cut.lineY;
@@ -180,7 +181,7 @@ function build(p: Project): MepContext {
     }
     const top = sl.props.topElevation - sl.props.thickness;
     crawl.forEach((c, i) => volumes.push({
-      id: `crawl:${i}`, kind: 'crawlspace', name: 'Crawlspace under the street floor', level: 'SL', rect: c,
+      id: `crawl:${i}`, kind: 'crawlspace', name: 'Crawlspace under the entry floor', level: entry, rect: c,
       zLo: ground, zHi: flat(top), allows: new Set(ALL), maxDn: 150,
     }));
   }
@@ -188,9 +189,11 @@ function build(p: Project): MepContext {
   const lot = p.site.lotPolygon.map(([x, y]) => [x - p.site.houseOrigin.x, y - p.site.houseOrigin.y] as P2);
   const lx = lot.map((c) => c[0]), ly = lot.map((c) => c[1]);
   const lotRect: Rect = { x0: Math.min(...lx) - 0.5, x1: Math.max(...lx) + 0.5, y0: Math.min(...ly) - 8, y1: Math.max(...ly) };
-  const house = (x: number, y: number) => crawl.some((c) => strictly(x, y, c)) || ['LL', 'SL'].some((l) => !!inRoom(l, x, y) && !(l === 'SL' && patio.some((r) => pointInRect(x, y, r))));
-  const llSlab = slabs.find((s) => s.level === 'LL' && s.props.onGrade);
-  const outerWalls = walls.filter((w) => (w.level === 'LL' || w.level === 'SL') && w.props.wallType !== 'interior' && w.props.wallType !== 'wet').map((w) => {
+  // floors that touch the ground: the entry floor and any below it
+  const groundFloors = planLevels(p).filter((l) => elev(l) <= elev(entry) + 1e-6);
+  const house = (x: number, y: number) => crawl.some((c) => strictly(x, y, c)) || groundFloors.some((l) => !!inRoom(l, x, y) && !(l === entry && patio.some((r) => pointInRect(x, y, r))));
+  const llSlab = slabs.find((s) => s.level === planLevels(p)[0] && s.props.onGrade);
+  const outerWalls = walls.filter((w) => groundFloors.includes(w.level) && w.props.wallType !== 'interior' && w.props.wallType !== 'wet').map((w) => {
     const sg = wallSeg(w), h = w.props.thickness / 2;
     return { rect: sg.o === 'v' ? { x0: sg.c - h, x1: sg.c + h, y0: sg.a, y1: sg.b } : { x0: sg.a, x1: sg.b, y0: sg.c - h, y1: sg.c + h }, base: wallSpan(p, w).base };
   });

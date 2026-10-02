@@ -2,7 +2,7 @@
 // (or the outside face of an outer wall), clear of openings, door swings and corners; ceiling items hang from the
 // plenum or slab above; floor items stand on the slab; equipment stands in a zone with room for maintenance.
 import { eq, getEl, openingSeg, q, wallSeg, type Seg } from '../geometry';
-import type { Device, Fixture, Opening, Project, ServiceSpace, Space, Wall } from '../schema';
+import { entryLevel, isPlanLevel, planLevels, type Device, type Fixture, type Opening, type Project, type ServiceSpace, type Space, type Wall } from '../schema';
 import { deviceType } from '../electrical/library';
 import { kindOf } from '../plumbing/library';
 import { CORNER_GAP, SHOWER_ZONE, deviceMount, fixtureMount, type Mount } from './library';
@@ -11,14 +11,13 @@ import { mepContext } from './spaces';
 type P2 = [number, number];
 type Item = Fixture | Device;
 
-const PLAN = ['LL', 'SL', 'UF'];
 const strictly = (x: number, y: number, c: { x0: number; y0: number; x1: number; y1: number }, m = 1e-6) => x > c.x0 + m && x < c.x1 - m && y > c.y0 + m && y < c.y1 - m;
 export const mountOf = (e: Item): Mount => (e.type === 'Fixture' ? fixtureMount(e.props.kind) : deviceMount(e.props.kind));
 const elevOf = (p: Project, l: string) => p.levels.find((x) => x.id === l)?.elevation ?? 0;
 
 /** The room an item is in (plan levels only). */
 export function roomOf(p: Project, e: Item): Space | undefined {
-  if (!PLAN.includes(e.level)) return undefined;
+  if (!isPlanLevel(p, e.level)) return undefined;
   const [x, y] = e.props.at;
   const rooms = p.elements.filter((s): s is Space => s.type === 'Space' && s.level === e.level);
   // strictly inside first; an item standing on a wall face is a few centimetres off its room's cells
@@ -26,14 +25,14 @@ export function roomOf(p: Project, e: Item): Space | undefined {
 }
 
 /** Which plan level's walls an item can hang on. */
-const wallLevels = (e: Item) => (PLAN.includes(e.level) ? [e.level] : e.level === 'site' || e.level === 'carport' ? ['SL', 'LL'] : []);
+const wallLevels = (p: Project, e: Item) => (isPlanLevel(p, e.level) ? [e.level] : e.level === 'site' || e.level === 'carport' ? [entryLevel(p), ...planLevels(p).filter((l) => l !== entryLevel(p))] : []);
 
 export interface Face { wall: Wall; seg: Seg; face: 1 | -1; room?: Space }
 
 /** Wall faces an item may use: faces of its own room, or outside faces of outer walls for outdoor items. */
 export function facesFor(p: Project, e: Item, room = roomOf(p, e)): Face[] {
   const out: Face[] = [];
-  for (const L of wallLevels(e)) {
+  for (const L of wallLevels(p, e)) {
     const rooms = p.elements.filter((s): s is Space => s.type === 'Space' && s.level === L);
     for (const w of p.elements) {
       if (w.type !== 'Wall' || w.level !== L) continue;
@@ -119,7 +118,7 @@ function placeOnWallZ(p: Project, e: Item, want: P2, only: Face | undefined, sho
   const room = roomOf(p, e);
   const faces = only ? [only] : facesFor(p, e, room);
   const z = e.type === 'Device' ? e.props.z : e.props.z + (kindOf(e.props.kind).supplyZ ?? 0.6);
-  const floor = elevOf(p, PLAN.includes(e.level) ? e.level : 'SL');
+  const floor = elevOf(p, isPlanLevel(p, e.level) ? e.level : entryLevel(p));
   const elec = e.type === 'Device';
   const showers = room ? p.elements.filter((f): f is Fixture => f.type === 'Fixture' && f.props.kind === 'shower' && f.level === room.level && room.props.cells.some((c) => strictly(f.props.at[0], f.props.at[1], c))) : [];
   const standoff = e.type === 'Fixture' ? (e.props.standoff ?? Math.max(0.05, kindOf(e.props.kind).size[1] / 2)) : 0.01;
@@ -148,7 +147,7 @@ function placeOnWallZ(p: Project, e: Item, want: P2, only: Face | undefined, sho
         if (tt > os.a - m && tt < os.b + m) return false;
       }
       const pt: P2 = s.o === 'v' ? [s.c + f.face * (t / 2 + 0.05), tt] : [tt, s.c + f.face * (t / 2 + 0.05)];
-      if (z - floor < 2.1 && PLAN.includes(f.wall.level) && inDoorSwing(p, f.wall.level, pt[0], pt[1])) return false;
+      if (z - floor < 2.1 && isPlanLevel(p, f.wall.level) && inDoorSwing(p, f.wall.level, pt[0], pt[1])) return false;
       if (elec && room?.props.zone === 'wet' && deviceType(e.props.kind).group === 'outlet') {
         for (const sh of showers) {
           const [sx, sy] = kindOf('shower').size;
@@ -273,7 +272,7 @@ export function hostOne<T extends Item>(p: Project, e: T, fresh: boolean): T {
     const pl = placeOnWall(p, e, e.props.at);
     if (pl) return apply(p, e, pl);
     // a switch with no wall in its own room (an open dining area) goes on the nearest wall of a neighbouring room
-    if (e.type === 'Device' && e.props.kind === 'switch' && PLAN.includes(e.level)) {
+    if (e.type === 'Device' && e.props.kind === 'switch' && isPlanLevel(p, e.level)) {
       const own = roomOf(p, e);
       const others = p.elements.filter((s): s is Space => s.type === 'Space' && s.level === e.level && s.id !== own?.id && s.props.zone !== 'stair')
         .map((s) => ({ s, d: Math.min(...s.props.cells.map((c) => Math.hypot(Math.max(c.x0 - e.props.at[0], 0, e.props.at[0] - c.x1), Math.max(c.y0 - e.props.at[1], 0, e.props.at[1] - c.y1)))) }))
@@ -299,7 +298,7 @@ export function hostOne<T extends Item>(p: Project, e: T, fresh: boolean): T {
     }
     return e;
   }
-  if (m === 'ceiling' && PLAN.includes(e.level)) {
+  if (m === 'ceiling' && isPlanLevel(p, e.level)) {
     let at = e.props.at;
     if (underBeam(p, e.level, at[0], at[1])) {
       for (const d of [0.15, 0.25, 0.35, 0.5]) {
@@ -314,7 +313,7 @@ export function hostOne<T extends Item>(p: Project, e: T, fresh: boolean): T {
     return { ...e, props: { ...e.props, at, hostId: h.id, z } };
   }
   if (m === 'site' && e.type === 'Device' && e.props.hostId !== 'post' && e.props.kind !== 'ev-charger') return { ...e, props: { ...e.props, hostId: 'post' } };
-  if (m === 'floor' && PLAN.includes(e.level)) {
+  if (m === 'floor' && isPlanLevel(p, e.level)) {
     const top = mepContext(p).floorTop(e.level, e.props.at[0], e.props.at[1]);
     const slab = p.elements.find((s) => s.type === 'Slab' && s.level === e.level && top !== null && eq(s.props.topElevation, top));
     const id = slab?.id;
@@ -325,7 +324,7 @@ export function hostOne<T extends Item>(p: Project, e: T, fresh: boolean): T {
 }
 
 function apply<T extends Item>(p: Project, e: T, pl: Placement): T {
-  const floor = elevOf(p, PLAN.includes(e.level) ? e.level : 'SL');
+  const floor = elevOf(p, isPlanLevel(p, e.level) ? e.level : entryLevel(p));
   const height = e.type === 'Device' ? q(e.props.z - floor) : undefined;
   if (e.props.hostWallId === pl.hostWallId && e.props.face === pl.face && eq(e.props.offset ?? NaN, pl.offset) && eq(e.props.at[0], pl.at[0]) && eq(e.props.at[1], pl.at[1])) return e;
   return { ...e, props: { ...e.props, hostWallId: pl.hostWallId, face: pl.face, offset: pl.offset, at: pl.at, ...(height !== undefined ? { height } : {}) } };

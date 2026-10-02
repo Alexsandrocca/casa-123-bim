@@ -2,7 +2,7 @@
 //   1. By area: CUB/m² × equivalent area (NBR 12721 weights), plus what the CUB leaves out.
 //   2. By quantities: assemblies, structure, openings, systems and features × editable unit costs.
 import { openingSeg, wallSeg } from '../geometry';
-import type { Project, Slab, Wall } from '../schema';
+import { isPlanLevel, planLevels, type Project, type Slab, type Wall } from '../schema';
 import { slabRect, slabVoids } from '../structure';
 import { energyEstimate } from '../electrical/solar';
 import { kindOf } from '../plumbing/library';
@@ -45,11 +45,12 @@ function netWallArea(p: Project, w: Wall): number {
 
 export function costEstimate(p: Project, q: Quantities): CostEstimate {
   /* ---- method 1: by area ---- */
-  const main = p.elements.reduce((a, s) => a + (s.type === 'Space' && ['LL', 'SL', 'UF'].includes(s.level) ? s.props.cells.reduce((t, c) => t + (c.x1 - c.x0) * (c.y1 - c.y0), 0) : 0), 0);
+  const main = p.elements.reduce((a, s) => a + (s.type === 'Space' && isPlanLevel(p, s.level) ? s.props.cells.reduce((t, c) => t + (c.x1 - c.x0) * (c.y1 - c.y0), 0) : 0), 0);
   let veranda = 0, open = 0, carport = 0;
   for (const d of p.elements) {
     if (d.type === 'Carport') carport += (d.props.rect.x1 - d.props.rect.x0) * (d.props.rect.y1 - d.props.rect.y0);
-    if (d.type !== 'Deck' || d.level === 'LL') continue;
+    // decks on the lowest floor of a house with several floors are garden paving, not built area
+    if (d.type !== 'Deck' || (planLevels(p).length > 1 && d.level === planLevels(p)[0])) continue;
     const r = d.props.rect, total = (r.x1 - r.x0) * (r.y1 - r.y0);
     // the part with a slab over it is a covered veranda
     let covered = 0;
