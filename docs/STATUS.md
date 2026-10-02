@@ -464,3 +464,9 @@ Spec 02 — 3D model (it is marked ready).
 ## 2026-10-01 — Manager: roadmap realigned (waiting for owner approval)
 - New product direction: `docs/product/ROADMAP-v2.md` (two tabs, DESIGN → approve → BIM; phases P0–P8).
 - Specs 05, 06, 07, 09 and 10 are superseded. Owner approved it (family first, commercial later; API key available). **P0 is ready.**
+
+## 2026-10-02 — Manager review of P0: accepted
+- P0 accepted. Q19–Q27 answered.
+- Removed the leftover "casa-bim-preview" entry from `CASA 123/.claude/launch.json`.
+- Reminder: always open the Code session **inside `casa-123-bim`**.
+- **P1 (lot wizard) is ready.** It starts with two carry-overs: Q24 (lock architecture in BIM) and Q20 (b) (shorter spans).

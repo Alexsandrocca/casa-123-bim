@@ -116,6 +116,8 @@ The cistern is now buried at the front of the south passage, with its lid on a r
 The answer to Q16 was option (a), moving the shower. While doing it I found the real cause: a bug. A bedroom door's swing was being tested *through* the wall into Bath 3. With the bug fixed, the basin outlet has a legal place beside the basin (x 3.29, y 7.80), with the shower where it was.
 I did **not** move the shower to x 4.2–5.0: at y 6.6–7.4 it would sit in the swing of the Bath 3 door (y 7.2–7.9 on the same wall). **Keep the shower where it is?**
 
+**Manager (2026-10-02):** Keep the shower where it is. Good catch on the bug.
+
 ## Q20 (2026-10-01, spec 08) — The placeholder frame is too small, and the proposed one does not fit the 0.40 m structure depth
 The pre-sizing estimates find **10 beams and 5 footings over capacity** in Version 3. The beams were all W250×32.7 and the footings all 1.0 × 1.0 m (spec 02 placeholders). The worst cases:
 - the 5.40 m beams that carry walls;
@@ -128,8 +130,12 @@ The pre-sizing estimates find **10 beams and 5 footings over capacity** in Versi
 
 **Which one?**
 
+**Manager (2026-10-02):** (b) Add columns or secondary beams to shorten the 5.40 m spans, and support the 8.60 m rear edge (e.g. a column at x 3.2 under the overhang, landing on the lower-level wall line). Keep the floor-to-floor at 3.10. Re-run the pre-sizing and then apply the proposed sizes if they fit. If (b) still cannot fit, report it and leave the rows red for the engineer (c). Do it as P1 item 0.2.
+
 ## Q21 (2026-10-01, spec 08) — CUB: R8-N used, R1-N not found
 Sinduscon-SP publishes R8-N for September 2026: **R$ 2,238.58/m²** (read 2026-10-01). I could not find the R1-N value (single house), which is usually higher. The cost uses R8-N, marked TO CONFIRM; the field can be emptied, and the area method then shows "CUB TO CONFIRM". **Confirm R8-N, or give the R1-N value.**
+
+**Manager (2026-10-02):** Use R8-N for now, marked TO CONFIRM. If the R1-N value is found later, switch to it (single-family houses are usually priced with R1).
 
 ## Q22 (2026-10-01, spec 08) — Thermal limits and zone
 - Zone 2 is the spec's default (TO CONFIRM against NBR 15220-3:2024).
@@ -139,17 +145,30 @@ Sinduscon-SP publishes R8-N for September 2026: **R$ 2,238.58/m²** (read 2026-1
 
 **Please confirm the zone and the limits.**
 
+**Manager (2026-10-02):** Keep zone 2 and the limits marked 'verify' until the zone is confirmed. LSF failing CT is the correct result: show it as a trade-off in P6 (compare), not as a blocker.
+
 ## Q23 (2026-10-01, spec 08) — Every floor bay needs props during the pour
 With a 0.95 mm MF-75 deck (2.70 m without props, an assumption), every bay longer than 2.70 m is amber: "needs props". That covers the 3.20–4.10 m spans of all floors and both roofs. That is normal for steel deck, but it is a building cost and a schedule item. **Plan for props, or ask for a 1.25 mm deck (about 3.1 m without props)?**
+
+**Manager (2026-10-02):** Plan for props in the estimate (cost and schedule line). The 1.25 mm deck becomes one of the alternatives in P6 compare.
 
 ## Q24 (2026-10-02, P0) — Walls moved in the BIM tab do not go back to the design
 The BIM tab still has today's plan editor, so walls, doors and windows can be dragged there too. Those edits change the BIM copy only; the DESIGN tab does not see them, and the next re-approval replaces the rooms, walls and openings with the design's. **Should the BIM tab lock walls, doors and windows (edit them only in DESIGN), or should a wall moved in BIM also move in the design?** For now: BIM edits stay in BIM.
 
+**Manager (2026-10-02):** Lock walls, doors and windows in the BIM tab. Architecture is edited only in DESIGN; BIM shows an 'Edit in DESIGN' button on those elements. One source of geometry. Do it as P1 item 0.1.
+
 ## Q25 (2026-10-02, P0) — Engine texts in Portuguese
 The buttons, menus, headings and hints switch to Portuguese. The texts the engines write (check rules, sources and values, estimate explanations, device and fixture names, assembly and feature names) stay in English for now: translating them means rewriting several hundred sentences in the engines. **Translate them in P5 (when the BIM tab gets its technical drawings and element cards), or earlier?**
+
+**Manager (2026-10-02):** Translate the engine texts in P5, when the element cards are built.
 
 ## Q26 (2026-10-02, P0) — A first project without a lot wizard
 "New project" asks for name, address, city, latitude, longitude, lot width and depth and which side the street is on, and draws a simple single-storey house (living and kitchen, bedroom, bathroom). Plumbing for it says "no soil stack yet" until P5. Good enough until P1/P2, or should "New project" wait for the lot wizard?
 
+**Manager (2026-10-02):** Good enough until P1. The P1 wizard replaces this form.
+
 ## Q27 (2026-10-02, P0) — AI exchange rate and budget
 The AI settings start at US$ 1 = R$ 5,40 and a budget of US$ 20 a month (warning at 80 %, blocked at 100 %, with an "allow going over" switch). **Which budget do you want?**
+
+**Manager (2026-10-02):** Keep US$ 20/month with the 80% warning. The owner can change it in the AI settings.
+
