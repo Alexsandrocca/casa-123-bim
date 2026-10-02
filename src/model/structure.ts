@@ -127,8 +127,11 @@ export function generateStructure(p: Project): Element[] {
   };
 
   // Columns at the grid intersections under any suspended slab.
-  for (const y of p.grid.y) {
-    for (const x of p.grid.x) {
+  const skipped = (x: number, y: number) => (p.grid.skip ?? []).some(([sx, sy]) => eq(sx, x) && eq(sy, y));
+  const points: [number, number][] = [...p.grid.y.flatMap((y) => p.grid.x.map((x) => [x, y] as [number, number])), ...(p.grid.extra ?? [])];
+  for (const [x, y] of points) {
+    {
+      if (skipped(x, y)) continue;
       const over = suspended.filter((s) => quadrants(x, y).some(([a, b]) => slabCovers(p, s, a, b)));
       if (!over.length) continue;
       const top = Math.max(...over.map((s) => s.props.topElevation - s.props.thickness));
@@ -149,7 +152,7 @@ export function generateStructure(p: Project): Element[] {
     for (let i = 0; i + 1 < rows.length; i++) {
       const y = (rows[i]! + rows[i + 1]!) / 2;
       for (const x of p.grid.x) {
-        if (!quadrants(x, y).some(([a, b]) => slabCovers(p, sl, a, b))) continue;
+        if (skipped(x, y) || !quadrants(x, y).some(([a, b]) => slabCovers(p, sl, a, b))) continue;
         const base = q(groundAt(p, x, y, zones) - 0.3);
         const pier: Column = {
           id: `pier-${pad(++np)}`, type: 'Column', level: entry, tags: ['generated'],

@@ -493,7 +493,9 @@ export const Project = z.object({
   }),
   structure: z.object({ floorToFloor: z.number(), clearHeight: z.number(), structureDepth: z.number() }),
   levels: z.array(Level).min(1),
-  grid: z.object({ x: z.array(z.number()), y: z.array(z.number()) }),
+  /** Structural grid. skip: intersections with no column (the beams span past them);
+   *  extra: columns off the grid lines (e.g. under an overhang), with no beam lines of their own. */
+  grid: z.object({ x: z.array(z.number()), y: z.array(z.number()), skip: z.array(Point).optional(), extra: z.array(Point).optional() }),
   /** Spec 04b: what the routers could not place, and what they changed on their own (e.g. a shaft made larger). */
   mep: z.object({
     noRoute: z.array(z.object({ system: z.string(), network: z.string(), item: z.string(), reason: z.string() })),

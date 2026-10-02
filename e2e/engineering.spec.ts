@@ -22,7 +22,7 @@ test('assemblies: exterior walls to light steel frame — thickness, U-value and
   await page.getByRole('button', { name: 'Close' }).click();
   // an exterior wall now draws 0.13 m thick, and its estimates carry the badge
   await page.locator('[data-wall="SL-wall-04"]').click({ force: true });
-  await expect(page.getByTestId('wall-thickness')).toHaveValue('0.13');
+  await expect(page.locator('.props .kv', { hasText: 'Thickness' }).first()).toContainText('0.13 m');
   await expect(page.getByTestId('estimates')).toContainText('U-value');
   await page.getByTestId('estimates').getByTestId('est-badge').first().click();
   await expect(page.locator('.estpop')).toContainText('Method');

@@ -10,6 +10,7 @@ import { A } from './assumptions';
 import { assemblyOf, useOf, values, type AssemblyUse } from './assemblies';
 import { BEAM_CANDIDATES, COLUMN_CANDIDATES, section, type Section } from './steel';
 import { featureLoads } from './features';
+import { WEB_HOLE, outerD } from '../mep/library';
 
 export type Status = 'ok' | 'amber' | 'red';
 /** Utilisation colours: green < 0.7, amber 0.7–1.0, red > 1.0. */
@@ -315,8 +316,38 @@ export function checkBeamSpan(p: Project, sp: BeamSpan, sec: Section): { util: n
 }
 
 /** Lightest W section that passes every span. */
-export function pickBeam(p: Project, spans: BeamSpan[]): Section | undefined {
-  return BEAM_CANDIDATES.find((sec) => spans.every((sp) => checkBeamSpan(p, sp, sec).util <= 1));
+/** The lightest section that passes every span. P1 (Q20): within the structure zone (maxDepth) when one passes there,
+ *  because a deeper beam takes the room the services run in; otherwise the lightest one overall. */
+export function pickBeam(p: Project, spans: BeamSpan[], maxDepth = Infinity, minDepth = 0): Section | undefined {
+  const ok = (sec: Section) => sec.d >= minDepth - 1e-9 && spans.every((sp) => checkBeamSpan(p, sp, sec).util <= 1);
+  return BEAM_CANDIDATES.find((sec) => sec.d <= maxDepth + 1e-9 && ok(sec)) ?? BEAM_CANDIDATES.find(ok);
+}
+
+/** P1 (Q20): the depth a beam keeps for the pipes and conduits that cross it through a web hole now
+ *  (hole Ø ≤ 0.4 × depth, 20 mm of web above and below), so a lighter section never cuts a route off. */
+export function holeDepth(p: Project, b: Beam): number {
+  const g = beamSeg(b), zTop = b.props.elevation, d = section(b.props.profile)?.d ?? 0;
+  const ax = g.o === 'v' ? 0 : 1;
+  let need = 0;
+  for (const e of p.elements) {
+    if (e.type !== 'PipeSegment' && e.type !== 'Conduit') continue;
+    const a = e.props.start, c = e.props.end;
+    if (Math.hypot(c[0] - a[0], c[1] - a[1]) < 0.01 || Math.abs(c[ax]! - a[ax]!) < 1e-9) continue;
+    const t = (g.c - a[ax]!) / (c[ax]! - a[ax]!);
+    if (t < 0 || t > 1) continue;
+    const along = g.o === 'v' ? a[1] + (c[1] - a[1]) * t : a[0] + (c[0] - a[0]) * t;
+    if (along < g.a - 0.01 || along > g.b + 0.01) continue;
+    const z = a[2] + (c[2] - a[2]) * t, r = outerD(e.props.dn) / 2;
+    if (z - r >= zTop - 1e-3 || z + r <= zTop - d + 1e-3) continue;
+    need = Math.max(need, 2 * r / WEB_HOLE, zTop - z + r + 0.02);
+  }
+  return need;
+}
+
+/** Room for a beam under a floor: the structure depth less the slab it carries (Casa 123: 0.40 − 0.14 = 0.26 m). */
+export function beamZone(p: Project, b: Beam): number {
+  const s = suspendedSlabs(p).find((x) => Math.abs(soffit(x) - b.props.elevation) < 0.05);
+  return p.structure.structureDepth - (s?.props.thickness ?? 0);
 }
 
 /* ---------------- columns ---------------- */
@@ -369,7 +400,7 @@ export function frame(p: Project): Frame {
     let worst = { util: 0, governing: 'no load', Md: 0, MRd: 0, defl: 0, limit: 0 };
     if (current) for (const sp of spans) { const c = checkBeamSpan(p, sp, current); if (c.util > worst.util) worst = c; }
     beams.push({
-      beam: b, spans, current, proposed: pickBeam(p, spans),
+      beam: b, spans, current, proposed: pickBeam(p, spans, beamZone(p, b), holeDepth(p, b)),
       check: current ? { util: worst.util, status: statusOf(worst.util), governing: worst.governing } : { util: NaN, status: 'red', governing: 'section not in the table' },
       Md: worst.Md, MRd: worst.MRd, defl: worst.defl, deflLimit: worst.limit,
     });

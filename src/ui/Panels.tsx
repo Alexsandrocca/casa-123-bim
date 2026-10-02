@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { minArea, needsDaylight, runChecks, summarize, type CheckResult } from '../model/checks';
 import {
-  deleteDevice, deleteOpening, doorMax, flipOpening, moveDevice, moveFixture, setCircuitSection, setDevice, setSolar, renameSpace, resizeOpening, setElementProps, setOpeningSize, setPipe, setServiceSpace, setWallThickness,
+  deleteDevice, deleteOpening, doorMax, flipOpening, moveDevice, moveFixture, setCircuitSection, setDevice, setSolar, renameSpace, resizeOpening, setElementProps, setOpeningSize, setPipe, setServiceSpace,
 } from '../model/commands';
 import { whyHere } from '../model/mep/analysis';
 import { networkLabel } from '../model/plumbing/checks';
@@ -102,9 +102,10 @@ export function PropertiesPanel() {
   return (
     <aside className="props" aria-label={t('Properties')}>
       {!el && <LevelSummary p={p} level={level} />}
-      {el?.type === 'Space' && <SpaceProps p={p} s={el} />}
+      {el?.type === 'Space' && <SpaceProps p={p} s={el} editable={false} />}
       {el?.type === 'Wall' && <WallProps p={p} w={el} />}
-      {el?.type === 'Opening' && <OpeningProps p={p} op={el} />}
+      {el?.type === 'Opening' && <OpeningProps p={p} op={el} editable={false} />}
+      {el && ['Space', 'Wall', 'Opening'].includes(el.type) && <EditInDesign id={el.id} />}
       {el?.type === 'Column' && <ColumnProps c={el} />}
       {el?.type === 'Beam' && <BeamProps b={el} />}
       {el?.type === 'Slab' && <SlabProps s={el} />}
@@ -171,12 +172,24 @@ function LevelSummary({ p, level }: { p: Project; level: PlanLevel }) {
           })}
         </tbody>
       </table>
-      <p className="hint">{t('Drag an inside wall to resize the rooms on both sides (5 cm steps). Drag a door or window to slide it along its wall. Double-click a wall to add a door (inside) or a window (outside). Click anything to see and edit its properties. The outer walls and the stair stay fixed. Your changes are saved in the project folder.')}</p>
+      <p className="hint">{t('Click anything to see its properties. Rooms, walls, doors and windows are edited in the DESIGN tab; structure, systems, assemblies and features here. Your changes are saved in the project folder.')}</p>
     </>
   );
 }
 
-function SpaceProps({ p, s }: { p: Project; s: Space }) {
+/** P1 (Q24): architecture is edited only in the DESIGN tab; the BIM tab shows it read-only with a way there. */
+function EditInDesign({ id }: { id: string }) {
+  const t = useT();
+  const editInDesign = useApp((st) => st.editInDesign);
+  return (
+    <div className="editindesign">
+      <p className="hint">{t('Walls, doors, windows and rooms are edited in the DESIGN tab, so the design stays the one source of the building.')}</p>
+      <button className="strong" onClick={() => editInDesign(id)} data-testid="edit-in-design">{t('Edit in DESIGN')}</button>
+    </div>
+  );
+}
+
+export function SpaceProps({ p, s, editable = true }: { p: Project; s: Space; editable?: boolean }) {
   const run = useApp((st) => st.run);
   const a = spaceArea(s), min = minArea(s), g = glassArea(p, s);
   const lv = p.levels.find((l) => l.id === s.level)!;
@@ -185,9 +198,9 @@ function SpaceProps({ p, s }: { p: Project; s: Space }) {
   return (
     <>
       <Header title={s.props.name} sub={`${t('Room')} · ${t(ZONE_NAME[s.props.zone] ?? s.props.zone)} · ${s.id}`} />
-      {s.props.zone !== 'stair'
-        ? <TextField label={t('Name')} value={s.props.name} testId="room-name" onCommit={(v) => run(renameSpace(s.id, v))} />
-        : <p className="hint">{t('The stair core is fixed. Its walls cannot be dragged.')}</p>}
+      {s.props.zone === 'stair'
+        ? <p className="hint">{t('The stair core is fixed. Its walls cannot be dragged.')}</p>
+        : editable ? <TextField label={t('Name')} value={s.props.name} testId="room-name" onCommit={(v) => run(renameSpace(s.id, v))} /> : null}
       <div className="kvs">
         <Row k={t('Area')} v={`${t.n(a, 2)} m²`} />
         {min > 0 && <Row k={t('Code minimum')} v={`${t.n(min, Number.isInteger(min) ? 0 : 1)} m²`} />}
@@ -201,7 +214,6 @@ function SpaceProps({ p, s }: { p: Project; s: Space }) {
 }
 
 function WallProps({ p, w }: { p: Project; w: Wall }) {
-  const run = useApp((st) => st.run);
   const s = wallSeg(w);
   const hosted = byLevel(p, w.level, 'Opening').filter((o) => o.props.host === w.id);
   const fixed = w.props.wallType === 'exterior' || w.props.wallType === 'retaining';
@@ -211,19 +223,19 @@ function WallProps({ p, w }: { p: Project; w: Wall }) {
     <>
       <Header title={t(WALL_NAME[w.props.wallType]!)} sub={`${t('Wall')} · ${w.id}`} />
       <AssemblySelect p={p} el={w} />
-      <NumberField label={t('Thickness')} value={w.props.thickness} step={0.01} min={0.05} onCommit={(v) => run(setWallThickness(w.id, v))} testId="wall-thickness" />
       <div className="kvs">
+        <Row k={t('Thickness')} v={`${m(w.props.thickness)} m`} />
         <Row k={t('Length')} v={`${m(wallLength(w))} m`} />
         <Row k={t('Height')} v={`${m(w.props.height)} m`} />
         <Row k={t('Runs along')} v={s.o === 'v' ? t('x = {c}, y {a} → {b}', { c: m(s.c), a: m(s.a), b: m(s.b) }) : t('y = {c}, x {a} → {b}', { c: m(s.c), a: m(s.a), b: m(s.b) })} />
         <Row k={t('Doors and windows')} v={String(hosted.length)} />
       </div>
-      <p className="hint">{fixed ? t('Outer walls follow the building outline and stay fixed.') : t('Drag this wall in the plan to resize the rooms on both sides. Its type comes from the rooms it separates.')}</p>
+      <p className="hint">{fixed ? t('Outer walls follow the building outline and stay fixed.') : t('Its type comes from the rooms it separates. Its thickness follows its assembly.')}</p>
     </>
   );
 }
 
-function OpeningProps({ p, op }: { p: Project; op: Opening }) {
+export function OpeningProps({ p, op, editable = true }: { p: Project; op: Opening; editable?: boolean }) {
   const run = useApp((st) => st.run);
   const select = useApp((st) => st.select);
   const host = getEl(p, op.props.host) as Wall | undefined;
@@ -235,22 +247,29 @@ function OpeningProps({ p, op }: { p: Project; op: Opening }) {
   return (
     <>
       <Header title={t(openingLabel(op))} sub={`${isDoor ? t('Door') : t('Window')} · ${op.id}`} />
-      <div className="btnrow">
-        <button onClick={() => run(resizeOpening(op.id, op.props.width - 0.1))}>− 10 cm</button>
-        <button onClick={() => run(resizeOpening(op.id, op.props.width + 0.1))}>+ 10 cm</button>
-        {swingable && <button onClick={() => run(flipOpening(op.id))}>{t('Flip swing')}</button>}
-        <button className="danger" onClick={() => { if (run(deleteOpening(op.id))) select(null); }}>{t('Delete')}</button>
-      </div>
-      <NumberField label={t('Width')} value={op.props.width} onCommit={(v) => run(resizeOpening(op.id, v))} testId="op-width" />
-      <NumberField label={t('Height')} value={op.props.height} onCommit={(v) => run(setOpeningSize(op.id, { height: v }))} />
-      {!isDoor && <NumberField label={t('Sill')} value={op.props.sill} onCommit={(v) => run(setOpeningSize(op.id, { sill: v }))} />}
+      {editable ? (
+        <>
+          <div className="btnrow">
+            <button onClick={() => run(resizeOpening(op.id, op.props.width - 0.1))}>− 10 cm</button>
+            <button onClick={() => run(resizeOpening(op.id, op.props.width + 0.1))}>+ 10 cm</button>
+            {swingable && <button onClick={() => run(flipOpening(op.id))}>{t('Flip swing')}</button>}
+            <button className="danger" onClick={() => { if (run(deleteOpening(op.id))) select(null); }}>{t('Delete')}</button>
+          </div>
+          <NumberField label={t('Width')} value={op.props.width} onCommit={(v) => run(resizeOpening(op.id, v))} testId="op-width" />
+          <NumberField label={t('Height')} value={op.props.height} onCommit={(v) => run(setOpeningSize(op.id, { height: v }))} />
+          {!isDoor && <NumberField label={t('Sill')} value={op.props.sill} onCommit={(v) => run(setOpeningSize(op.id, { sill: v }))} />}
+        </>
+      ) : null}
       <div className="kvs">
+        {!editable && <Row k={t('Width')} v={`${m(op.props.width)} m`} />}
+        {!editable && <Row k={t('Height')} v={`${m(op.props.height)} m`} />}
+        {!editable && !isDoor && <Row k={t('Sill')} v={`${m(op.props.sill)} m`} />}
         {s && <Row k={t('Position')} v={s.o === 'v' ? t('x = {c}, y {a} → {b}', { c: m(s.c), a: m(s.a), b: m(s.b) }) : t('y = {c}, x {a} → {b}', { c: m(s.c), a: m(s.a), b: m(s.b) })} />}
         <Row k={t('Host wall')} v={host ? `${t(WALL_NAME[host.props.wallType]!)} ${host.id}` : '—'} />
         {!isDoor && <Row k={t('Glass')} v={`${t.n(op.props.width * op.props.height, 2)} m²`} />}
         {isDoor && <Row k={t('Width range')} v={`${m(0.6)} – ${m(doorMax(op))} m`} />}
       </div>
-      <p className="hint">{t('Drag it in the plan to slide it along its wall. Delete or Backspace removes it.')}</p>
+      {editable && <p className="hint">{t('Drag it in the plan to slide it along its wall. Delete or Backspace removes it.')}</p>}
     </>
   );
 }

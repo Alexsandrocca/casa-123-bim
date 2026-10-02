@@ -143,7 +143,7 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
       }
       return;
     }
-    if (tool !== 'select') { addAt(x, y, tool); return; }
+    if (tool === 'door' || tool === 'window') { if (!bimStyle) addAt(x, y, tool); return; }
     const tg = ev.target as Element;
     const dg = elec2d ? tg.closest('[data-device]') : null;
     if (dg) {
@@ -176,6 +176,8 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
       const host = walls.find((w) => w.id === op.props.host)!;
       const s = openingSeg(op, host);
       st.select(id);
+      // P1 (Q24): in the BIM tab architecture is read-only; it is edited in DESIGN
+      if (bimStyle) return;
       drag.current = { kind: 'opening', id, o: s.o, off: (s.o === 'h' ? x : y) - s.a, x0: x, y0: y, moved: false };
     } else if (hg) {
       const h = handles[Number(hg.getAttribute('data-handle'))]!;
@@ -183,6 +185,7 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
       const w = nearestWall(x, y, 0.5);
       st.select(w && wallSeg(w).o === h.o ? w.id : null);
       if (h.locked) { st.flash(t('That wall belongs to the stair core, which stays fixed.')); return; }
+      if (bimStyle) { st.flash(t('Walls are moved in the DESIGN tab. Use “Edit in DESIGN” in the properties.')); return; }
       drag.current = { kind: 'wall', h, at, x0: x, y0: y, moved: false };
     } else if (wg) {
       st.select(wg.getAttribute('data-wall'));
@@ -238,7 +241,7 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
   };
 
   const onDoubleClick = (ev: React.MouseEvent<SVGSVGElement>) => {
-    if (tool !== 'select') return;
+    if (tool !== 'select' || bimStyle) return;
     const [x, y] = toPlan(ev);
     addAt(x, y);
   };

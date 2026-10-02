@@ -674,4 +674,11 @@ export const PT: Record<string, string> = {
   "× {e} m² equivalent + {x} % not in the CUB": "× {e} m² equivalentes + {x} % fora do CUB",
   "Biggest items": "Maiores itens",
   "Biggest cost items": "Maiores itens de custo",
+  // P1 — carry-over Q24 (architecture is edited only in DESIGN)
+  "Click anything to see it. Walls, doors and windows are edited in the DESIGN tab.": "Clique em qualquer elemento para vê-lo. Paredes, portas e janelas são editadas na aba PROJETO.",
+  "Click anything to see its properties. Rooms, walls, doors and windows are edited in the DESIGN tab; structure, systems, assemblies and features here. Your changes are saved in the project folder.": "Clique em qualquer elemento para ver suas propriedades. Ambientes, paredes, portas e janelas são editados na aba PROJETO; estrutura, instalações, composições e elementos arquitetônicos aqui. Suas alterações são salvas na pasta do projeto.",
+  "Walls, doors, windows and rooms are edited in the DESIGN tab, so the design stays the one source of the building.": "Paredes, portas, janelas e ambientes são editados na aba PROJETO, para que o projeto continue sendo a única fonte da edificação.",
+  "Edit in DESIGN": "Editar em PROJETO",
+  "Its type comes from the rooms it separates. Its thickness follows its assembly.": "O tipo vem dos ambientes que ela separa. A espessura segue a sua composição.",
+  "Walls are moved in the DESIGN tab. Use “Edit in DESIGN” in the properties.": "Paredes são movidas na aba PROJETO. Use “Editar em PROJETO” nas propriedades.",
 };

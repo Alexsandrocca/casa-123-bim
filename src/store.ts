@@ -58,10 +58,16 @@ const designKey = (p: Project) => JSON.stringify(p.elements.filter((e) => DESIGN
 /** Merge an approved design into the BIM model: the design elements and the site come from the design,
  *  the rest (structure, systems, features, assumptions) stays the BIM tab's; services re-host and re-route. */
 export function mergeIntoBim(bim: Project, design: Project): Project {
+  // a wall keeps the assembly chosen in BIM (an engineering choice) when it is still in the design
+  const asm = new Map(bim.elements.flatMap((e) => (e.type === 'Wall' && e.props.assemblyId ? [[e.id, e.props.assemblyId] as const] : [])));
+  const fromDesign = design.elements.filter((e) => DESIGN_TYPES.includes(e.type)).map((e) => {
+    const a = e.type === 'Wall' ? asm.get(e.id) : undefined;
+    return e.type === 'Wall' && a && !e.props.assemblyId ? { ...e, props: { ...e.props, assemblyId: a } } : e;
+  });
   const next: Project = {
     ...bim,
     site: design.site, levels: design.levels,
-    elements: [...design.elements.filter((e) => DESIGN_TYPES.includes(e.type)), ...bim.elements.filter((e) => !DESIGN_TYPES.includes(e.type))],
+    elements: [...fromDesign, ...bim.elements.filter((e) => !DESIGN_TYPES.includes(e.type))],
   };
   const synced = syncThickness(next);
   return synced.elements.some((e) => e.type === 'Fixture' || e.type === 'Device') ? withMep(synced) : synced;
@@ -150,6 +156,8 @@ export interface AppState {
   lookFrom(pos: [number, number, number], target: [number, number, number]): void;
   /** Select from the 3D view: also shows the element's floor in 2D. */
   pick(id: string | null): void;
+  /** P1 (Q24): switch to the DESIGN tab and select the same wall, door, window or room there. */
+  editInDesign(id: string): void;
 }
 
 let flashTimer: ReturnType<typeof setTimeout> | undefined;
@@ -473,6 +481,15 @@ export const useApp = create<AppState>((set, get) => {
     set3d(patch) { set(patch); },
     goCamera(preset) { set((s) => ({ camera: { preset, n: s.camera.n + 1 }, walk: false })); },
     lookFrom(pos, target) { set((s) => ({ camera: { preset: s.camera.preset, n: s.camera.n + 1, pos, target }, walk: false })); },
+    editInDesign(id) {
+      const s = get();
+      if (!s.info) return;
+      const design = s.versions[s.info.designVersionId]?.present;
+      const el = design?.elements.find((e) => e.id === id);
+      s.setTab('design');
+      if (!el) { get().flash('That element is not in the design any more (it changed since the approval).'); return; }
+      set({ selection: id, level: planLevels(design!).includes(el.level) ? el.level : get().level });
+    },
     pick(id) {
       if (!id) { set({ selection: null }); return; }
       const p = hist().present;

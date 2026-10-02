@@ -5,7 +5,7 @@ import { byLevel, getEl, spaceArea } from '../model/geometry';
 import { planLevels } from '../model/schema';
 import { parseRoute, useApp, useProject, type Tool } from '../store';
 import { useT } from '../i18n/useT';
-import { AboutDialog, ChecksBar, PropertiesPanel } from './Panels';
+import { AboutDialog, ChecksBar, OpeningProps, PropertiesPanel } from './Panels';
 import { PlanView, ZONE_COLOR } from './PlanView';
 import { PlumbingDialog } from './PlumbingDialog';
 import { ElectricalDialog } from './ElectricalDialog';
@@ -58,7 +58,8 @@ function useKeys() {
       if (typing) return;
       if ((e.key === 'Delete' || e.key === 'Backspace') && s.selection) {
         const el = getEl(s.versions[s.active]!.present, s.selection);
-        if (el?.type === 'Opening') { e.preventDefault(); if (s.run(deleteOpening(el.id))) s.select(null); }
+        const design = s.route.page === 'project' && s.route.tab === 'design';
+        if (el?.type === 'Opening' && design) { e.preventDefault(); if (s.run(deleteOpening(el.id))) s.select(null); }
         if (el?.type === 'Feature' && s.route.page === 'project' && s.route.tab === 'bim') { e.preventDefault(); if (s.run(deleteFeature(el.id))) s.select(null); }
       }
       if (e.key === 'Escape') { s.select(null); s.setTool('select'); }
@@ -193,6 +194,7 @@ function DesignPanel() {
           </li>
         ))}
       </ul>
+      {sel?.type === 'Opening' && <OpeningProps p={p} op={sel} />}
       {sel?.type === 'Space' && (
         <label className="field">
           <span>{t('Name')}</span>
@@ -284,8 +286,6 @@ function BimWorkspace() {
     <>
       <nav className="toolbar" aria-label={t('Tools')}>
         <ToolButton label={t('Select')} pressed={tool === 'select'} onClick={() => st.setTool('select')}>{ICONS.select}</ToolButton>
-        <ToolButton label={t('Add door')} pressed={tool === 'door'} onClick={() => setTool('door')}>{ICONS.door}</ToolButton>
-        <ToolButton label={t('Add window')} pressed={tool === 'window'} onClick={() => setTool('window')}>{ICONS.window}</ToolButton>
         <ToolButton label={t('Add outlet')} pressed={tool === 'outlet'} onClick={() => { setTool('outlet'); st.set3d({ elec2d: true }); }} testId="tool-outlet">{ICONS.outlet}</ToolButton>
         <hr />
         <ToolButton label={t('Undo')} onClick={st.undo} disabled={!canUndo} testId="undo">{ICONS.undo}</ToolButton>
@@ -320,7 +320,7 @@ function BimWorkspace() {
               </label>
             )}
             <span className="hint">
-              {tool === 'feature' && ft ? `${ft.label}: ${ft.hint} (${t('works in 2D and 3D; Esc to stop')})` : tool === 'door' ? t('Click a wall to add a door.') : tool === 'window' ? t('Click an outside wall to add a window.') : tool === 'outlet' ? t('Click in a room to add an outlet on its nearest wall.') : t('Drag inside walls, doors and windows. Double-click a wall to add an opening.')}
+              {tool === 'feature' && ft ? `${ft.label}: ${ft.hint} (${t('works in 2D and 3D; Esc to stop')})` : tool === 'outlet' ? t('Click in a room to add an outlet on its nearest wall.') : t('Click anything to see it. Walls, doors and windows are edited in the DESIGN tab.')}
             </span>
           </ViewBar>
         </div>

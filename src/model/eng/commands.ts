@@ -119,12 +119,32 @@ export function applyProposedSizes(): Command {
       for (const r of f.footings) {
         const e = r.footing, cx = (e.props.rect.x0 + e.props.rect.x1) / 2, cy = (e.props.rect.y0 + e.props.rect.y1) / 2;
         const rect = { x0: q(cx - r.B / 2), x1: q(cx + r.B / 2), y0: q(cy - r.B / 2), y1: q(cy + r.B / 2) };
-        if (!eq(rect.x0, e.props.rect.x0) || !eq(rect.y0, e.props.rect.y0) || !eq(rect.x1, e.props.rect.x1) || !eq(r.h, e.props.depth)) changed.set(e.id, { ...e, props: { ...e.props, rect, depth: r.h } });
+        if (eq(rect.x0, e.props.rect.x0) && eq(rect.y0, e.props.rect.y0) && eq(rect.x1, e.props.rect.x1) && eq(r.h, e.props.depth)) continue;
+        // P1 (Q20): only pads over capacity grow; a pad that is big enough stays (making it smaller re-routes the ground runs for nothing)
+        if (r.check.util <= 1) continue;
+        // P1 (Q20): a bigger pad that would hit a buried pipe or conduit stays as it is (red, for the engineer)
+        if (r.B > e.props.rect.x1 - e.props.rect.x0 + 1e-6 && runsThrough(p, rect, e.props.topElevation - r.h - 0.05, e.props.topElevation + 0.05)) continue;
+        changed.set(e.id, { ...e, props: { ...e.props, rect, depth: r.h } });
       }
       if (!changed.size) return p;
       return withMep(replaceAll(p, changed));
     },
   };
+}
+
+/** Does any pipe or conduit pass through this box (plan rect, z0–z1)? Sampled every 5 cm, with the run's radius. */
+function runsThrough(p: Project, r: { x0: number; y0: number; x1: number; y1: number }, z0: number, z1: number): boolean {
+  for (const e of p.elements) {
+    if (e.type !== 'PipeSegment' && e.type !== 'Conduit') continue;
+    const [ax, ay, az] = e.props.start, [bx, by, bz] = e.props.end;
+    const rad = e.props.dn / 2000 + 0.01;
+    const n = Math.max(2, Math.ceil(Math.hypot(bx - ax, by - ay, bz - az) / 0.05) + 1);
+    for (let i = 0; i < n; i++) {
+      const t = i / (n - 1), x = ax + (bx - ax) * t, y = ay + (by - ay) * t, z = az + (bz - az) * t;
+      if (x > r.x0 - rad && x < r.x1 + rad && y > r.y0 - rad && y < r.y1 + rad && z > z0 - rad && z < z1 + rad) return true;
+    }
+  }
+  return false;
 }
 
 /** Place a feature. */

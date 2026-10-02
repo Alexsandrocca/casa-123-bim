@@ -31,7 +31,7 @@ test('opens Version 2 on the street level with the prototype room areas', async 
 });
 
 test('dragging the kitchen/dining wall changes both rooms live, and undo restores them', async ({ page }) => {
-  await openCasa(page, { version: 'v2' });
+  await openCasa(page, { version: 'v2', tab: 'design' });
   await expect(area(page, 'Kitchen')).toHaveText('14.0 m²');
   // Towards the rear (up on screen) makes the kitchen bigger and the dining room smaller.
   await dragLine(page, '[data-line^="h:7.60:"]', 0, -40);
@@ -48,7 +48,7 @@ test('dragging the kitchen/dining wall changes both rooms live, and undo restore
 });
 
 test('the stair walls stay fixed', async ({ page }) => {
-  await openCasa(page, { version: 'v2' });
+  await openCasa(page, { version: 'v2', tab: 'design' });
   await page.getByRole('tab', { name: 'Upper +3.70' }).click();
   await dragLine(page, '[data-line^="v:1.60:"]', 40, 0);
   await expect(page.getByRole('status')).toContainText('stair core');
@@ -73,7 +73,7 @@ test('Version 1 and Version 2 keep their edits separately', async ({ page }) => 
 });
 
 test('select a door, resize it, flip it and delete it', async ({ page }) => {
-  await openCasa(page, { version: 'v2' });
+  await openCasa(page, { version: 'v2', tab: 'design' });
   const door = page.locator('[data-opening="SL-door-03"] .hit');
   await door.click();
   await expect(page.getByTestId('op-width')).toHaveValue('0.80');
@@ -87,11 +87,12 @@ test('select a door, resize it, flip it and delete it', async ({ page }) => {
 });
 
 test('double-click an outside wall adds a window; checks list opens', async ({ page }) => {
-  await openCasa(page, { version: 'v2' });
+  await openCasa(page, { version: 'v2', tab: 'design' });
   const before = await page.locator('[data-opening]').count();
   const wall = (await page.locator('[data-wall="SL-wall-02"]').boundingBox())!; // north wall
   await page.mouse.dblclick(wall.x + wall.width / 2, wall.y + wall.height * 0.1);
   await expect(page.locator('[data-opening]')).toHaveCount(before + 1);
+  await page.getByTestId('tab-bim').click();
   await page.getByTestId('checks-toggle').click();
   await expect(page.getByRole('cell', { name: /Civil Code/ }).first()).toBeVisible();
   await page.getByRole('button', { name: 'About' }).click();
@@ -99,7 +100,7 @@ test('double-click an outside wall adds a window; checks list opens', async ({ p
 });
 
 test('drag a door along its wall', async ({ page }) => {
-  await openCasa(page, { version: 'v2' });
+  await openCasa(page, { version: 'v2', tab: 'design' });
   await page.locator('[data-opening="SL-door-03"] .hit').click();
   await expect(page.getByText('y = 5.00, x 3.40 → 4.20')).toBeVisible();
   await dragLine(page, '[data-opening="SL-door-03"] .hit', 60, 0);
@@ -121,4 +122,23 @@ test('Save model downloads the JSON and Open model loads it back', async ({ page
   await expect(area(page, 'Kitchen')).toHaveText('14.0 m²');
   await page.getByTestId('open-file').setInputFiles({ name: 'bad.json', mimeType: 'application/json', buffer: Buffer.from('{"hello":1}') });
   await expect(page.getByRole('status')).toContainText('not a model of this app');
+});
+
+test('P1 (Q24): the BIM tab cannot drag walls or doors; “Edit in DESIGN” opens the same wall there', async ({ page }) => {
+  await openCasa(page, { version: 'v2' });
+  await expect(area(page, 'Kitchen')).toHaveText('14.0 m²');
+  await dragLine(page, '[data-line^="h:7.60:"]', 0, -40);
+  await expect(page.getByRole('status')).toContainText('DESIGN tab');
+  await expect(area(page, 'Kitchen')).toHaveText('14.0 m²');
+  await page.locator('[data-opening="SL-door-03"] .hit').click();
+  await expect(page.getByTestId('op-width')).toHaveCount(0);
+  await dragLine(page, '[data-opening="SL-door-03"] .hit', 60, 0);
+  await expect(page.getByText('y = 5.00, x 3.40 → 4.20')).toBeVisible();
+  const w4 = (await page.locator('[data-wall="SL-wall-04"]').boundingBox())!; // west wall, clicked near its front end (no window there)
+  await page.mouse.click(w4.x + w4.width / 2, w4.y + w4.height * 0.97);
+  await expect(page.locator('.props h3')).toHaveText('Exterior wall');
+  await expect(page.getByTestId('wall-thickness')).toHaveCount(0);
+  await page.getByTestId('edit-in-design').click();
+  await expect(page.getByTestId('tab-design')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('line.selwall')).toHaveCount(1);
 });
