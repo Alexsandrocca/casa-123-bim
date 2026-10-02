@@ -1,0 +1,370 @@
+{
+ "casa-v1": {
+  "address": "Rua Alceu Maynardi Araújo, 123, Nova Piracicaba, Piracicaba/SP",
+  "lot": {
+   "front": 14,
+   "rear": 15,
+   "sides": 25
+  },
+  "lotPolygon": [
+   [
+    0,
+    0
+   ],
+   [
+    14,
+    0
+   ],
+   [
+    15,
+    25
+   ],
+   [
+    0,
+    25
+   ]
+  ],
+  "houseOrigin": {
+   "x": 1.92,
+   "y": 4
+  },
+  "fallStreetToRear": 2,
+  "setbacks": {
+   "front": 4,
+   "rear": 6,
+   "sides": 1.2
+  },
+  "cut": {
+   "lineY": 8.5,
+   "gardenLevel": -2.55,
+   "retainingSouthToY": 10.5,
+   "retainingNorthToY": 8.9
+  },
+  "ramp": {
+   "width": 4,
+   "slope": 0.125
+  },
+  "eavesLimit": 0.7,
+  "region": {
+   "city": "Piracicaba",
+   "state": "SP",
+   "lat": -22.72,
+   "lon": -47.65,
+   "utcOffset": -3,
+   "xBearing": 0,
+   "supply": {
+    "utility": "CPFL",
+    "phaseV": 127,
+    "lineV": 220,
+    "phases": 3,
+    "confirmed": false
+   },
+   "water": "SEMAE",
+   "rules": {
+    "code": "Piracicaba LC 474/2025",
+    "sanitary": "SP sanitary code, Decreto 12.342/78"
+   },
+   "pvYield": {
+    "monthly": [
+     130,
+     120,
+     128,
+     120,
+     112,
+     104,
+     114,
+     128,
+     124,
+     132,
+     130,
+     128
+    ],
+    "source": "PVGIS-like values, 20° facing north"
+   },
+   "solarHeaterShare": 0.7
+  },
+  "toConfirm": [
+   "Topographic survey",
+   "SPT soil borings",
+   "SEMAE sewer depth",
+   "Lot zone and height limit",
+   "Climate zone (NBR 15220-3)",
+   "Whether decks are allowed in the setbacks",
+   "CPFL supply type",
+   "Which side boundary takes the extra 1 m at the rear"
+  ]
+ },
+ "casa-v2": {
+  "address": "Rua Alceu Maynardi Araújo, 123, Nova Piracicaba, Piracicaba/SP",
+  "lot": {
+   "front": 14,
+   "rear": 15,
+   "sides": 25
+  },
+  "lotPolygon": [
+   [
+    0,
+    0
+   ],
+   [
+    14,
+    0
+   ],
+   [
+    15,
+    25
+   ],
+   [
+    0,
+    25
+   ]
+  ],
+  "houseOrigin": {
+   "x": 1.92,
+   "y": 4
+  },
+  "fallStreetToRear": 2,
+  "setbacks": {
+   "front": 4,
+   "rear": 6,
+   "sides": 1.2
+  },
+  "cut": {
+   "lineY": 8.5,
+   "gardenLevel": -2.55,
+   "retainingSouthToY": 10.5,
+   "retainingNorthToY": 8.9
+  },
+  "ramp": {
+   "width": 4,
+   "slope": 0.125
+  },
+  "eavesLimit": 0.7,
+  "region": {
+   "city": "Piracicaba",
+   "state": "SP",
+   "lat": -22.72,
+   "lon": -47.65,
+   "utcOffset": -3,
+   "xBearing": 0,
+   "supply": {
+    "utility": "CPFL",
+    "phaseV": 127,
+    "lineV": 220,
+    "phases": 3,
+    "confirmed": false
+   },
+   "water": "SEMAE",
+   "rules": {
+    "code": "Piracicaba LC 474/2025",
+    "sanitary": "SP sanitary code, Decreto 12.342/78"
+   },
+   "pvYield": {
+    "monthly": [
+     130,
+     120,
+     128,
+     120,
+     112,
+     104,
+     114,
+     128,
+     124,
+     132,
+     130,
+     128
+    ],
+    "source": "PVGIS-like values, 20° facing north"
+   },
+   "solarHeaterShare": 0.7
+  },
+  "toConfirm": [
+   "Topographic survey",
+   "SPT soil borings",
+   "SEMAE sewer depth",
+   "Lot zone and height limit",
+   "Climate zone (NBR 15220-3)",
+   "Whether decks are allowed in the setbacks",
+   "CPFL supply type",
+   "Which side boundary takes the extra 1 m at the rear"
+  ]
+ },
+ "casa-v3": {
+  "address": "Rua Alceu Maynardi Araújo, 123, Nova Piracicaba, Piracicaba/SP",
+  "lot": {
+   "front": 14,
+   "rear": 15,
+   "sides": 25
+  },
+  "lotPolygon": [
+   [
+    0,
+    0
+   ],
+   [
+    14,
+    0
+   ],
+   [
+    15,
+    25
+   ],
+   [
+    0,
+    25
+   ]
+  ],
+  "houseOrigin": {
+   "x": 1.5,
+   "y": 4
+  },
+  "fallStreetToRear": 2,
+  "setbacks": {
+   "front": 4,
+   "rear": 6,
+   "sides": 1.2
+  },
+  "cut": {
+   "lineY": 8.5,
+   "gardenLevel": -2.55,
+   "retainingSouthToY": 10.5,
+   "retainingNorthToY": 8.9
+  },
+  "ramp": {
+   "width": 4,
+   "slope": 0.125
+  },
+  "eavesLimit": 0.7,
+  "region": {
+   "city": "Piracicaba",
+   "state": "SP",
+   "lat": -22.72,
+   "lon": -47.65,
+   "utcOffset": -3,
+   "xBearing": 0,
+   "supply": {
+    "utility": "CPFL",
+    "phaseV": 127,
+    "lineV": 220,
+    "phases": 3,
+    "confirmed": false
+   },
+   "water": "SEMAE",
+   "rules": {
+    "code": "Piracicaba LC 474/2025",
+    "sanitary": "SP sanitary code, Decreto 12.342/78"
+   },
+   "pvYield": {
+    "monthly": [
+     130,
+     120,
+     128,
+     120,
+     112,
+     104,
+     114,
+     128,
+     124,
+     132,
+     130,
+     128
+    ],
+    "source": "PVGIS-like values, 20° facing north"
+   },
+   "solarHeaterShare": 0.7
+  },
+  "toConfirm": [
+   "Topographic survey",
+   "SPT soil borings",
+   "SEMAE sewer depth",
+   "Lot zone and height limit",
+   "Climate zone (NBR 15220-3)",
+   "Whether decks are allowed in the setbacks",
+   "CPFL supply type",
+   "Which side boundary takes the extra 1 m at the rear"
+  ],
+  "utilities": {
+   "sewerDepth": 3,
+   "sewerOffset": 6.5,
+   "waterMainDepth": 1.5,
+   "rainIntensity": 150
+  }
+ },
+ "flat-lot": {
+  "address": "Rua de Teste, 10, Florianópolis/SC",
+  "lot": {
+   "front": 12,
+   "rear": 12,
+   "sides": 30
+  },
+  "lotPolygon": [
+   [
+    0,
+    0
+   ],
+   [
+    12,
+    0
+   ],
+   [
+    12,
+    30
+   ],
+   [
+    0,
+    30
+   ]
+  ],
+  "houseOrigin": {
+   "x": 1.5,
+   "y": 4
+  },
+  "fallStreetToRear": 0,
+  "setbacks": {
+   "front": 4,
+   "rear": 3,
+   "sides": 1.5
+  },
+  "cut": {
+   "lineY": 8,
+   "gardenLevel": 0,
+   "retainingSouthToY": 0,
+   "retainingNorthToY": 0
+  },
+  "region": {
+   "city": "Florianópolis",
+   "state": "SC",
+   "lat": -27.59,
+   "lon": -48.55,
+   "utcOffset": -3,
+   "xBearing": 180,
+   "supply": {
+    "utility": null,
+    "phaseV": 220,
+    "lineV": 380,
+    "phases": 3,
+    "confirmed": false
+   },
+   "water": null,
+   "rules": {
+    "code": null,
+    "sanitary": null
+   },
+   "pvYield": null,
+   "solarHeaterShare": null
+  },
+  "utilities": {
+   "sewerDepth": 1.2,
+   "sewerOffset": 4,
+   "waterMainDepth": 0.8,
+   "rainIntensity": 150
+  },
+  "toConfirm": [
+   "Topographic survey",
+   "Soil borings",
+   "City zoning and building rules",
+   "Sewer depth",
+   "Electricity supply"
+  ]
+ }
+}

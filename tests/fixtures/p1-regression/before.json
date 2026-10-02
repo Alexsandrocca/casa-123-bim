@@ -1,0 +1,4434 @@
+{
+ "casa-v1": {
+  "site": {
+   "lot": [
+    [
+     -1.92,
+     -4
+    ],
+    [
+     12.08,
+     -4
+    ],
+    [
+     13.08,
+     21
+    ],
+    [
+     -1.92,
+     21
+    ]
+   ],
+   "yStreet": -4,
+   "yRear": 21,
+   "xSouth": -1.92,
+   "xNorth": [
+    12.08,
+    12.212,
+    12.58,
+    13.04
+   ],
+   "natural": [
+    0,
+    -0.264,
+    -1,
+    -1.92
+   ],
+   "garden": -2.55,
+   "rampEndY": 16.4,
+   "passageEndY": 10.5,
+   "cutY": 8.5,
+   "house": {
+    "x0": 0,
+    "x1": 8.6,
+    "y0": 0,
+    "y1": 15
+   }
+  },
+  "zones": "54172d270a99abd9",
+  "ground": "8cd3ad851f65f14c",
+  "sun": [
+   {
+    "altitude": 24.298629,
+    "azimuth": 48.533761,
+    "dir": [
+     0.603518,
+     -0.682964,
+     0.411493
+    ]
+   },
+   {
+    "altitude": 43.743019,
+    "azimuth": 3.954457,
+    "dir": [
+     0.720728,
+     -0.049823,
+     0.691425
+    ]
+   },
+   {
+    "altitude": 50.766963,
+    "azimuth": 260.270889,
+    "dir": [
+     -0.106882,
+     0.62338,
+     0.77458
+    ]
+   },
+   {
+    "altitude": 16.485178,
+    "azimuth": 82.50912,
+    "dir": [
+     0.125009,
+     -0.95071,
+     0.283767
+    ]
+   }
+  ],
+  "view": "f920e37f54ccbac9",
+  "checks": [
+   {
+    "id": "area:LL-space-05",
+    "status": "pass",
+    "title": "WC floor area",
+    "value": "3.80 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office floor area",
+    "value": "27.30 m² (min 8 m²)",
+    "rule": "Living rooms and work rooms: at least 8 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office window ratio",
+    "value": "glass 14.76 m² = 1/2 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:SL-space-03",
+    "status": "pass",
+    "title": "WC floor area",
+    "value": "2.56 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:SL-space-04",
+    "status": "pass",
+    "title": "Kitchen floor area",
+    "value": "18.90 m² (min 4 m²)",
+    "rule": "Kitchen: at least 4 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:SL-space-04",
+    "status": "pass",
+    "title": "Kitchen window ratio",
+    "value": "glass 3.38 m² = 1/6 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:SL-space-05",
+    "status": "pass",
+    "title": "Dining window ratio",
+    "value": "glass 3.64 m² = 1/3 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:SL-space-06",
+    "status": "pass",
+    "title": "Living floor area",
+    "value": "31.40 m² (min 8 m²)",
+    "rule": "Living rooms and work rooms: at least 8 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:SL-space-06",
+    "status": "pass",
+    "title": "Living window ratio",
+    "value": "glass 23.24 m² = 1/1 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 floor area",
+    "value": "12.60 m² (min 8 m²)",
+    "rule": "Bedrooms: 10 m² for the first (master), 8 m² for the others",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 window ratio",
+    "value": "glass 6.50 m² = 1/2 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-02",
+    "status": "pass",
+    "title": "Bath 2 floor area",
+    "value": "3.15 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-03",
+    "status": "pass",
+    "title": "Bath 3 floor area",
+    "value": "3.15 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 floor area",
+    "value": "11.20 m² (min 8 m²)",
+    "rule": "Bedrooms: 10 m² for the first (master), 8 m² for the others",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 window ratio",
+    "value": "glass 6.50 m² = 1/2 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-07",
+    "status": "pass",
+    "title": "Master bath floor area",
+    "value": "4.40 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-09",
+    "status": "pass",
+    "title": "Master bedroom floor area",
+    "value": "10.20 m² (min 10 m²)",
+    "rule": "Bedrooms: 10 m² for the first (master), 8 m² for the others",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:UF-space-09",
+    "status": "pass",
+    "title": "Master bedroom window ratio",
+    "value": "glass 6.76 m² = 1/2 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "corridor:LL-space-02",
+    "status": "pass",
+    "title": "Hall width",
+    "value": "narrowest part 1.20 m",
+    "rule": "Corridors and halls at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "corridor:SL-space-02",
+    "status": "pass",
+    "title": "Entry width",
+    "value": "narrowest part 1.60 m",
+    "rule": "Corridors and halls at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "corridor:UF-space-05",
+    "status": "pass",
+    "title": "Hall width",
+    "value": "narrowest part 1.20 m",
+    "rule": "Corridors and halls at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "blondel:stair-01",
+    "status": "pass",
+    "title": "U-stair LL → SL: comfort (Blondel)",
+    "value": "2 × 0.182 + 0.27 = 0.634 m",
+    "rule": "0.63 ≤ 2h + b ≤ 0.65 (h riser, b tread)",
+    "source": "Blondel rule, project rulebook"
+   },
+   {
+    "id": "headroom:stair-01",
+    "status": "pass",
+    "title": "U-stair LL → SL: headroom",
+    "value": "lowest 2.52 m",
+    "rule": "Headroom above every tread at least 2.10 m",
+    "source": "Project rulebook (stair comfort)"
+   },
+   {
+    "id": "stairwidth:stair-01",
+    "status": "pass",
+    "title": "U-stair LL → SL: width",
+    "value": "1.15 m",
+    "rule": "Stairs at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "blondel:stair-02",
+    "status": "pass",
+    "title": "U-stair SL → UF: comfort (Blondel)",
+    "value": "2 × 0.182 + 0.27 = 0.634 m",
+    "rule": "0.63 ≤ 2h + b ≤ 0.65 (h riser, b tread)",
+    "source": "Blondel rule, project rulebook"
+   },
+   {
+    "id": "headroom:stair-02",
+    "status": "pass",
+    "title": "U-stair SL → UF: headroom",
+    "value": "lowest 2.52 m",
+    "rule": "Headroom above every tread at least 2.10 m",
+    "source": "Project rulebook (stair comfort)"
+   },
+   {
+    "id": "stairwidth:stair-02",
+    "status": "pass",
+    "title": "U-stair SL → UF: width",
+    "value": "1.15 m",
+    "rule": "Stairs at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "1301:LL-door-05",
+    "status": "pass",
+    "title": "Glass slider LL-door-05",
+    "value": "2.22 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:LL-win-01",
+    "status": "pass",
+    "title": "High window LL-win-01",
+    "value": "4.72 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:LL-win-02",
+    "status": "pass",
+    "title": "Glass slider LL-win-02",
+    "value": "4.64 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:LL-win-03",
+    "status": "pass",
+    "title": "Window LL-win-03",
+    "value": "4.00 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-01",
+    "status": "pass",
+    "title": "Window SL-win-01",
+    "value": "1.92 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-02",
+    "status": "pass",
+    "title": "Window SL-win-02",
+    "value": "3.85 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-03",
+    "status": "pass",
+    "title": "Glass slider SL-win-03",
+    "value": "3.99 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-04",
+    "status": "pass",
+    "title": "Glass slider SL-win-04",
+    "value": "4.46 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-05",
+    "status": "pass",
+    "title": "Window SL-win-05",
+    "value": "2.22 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-06",
+    "status": "pass",
+    "title": "Window SL-win-06",
+    "value": "3.78 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-07",
+    "status": "pass",
+    "title": "Window SL-win-07",
+    "value": "3.84 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-01",
+    "status": "pass",
+    "title": "Window UF-win-01",
+    "value": "2.42 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-02",
+    "status": "pass",
+    "title": "Window UF-win-02",
+    "value": "1.92 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-03",
+    "status": "pass",
+    "title": "High window UF-win-03",
+    "value": "5.82 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-04",
+    "status": "pass",
+    "title": "Window UF-win-04",
+    "value": "4.24 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-05",
+    "status": "pass",
+    "title": "Window UF-win-05",
+    "value": "3.86 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-06",
+    "status": "pass",
+    "title": "Window UF-win-06",
+    "value": "3.98 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-07",
+    "status": "pass",
+    "title": "Window UF-win-07",
+    "value": "4.04 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-08",
+    "status": "pass",
+    "title": "Window UF-win-08",
+    "value": "4.46 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-09",
+    "status": "pass",
+    "title": "Window UF-win-09",
+    "value": "2.22 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "setback:front",
+    "status": "pass",
+    "title": "Front setback",
+    "value": "4.00 m (min 4.00 m)",
+    "rule": "Building footprint at least 4.00 m from the front boundary",
+    "source": "Setbacks given by the owner (Piracicaba LC 474/2025)"
+   },
+   {
+    "id": "setback:rear",
+    "status": "pass",
+    "title": "Rear setback",
+    "value": "6.00 m (min 6.00 m)",
+    "rule": "Building footprint at least 6.00 m from the rear boundary",
+    "source": "Setbacks given by the owner (Piracicaba LC 474/2025)"
+   },
+   {
+    "id": "setback:south",
+    "status": "pass",
+    "title": "South side setback",
+    "value": "1.92 m (min 1.20 m)",
+    "rule": "Building footprint at least 1.20 m from the south side boundary",
+    "source": "Setbacks given by the owner (Piracicaba LC 474/2025)"
+   },
+   {
+    "id": "setback:north",
+    "status": "pass",
+    "title": "North side setback",
+    "value": "3.64 m (min 1.20 m)",
+    "rule": "Building footprint at least 1.20 m from the north side boundary",
+    "source": "Setbacks given by the owner (Piracicaba LC 474/2025)"
+   },
+   {
+    "id": "support:all",
+    "status": "pass",
+    "title": "Nothing floats",
+    "value": "all 130 elements rest on something",
+    "rule": "Every element rests on a supported element, down to footings in the ground",
+    "source": "Project rule (spec 02); NBR 8800 / NBR 6122 for the real design"
+   },
+   {
+    "id": "eaves:roof-slab-01",
+    "status": "pass",
+    "title": "Flat roof eaves",
+    "value": "0.40 m (limit 0.70 m)",
+    "rule": "Eaves up to 0.70 m are not counted in site coverage",
+    "source": "Piracicaba LC 474/2025"
+   },
+   {
+    "id": "eaves:UF-slab-02",
+    "status": "pass",
+    "title": "Garage roof eaves",
+    "value": "0.00 m (limit 0.70 m)",
+    "rule": "Eaves up to 0.70 m are not counted in site coverage",
+    "source": "Piracicaba LC 474/2025"
+   },
+   {
+    "id": "eng:deck:SL-slab-01",
+    "status": "warn",
+    "title": "Steel deck spans · Street level +0.60 floor",
+    "value": "longest 3.20 m: deck span 3.20 m > 2.70 m: needs props during the pour (or a thicker deck)",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:deck:UF-slab-01",
+    "status": "warn",
+    "title": "Steel deck spans · Upper level +3.70 floor",
+    "value": "longest 3.20 m: deck span 3.20 m > 2.70 m: needs props during the pour (or a thicker deck)",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:deck:roof-slab-01",
+    "status": "warn",
+    "title": "Steel deck spans · Flat roof",
+    "value": "longest 3.20 m: deck span 3.20 m > 2.70 m: needs props during the pour (or a thicker deck)",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:deck:SL-slab-03",
+    "status": "warn",
+    "title": "Steel deck spans · Roof of the lower level",
+    "value": "longest 1.90 m: deck span 1.90 m ≤ 2.70 m without props",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:deck:UF-slab-02",
+    "status": "warn",
+    "title": "Steel deck spans · Garage roof",
+    "value": "longest 3.20 m: deck span 3.20 m > 2.70 m: needs props during the pour (or a thicker deck)",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:beams",
+    "status": "fail",
+    "title": "Beams (pre-sizing)",
+    "value": "2 over capacity, 4 between 0.7 and 1.0, 20 fine · highest beam-21 at 1.17 · Engineering → Structure proposes sections",
+    "rule": "Bending with fy 345 MPa and deflection ≤ span/350 under 1.4 × loads",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:columns",
+    "status": "pass",
+    "title": "Columns and piers (pre-sizing)",
+    "value": "0 over capacity, 0 between 0.7 and 1.0, 26 fine · highest col-11 at 0.29",
+    "rule": "Axial capacity χ·A·fy/1.10, K = 1, buckling between the floors",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:footings",
+    "status": "fail",
+    "title": "Footings (pre-sizing)",
+    "value": "7 over capacity, 3 between 0.7 and 1.0, 16 fine · highest footing-11 at 2.14 · Engineering → Structure proposes sections",
+    "rule": "Soil pressure under each pad ≤ 150 kPa",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:retaining",
+    "status": "warn",
+    "title": "Retaining walls (pre-sizing)",
+    "value": "0 over capacity, 3 between 0.7 and 1.0, 0 fine · highest LL-wall-01 at 0.80",
+    "rule": "Stem ≈ H/10 (min 0.20 m), base ≈ 0.6 H, with drainage",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:steel-rate",
+    "status": "warn",
+    "title": "Steel per m² of floor",
+    "value": "15267 kg for 238 m² = 64.1 kg/m² (heavy: try the proposed sections, or shorter spans)",
+    "rule": "Typical steel frames for houses use 25–45 kg/m²",
+    "source": "Rule of thumb (cross-check)"
+   },
+   {
+    "id": "eng:bracing",
+    "status": "pass",
+    "title": "Lateral bracing (wind)",
+    "value": "wind ≈ 0.76 kN/m² (V0 40 m/s): 97 kN along x, 56 kN along y · 12 braced bays proposed (Engineering → Structure)",
+    "rule": "Each grid direction needs at least one braced bay or moment frame per storey",
+    "source": "NBR 6123 (V0 TO CONFIRM); NBR 8800"
+   },
+   {
+    "id": "eng:soil",
+    "status": "confirm",
+    "title": "Soil bearing pressure",
+    "value": "150 kPa assumed · TO CONFIRM by SPT borings",
+    "rule": "Footings are sized on the allowable soil pressure",
+    "source": "NBR 6122; NBR 6484 (SPT)"
+   },
+   {
+    "id": "eng:thermal:wall:ext-ceramic-14",
+    "status": "pass",
+    "title": "Exterior walls · Ceramic block 14 cm, rendered",
+    "value": "U 2.30 ≤ 2.7 W/m²K · CT 211 ≥ 130 kJ/m²K",
+    "rule": "NBR 15575 simplified method, zone 2: U ≤ 2.7, CT ≥ 130 (verify)",
+    "source": "NBR 15575-4:2021 (zone 2 TO CONFIRM against NBR 15220-3:2024); limit to verify"
+   },
+   {
+    "id": "eng:thermal:roof:roof-deck-xps-gravel",
+    "status": "pass",
+    "title": "Roof · Steel deck, waterproofing, XPS 50 mm and gravel (inverted roof)",
+    "value": "U 0.55 ≤ 2.3 W/m²K",
+    "rule": "NBR 15575 simplified method, zone 2, α 0.50: U ≤ 2.3 (verify)",
+    "source": "NBR 15575-5:2021 (zone 2 TO CONFIRM against NBR 15220-3:2024); limit to verify"
+   },
+   {
+    "id": "env:cross:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office cross-ventilation",
+    "value": "openings on W and N",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office openable area",
+    "value": "7.38 m² openable (need 1.71 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:SL-space-04",
+    "status": "pass",
+    "title": "Kitchen cross-ventilation",
+    "value": "openings on S, through the door to Dining (N)",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:SL-space-04",
+    "status": "pass",
+    "title": "Kitchen openable area",
+    "value": "1.69 m² openable (need 1.18 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:SL-space-05",
+    "status": "pass",
+    "title": "Dining cross-ventilation",
+    "value": "openings on N, through the door to Entry (E)",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:SL-space-05",
+    "status": "pass",
+    "title": "Dining openable area",
+    "value": "1.82 m² openable (need 0.70 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:SL-space-06",
+    "status": "pass",
+    "title": "Living cross-ventilation",
+    "value": "openings on N and W",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:SL-space-06",
+    "status": "pass",
+    "title": "Living openable area",
+    "value": "11.62 m² openable (need 1.96 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 cross-ventilation",
+    "value": "openings on E and S",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 openable area",
+    "value": "3.25 m² openable (need 0.79 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 cross-ventilation",
+    "value": "openings on E and N",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 openable area",
+    "value": "3.25 m² openable (need 0.70 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:UF-space-09",
+    "status": "pass",
+    "title": "Master bedroom cross-ventilation",
+    "value": "openings on N and W",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:UF-space-09",
+    "status": "pass",
+    "title": "Master bedroom openable area",
+    "value": "3.38 m² openable (need 0.64 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:sun:LL-door-05",
+    "status": "warn",
+    "title": "Sun on glass LL-door-05",
+    "value": "6.5 h on 21 Dec, 5.0 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:LL-win-01",
+    "status": "warn",
+    "title": "Sun on glass LL-win-01",
+    "value": "6.5 h on 21 Dec, 5.0 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:LL-win-02",
+    "status": "warn",
+    "title": "Sun on glass LL-win-02",
+    "value": "6.5 h on 21 Dec, 5.0 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:LL-win-03",
+    "status": "pass",
+    "title": "Sun on glass LL-win-03",
+    "value": "0.0 h on 21 Dec, 10.1 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-01",
+    "status": "pass",
+    "title": "Sun on glass SL-win-01",
+    "value": "9.5 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-02",
+    "status": "pass",
+    "title": "Sun on glass SL-win-02",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-03",
+    "status": "pass",
+    "title": "Sun on glass SL-win-03",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-04",
+    "status": "warn",
+    "title": "Sun on glass SL-win-04",
+    "value": "6.5 h on 21 Dec, 5.0 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-05",
+    "status": "warn",
+    "title": "Sun on glass SL-win-05",
+    "value": "6.5 h on 21 Dec, 5.0 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-06",
+    "status": "pass",
+    "title": "Sun on glass SL-win-06",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-07",
+    "status": "pass",
+    "title": "Sun on glass SL-win-07",
+    "value": "6.5 h on 21 Dec, 5.5 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-01",
+    "status": "pass",
+    "title": "Sun on glass UF-win-01",
+    "value": "5.5 h on 21 Dec, 4.8 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-02",
+    "status": "pass",
+    "title": "Sun on glass UF-win-02",
+    "value": "6.3 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-03",
+    "status": "pass",
+    "title": "Sun on glass UF-win-03",
+    "value": "5.3 h on 21 Dec, 4.8 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-04",
+    "status": "pass",
+    "title": "Sun on glass UF-win-04",
+    "value": "5.5 h on 21 Dec, 4.8 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-05",
+    "status": "pass",
+    "title": "Sun on glass UF-win-05",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-06",
+    "status": "pass",
+    "title": "Sun on glass UF-win-06",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-07",
+    "status": "pass",
+    "title": "Sun on glass UF-win-07",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-08",
+    "status": "warn",
+    "title": "Sun on glass UF-win-08",
+    "value": "5.8 h on 21 Dec, 4.6 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-09",
+    "status": "warn",
+    "title": "Sun on glass UF-win-09",
+    "value": "5.8 h on 21 Dec, 4.5 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:daylight:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office daylight",
+    "value": "average daylight factor ≈ 8.8 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:SL-space-04",
+    "status": "pass",
+    "title": "Kitchen daylight",
+    "value": "average daylight factor ≈ 2.5 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:SL-space-05",
+    "status": "pass",
+    "title": "Dining daylight",
+    "value": "average daylight factor ≈ 4.0 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:SL-space-06",
+    "status": "pass",
+    "title": "Living daylight",
+    "value": "average daylight factor ≈ 11.1 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 daylight",
+    "value": "average daylight factor ≈ 5.8 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 daylight",
+    "value": "average daylight factor ≈ 6.3 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:UF-space-09",
+    "status": "pass",
+    "title": "Master bedroom daylight",
+    "value": "average daylight factor ≈ 7.0 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   }
+  ],
+  "scene": "ca8135b3c297b35a",
+  "surfaces": "f4dd55d812cbe524",
+  "design": "20a14e49d69c5cb3",
+  "mepContext": "9486394a13ae7fa7",
+  "plumbing": "78814c041025ec10",
+  "electrical": "97d170e1550eee4a",
+  "mep": "b9d1ef07d551c6fd",
+  "frame": "f70c28782b933a88",
+  "thermal": "f9d625882b251e39",
+  "env": "8251bf0416cff16d",
+  "energy": "b065e0ddb84fdbf4",
+  "cost": "6fa986f47b536035"
+ },
+ "casa-v2": {
+  "site": {
+   "lot": [
+    [
+     -1.92,
+     -4
+    ],
+    [
+     12.08,
+     -4
+    ],
+    [
+     13.08,
+     21
+    ],
+    [
+     -1.92,
+     21
+    ]
+   ],
+   "yStreet": -4,
+   "yRear": 21,
+   "xSouth": -1.92,
+   "xNorth": [
+    12.08,
+    12.212,
+    12.58,
+    13.04
+   ],
+   "natural": [
+    0,
+    -0.264,
+    -1,
+    -1.92
+   ],
+   "garden": -2.55,
+   "rampEndY": 16.4,
+   "passageEndY": 10.5,
+   "cutY": 8.5,
+   "house": {
+    "x0": 0,
+    "x1": 8.6,
+    "y0": 0,
+    "y1": 15
+   }
+  },
+  "zones": "35a8e367c495dc94",
+  "ground": "28d96ded549b8000",
+  "sun": [
+   {
+    "altitude": 24.298629,
+    "azimuth": 48.533761,
+    "dir": [
+     0.603518,
+     -0.682964,
+     0.411493
+    ]
+   },
+   {
+    "altitude": 43.743019,
+    "azimuth": 3.954457,
+    "dir": [
+     0.720728,
+     -0.049823,
+     0.691425
+    ]
+   },
+   {
+    "altitude": 50.766963,
+    "azimuth": 260.270889,
+    "dir": [
+     -0.106882,
+     0.62338,
+     0.77458
+    ]
+   },
+   {
+    "altitude": 16.485178,
+    "azimuth": 82.50912,
+    "dir": [
+     0.125009,
+     -0.95071,
+     0.283767
+    ]
+   }
+  ],
+  "view": "f920e37f54ccbac9",
+  "checks": [
+   {
+    "id": "area:LL-space-05",
+    "status": "pass",
+    "title": "WC floor area",
+    "value": "2.72 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office floor area",
+    "value": "32.38 m² (min 8 m²)",
+    "rule": "Living rooms and work rooms: at least 8 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office window ratio",
+    "value": "glass 14.32 m² = 1/2 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:SL-space-03",
+    "status": "pass",
+    "title": "WC floor area",
+    "value": "3.60 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:SL-space-06",
+    "status": "pass",
+    "title": "Kitchen floor area",
+    "value": "14.04 m² (min 4 m²)",
+    "rule": "Kitchen: at least 4 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:SL-space-06",
+    "status": "pass",
+    "title": "Kitchen window ratio",
+    "value": "glass 2.60 m² = 1/5 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:SL-space-07",
+    "status": "pass",
+    "title": "Dining window ratio",
+    "value": "glass 2.08 m² = 1/5 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:SL-space-08",
+    "status": "pass",
+    "title": "Living floor area",
+    "value": "16.20 m² (min 8 m²)",
+    "rule": "Living rooms and work rooms: at least 8 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:SL-space-08",
+    "status": "pass",
+    "title": "Living window ratio",
+    "value": "glass 16.28 m² = 1/1 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 floor area",
+    "value": "10.24 m² (min 8 m²)",
+    "rule": "Bedrooms: 10 m² for the first (master), 8 m² for the others",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 window ratio",
+    "value": "glass 5.98 m² = 1/2 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-02",
+    "status": "pass",
+    "title": "Bath 2 floor area",
+    "value": "2.88 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-03",
+    "status": "pass",
+    "title": "Bath 3 floor area",
+    "value": "2.88 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 floor area",
+    "value": "15.84 m² (min 8 m²)",
+    "rule": "Bedrooms: 10 m² for the first (master), 8 m² for the others",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 window ratio",
+    "value": "glass 7.02 m² = 1/2 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-05",
+    "status": "pass",
+    "title": "Master bedroom floor area",
+    "value": "18.36 m² (min 10 m²)",
+    "rule": "Bedrooms: 10 m² for the first (master), 8 m² for the others",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:UF-space-05",
+    "status": "pass",
+    "title": "Master bedroom window ratio",
+    "value": "glass 8.58 m² = 1/2 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-06",
+    "status": "pass",
+    "title": "Master bath floor area",
+    "value": "3.96 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "corridor:LL-space-04",
+    "status": "pass",
+    "title": "Hall width",
+    "value": "narrowest part 2.50 m",
+    "rule": "Corridors and halls at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "corridor:SL-space-02",
+    "status": "pass",
+    "title": "Entry · hall width",
+    "value": "narrowest part 1.20 m",
+    "rule": "Corridors and halls at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "corridor:UF-space-08",
+    "status": "pass",
+    "title": "Hall width",
+    "value": "narrowest part 1.10 m",
+    "rule": "Corridors and halls at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "blondel:stair-01",
+    "status": "pass",
+    "title": "Up flight SL → UF: comfort (Blondel)",
+    "value": "2 × 0.182 + 0.27 = 0.634 m",
+    "rule": "0.63 ≤ 2h + b ≤ 0.65 (h riser, b tread)",
+    "source": "Blondel rule, project rulebook"
+   },
+   {
+    "id": "headroom:stair-01",
+    "status": "pass",
+    "title": "Up flight SL → UF: headroom",
+    "value": "lowest 2.71 m",
+    "rule": "Headroom above every tread at least 2.10 m",
+    "source": "Project rulebook (stair comfort)"
+   },
+   {
+    "id": "stairwidth:stair-01",
+    "status": "pass",
+    "title": "Up flight SL → UF: width",
+    "value": "1.50 m",
+    "rule": "Stairs at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "blondel:stair-02",
+    "status": "pass",
+    "title": "Down flight LL → SL: comfort (Blondel)",
+    "value": "2 × 0.182 + 0.27 = 0.634 m",
+    "rule": "0.63 ≤ 2h + b ≤ 0.65 (h riser, b tread)",
+    "source": "Blondel rule, project rulebook"
+   },
+   {
+    "id": "headroom:stair-02",
+    "status": "pass",
+    "title": "Down flight LL → SL: headroom",
+    "value": "lowest 2.71 m",
+    "rule": "Headroom above every tread at least 2.10 m",
+    "source": "Project rulebook (stair comfort)"
+   },
+   {
+    "id": "stairwidth:stair-02",
+    "status": "pass",
+    "title": "Down flight LL → SL: width",
+    "value": "1.50 m",
+    "rule": "Stairs at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "1301:LL-door-05",
+    "status": "pass",
+    "title": "Glass slider LL-door-05",
+    "value": "2.32 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:LL-win-01",
+    "status": "pass",
+    "title": "Window LL-win-01",
+    "value": "1.92 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:LL-win-02",
+    "status": "pass",
+    "title": "High window LL-win-02",
+    "value": "5.42 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:LL-win-03",
+    "status": "pass",
+    "title": "Glass slider LL-win-03",
+    "value": "4.54 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:LL-win-04",
+    "status": "pass",
+    "title": "Window LL-win-04",
+    "value": "4.00 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-01",
+    "status": "pass",
+    "title": "Window SL-win-01",
+    "value": "4.02 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-02",
+    "status": "pass",
+    "title": "High window SL-win-02",
+    "value": "1.92 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-03",
+    "status": "pass",
+    "title": "High window SL-win-03",
+    "value": "1.92 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-04",
+    "status": "pass",
+    "title": "Window SL-win-04",
+    "value": "3.85 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-05",
+    "status": "pass",
+    "title": "Window SL-win-05",
+    "value": "3.95 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-06",
+    "status": "pass",
+    "title": "Glass slider SL-win-06",
+    "value": "4.03 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-07",
+    "status": "pass",
+    "title": "Glass slider SL-win-07",
+    "value": "4.34 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-08",
+    "status": "pass",
+    "title": "Window SL-win-08",
+    "value": "1.92 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-09",
+    "status": "pass",
+    "title": "Window SL-win-09",
+    "value": "2.22 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-01",
+    "status": "pass",
+    "title": "Window UF-win-01",
+    "value": "2.32 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-02",
+    "status": "pass",
+    "title": "Window UF-win-02",
+    "value": "1.92 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-03",
+    "status": "pass",
+    "title": "High window UF-win-03",
+    "value": "5.42 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-04",
+    "status": "pass",
+    "title": "Window UF-win-04",
+    "value": "4.24 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-05",
+    "status": "pass",
+    "title": "Window UF-win-05",
+    "value": "3.86 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-06",
+    "status": "pass",
+    "title": "Window UF-win-06",
+    "value": "4.00 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-07",
+    "status": "pass",
+    "title": "Window UF-win-07",
+    "value": "4.58 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-08",
+    "status": "pass",
+    "title": "Window UF-win-08",
+    "value": "2.22 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-09",
+    "status": "pass",
+    "title": "Window UF-win-09",
+    "value": "1.92 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "setback:front",
+    "status": "pass",
+    "title": "Front setback",
+    "value": "4.00 m (min 4.00 m)",
+    "rule": "Building footprint at least 4.00 m from the front boundary",
+    "source": "Setbacks given by the owner (Piracicaba LC 474/2025)"
+   },
+   {
+    "id": "setback:rear",
+    "status": "pass",
+    "title": "Rear setback",
+    "value": "6.00 m (min 6.00 m)",
+    "rule": "Building footprint at least 6.00 m from the rear boundary",
+    "source": "Setbacks given by the owner (Piracicaba LC 474/2025)"
+   },
+   {
+    "id": "setback:south",
+    "status": "pass",
+    "title": "South side setback",
+    "value": "1.92 m (min 1.20 m)",
+    "rule": "Building footprint at least 1.20 m from the south side boundary",
+    "source": "Setbacks given by the owner (Piracicaba LC 474/2025)"
+   },
+   {
+    "id": "setback:north",
+    "status": "pass",
+    "title": "North side setback",
+    "value": "3.64 m (min 1.20 m)",
+    "rule": "Building footprint at least 1.20 m from the north side boundary",
+    "source": "Setbacks given by the owner (Piracicaba LC 474/2025)"
+   },
+   {
+    "id": "support:all",
+    "status": "pass",
+    "title": "Nothing floats",
+    "value": "all 123 elements rest on something",
+    "rule": "Every element rests on a supported element, down to footings in the ground",
+    "source": "Project rule (spec 02); NBR 8800 / NBR 6122 for the real design"
+   },
+   {
+    "id": "eaves:roof-slab-01",
+    "status": "pass",
+    "title": "Flat roof eaves",
+    "value": "0.40 m (limit 0.70 m)",
+    "rule": "Eaves up to 0.70 m are not counted in site coverage",
+    "source": "Piracicaba LC 474/2025"
+   },
+   {
+    "id": "eaves:UF-slab-02",
+    "status": "pass",
+    "title": "Garage roof eaves",
+    "value": "0.00 m (limit 0.70 m)",
+    "rule": "Eaves up to 0.70 m are not counted in site coverage",
+    "source": "Piracicaba LC 474/2025"
+   },
+   {
+    "id": "eng:deck:SL-slab-01",
+    "status": "warn",
+    "title": "Steel deck spans · Street level +0.60 floor",
+    "value": "longest 4.10 m: deck span 4.10 m > 2.70 m: needs props during the pour (or a thicker deck)",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:deck:UF-slab-01",
+    "status": "warn",
+    "title": "Steel deck spans · Upper level +3.70 floor",
+    "value": "longest 4.10 m: deck span 4.10 m > 2.70 m: needs props during the pour (or a thicker deck)",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:deck:roof-slab-01",
+    "status": "warn",
+    "title": "Steel deck spans · Flat roof",
+    "value": "longest 4.10 m: deck span 4.10 m > 2.70 m: needs props during the pour (or a thicker deck)",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:deck:SL-slab-03",
+    "status": "warn",
+    "title": "Steel deck spans · Veranda slab (roof of the lower level)",
+    "value": "longest 2.40 m: deck span 2.40 m ≤ 2.70 m without props",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:deck:UF-slab-02",
+    "status": "fail",
+    "title": "Steel deck spans · Garage roof",
+    "value": "longest 5.00 m: deck span 5.00 m > 4.20 m even with props: add a beam or use a deeper deck",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:beams",
+    "status": "fail",
+    "title": "Beams (pre-sizing)",
+    "value": "11 over capacity, 1 between 0.7 and 1.0, 15 fine · highest beam-11 at 2.89 · Engineering → Structure proposes sections",
+    "rule": "Bending with fy 345 MPa and deflection ≤ span/350 under 1.4 × loads",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:columns",
+    "status": "pass",
+    "title": "Columns and piers (pre-sizing)",
+    "value": "0 over capacity, 0 between 0.7 and 1.0, 20 fine · highest col-08 at 0.34",
+    "rule": "Axial capacity χ·A·fy/1.10, K = 1, buckling between the floors",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:footings",
+    "status": "fail",
+    "title": "Footings (pre-sizing)",
+    "value": "6 over capacity, 5 between 0.7 and 1.0, 9 fine · highest footing-08 at 2.51 · Engineering → Structure proposes sections",
+    "rule": "Soil pressure under each pad ≤ 150 kPa",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:retaining",
+    "status": "warn",
+    "title": "Retaining walls (pre-sizing)",
+    "value": "0 over capacity, 3 between 0.7 and 1.0, 0 fine · highest LL-wall-01 at 0.80",
+    "rule": "Stem ≈ H/10 (min 0.20 m), base ≈ 0.6 H, with drainage",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:steel-rate",
+    "status": "warn",
+    "title": "Steel per m² of floor",
+    "value": "13251 kg for 238 m² = 55.6 kg/m² (heavy: try the proposed sections, or shorter spans)",
+    "rule": "Typical steel frames for houses use 25–45 kg/m²",
+    "source": "Rule of thumb (cross-check)"
+   },
+   {
+    "id": "eng:bracing",
+    "status": "pass",
+    "title": "Lateral bracing (wind)",
+    "value": "wind ≈ 0.76 kN/m² (V0 40 m/s): 97 kN along x, 56 kN along y · 11 braced bays proposed (Engineering → Structure)",
+    "rule": "Each grid direction needs at least one braced bay or moment frame per storey",
+    "source": "NBR 6123 (V0 TO CONFIRM); NBR 8800"
+   },
+   {
+    "id": "eng:soil",
+    "status": "confirm",
+    "title": "Soil bearing pressure",
+    "value": "150 kPa assumed · TO CONFIRM by SPT borings",
+    "rule": "Footings are sized on the allowable soil pressure",
+    "source": "NBR 6122; NBR 6484 (SPT)"
+   },
+   {
+    "id": "eng:thermal:wall:ext-ceramic-14",
+    "status": "pass",
+    "title": "Exterior walls · Ceramic block 14 cm, rendered",
+    "value": "U 2.30 ≤ 2.7 W/m²K · CT 211 ≥ 130 kJ/m²K",
+    "rule": "NBR 15575 simplified method, zone 2: U ≤ 2.7, CT ≥ 130 (verify)",
+    "source": "NBR 15575-4:2021 (zone 2 TO CONFIRM against NBR 15220-3:2024); limit to verify"
+   },
+   {
+    "id": "eng:thermal:roof:roof-deck-xps-gravel",
+    "status": "pass",
+    "title": "Roof · Steel deck, waterproofing, XPS 50 mm and gravel (inverted roof)",
+    "value": "U 0.55 ≤ 2.3 W/m²K",
+    "rule": "NBR 15575 simplified method, zone 2, α 0.50: U ≤ 2.3 (verify)",
+    "source": "NBR 15575-5:2021 (zone 2 TO CONFIRM against NBR 15220-3:2024); limit to verify"
+   },
+   {
+    "id": "env:cross:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office cross-ventilation",
+    "value": "openings on W and N",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office openable area",
+    "value": "7.16 m² openable (need 2.02 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:SL-space-06",
+    "status": "pass",
+    "title": "Kitchen cross-ventilation",
+    "value": "openings on N, through the door to Entry · hall (E)",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:SL-space-06",
+    "status": "pass",
+    "title": "Kitchen openable area",
+    "value": "1.30 m² openable (need 0.88 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:SL-space-07",
+    "status": "pass",
+    "title": "Dining cross-ventilation",
+    "value": "openings on N, through the door to Entry · hall (E)",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:SL-space-07",
+    "status": "pass",
+    "title": "Dining openable area",
+    "value": "1.04 m² openable (need 0.67 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:SL-space-08",
+    "status": "pass",
+    "title": "Living cross-ventilation",
+    "value": "openings on N and W",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:SL-space-08",
+    "status": "pass",
+    "title": "Living openable area",
+    "value": "8.14 m² openable (need 1.01 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 cross-ventilation",
+    "value": "openings on E and S",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 openable area",
+    "value": "2.99 m² openable (need 0.64 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 cross-ventilation",
+    "value": "openings on E and N",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 openable area",
+    "value": "3.51 m² openable (need 0.99 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:UF-space-05",
+    "status": "pass",
+    "title": "Master bedroom cross-ventilation",
+    "value": "openings on N and W",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:UF-space-05",
+    "status": "pass",
+    "title": "Master bedroom openable area",
+    "value": "4.29 m² openable (need 1.15 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:sun:LL-door-05",
+    "status": "warn",
+    "title": "Sun on glass LL-door-05",
+    "value": "6.5 h on 21 Dec, 5.0 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:LL-win-01",
+    "status": "pass",
+    "title": "Sun on glass LL-win-01",
+    "value": "10.1 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:LL-win-02",
+    "status": "warn",
+    "title": "Sun on glass LL-win-02",
+    "value": "6.5 h on 21 Dec, 5.0 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:LL-win-03",
+    "status": "warn",
+    "title": "Sun on glass LL-win-03",
+    "value": "6.5 h on 21 Dec, 5.0 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:LL-win-04",
+    "status": "pass",
+    "title": "Sun on glass LL-win-04",
+    "value": "0.0 h on 21 Dec, 10.1 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-01",
+    "status": "pass",
+    "title": "Sun on glass SL-win-01",
+    "value": "6.5 h on 21 Dec, 5.5 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-02",
+    "status": "pass",
+    "title": "Sun on glass SL-win-02",
+    "value": "10.8 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-03",
+    "status": "pass",
+    "title": "Sun on glass SL-win-03",
+    "value": "9.5 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-04",
+    "status": "pass",
+    "title": "Sun on glass SL-win-04",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-05",
+    "status": "pass",
+    "title": "Sun on glass SL-win-05",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-06",
+    "status": "pass",
+    "title": "Sun on glass SL-win-06",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-07",
+    "status": "warn",
+    "title": "Sun on glass SL-win-07",
+    "value": "4.3 h on 21 Dec, 3.9 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-08",
+    "status": "pass",
+    "title": "Sun on glass SL-win-08",
+    "value": "9.3 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-09",
+    "status": "warn",
+    "title": "Sun on glass SL-win-09",
+    "value": "3.3 h on 21 Dec, 2.8 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-01",
+    "status": "pass",
+    "title": "Sun on glass UF-win-01",
+    "value": "5.5 h on 21 Dec, 4.8 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-02",
+    "status": "pass",
+    "title": "Sun on glass UF-win-02",
+    "value": "6.3 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-03",
+    "status": "pass",
+    "title": "Sun on glass UF-win-03",
+    "value": "5.3 h on 21 Dec, 4.8 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-04",
+    "status": "pass",
+    "title": "Sun on glass UF-win-04",
+    "value": "5.5 h on 21 Dec, 4.8 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-05",
+    "status": "pass",
+    "title": "Sun on glass UF-win-05",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-06",
+    "status": "pass",
+    "title": "Sun on glass UF-win-06",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-07",
+    "status": "warn",
+    "title": "Sun on glass UF-win-07",
+    "value": "5.8 h on 21 Dec, 4.6 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-08",
+    "status": "warn",
+    "title": "Sun on glass UF-win-08",
+    "value": "5.8 h on 21 Dec, 4.5 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-09",
+    "status": "pass",
+    "title": "Sun on glass UF-win-09",
+    "value": "6.3 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:daylight:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office daylight",
+    "value": "average daylight factor ≈ 7.5 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:SL-space-06",
+    "status": "pass",
+    "title": "Kitchen daylight",
+    "value": "average daylight factor ≈ 2.3 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:SL-space-07",
+    "status": "pass",
+    "title": "Dining daylight",
+    "value": "average daylight factor ≈ 2.2 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:SL-space-08",
+    "status": "pass",
+    "title": "Living daylight",
+    "value": "average daylight factor ≈ 9.9 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 daylight",
+    "value": "average daylight factor ≈ 6.2 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 daylight",
+    "value": "average daylight factor ≈ 4.8 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:UF-space-05",
+    "status": "pass",
+    "title": "Master bedroom daylight",
+    "value": "average daylight factor ≈ 5.4 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   }
+  ],
+  "scene": "57408af1552cb867",
+  "surfaces": "c7be4359d748baf0",
+  "design": "fc933517fa7eb85b",
+  "mepContext": "996dccc4da23a03d",
+  "plumbing": "78814c041025ec10",
+  "electrical": "97d170e1550eee4a",
+  "mep": "b9d1ef07d551c6fd",
+  "frame": "bc74874a1a0b4261",
+  "thermal": "1bc15405c826c0da",
+  "env": "c9c11227d70e88f3",
+  "energy": "b065e0ddb84fdbf4",
+  "cost": "1da990ec3a548fb7"
+ },
+ "casa-v3": {
+  "site": {
+   "lot": [
+    [
+     -1.5,
+     -4
+    ],
+    [
+     12.5,
+     -4
+    ],
+    [
+     13.5,
+     21
+    ],
+    [
+     -1.5,
+     21
+    ]
+   ],
+   "yStreet": -4,
+   "yRear": 21,
+   "xSouth": -1.5,
+   "xNorth": [
+    12.5,
+    12.632,
+    13,
+    13.46
+   ],
+   "natural": [
+    0,
+    -0.264,
+    -1,
+    -1.92
+   ],
+   "garden": -2.55,
+   "rampEndY": 16.4,
+   "passageEndY": 10.5,
+   "cutY": 8.5,
+   "house": {
+    "x0": 0,
+    "x1": 8.6,
+    "y0": 1,
+    "y1": 15
+   }
+  },
+  "zones": "24a2e6357e5a7e6b",
+  "ground": "24d2a49b02a6dea3",
+  "sun": [
+   {
+    "altitude": 24.298629,
+    "azimuth": 48.533761,
+    "dir": [
+     0.603518,
+     -0.682964,
+     0.411493
+    ]
+   },
+   {
+    "altitude": 43.743019,
+    "azimuth": 3.954457,
+    "dir": [
+     0.720728,
+     -0.049823,
+     0.691425
+    ]
+   },
+   {
+    "altitude": 50.766963,
+    "azimuth": 260.270889,
+    "dir": [
+     -0.106882,
+     0.62338,
+     0.77458
+    ]
+   },
+   {
+    "altitude": 16.485178,
+    "azimuth": 82.50912,
+    "dir": [
+     0.125009,
+     -0.95071,
+     0.283767
+    ]
+   }
+  ],
+  "view": "2a5507c6d49a542e",
+  "checks": [
+   {
+    "id": "area:LL-space-05",
+    "status": "pass",
+    "title": "WC floor area",
+    "value": "2.72 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office floor area",
+    "value": "32.38 m² (min 8 m²)",
+    "rule": "Living rooms and work rooms: at least 8 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office window ratio",
+    "value": "glass 14.32 m² = 1/2 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:SL-space-02",
+    "status": "pass",
+    "title": "WC floor area",
+    "value": "3.20 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:SL-space-05",
+    "status": "pass",
+    "title": "Kitchen floor area",
+    "value": "14.04 m² (min 4 m²)",
+    "rule": "Kitchen: at least 4 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:SL-space-05",
+    "status": "pass",
+    "title": "Kitchen window ratio",
+    "value": "glass 5.98 m² = 1/2 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:SL-space-06",
+    "status": "pass",
+    "title": "Dining window ratio",
+    "value": "glass 2.08 m² = 1/5 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:SL-space-07",
+    "status": "pass",
+    "title": "Living floor area",
+    "value": "16.20 m² (min 8 m²)",
+    "rule": "Living rooms and work rooms: at least 8 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:SL-space-07",
+    "status": "pass",
+    "title": "Living window ratio",
+    "value": "glass 16.28 m² = 1/1 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 floor area",
+    "value": "10.24 m² (min 8 m²)",
+    "rule": "Bedrooms: 10 m² for the first (master), 8 m² for the others",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 window ratio",
+    "value": "glass 5.98 m² = 1/2 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-02",
+    "status": "pass",
+    "title": "Bath 2 floor area",
+    "value": "2.88 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-03",
+    "status": "pass",
+    "title": "Bath 3 floor area",
+    "value": "2.88 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 floor area",
+    "value": "15.84 m² (min 8 m²)",
+    "rule": "Bedrooms: 10 m² for the first (master), 8 m² for the others",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 window ratio",
+    "value": "glass 7.02 m² = 1/2 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-05",
+    "status": "pass",
+    "title": "Master bedroom floor area",
+    "value": "18.36 m² (min 10 m²)",
+    "rule": "Bedrooms: 10 m² for the first (master), 8 m² for the others",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "light:UF-space-05",
+    "status": "pass",
+    "title": "Master bedroom window ratio",
+    "value": "glass 8.58 m² = 1/2 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "area:UF-space-06",
+    "status": "pass",
+    "title": "Master bath floor area",
+    "value": "3.96 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "corridor:LL-space-04",
+    "status": "pass",
+    "title": "Hall width",
+    "value": "narrowest part 2.50 m",
+    "rule": "Corridors and halls at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "corridor:SL-space-01",
+    "status": "pass",
+    "title": "Entry · hall width",
+    "value": "narrowest part 1.20 m",
+    "rule": "Corridors and halls at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "corridor:UF-space-08",
+    "status": "pass",
+    "title": "Hall width",
+    "value": "narrowest part 1.10 m",
+    "rule": "Corridors and halls at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "blondel:stair-01",
+    "status": "pass",
+    "title": "Up flight SL → UF: comfort (Blondel)",
+    "value": "2 × 0.182 + 0.27 = 0.634 m",
+    "rule": "0.63 ≤ 2h + b ≤ 0.65 (h riser, b tread)",
+    "source": "Blondel rule, project rulebook"
+   },
+   {
+    "id": "headroom:stair-01",
+    "status": "pass",
+    "title": "Up flight SL → UF: headroom",
+    "value": "lowest 2.71 m",
+    "rule": "Headroom above every tread at least 2.10 m",
+    "source": "Project rulebook (stair comfort)"
+   },
+   {
+    "id": "stairwidth:stair-01",
+    "status": "pass",
+    "title": "Up flight SL → UF: width",
+    "value": "1.50 m",
+    "rule": "Stairs at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "blondel:stair-02",
+    "status": "pass",
+    "title": "Down flight LL → SL: comfort (Blondel)",
+    "value": "2 × 0.182 + 0.27 = 0.634 m",
+    "rule": "0.63 ≤ 2h + b ≤ 0.65 (h riser, b tread)",
+    "source": "Blondel rule, project rulebook"
+   },
+   {
+    "id": "headroom:stair-02",
+    "status": "pass",
+    "title": "Down flight LL → SL: headroom",
+    "value": "lowest 2.71 m",
+    "rule": "Headroom above every tread at least 2.10 m",
+    "source": "Project rulebook (stair comfort)"
+   },
+   {
+    "id": "stairwidth:stair-02",
+    "status": "pass",
+    "title": "Down flight LL → SL: width",
+    "value": "1.50 m",
+    "rule": "Stairs at least 0.90 m wide",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "1301:LL-door-05",
+    "status": "pass",
+    "title": "Glass slider LL-door-05",
+    "value": "1.90 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:LL-win-01",
+    "status": "pass",
+    "title": "Window LL-win-01",
+    "value": "1.50 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:LL-win-02",
+    "status": "pass",
+    "title": "High window LL-win-02",
+    "value": "5.00 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:LL-win-03",
+    "status": "pass",
+    "title": "Glass slider LL-win-03",
+    "value": "4.96 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:LL-win-04",
+    "status": "pass",
+    "title": "Window LL-win-04",
+    "value": "4.42 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-01",
+    "status": "pass",
+    "title": "Window SL-win-01",
+    "value": "3.60 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-02",
+    "status": "pass",
+    "title": "High window SL-win-02",
+    "value": "1.50 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-03",
+    "status": "pass",
+    "title": "High window SL-win-03",
+    "value": "1.50 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-04",
+    "status": "pass",
+    "title": "Window SL-win-04",
+    "value": "4.27 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-05",
+    "status": "pass",
+    "title": "Window SL-win-05",
+    "value": "4.37 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-06",
+    "status": "pass",
+    "title": "Glass slider SL-win-06",
+    "value": "4.45 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-07",
+    "status": "pass",
+    "title": "Glass slider SL-win-07",
+    "value": "4.76 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-08",
+    "status": "pass",
+    "title": "Window SL-win-08",
+    "value": "1.50 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-09",
+    "status": "pass",
+    "title": "Window SL-win-09",
+    "value": "1.80 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-10",
+    "status": "pass",
+    "title": "Window SL-win-10",
+    "value": "4.66 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:SL-win-11",
+    "status": "pass",
+    "title": "Window SL-win-11",
+    "value": "4.70 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-01",
+    "status": "pass",
+    "title": "Window UF-win-01",
+    "value": "1.90 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-02",
+    "status": "pass",
+    "title": "Window UF-win-02",
+    "value": "1.50 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-03",
+    "status": "pass",
+    "title": "High window UF-win-03",
+    "value": "5.00 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-04",
+    "status": "pass",
+    "title": "Window UF-win-04",
+    "value": "4.66 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-05",
+    "status": "pass",
+    "title": "Window UF-win-05",
+    "value": "4.28 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-06",
+    "status": "pass",
+    "title": "Window UF-win-06",
+    "value": "4.42 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-07",
+    "status": "pass",
+    "title": "Window UF-win-07",
+    "value": "5.00 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-08",
+    "status": "pass",
+    "title": "Window UF-win-08",
+    "value": "1.80 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:UF-win-09",
+    "status": "pass",
+    "title": "Window UF-win-09",
+    "value": "1.50 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "setback:front",
+    "status": "pass",
+    "title": "Front setback",
+    "value": "5.00 m (min 4.00 m) · house building line; not counting the carport (carport-01), see its own check",
+    "rule": "Building footprint at least 4.00 m from the front boundary",
+    "source": "Setbacks given by the owner (Piracicaba LC 474/2025)"
+   },
+   {
+    "id": "setback:rear",
+    "status": "pass",
+    "title": "Rear setback",
+    "value": "6.00 m (min 6.00 m)",
+    "rule": "Building footprint at least 6.00 m from the rear boundary",
+    "source": "Setbacks given by the owner (Piracicaba LC 474/2025)"
+   },
+   {
+    "id": "setback:south",
+    "status": "pass",
+    "title": "South side setback",
+    "value": "1.50 m (min 1.20 m)",
+    "rule": "Building footprint at least 1.20 m from the south side boundary",
+    "source": "Setbacks given by the owner (Piracicaba LC 474/2025)"
+   },
+   {
+    "id": "setback:north",
+    "status": "pass",
+    "title": "North side setback",
+    "value": "4.10 m (min 1.20 m)",
+    "rule": "Building footprint at least 1.20 m from the north side boundary",
+    "source": "Setbacks given by the owner (Piracicaba LC 474/2025)"
+   },
+   {
+    "id": "parking:carport-01",
+    "status": "pass",
+    "title": "Parking",
+    "value": "2 bays of 2.50 × 5.00 m with room to open the doors",
+    "rule": "2 parking bays of at least 2.50 × 5.00 m, with 0.60 m beside each to open the doors",
+    "source": "Owner requirement (spec 02b)"
+   },
+   {
+    "id": "carport-setback:carport-01",
+    "status": "confirm",
+    "title": "Carport in the front setback",
+    "value": "TO CONFIRM with the city hall (Prefeitura)",
+    "rule": "A covered carport in the 4 m front setback, and how much of it counts in site coverage",
+    "source": "Piracicaba LC 474/2025 (to confirm)"
+   },
+   {
+    "id": "support:all",
+    "status": "pass",
+    "title": "Nothing floats",
+    "value": "all 133 elements rest on something",
+    "rule": "Every element rests on a supported element, down to footings in the ground",
+    "source": "Project rule (spec 02); NBR 8800 / NBR 6122 for the real design"
+   },
+   {
+    "id": "eaves:roof-slab-01",
+    "status": "pass",
+    "title": "Flat roof eaves",
+    "value": "0.40 m (limit 0.70 m)",
+    "rule": "Eaves up to 0.70 m are not counted in site coverage",
+    "source": "Piracicaba LC 474/2025"
+   },
+   {
+    "id": "eaves:UF-slab-02",
+    "status": "pass",
+    "title": "Entry roof eaves",
+    "value": "0.00 m (limit 0.70 m)",
+    "rule": "Eaves up to 0.70 m are not counted in site coverage",
+    "source": "Piracicaba LC 474/2025"
+   },
+   {
+    "id": "slope:sew-UF-fx-stack-01",
+    "status": "pass",
+    "title": "Slope · Upper-level drains to stack stack-01",
+    "value": "lowest 1.1 % on DN 100",
+    "rule": "Gravity sewage at least 2 % for DN ≤ 75 and 1 % for DN ≥ 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "dn:sew-UF-fx-stack-01",
+    "status": "pass",
+    "title": "Pipe size · Upper-level drains to stack stack-01",
+    "value": "largest load 18 fixture units",
+    "rule": "DN by fixture units (UHC); any pipe carrying a toilet at least DN 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "slope:sew-UF-fx-stack-02",
+    "status": "pass",
+    "title": "Slope · Upper-level drains to stack stack-02",
+    "value": "lowest 1.2 % on DN 100",
+    "rule": "Gravity sewage at least 2 % for DN ≤ 75 and 1 % for DN ≥ 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "dn:sew-UF-fx-stack-02",
+    "status": "pass",
+    "title": "Pipe size · Upper-level drains to stack stack-02",
+    "value": "largest load 9 fixture units",
+    "rule": "DN by fixture units (UHC); any pipe carrying a toilet at least DN 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "slope:sew-SL-fx-stack-01",
+    "status": "pass",
+    "title": "Slope · Street-level drains to stack stack-01",
+    "value": "lowest 1.0 % on DN 100",
+    "rule": "Gravity sewage at least 2 % for DN ≤ 75 and 1 % for DN ≥ 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "dn:sew-SL-fx-stack-01",
+    "status": "pass",
+    "title": "Pipe size · Street-level drains to stack stack-01",
+    "value": "largest load 7 fixture units",
+    "rule": "DN by fixture units (UHC); any pipe carrying a toilet at least DN 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "slope:sew-kitchen",
+    "status": "pass",
+    "title": "Slope · Kitchen line (through the grease trap)",
+    "value": "lowest 2.0 % on DN 40",
+    "rule": "Gravity sewage at least 2 % for DN ≤ 75 and 1 % for DN ≥ 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "dn:sew-kitchen",
+    "status": "pass",
+    "title": "Pipe size · Kitchen line (through the grease trap)",
+    "value": "largest load 5 fixture units",
+    "rule": "DN by fixture units (UHC); any pipe carrying a toilet at least DN 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "slope:sew-LL",
+    "status": "pass",
+    "title": "Slope · Lower-level drains to the lift station",
+    "value": "lowest 2.1 % on DN 50",
+    "rule": "Gravity sewage at least 2 % for DN ≤ 75 and 1 % for DN ≥ 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "dn:sew-LL",
+    "status": "pass",
+    "title": "Pipe size · Lower-level drains to the lift station",
+    "value": "largest load 10 fixture units",
+    "rule": "DN by fixture units (UHC); any pipe carrying a toilet at least DN 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "slope:sew-collector",
+    "status": "pass",
+    "title": "Slope · Sewage collector to the street",
+    "value": "lowest 1.0 % on DN 100",
+    "rule": "Gravity sewage at least 2 % for DN ≤ 75 and 1 % for DN ≥ 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "dn:sew-collector",
+    "status": "pass",
+    "title": "Pipe size · Sewage collector to the street",
+    "value": "largest load 55 fixture units",
+    "rule": "DN by fixture units (UHC); any pipe carrying a toilet at least DN 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "dn:stack-fx-stack-01",
+    "status": "pass",
+    "title": "Pipe size · Soil stack fx-stack-01",
+    "value": "largest load 25 fixture units",
+    "rule": "DN by fixture units (UHC); any pipe carrying a toilet at least DN 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "dn:stack-fx-stack-02",
+    "status": "pass",
+    "title": "Pipe size · Soil stack fx-stack-02",
+    "value": "largest load 9 fixture units",
+    "rule": "DN by fixture units (UHC); any pipe carrying a toilet at least DN 100",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "vent:fx-stack-01",
+    "status": "pass",
+    "title": "Vent on stack fx-stack-01",
+    "value": "DN 75 to 7.40 (roof 6.80)",
+    "rule": "Each soil stack continues as a vent through the roof",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "vent:fx-stack-02",
+    "status": "pass",
+    "title": "Vent on stack fx-stack-02",
+    "value": "DN 75 to 7.40 (roof 6.80)",
+    "rule": "Each soil stack continues as a vent through the roof",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "sewage:boxes",
+    "status": "pass",
+    "title": "Inspection boxes outside",
+    "value": "5 boxes; every turn and junction outside has one",
+    "rule": "An inspection box at every change of direction or junction outside the house, and before the property exit",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "sewage:grease",
+    "status": "pass",
+    "title": "Grease trap on the kitchen line",
+    "value": "fx-grease-trap-01 at (7.4, 4.3)",
+    "rule": "Kitchen sinks drain through a grease trap",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "sewage:ll-gravity",
+    "status": "fail",
+    "title": "Lower level drains to the street by gravity",
+    "value": "leaves the house at -2.85, 19.0 m at 1 % → arrives -3.04; the sewer (3.00 m deep) needs ≥ -2.70 — no: the lift station is needed",
+    "rule": "A side connection must come in at least 0.30 m above the bottom of the public sewer",
+    "source": "NBR 8160 (sewage); sewer depth from SEMAE (to confirm)"
+   },
+   {
+    "id": "sewage:lift",
+    "status": "pass",
+    "title": "Lower-level lift station",
+    "value": "present: sealed, pump, alarm, check valve, plus backflow valve",
+    "rule": "If the lower level cannot drain by gravity, a sealed lift station pumps it up",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "sewage:street",
+    "status": "pass",
+    "title": "Sewage reaches the street sewer",
+    "value": "arrives at -0.84; needs ≥ -2.70",
+    "rule": "The house connection comes in above the public sewer",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "water:pressure",
+    "status": "pass",
+    "title": "Water pressure at the worst fixture",
+    "value": "Basin on UF: 27 kPa static (2.65 m); upper-floor showers boosted by the pressure pump; highest 162 kPa",
+    "rule": "At least 10 kPa (1 m of water) at every outlet and at most 400 kPa static",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:hot-UF-fx-stack-01",
+    "status": "pass",
+    "title": "Pipe size · Hot water UF-fx-stack-01",
+    "value": "largest ΣP 1.4 on DN 20",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:hot-UF-fx-stack-02",
+    "status": "pass",
+    "title": "Pipe size · Hot water UF-fx-stack-02",
+    "value": "largest ΣP 0.7 on DN 20",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:hot-LL",
+    "status": "pass",
+    "title": "Pipe size · Hot water LL",
+    "value": "largest ΣP 2.1 on DN 20",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:hot-LL-under",
+    "status": "pass",
+    "title": "Pipe size · Hot water LL-under",
+    "value": "largest ΣP 0.7 on DN 20",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:hot-SL",
+    "status": "pass",
+    "title": "Pipe size · Hot water SL",
+    "value": "largest ΣP 4.2 on DN 25",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:hot-riser-fx-stack-01",
+    "status": "pass",
+    "title": "Pipe size · Hot water riser-fx-stack-01",
+    "value": "largest ΣP 0.0 on DN 32",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:hot-riser-LL",
+    "status": "pass",
+    "title": "Pipe size · Hot water riser-LL",
+    "value": "largest ΣP 0.0 on DN 32",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:hot-riser-fx-stack-02",
+    "status": "pass",
+    "title": "Pipe size · Hot water riser-fx-stack-02",
+    "value": "largest ΣP 0.0 on DN 32",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:hot-main",
+    "status": "pass",
+    "title": "Pipe size · Hot water main",
+    "value": "largest ΣP 4.5 on DN 25",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:cold-UF-fx-stack-01",
+    "status": "pass",
+    "title": "Pipe size · Cold water UF-fx-stack-01",
+    "value": "largest ΣP 1.1 on DN 20",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:cold-UF-fx-stack-02",
+    "status": "pass",
+    "title": "Pipe size · Cold water UF-fx-stack-02",
+    "value": "largest ΣP 1.0 on DN 20",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:cold-LL",
+    "status": "pass",
+    "title": "Pipe size · Cold water LL",
+    "value": "largest ΣP 3.8 on DN 20",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:cold-LL-under",
+    "status": "pass",
+    "title": "Pipe size · Cold water LL-under",
+    "value": "largest ΣP 1.7 on DN 20",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:cold-SL",
+    "status": "pass",
+    "title": "Pipe size · Cold water SL",
+    "value": "largest ΣP 12.9 on DN 32",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:cold-riser-LL",
+    "status": "pass",
+    "title": "Pipe size · Cold water riser-LL",
+    "value": "largest ΣP 0.0 on DN 32",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:cold-riser-fx-stack-01",
+    "status": "pass",
+    "title": "Pipe size · Cold water riser-fx-stack-01",
+    "value": "largest ΣP 0.0 on DN 32",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:cold-riser-fx-stack-02",
+    "status": "pass",
+    "title": "Pipe size · Cold water riser-fx-stack-02",
+    "value": "largest ΣP 0.0 on DN 32",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:cold-tanks",
+    "status": "pass",
+    "title": "Pipe size · Cold water tanks",
+    "value": "largest ΣP 12.9 on DN 32",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:cold-riser",
+    "status": "pass",
+    "title": "Pipe size · Cold water riser",
+    "value": "largest ΣP 12.9 on DN 32",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "wdn:cold-feed",
+    "status": "pass",
+    "title": "Pipe size · Cold water feed",
+    "value": "largest ΣP 0.0 on DN 25",
+    "rule": "Q = 0.3 √ΣP, speed at most 3 m/s",
+    "source": "NBR 5626 / 7198 (cold and hot water)"
+   },
+   {
+    "id": "rain:flow",
+    "status": "pass",
+    "title": "Rainwater pipes carry the design storm",
+    "value": "largest: 135 m² → 336 L/min on DN 150",
+    "rule": "Flow Q = I·A/60 at 150 mm/h within the pipe capacity",
+    "source": "NBR 10844 / 15527 (rainwater)"
+   },
+   {
+    "id": "rain:intensity",
+    "status": "confirm",
+    "title": "Design rainfall for Piracicaba",
+    "value": "150 mm/h, 5-minute storm — TO CONFIRM",
+    "rule": "Rainfall intensity from the local rainfall curve (return period 5 years)",
+    "source": "NBR 10844 / 15527 (rainwater)"
+   },
+   {
+    "id": "site:cover",
+    "status": "pass",
+    "title": "Underground pipes are buried",
+    "value": "all underground runs have at least 0.30 m of cover",
+    "rule": "At least 0.30 m of soil or paving over underground pipes",
+    "source": "NBR 8160 / NBR 10844 (good practice)"
+   },
+   {
+    "id": "rain:overflow",
+    "status": "pass",
+    "title": "Cistern overflow to the garden infiltration trench",
+    "value": "leaves the cistern at -1.80, reaches the trench at -3.27",
+    "rule": "The overflow runs by gravity (≥ 0.5 %) to an infiltration point on the lot (Q10, option c)",
+    "source": "NBR 10844 / 15527 (rainwater)"
+   },
+   {
+    "id": "points:LL-space-02",
+    "status": "pass",
+    "title": "Points · Storage",
+    "value": "outlets 1 of 1 needed · lighting 100 of 100 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:LL-space-03",
+    "status": "pass",
+    "title": "Points · Laundry",
+    "value": "outlets 3 of 3 needed · lighting 100 of 100 VA",
+    "rule": "Kitchens and service areas: 1 outlet per 3.5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:LL-space-04",
+    "status": "pass",
+    "title": "Points · Hall",
+    "value": "outlets 1 of 1 needed · lighting 100 of 100 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:LL-space-05",
+    "status": "pass",
+    "title": "Points · WC",
+    "value": "outlets 1 of 1 needed · lighting 100 of 100 VA",
+    "rule": "Bathrooms: 1 outlet near the basin; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:LL-space-06",
+    "status": "pass",
+    "title": "Points · Studio · office",
+    "value": "outlets 5 of 5 needed · lighting 460 of 460 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:SL-space-01",
+    "status": "pass",
+    "title": "Points · Entry · hall",
+    "value": "outlets 1 of 1 needed · lighting 220 of 220 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:SL-space-02",
+    "status": "pass",
+    "title": "Points · WC",
+    "value": "outlets 1 of 1 needed · lighting 100 of 100 VA",
+    "rule": "Bathrooms: 1 outlet near the basin; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:SL-space-03",
+    "status": "pass",
+    "title": "Points · Storage",
+    "value": "outlets 1 of 1 needed · lighting 100 of 100 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:SL-space-04",
+    "status": "pass",
+    "title": "Points · Pantry",
+    "value": "outlets 1 of 1 needed · lighting 100 of 100 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:SL-space-05",
+    "status": "pass",
+    "title": "Points · Kitchen",
+    "value": "outlets 5 of 5 needed · lighting 220 of 220 VA",
+    "rule": "Kitchens and service areas: 1 outlet per 3.5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:SL-space-06",
+    "status": "pass",
+    "title": "Points · Dining",
+    "value": "outlets 3 of 3 needed · lighting 160 of 160 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:SL-space-07",
+    "status": "pass",
+    "title": "Points · Living",
+    "value": "outlets 4 of 4 needed · lighting 280 of 220 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:UF-space-01",
+    "status": "pass",
+    "title": "Points · Bedroom 2",
+    "value": "outlets 3 of 3 needed · lighting 160 of 160 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:UF-space-02",
+    "status": "pass",
+    "title": "Points · Bath 2",
+    "value": "outlets 1 of 1 needed · lighting 100 of 100 VA",
+    "rule": "Bathrooms: 1 outlet near the basin; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:UF-space-03",
+    "status": "pass",
+    "title": "Points · Bath 3",
+    "value": "outlets 1 of 1 needed · lighting 100 of 100 VA",
+    "rule": "Bathrooms: 1 outlet near the basin; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:UF-space-04",
+    "status": "pass",
+    "title": "Points · Bedroom 3",
+    "value": "outlets 4 of 4 needed · lighting 220 of 220 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:UF-space-05",
+    "status": "pass",
+    "title": "Points · Master bedroom",
+    "value": "outlets 4 of 4 needed · lighting 280 of 280 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:UF-space-06",
+    "status": "pass",
+    "title": "Points · Master bath",
+    "value": "outlets 1 of 1 needed · lighting 100 of 100 VA",
+    "rule": "Bathrooms: 1 outlet near the basin; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:UF-space-07",
+    "status": "pass",
+    "title": "Points · Closet",
+    "value": "outlets 1 of 1 needed · lighting 100 of 100 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:UF-space-08",
+    "status": "pass",
+    "title": "Points · Hall",
+    "value": "outlets 1 of 1 needed · lighting 160 of 160 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "elec:breakers",
+    "status": "pass",
+    "title": "Breakers protect their cables",
+    "value": "33 circuits: load ≤ breaker ≤ cable capacity",
+    "rule": "Design current ≤ breaker ≤ cable capacity (Ib ≤ In ≤ Iz)",
+    "source": "NBR 5410 (low-voltage installations) §5.3.4"
+   },
+   {
+    "id": "elec:drop",
+    "status": "pass",
+    "title": "Voltage drop ≤ 4 %",
+    "value": "highest 3.30 % on Lighting SL (17.5 m, 1.5 mm²)",
+    "rule": "Voltage drop from the panel to the farthest point at most 4 %",
+    "source": "NBR 5410 (low-voltage installations) §6.2.7"
+   },
+   {
+    "id": "elec:minsection",
+    "status": "pass",
+    "title": "Minimum cable sections",
+    "value": "lighting ≥ 1.5 mm², power ≥ 2.5 mm²",
+    "rule": "Lighting circuits at least 1.5 mm², power circuits at least 2.5 mm²",
+    "source": "NBR 5410 (low-voltage installations) §6.2.6"
+   },
+   {
+    "id": "elec:rcd",
+    "status": "pass",
+    "title": "RCD 30 mA on outlets, wet areas and outdoors",
+    "value": "24 circuits behind 30 mA RCDs",
+    "rule": "Residual-current protection (30 mA) for outlets, bathrooms and outdoor points",
+    "source": "NBR 5410 (low-voltage installations) §5.1.3.2.2"
+   },
+   {
+    "id": "elec:phases:dev-panel-01",
+    "status": "pass",
+    "title": "Phase balance · Main electrical panel",
+    "value": "A 14.4 kW · B 14.6 kW · C 14.5 kW — imbalance 1.2 %",
+    "rule": "Spread the circuits so the three phases carry similar loads (target ≤ 15 %)",
+    "source": "NBR 5410 (low-voltage installations); CPFL supply rules (to confirm)"
+   },
+   {
+    "id": "elec:phases:dev-sub-panel-01",
+    "status": "pass",
+    "title": "Phase balance · Lower-level sub-panel",
+    "value": "A 3.2 kW · B 2.9 kW · C 3.3 kW — imbalance 10.1 %",
+    "rule": "Spread the circuits so the three phases carry similar loads (target ≤ 15 %)",
+    "source": "NBR 5410 (low-voltage installations); CPFL supply rules (to confirm)"
+   },
+   {
+    "id": "elec:assigned",
+    "status": "pass",
+    "title": "Every point is on a circuit",
+    "value": "91 points on 33 circuits",
+    "rule": "Each outlet, light and appliance belongs to a protected circuit",
+    "source": "NBR 5410 (low-voltage installations)"
+   },
+   {
+    "id": "solar:fit",
+    "status": "pass",
+    "title": "Solar modules fit on the roof",
+    "value": "12 of 12 modules, 6.6 kWp, 20° facing north, 0.30 m from the parapet",
+    "rule": "Rows spaced so they do not shade each other at winter noon; clear of tanks, pump and vents",
+    "source": "Design rule (owner brief)"
+   },
+   {
+    "id": "solar:shade",
+    "status": "pass",
+    "title": "Solar shading",
+    "value": "2.5 % of the sun lost to shade (sun model, solstices and equinoxes)",
+    "rule": "Shade losses at most 5 %",
+    "source": "Sun model (spec 02)"
+   },
+   {
+    "id": "solar:inverter",
+    "status": "pass",
+    "title": "Inverter sizing",
+    "value": "6.6 kWp on a 6 kW hybrid inverter (DC/AC 1.10)",
+    "rule": "DC/AC ratio between 0.9 and 1.3",
+    "source": "Manufacturer practice"
+   },
+   {
+    "id": "solar:energy",
+    "status": "pass",
+    "title": "Solar energy (estimate)",
+    "value": "about 788 kWh per month, 9458 kWh per year — ESTIMATE",
+    "rule": "Monthly yield for Piracicaba (PVGIS-like values, 20° facing north)",
+    "source": "Estimate, to confirm with the installer"
+   },
+   {
+    "id": "cam:coverage",
+    "status": "pass",
+    "title": "Camera coverage of the lot",
+    "value": "98 % of the open lot seen; 6.25 m² blind",
+    "rule": "Cameras see at least 85 % of the open lot (range and angle from the lens)",
+    "source": "Owner requirement (brief)"
+   },
+   {
+    "id": "cam:poe",
+    "status": "pass",
+    "title": "PoE switch budget",
+    "value": "17 of 24 ports, 111 W of 250 W",
+    "rule": "Ports and PoE power within the 24-port switch",
+    "source": "IEEE 802.3af/at"
+   },
+   {
+    "id": "cam:nvr",
+    "status": "pass",
+    "title": "NVR recording",
+    "value": "16 cameras × 4 MP H.265 ≈ 346 GB/day → 23 days on 8 TB",
+    "rule": "At least 15 days of continuous recording",
+    "source": "Owner requirement (brief)"
+   },
+   {
+    "id": "mep:hosted",
+    "status": "pass",
+    "title": "Every fixture and device is hosted",
+    "value": "182 items on a wall face, ceiling, floor, shaft, roof zone or the ground",
+    "rule": "Every item is attached to a building element that can carry it",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:exposed",
+    "status": "pass",
+    "title": "Pipes and conduits inside service spaces",
+    "value": "1238 runs, all in walls, shafts, plenums, screed, the crawlspace, the ground or roof zones",
+    "rule": "Each run is inside a wall, shaft, ceiling plenum, floor screed, crawlspace, the ground or a roof zone",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:wallruns",
+    "status": "pass",
+    "title": "Runs follow the rules of their space",
+    "value": "walls only vertical drops and ≤ 1 m horizontal runs; nothing too close to the crawlspace ground",
+    "rule": "Walls: vertical drops and horizontal runs ≤ 1.0 m (none in outer or retaining walls except conduits); crawlspace runs ≥ 0.15 m above the ground",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:forbidden",
+    "status": "pass",
+    "title": "No run crosses a forbidden zone",
+    "value": "stair voids and flights, doors (+0.10 m), windows, columns, footings and retaining-wall cores are clear",
+    "rule": "Never through stairs, door or window openings, columns, footings or retaining-wall cores; beams only through web holes",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:capacity",
+    "status": "pass",
+    "title": "Service spaces are not over capacity",
+    "value": "walls hold their DN, the screed only ≤ 25 mm conduits, shafts fit their pipes",
+    "rule": "Wall cavity = thickness − 2 × 15 mm (0.12 m → DN ≤ 50, 0.15 m → DN ≤ 75, DN 100 needs a shaft or a 0.20 m wall); screed ≤ 25 mm conduits; shafts sized from their pipes + 50 mm",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:slope",
+    "status": "pass",
+    "title": "Gravity pipes fall all the way",
+    "value": "95 gravity runs, none reversed or too flat",
+    "rule": "Sewage and rain fall continuously at the minimum slope (2 % DN ≤ 75, 1 % DN ≥ 100; rain 0.5 %)",
+    "source": "NBR 8160 / NBR 10844"
+   },
+   {
+    "id": "mep:clash",
+    "status": "pass",
+    "title": "No clashes",
+    "value": "no pipe–pipe, pipe–conduit, MEP–structure or MEP–door/window clashes",
+    "rule": "Runs keep clear of each other and of the structure; conduits ≥ 0.20 m from hot water",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:holes",
+    "status": "pass",
+    "title": "Beam web holes (for the engineer)",
+    "value": "19 holes, all ≤ 0.4 × beam depth and in the middle third of the span",
+    "rule": "A beam may be crossed only through a web hole Ø ≤ 0.4 × depth in the middle third of the span, flagged for the engineer",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:hangers",
+    "status": "pass",
+    "title": "Horizontal runs have supports",
+    "value": "221 hangers on 85 hung runs",
+    "rule": "Hangers on horizontal pipes at spacing by material and DN (PVC ≈ 10 × DN, max 2 m; to verify with the manufacturer); conduits every 1.2 m",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:access",
+    "status": "pass",
+    "title": "Equipment can be serviced",
+    "value": "13 pieces of equipment with a clear service space and a way to reach them",
+    "rule": "Equipment stands on a supported base with a maintenance clearance; roof zones have a hatch or ladder; the cistern stays off the entry path and car bays",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:height",
+    "status": "pass",
+    "title": "Ceiling height under the plenums",
+    "value": "lowest margin: Lowered ceiling · Dining (south two thirds) 2.71 m (needs 2.70)",
+    "rule": "At least 2.70 m in living rooms and bedrooms, 2.50 m in wet rooms, kitchens, halls and service rooms, 2.20 m under a bulkhead ≤ 0.60 m wide",
+    "source": "Spec 04b; SP sanitary code"
+   },
+   {
+    "id": "eng:deck:SL-slab-01",
+    "status": "warn",
+    "title": "Steel deck spans · Street level +0.60 floor",
+    "value": "longest 4.10 m: deck span 4.10 m > 2.70 m: needs props during the pour (or a thicker deck)",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:deck:UF-slab-01",
+    "status": "warn",
+    "title": "Steel deck spans · Upper level +3.70 floor",
+    "value": "longest 4.10 m: deck span 4.10 m > 2.70 m: needs props during the pour (or a thicker deck)",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:deck:roof-slab-01",
+    "status": "warn",
+    "title": "Steel deck spans · Flat roof",
+    "value": "longest 4.10 m: deck span 4.10 m > 2.70 m: needs props during the pour (or a thicker deck)",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:deck:SL-slab-03",
+    "status": "warn",
+    "title": "Steel deck spans · Veranda slab (roof of the lower level)",
+    "value": "longest 2.40 m: deck span 2.40 m ≤ 2.70 m without props",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:deck:UF-slab-02",
+    "status": "warn",
+    "title": "Steel deck spans · Entry roof",
+    "value": "longest 3.20 m: deck span 3.20 m > 2.70 m: needs props during the pour (or a thicker deck)",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:beams",
+    "status": "fail",
+    "title": "Beams (pre-sizing)",
+    "value": "10 over capacity, 1 between 0.7 and 1.0, 16 fine · highest beam-10 at 2.49 · Engineering → Structure proposes sections",
+    "rule": "Bending with fy 345 MPa and deflection ≤ span/350 under 1.4 × loads",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:columns",
+    "status": "pass",
+    "title": "Columns and piers (pre-sizing)",
+    "value": "0 over capacity, 0 between 0.7 and 1.0, 19 fine · highest col-07 at 0.35",
+    "rule": "Axial capacity χ·A·fy/1.10, K = 1, buckling between the floors",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:footings",
+    "status": "fail",
+    "title": "Footings (pre-sizing)",
+    "value": "5 over capacity, 4 between 0.7 and 1.0, 10 fine · highest footing-07 at 2.57 · Engineering → Structure proposes sections",
+    "rule": "Soil pressure under each pad ≤ 150 kPa",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:retaining",
+    "status": "warn",
+    "title": "Retaining walls (pre-sizing)",
+    "value": "0 over capacity, 3 between 0.7 and 1.0, 0 fine · highest LL-wall-01 at 0.80",
+    "rule": "Stem ≈ H/10 (min 0.20 m), base ≈ 0.6 H, with drainage",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:steel-rate",
+    "status": "warn",
+    "title": "Steel per m² of floor",
+    "value": "12909 kg for 208 m² = 62.1 kg/m² (heavy: try the proposed sections, or shorter spans)",
+    "rule": "Typical steel frames for houses use 25–45 kg/m²",
+    "source": "Rule of thumb (cross-check)"
+   },
+   {
+    "id": "eng:roof-equipment:roof-slab-01:0:1",
+    "status": "warn",
+    "title": "Roof equipment load · Flat roof",
+    "value": "Water tank 1000 L, full, Water tank 1000 L, full, Pressure pump: 22.8 kN on 13.1 m² → 8.17 kN/m² in service; deck amber, beams under it up to 0.43",
+    "rule": "Full tanks and the heat-pump heater are carried by the deck and the beams under them (Q12)",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122); NBR 6120:2019"
+   },
+   {
+    "id": "eng:roof-equipment:UF-slab-02:0:0",
+    "status": "warn",
+    "title": "Roof equipment load · Entry roof",
+    "value": "Heat-pump water heater 300 L, full, AC outdoor unit, AC outdoor unit, AC outdoor unit: 5.2 kN on 12.8 m² → 6.84 kN/m² in service; deck amber, beams under it up to 0.33",
+    "rule": "Full tanks and the heat-pump heater are carried by the deck and the beams under them (Q12)",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122); NBR 6120:2019"
+   },
+   {
+    "id": "eng:bracing",
+    "status": "pass",
+    "title": "Lateral bracing (wind)",
+    "value": "wind ≈ 0.76 kN/m² (V0 40 m/s): 91 kN along x, 56 kN along y · 11 braced bays proposed (Engineering → Structure)",
+    "rule": "Each grid direction needs at least one braced bay or moment frame per storey",
+    "source": "NBR 6123 (V0 TO CONFIRM); NBR 8800"
+   },
+   {
+    "id": "eng:soil",
+    "status": "confirm",
+    "title": "Soil bearing pressure",
+    "value": "150 kPa assumed · TO CONFIRM by SPT borings",
+    "rule": "Footings are sized on the allowable soil pressure",
+    "source": "NBR 6122; NBR 6484 (SPT)"
+   },
+   {
+    "id": "eng:thermal:wall:ext-ceramic-14",
+    "status": "pass",
+    "title": "Exterior walls · Ceramic block 14 cm, rendered",
+    "value": "U 2.30 ≤ 2.7 W/m²K · CT 211 ≥ 130 kJ/m²K",
+    "rule": "NBR 15575 simplified method, zone 2: U ≤ 2.7, CT ≥ 130 (verify)",
+    "source": "NBR 15575-4:2021 (zone 2 TO CONFIRM against NBR 15220-3:2024); limit to verify"
+   },
+   {
+    "id": "eng:thermal:roof:roof-deck-xps-gravel",
+    "status": "pass",
+    "title": "Roof · Steel deck, waterproofing, XPS 50 mm and gravel (inverted roof)",
+    "value": "U 0.55 ≤ 2.3 W/m²K",
+    "rule": "NBR 15575 simplified method, zone 2, α 0.50: U ≤ 2.3 (verify)",
+    "source": "NBR 15575-5:2021 (zone 2 TO CONFIRM against NBR 15220-3:2024); limit to verify"
+   },
+   {
+    "id": "env:cross:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office cross-ventilation",
+    "value": "openings on W and N",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office openable area",
+    "value": "7.16 m² openable (need 2.02 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:SL-space-05",
+    "status": "pass",
+    "title": "Kitchen cross-ventilation",
+    "value": "openings on E and N",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:SL-space-05",
+    "status": "pass",
+    "title": "Kitchen openable area",
+    "value": "3.94 m² openable (need 0.88 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:SL-space-06",
+    "status": "pass",
+    "title": "Dining cross-ventilation",
+    "value": "openings on N, through the door to Entry · hall (E)",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:SL-space-06",
+    "status": "pass",
+    "title": "Dining openable area",
+    "value": "1.04 m² openable (need 0.67 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:SL-space-07",
+    "status": "pass",
+    "title": "Living cross-ventilation",
+    "value": "openings on N and W",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:SL-space-07",
+    "status": "pass",
+    "title": "Living openable area",
+    "value": "8.14 m² openable (need 1.01 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 cross-ventilation",
+    "value": "openings on E and S",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 openable area",
+    "value": "2.99 m² openable (need 0.64 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 cross-ventilation",
+    "value": "openings on E and N",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 openable area",
+    "value": "3.51 m² openable (need 0.99 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:UF-space-05",
+    "status": "pass",
+    "title": "Master bedroom cross-ventilation",
+    "value": "openings on N and W",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:UF-space-05",
+    "status": "pass",
+    "title": "Master bedroom openable area",
+    "value": "4.29 m² openable (need 1.15 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:sun:LL-door-05",
+    "status": "warn",
+    "title": "Sun on glass LL-door-05",
+    "value": "6.5 h on 21 Dec, 5.0 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:LL-win-01",
+    "status": "pass",
+    "title": "Sun on glass LL-win-01",
+    "value": "10.1 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:LL-win-02",
+    "status": "warn",
+    "title": "Sun on glass LL-win-02",
+    "value": "6.5 h on 21 Dec, 5.0 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:LL-win-03",
+    "status": "warn",
+    "title": "Sun on glass LL-win-03",
+    "value": "6.5 h on 21 Dec, 5.0 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:LL-win-04",
+    "status": "pass",
+    "title": "Sun on glass LL-win-04",
+    "value": "0.0 h on 21 Dec, 10.0 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-door-05",
+    "status": "pass",
+    "title": "Sun on glass SL-door-05",
+    "value": "3.6 h on 21 Dec, 4.5 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-01",
+    "status": "pass",
+    "title": "Sun on glass SL-win-01",
+    "value": "3.3 h on 21 Dec, 0.3 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-02",
+    "status": "pass",
+    "title": "Sun on glass SL-win-02",
+    "value": "10.3 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-03",
+    "status": "pass",
+    "title": "Sun on glass SL-win-03",
+    "value": "9.5 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-04",
+    "status": "pass",
+    "title": "Sun on glass SL-win-04",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-05",
+    "status": "pass",
+    "title": "Sun on glass SL-win-05",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-06",
+    "status": "pass",
+    "title": "Sun on glass SL-win-06",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-07",
+    "status": "warn",
+    "title": "Sun on glass SL-win-07",
+    "value": "4.3 h on 21 Dec, 3.9 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-08",
+    "status": "pass",
+    "title": "Sun on glass SL-win-08",
+    "value": "9.3 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-09",
+    "status": "warn",
+    "title": "Sun on glass SL-win-09",
+    "value": "3.3 h on 21 Dec, 2.8 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-10",
+    "status": "pass",
+    "title": "Sun on glass SL-win-10",
+    "value": "5.5 h on 21 Dec, 5.3 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:SL-win-11",
+    "status": "pass",
+    "title": "Sun on glass SL-win-11",
+    "value": "0.0 h on 21 Dec, 4.9 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-01",
+    "status": "pass",
+    "title": "Sun on glass UF-win-01",
+    "value": "5.3 h on 21 Dec, 4.5 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-02",
+    "status": "pass",
+    "title": "Sun on glass UF-win-02",
+    "value": "6.3 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-03",
+    "status": "pass",
+    "title": "Sun on glass UF-win-03",
+    "value": "5.3 h on 21 Dec, 4.8 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-04",
+    "status": "pass",
+    "title": "Sun on glass UF-win-04",
+    "value": "5.5 h on 21 Dec, 4.8 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-05",
+    "status": "pass",
+    "title": "Sun on glass UF-win-05",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-06",
+    "status": "pass",
+    "title": "Sun on glass UF-win-06",
+    "value": "0.0 h on 21 Dec, 10.5 h on 21 Jun · facing N",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-07",
+    "status": "warn",
+    "title": "Sun on glass UF-win-07",
+    "value": "5.8 h on 21 Dec, 4.6 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-08",
+    "status": "warn",
+    "title": "Sun on glass UF-win-08",
+    "value": "5.8 h on 21 Dec, 4.5 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:UF-win-09",
+    "status": "pass",
+    "title": "Sun on glass UF-win-09",
+    "value": "6.3 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:daylight:LL-space-06",
+    "status": "pass",
+    "title": "Studio · office daylight",
+    "value": "average daylight factor ≈ 7.5 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:SL-space-05",
+    "status": "pass",
+    "title": "Kitchen daylight",
+    "value": "average daylight factor ≈ 5.1 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:SL-space-06",
+    "status": "pass",
+    "title": "Dining daylight",
+    "value": "average daylight factor ≈ 2.2 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:SL-space-07",
+    "status": "pass",
+    "title": "Living daylight",
+    "value": "average daylight factor ≈ 9.9 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:UF-space-01",
+    "status": "pass",
+    "title": "Bedroom 2 daylight",
+    "value": "average daylight factor ≈ 6.1 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:UF-space-04",
+    "status": "pass",
+    "title": "Bedroom 3 daylight",
+    "value": "average daylight factor ≈ 4.8 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:UF-space-05",
+    "status": "pass",
+    "title": "Master bedroom daylight",
+    "value": "average daylight factor ≈ 5.4 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   }
+  ],
+  "scene": "e2a4ef7ca5fcd512",
+  "surfaces": "46e933a17d670e1b",
+  "design": "2137bc10cdd3456a",
+  "mepContext": "8d58dca92f4d6285",
+  "plumbing": "96b6c8be97d986e0",
+  "electrical": "9ecbb305de117ea7",
+  "mep": "1cc75c9fa4479c29",
+  "frame": "941132d667b1572d",
+  "thermal": "c7d5bf7d655918ac",
+  "env": "ae65a2cae17c4833",
+  "energy": "216809a1ed0df77f",
+  "cost": "855ef87e3fb77931"
+ },
+ "flat-lot": {
+  "site": {
+   "lot": [
+    [
+     -1.5,
+     -4
+    ],
+    [
+     10.5,
+     -4
+    ],
+    [
+     10.5,
+     26
+    ],
+    [
+     -1.5,
+     26
+    ]
+   ],
+   "yStreet": -4,
+   "yRear": 26,
+   "xSouth": -1.5,
+   "xNorth": [
+    10.5,
+    10.5,
+    10.5,
+    10.5
+   ],
+   "natural": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "garden": 0,
+   "rampEndY": -4,
+   "passageEndY": 0,
+   "cutY": 8,
+   "house": {
+    "x0": 0,
+    "x1": 9,
+    "y0": 0,
+    "y1": 8
+   }
+  },
+  "zones": "6fe4ba9b5526afbe",
+  "ground": "a535a82eb70c4182",
+  "sun": [
+   {
+    "altitude": 20.438181,
+    "azimuth": 47.648405,
+    "dir": [
+     -0.63127,
+     0.692503,
+     0.349197
+    ]
+   },
+   {
+    "altitude": 38.825366,
+    "azimuth": 4.72741,
+    "dir": [
+     -0.77641,
+     0.064206,
+     0.626949
+    ]
+   },
+   {
+    "altitude": 52.135259,
+    "azimuth": 266.615001,
+    "dir": [
+     0.036242,
+     -0.612729,
+     0.789462
+    ]
+   },
+   {
+    "altitude": 15.002506,
+    "azimuth": 81.563364,
+    "dir": [
+     -0.141715,
+     0.955462,
+     0.258861
+    ]
+   }
+  ],
+  "view": "375ea92400a5cf48",
+  "checks": [
+   {
+    "id": "light:GF-space-01",
+    "status": "warn",
+    "title": "Living and kitchen window ratio",
+    "value": "glass 6.48 m² = 1/6 of the floor (below the 1/6 target)",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "sanitary code for Florianópolis TO CONFIRM (São Paulo values used)"
+   },
+   {
+    "id": "area:GF-space-02",
+    "status": "pass",
+    "title": "Bedroom floor area",
+    "value": "18.79 m² (min 8 m²)",
+    "rule": "Bedrooms: 10 m² for the first (master), 8 m² for the others",
+    "source": "sanitary code for Florianópolis TO CONFIRM (São Paulo values used)"
+   },
+   {
+    "id": "light:GF-space-02",
+    "status": "fail",
+    "title": "Bedroom window ratio",
+    "value": "glass 1.95 m² = 1/10 of the floor",
+    "rule": "Window glass at least 1/8 of the floor area (design target 1/6)",
+    "source": "sanitary code for Florianópolis TO CONFIRM (São Paulo values used)"
+   },
+   {
+    "id": "area:GF-space-03",
+    "status": "pass",
+    "title": "Bathroom floor area",
+    "value": "13.61 m² (min 2.5 m²)",
+    "rule": "Bathrooms and WCs: at least 2.5 m²",
+    "source": "sanitary code for Florianópolis TO CONFIRM (São Paulo values used)"
+   },
+   {
+    "id": "1301:GF-win-01",
+    "status": "pass",
+    "title": "Window GF-win-01",
+    "value": "4.05 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:GF-win-02",
+    "status": "pass",
+    "title": "Glass slider GF-win-02",
+    "value": "2.98 m from the south boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:GF-win-03",
+    "status": "pass",
+    "title": "Window GF-win-03",
+    "value": "2.78 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "1301:GF-win-04",
+    "status": "pass",
+    "title": "High window GF-win-04",
+    "value": "1.50 m from the north boundary",
+    "rule": "No window within 1.50 m of a neighbour boundary",
+    "source": "Civil Code (Código Civil) art. 1.301"
+   },
+   {
+    "id": "setback:front",
+    "status": "pass",
+    "title": "Front setback",
+    "value": "4.00 m (min 4.00 m)",
+    "rule": "Building footprint at least 4.00 m from the front boundary",
+    "source": "Setbacks given by the owner (Florianópolis building and zoning code (TO CONFIRM))"
+   },
+   {
+    "id": "setback:rear",
+    "status": "pass",
+    "title": "Rear setback",
+    "value": "18.00 m (min 3.00 m)",
+    "rule": "Building footprint at least 3.00 m from the rear boundary",
+    "source": "Setbacks given by the owner (Florianópolis building and zoning code (TO CONFIRM))"
+   },
+   {
+    "id": "setback:north",
+    "status": "pass",
+    "title": "North side setback",
+    "value": "1.50 m (min 1.50 m)",
+    "rule": "Building footprint at least 1.50 m from the north side boundary",
+    "source": "Setbacks given by the owner (Florianópolis building and zoning code (TO CONFIRM))"
+   },
+   {
+    "id": "setback:south",
+    "status": "pass",
+    "title": "South side setback",
+    "value": "1.50 m (min 1.50 m)",
+    "rule": "Building footprint at least 1.50 m from the south side boundary",
+    "source": "Setbacks given by the owner (Florianópolis building and zoning code (TO CONFIRM))"
+   },
+   {
+    "id": "site:city-rules",
+    "status": "confirm",
+    "title": "City rules for Florianópolis",
+    "value": "TO CONFIRM: setbacks, site coverage, eaves and height limits are not known for this city yet",
+    "rule": "The lot must follow the city zoning and building code",
+    "source": "Florianópolis building and zoning code (TO CONFIRM)"
+   },
+   {
+    "id": "support:all",
+    "status": "pass",
+    "title": "Nothing floats",
+    "value": "all 33 elements rest on something",
+    "rule": "Every element rests on a supported element, down to footings in the ground",
+    "source": "Project rule (spec 02); NBR 8800 / NBR 6122 for the real design"
+   },
+   {
+    "id": "eaves:roof-slab-01",
+    "status": "confirm",
+    "title": "Flat roof eaves",
+    "value": "0.50 m (limit TO CONFIRM)",
+    "rule": "Eaves up to the city limit are not counted in site coverage",
+    "source": "Florianópolis building and zoning code (TO CONFIRM)"
+   },
+   {
+    "id": "sewage:grease",
+    "status": "fail",
+    "title": "Grease trap on the kitchen line",
+    "value": "kitchen sink drains without a grease trap",
+    "rule": "Kitchen sinks drain through a grease trap",
+    "source": "NBR 8160 (sewage)"
+   },
+   {
+    "id": "points:GF-space-01",
+    "status": "pass",
+    "title": "Points · Living and kitchen",
+    "value": "outlets 6 of 6 needed · lighting 580 of 580 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:GF-space-02",
+    "status": "pass",
+    "title": "Points · Bedroom",
+    "value": "outlets 4 of 4 needed · lighting 280 of 280 VA",
+    "rule": "Rooms up to 6 m²: 1 outlet, larger: 1 per 5 m of perimeter; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "points:GF-space-03",
+    "status": "pass",
+    "title": "Points · Bathroom",
+    "value": "outlets 1 of 1 needed · lighting 160 of 160 VA",
+    "rule": "Bathrooms: 1 outlet near the basin; lighting 100 VA for 6 m² + 60 VA per 4 m²",
+    "source": "NBR 5410 (low-voltage installations) §9.5.2"
+   },
+   {
+    "id": "elec:breakers",
+    "status": "pass",
+    "title": "Breakers protect their cables",
+    "value": "3 circuits: load ≤ breaker ≤ cable capacity",
+    "rule": "Design current ≤ breaker ≤ cable capacity (Ib ≤ In ≤ Iz)",
+    "source": "NBR 5410 (low-voltage installations) §5.3.4"
+   },
+   {
+    "id": "elec:drop",
+    "status": "pass",
+    "title": "Voltage drop ≤ 4 %",
+    "value": "highest 0.69 % on Lighting GF (13.9 m, 1.5 mm²)",
+    "rule": "Voltage drop from the panel to the farthest point at most 4 %",
+    "source": "NBR 5410 (low-voltage installations) §6.2.7"
+   },
+   {
+    "id": "elec:minsection",
+    "status": "pass",
+    "title": "Minimum cable sections",
+    "value": "lighting ≥ 1.5 mm², power ≥ 2.5 mm²",
+    "rule": "Lighting circuits at least 1.5 mm², power circuits at least 2.5 mm²",
+    "source": "NBR 5410 (low-voltage installations) §6.2.6"
+   },
+   {
+    "id": "elec:rcd",
+    "status": "pass",
+    "title": "RCD 30 mA on outlets, wet areas and outdoors",
+    "value": "3 circuits behind 30 mA RCDs",
+    "rule": "Residual-current protection (30 mA) for outlets, bathrooms and outdoor points",
+    "source": "NBR 5410 (low-voltage installations) §5.1.3.2.2"
+   },
+   {
+    "id": "elec:phases:dev-panel-01",
+    "status": "warn",
+    "title": "Phase balance · Main electrical panel",
+    "value": "A 1.0 kW · B 1.0 kW · C 0.6 kW — imbalance 48.1 %",
+    "rule": "Spread the circuits so the three phases carry similar loads (target ≤ 15 %)",
+    "source": "NBR 5410 (low-voltage installations); electricity company supply rules (to confirm)"
+   },
+   {
+    "id": "elec:assigned",
+    "status": "pass",
+    "title": "Every point is on a circuit",
+    "value": "15 points on 3 circuits",
+    "rule": "Each outlet, light and appliance belongs to a protected circuit",
+    "source": "NBR 5410 (low-voltage installations)"
+   },
+   {
+    "id": "cam:coverage",
+    "status": "warn",
+    "title": "Camera coverage of the lot",
+    "value": "0 % of the open lot seen; 288 m² blind",
+    "rule": "Cameras see at least 85 % of the open lot (range and angle from the lens)",
+    "source": "Owner requirement (brief)"
+   },
+   {
+    "id": "cam:poe",
+    "status": "pass",
+    "title": "PoE switch budget",
+    "value": "0 of 24 ports, 0 W of 250 W",
+    "rule": "Ports and PoE power within the 24-port switch",
+    "source": "IEEE 802.3af/at"
+   },
+   {
+    "id": "cam:nvr",
+    "status": "pass",
+    "title": "NVR recording",
+    "value": "0 cameras × 4 MP H.265 ≈ 0 GB/day → Infinity days on 8 TB",
+    "rule": "At least 15 days of continuous recording",
+    "source": "Owner requirement (brief)"
+   },
+   {
+    "id": "noroute:sewage:fx-toilet-01",
+    "status": "fail",
+    "title": "No route · sewage",
+    "value": "fx-toilet-01: no soil stack in this project yet: add a stack in a shaft (P5 lays out new projects)",
+    "rule": "If no valid path exists the router says so and draws nothing",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "noroute:sewage:fx-basin-01",
+    "status": "fail",
+    "title": "No route · sewage",
+    "value": "fx-basin-01: no soil stack in this project yet: add a stack in a shaft (P5 lays out new projects)",
+    "rule": "If no valid path exists the router says so and draws nothing",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "noroute:sewage:fx-shower-01",
+    "status": "fail",
+    "title": "No route · sewage",
+    "value": "fx-shower-01: no soil stack in this project yet: add a stack in a shaft (P5 lays out new projects)",
+    "rule": "If no valid path exists the router says so and draws nothing",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "noroute:sewage:fx-kitchen-sink-01",
+    "status": "fail",
+    "title": "No route · sewage",
+    "value": "fx-kitchen-sink-01: no soil stack in this project yet: add a stack in a shaft (P5 lays out new projects)",
+    "rule": "If no valid path exists the router says so and draws nothing",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "noroute:cold:fx-toilet-01",
+    "status": "fail",
+    "title": "No route · cold",
+    "value": "fx-toilet-01: no water source in this project yet: add a water meter or a tank (P5 lays out new projects)",
+    "rule": "If no valid path exists the router says so and draws nothing",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "noroute:cold:fx-basin-01",
+    "status": "fail",
+    "title": "No route · cold",
+    "value": "fx-basin-01: no water source in this project yet: add a water meter or a tank (P5 lays out new projects)",
+    "rule": "If no valid path exists the router says so and draws nothing",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "noroute:cold:fx-shower-01",
+    "status": "fail",
+    "title": "No route · cold",
+    "value": "fx-shower-01: no water source in this project yet: add a water meter or a tank (P5 lays out new projects)",
+    "rule": "If no valid path exists the router says so and draws nothing",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "noroute:cold:fx-kitchen-sink-01",
+    "status": "fail",
+    "title": "No route · cold",
+    "value": "fx-kitchen-sink-01: no water source in this project yet: add a water meter or a tank (P5 lays out new projects)",
+    "rule": "If no valid path exists the router says so and draws nothing",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:hosted",
+    "status": "pass",
+    "title": "Every fixture and device is hosted",
+    "value": "25 items on a wall face, ceiling, floor, shaft, roof zone or the ground",
+    "rule": "Every item is attached to a building element that can carry it",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:exposed",
+    "status": "pass",
+    "title": "Pipes and conduits inside service spaces",
+    "value": "68 runs, all in walls, shafts, plenums, screed, the crawlspace, the ground or roof zones",
+    "rule": "Each run is inside a wall, shaft, ceiling plenum, floor screed, crawlspace, the ground or a roof zone",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:wallruns",
+    "status": "pass",
+    "title": "Runs follow the rules of their space",
+    "value": "walls only vertical drops and ≤ 1 m horizontal runs; nothing too close to the crawlspace ground",
+    "rule": "Walls: vertical drops and horizontal runs ≤ 1.0 m (none in outer or retaining walls except conduits); crawlspace runs ≥ 0.15 m above the ground",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:forbidden",
+    "status": "pass",
+    "title": "No run crosses a forbidden zone",
+    "value": "stair voids and flights, doors (+0.10 m), windows, columns, footings and retaining-wall cores are clear",
+    "rule": "Never through stairs, door or window openings, columns, footings or retaining-wall cores; beams only through web holes",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:capacity",
+    "status": "pass",
+    "title": "Service spaces are not over capacity",
+    "value": "walls hold their DN, the screed only ≤ 25 mm conduits, shafts fit their pipes",
+    "rule": "Wall cavity = thickness − 2 × 15 mm (0.12 m → DN ≤ 50, 0.15 m → DN ≤ 75, DN 100 needs a shaft or a 0.20 m wall); screed ≤ 25 mm conduits; shafts sized from their pipes + 50 mm",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:slope",
+    "status": "pass",
+    "title": "Gravity pipes fall all the way",
+    "value": "0 gravity runs, none reversed or too flat",
+    "rule": "Sewage and rain fall continuously at the minimum slope (2 % DN ≤ 75, 1 % DN ≥ 100; rain 0.5 %)",
+    "source": "NBR 8160 / NBR 10844"
+   },
+   {
+    "id": "mep:clash",
+    "status": "pass",
+    "title": "No clashes",
+    "value": "no pipe–pipe, pipe–conduit, MEP–structure or MEP–door/window clashes",
+    "rule": "Runs keep clear of each other and of the structure; conduits ≥ 0.20 m from hot water",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:hangers",
+    "status": "pass",
+    "title": "Horizontal runs have supports",
+    "value": "0 hangers on 0 hung runs",
+    "rule": "Hangers on horizontal pipes at spacing by material and DN (PVC ≈ 10 × DN, max 2 m; to verify with the manufacturer); conduits every 1.2 m",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "mep:access",
+    "status": "pass",
+    "title": "Equipment can be serviced",
+    "value": "0 pieces of equipment with a clear service space and a way to reach them",
+    "rule": "Equipment stands on a supported base with a maintenance clearance; roof zones have a hatch or ladder; the cistern stays off the entry path and car bays",
+    "source": "Spec 04b (MEP physics); NBR 8160, 5626, 5410 practice"
+   },
+   {
+    "id": "eng:deck:roof-slab-01",
+    "status": "fail",
+    "title": "Steel deck spans · Flat roof",
+    "value": "longest 4.64 m: deck span 4.64 m > 4.20 m even with props: add a beam or use a deeper deck",
+    "rule": "Deck spans ≤ 2.70 m without props, ≤ 4.20 m with props (assumptions)",
+    "source": "Manufacturer-type deck table (verify with the supplier)"
+   },
+   {
+    "id": "eng:beams",
+    "status": "fail",
+    "title": "Beams (pre-sizing)",
+    "value": "1 over capacity, 1 between 0.7 and 1.0, 4 fine · highest beam-02 at 1.46 · Engineering → Structure proposes sections",
+    "rule": "Bending with fy 345 MPa and deflection ≤ span/350 under 1.4 × loads",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:columns",
+    "status": "pass",
+    "title": "Columns and piers (pre-sizing)",
+    "value": "0 over capacity, 0 between 0.7 and 1.0, 9 fine · highest col-05 at 0.11",
+    "rule": "Axial capacity χ·A·fy/1.10, K = 1, buckling between the floors",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:footings",
+    "status": "warn",
+    "title": "Footings (pre-sizing)",
+    "value": "0 over capacity, 1 between 0.7 and 1.0, 8 fine · highest footing-05 at 0.86",
+    "rule": "Soil pressure under each pad ≤ 150 kPa",
+    "source": "Estimate (spec 08 rules of thumb); the structural engineer designs the real frame (NBR 8800, NBR 6122)"
+   },
+   {
+    "id": "eng:steel-rate",
+    "status": "pass",
+    "title": "Steel per m² of floor",
+    "value": "3204 kg for 72 m² = 44.5 kg/m²",
+    "rule": "Typical steel frames for houses use 25–45 kg/m²",
+    "source": "Rule of thumb (cross-check)"
+   },
+   {
+    "id": "eng:bracing",
+    "status": "pass",
+    "title": "Lateral bracing (wind)",
+    "value": "wind: V0 TO CONFIRM: forces not computed · 4 braced bays proposed (Engineering → Structure)",
+    "rule": "Each grid direction needs at least one braced bay or moment frame per storey",
+    "source": "NBR 6123 (V0 TO CONFIRM); NBR 8800"
+   },
+   {
+    "id": "eng:soil",
+    "status": "confirm",
+    "title": "Soil bearing pressure",
+    "value": "150 kPa assumed · TO CONFIRM by SPT borings",
+    "rule": "Footings are sized on the allowable soil pressure",
+    "source": "NBR 6122; NBR 6484 (SPT)"
+   },
+   {
+    "id": "eng:thermal:wall:ext-ceramic-14",
+    "status": "confirm",
+    "title": "Exterior walls · Ceramic block 14 cm, rendered",
+    "value": "U 2.30 W/m²K · CT 211 kJ/m²K · set the bioclimatic zone (Engineering → Assumptions) to check",
+    "rule": "NBR 15575 simplified method, bioclimatic zone TO CONFIRM",
+    "source": "NBR 15575-4:2021 (zone — TO CONFIRM against NBR 15220-3:2024); limit to verify"
+   },
+   {
+    "id": "eng:thermal:roof:roof-deck-xps-gravel",
+    "status": "confirm",
+    "title": "Roof · Steel deck, waterproofing, XPS 50 mm and gravel (inverted roof)",
+    "value": "U 0.55 W/m²K · CT 439 kJ/m²K · set the bioclimatic zone (Engineering → Assumptions) to check",
+    "rule": "NBR 15575 simplified method, bioclimatic zone TO CONFIRM",
+    "source": "NBR 15575-5:2021 (zone — TO CONFIRM against NBR 15220-3:2024); limit to verify"
+   },
+   {
+    "id": "env:cross:GF-space-01",
+    "status": "pass",
+    "title": "Living and kitchen cross-ventilation",
+    "value": "openings on W and E",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:GF-space-01",
+    "status": "pass",
+    "title": "Living and kitchen openable area",
+    "value": "3.24 m² openable (need 2.48 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:cross:GF-space-02",
+    "status": "pass",
+    "title": "Bedroom cross-ventilation",
+    "value": "openings on W, through the door to Living and kitchen (E)",
+    "rule": "Long-stay rooms: openings on two facades, or through a door to a room on another facade",
+    "source": "Bioclimatic design principle (NBR 15220-3 strategies)"
+   },
+   {
+    "id": "env:vent:GF-space-02",
+    "status": "fail",
+    "title": "Bedroom openable area",
+    "value": "0.98 m² openable (need 1.17 m²)",
+    "rule": "Openable area at least half of the required window area (floor/8)",
+    "source": "SP sanitary code, Decreto 12.342/78"
+   },
+   {
+    "id": "env:sun:GF-win-01",
+    "status": "warn",
+    "title": "Sun on glass GF-win-01",
+    "value": "5.3 h on 21 Dec, 4.3 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:GF-win-02",
+    "status": "pass",
+    "title": "Sun on glass GF-win-02",
+    "value": "6.0 h on 21 Dec, 4.3 h on 21 Jun · facing E",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:GF-win-03",
+    "status": "warn",
+    "title": "Sun on glass GF-win-03",
+    "value": "5.3 h on 21 Dec, 4.3 h on 21 Jun · facing W · west glass without enough shading: add a brise, shutters or an eave",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:sun:GF-win-04",
+    "status": "pass",
+    "title": "Sun on glass GF-win-04",
+    "value": "4.5 h on 21 Dec, 0.0 h on 21 Jun · facing S",
+    "rule": "West glass with more than 2 h of direct sun on 21 Dec needs shading",
+    "source": "Sun model (NOAA) with the eaves, the upper floor, brises and other shading in the model"
+   },
+   {
+    "id": "env:daylight:GF-space-01",
+    "status": "pass",
+    "title": "Living and kitchen daylight",
+    "value": "average daylight factor ≈ 2.4 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   },
+   {
+    "id": "env:daylight:GF-space-02",
+    "status": "warn",
+    "title": "Bedroom daylight",
+    "value": "average daylight factor ≈ 1.1 % (target ≥ 2 %)",
+    "rule": "Average daylight factor ≥ 2 % in long-stay rooms",
+    "source": "BRE average daylight factor formula (estimate)"
+   }
+  ],
+  "scene": "1ba169e868f99eeb",
+  "surfaces": "67abe49066d78fd3",
+  "design": "e808d2b5e8f0f407",
+  "mepContext": "ab824df6d478c88b",
+  "plumbing": "c3dbb82ddee78d8e",
+  "electrical": "4b3f2bdf6a9e71b7",
+  "mep": "20b85ab98ffea90b",
+  "frame": "a27395681d73b88a",
+  "thermal": "83f71a9b5d10d62b",
+  "env": "6c2d31de2eb369a7",
+  "energy": "b065e0ddb84fdbf4",
+  "cost": "dc03212a6dac1473"
+ }
+}
