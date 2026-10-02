@@ -33,8 +33,10 @@ test('Projects home shows Casa 123; opening it lands on DESIGN with Version 3 in
   await expect(page.locator('.plan .dim')).toHaveCount(0);
   await expect(page.getByTestId('checks-toggle')).toHaveCount(0);
   await expect(page.getByTestId('plumbing2d')).toHaveCount(0);
-  await expect(page.getByTestId('step-lot')).toBeDisabled();
-  await expect(page.getByTestId('step-lot')).toContainText('coming in P1');
+  // P1: the Lot step opens the lot wizard; Start waits for P2
+  await expect(page.getByTestId('step-lot')).toBeEnabled();
+  await expect(page.getByTestId('step-start')).toBeDisabled();
+  await expect(page.getByTestId('step-start')).toContainText('coming in P2');
   await page.evaluate(() => document.fonts.ready);
   await page.screenshot({ path: 'docs/screens/P0-design.png' });
 

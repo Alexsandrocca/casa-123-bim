@@ -1,5 +1,5 @@
 # P1 — Lot wizard
-Status: in progress
+Status: done (2026-10-02)
 
 ## Goal
 The first step of every project. A friendly, step-by-step wizard (pt-BR first) where anyone describes their lot, even without a survey, and gets a to-scale lot with its **buildable envelope**, its sun, and a clear list of what is still to confirm and with whom.

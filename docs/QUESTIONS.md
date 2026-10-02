@@ -172,3 +172,15 @@ The AI settings start at US$ 1 = R$ 5,40 and a budget of US$ 20 a month (warning
 
 **Manager (2026-10-02):** Keep US$ 20/month with the 80% warning. The owner can change it in the AI settings.
 
+## Q28 (2026-10-02, P1 / Q20) — Three of the new columns are visible
+The Q20 (b) layout works (no member over capacity, no route lost), but three new columns are not inside a wall:
+- **x 5.00, y 8.50:** free-standing in the street-level dining room, and at the inside corner of Bedroom 3 upstairs (0.30 m past the end of the bath wall);
+- **x 5.00, y 12.60:** free-standing in the lower-level studio (inside the walls on the two floors above);
+- **x 3.20, y 13.60:** a post on the veranda, under the upper-floor overhang (on the lower-level wall line, as suggested).
+Without the column at x 5.00, y 8.50, the beams of that line span 5.40 m again and need W410 sections that do not fit the zone. **Keep them as visible steel columns (a design feature), box them into a wall or cabinet, or ask the engineer for another solution?**
+
+## Q29 (2026-10-02, P1) — Piracicaba's rules for the city table
+The city table has Piracicaba's code (LC 474/2025) and its eaves limit (0.70 m). The zone, site coverage (TO), permeable area (TP), floor-area ratio (CA), height limit and number of floors are **empty, TO CONFIRM**; the setbacks are the values given for Casa 123 (front 4.00, rear 6.00, sides 1.20), marked TO CONFIRM for other lots. **Can the owner or the Prefeitura give the zone of Rua Alceu Maynardi Araújo, 123 and its TO / TP / CA / height?** I did not invent values.
+
+## Q30 (2026-10-02, P1) — One real AI call for the screenshot
+The spec asks for one real call to read the Casa 123 sentence. `.env.local` has no API key yet, so the AI is tested with a mocked answer and `docs/screens/P1-ai.png` shows that mocked answer. **When the owner adds the key (Add AI key.command), I will make the one real call and replace the screenshot** (cost about US$ 0.01).

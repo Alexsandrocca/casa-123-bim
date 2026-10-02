@@ -280,17 +280,18 @@ function AiDescribe({ t, d, setD }: { t: T; d: LotDraft; setD: (f: (x: LotDraft)
   const project = useApp((s) => s.info?.id);
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState('');
+  /** a text key and its values (shown in the current language), or a server message */
+  const [msg, setMsg] = useState<{ k: string; v?: Record<string, string | number> } | null>(null);
   const [fields, setFields] = useState<LotAiFields | null>(null);
   const [editing, setEditing] = useState(false);
   const read = async () => {
-    setBusy(true); setMsg(''); setFields(null); setEditing(false);
+    setBusy(true); setMsg(null); setFields(null); setEditing(false);
     try {
       const r = await api.aiLot(text, project);
       setFields(r.fields);
-      setMsg(t('Read by the AI · cost US$ {usd}', { usd: t.n(r.usage.usd, 4) }));
+      setMsg({ k: 'Read by the AI · cost US$ {usd}', v: { usd: r.usage.usd } });
     } catch (e) {
-      setMsg(e instanceof ApiError && e.code === 'no-key' ? t('The AI is not connected yet (no key). Fill in the steps by hand, or add the key with “Add AI key.command”.') : e instanceof ApiError ? e.message : String(e));
+      setMsg(e instanceof ApiError && e.code === 'no-key' ? { k: 'The AI is not connected yet (no key). Fill in the steps by hand, or add the key with “Add AI key.command”.' } : { k: e instanceof ApiError ? e.message : String(e) });
     } finally { setBusy(false); }
   };
   const use = () => {
@@ -301,7 +302,7 @@ function AiDescribe({ t, d, setD }: { t: T; d: LotDraft; setD: (f: (x: LotDraft)
       if (fields.city) next = withCity(next, fields.city, fields.state ?? next.region.state);
       return next;
     });
-    setFields(null); setMsg(t('Values used. Check them in the next steps.'));
+    setFields(null); setMsg({ k: 'Values used. Check them in the next steps.' });
   };
   const f = fields;
   const set = (patch: Partial<LotAiFields>) => f && setFields({ ...f, ...patch });
@@ -313,7 +314,7 @@ function AiDescribe({ t, d, setD }: { t: T; d: LotDraft; setD: (f: (x: LotDraft)
         <textarea rows={3} value={text} onChange={(e) => setText(e.target.value)} placeholder={t('e.g. 14 m at the front, 15 at the back, 25 on the sides, it falls about 2 m to the back, the street is to the east, Piracicaba')} data-testid="ai-text" />
       </label>
       <button disabled={busy || !text.trim()} onClick={read} data-testid="ai-read">{busy ? t('Reading…') : t('Read with AI')}</button>
-      {msg && <p className="hint" data-testid="ai-msg">{msg}</p>}
+      {msg && <p className="hint" data-testid="ai-msg">{t(msg.k, msg.v && Object.fromEntries(Object.entries(msg.v).map(([k, v]) => [k, typeof v === 'number' ? t.n(v, 4) : v])))}</p>}
       {f && (
         <div className="aipreview" data-testid="ai-preview">
           <h4>{t('The AI understood:')}</h4>

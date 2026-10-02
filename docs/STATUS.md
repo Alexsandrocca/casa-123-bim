@@ -2,6 +2,67 @@
 
 _Updated by Claude Code after every spec. The manager reads this file._
 
+## 2026-10-02 — P1 done: lot wizard
+
+### What was built
+- **Lot wizard** (Portuguese first, English with the EN button). Seven steps on the left, the questions in the middle, the lot to scale on the right (or the map), **Voltar / Avançar** at the bottom. Nothing blocks moving on; you can jump to any step.
+  1. **Endereço e localização:** name (new projects), address, city, state, latitude/longitude, and a map (OpenStreetMap) to click the lot. The city fills the starting rules, whom to ask and the sun. Optional box *"descreva seu lote em palavras"* (AI, see below).
+  2. **Forma do lote:** rectangle, trapezoid (front, rear, depth; which side takes the difference), corner lot (two streets), irregular (a table of corners). Corners drag on the drawing in 5 cm steps. Live area, perimeter and side lengths; tick which sides face a street.
+  3. **Orientação:** "a frente do lote está voltada para…" (8 directions plus a 1° dial), or **two clicks on the map** along the street front. The drawing shows the sun path on 21 June and 21 December, sunrise and sunset, and a table of **hours of sun per side**.
+  4. **Terreno:** flat / falls to the rear / rises / falls to one side, with the metres; or the 4 corner heights. A small 3D preview of the ground. Note: the topographic survey can replace it later (the model already keeps spot heights).
+  5. **Regras:** zone, setbacks (front, rear, each side), TO, TP, CA, height, floors, eaves, special notes. **Live:** the buildable area drawn in green, the maximum footprint (TO), the maximum built area (CA), the minimum permeable area (TP), and the 1.50 m window line (Civil Code) in orange dashes.
+  6. **Redes da rua:** sewer (exists? depth), water main, electricity (127/220 or 220/380; single-, two- or three-phase), rainwater (storm drain or gutter), gas (and whether the family wants it). Each says **whom to ask** (Piracicaba: SEMAE, CPFL; elsewhere generic names).
+  7. **Resumo:** the lot card and the **"to confirm" list grouped by whom to ask**. **Salvar lote.**
+- **Every answer can be "Não sei":** it fills a typical value and marks it **A CONFIRMAR**. Each value has a small chip: *informado / confirmado / A CONFIRMAR*.
+- **Describe the lot in words (AI):** the local server asks Claude for the lot as typed JSON (checked with zod). The wizard shows *"A IA entendeu: …"* with **Usar estes valores / Editar / Descartar**; nothing is applied on its own. Usage is logged and counted in the budget as in P0.
+- **New project** now starts with the wizard. **Salvar lote** creates the project at the **Início** stage (greyed until P2) with the simple P0 house placed inside the buildable area.
+- **Existing projects:** the **1 Lote** step of the journey opens the wizard prefilled. Saving changes the lot in every working version (each with its own undo step); the approved snapshots stay frozen. The checks run again. **If the house now falls outside the buildable area, the plan shows a red message and the green envelope line; the house is never moved.**
+- **Data model:** the lot is now `site.lot` (shape, street sides, position and north, terrain, rules, services, notes), each value with its status, source and date. Every engine (site, sun, setbacks, ground, routes to the street, supply) reads only from it. **Casa 123 was moved into it with no change in any result** (test).
+- New site checks when a lot has the values: site coverage (TO), floor-area ratio (CA), permeable area (TP), height and floors. Corner lots get a front setback on both streets.
+- **Carry-over Q24:** in the BIM tab, walls, doors and windows can no longer be dragged or added. Clicking one shows its properties read-only with **Editar em PROJETO**, which switches tab and selects it. Door/window size, swing and delete moved to the DESIGN side panel.
+- **Carry-over Q20 (b):** see the result below.
+
+### Q20 result (BIM copy of Version 3)
+- Added a **column line at x 5.00** (columns at y 5.00, 8.50 and 12.60; none at the veranda edge, where a conduit runs) and **one column under the rear overhang at x 3.20, y 13.60**, standing on the lower-level wall line.
+- Re-ran the pre-sizing, then applied the proposed sizes **that fit**: beams no deeper than the 0.26 m left in the 0.40 m zone (0.40 − 0.14 slab), and never shallower where a pipe crosses through a web hole; footings enlarged only where over capacity and not into a buried pipe.
+- **Result: 0 beams and 0 footings over capacity** (before: 10 and 5). Beams W150 to W250; the highest beam is exactly at its limit (1.00). Steel **7.0 t (34 kg/m²)** instead of 12.9 t (62 kg/m²). Floor-to-floor stays 3.10.
+- **No pipe or conduit lost its route.** The BIM checks now show **1 fail** (the lower-level gravity drain, on purpose, as before) and 3 to confirm (carport, rainfall, soil).
+- To decide (Q28): three of the new columns are visible — in the street-level dining room and the corner of Bedroom 3 (x 5.00, y 8.50), in the lower-level studio (x 5.00, y 12.60), and as a post on the veranda (x 3.20, y 13.60).
+
+### How to see it
+1. Double-click **Open Casa BIM.command** (keep its window open). If an old Casa window is already open, close it first: the running app still has the old code in memory.
+2. On the Projects page click **Novo projeto**, or open **Casa 123** and click **1 Lote** in the journey bar.
+3. Screenshots: `docs/screens/P1-shape.png`, `P1-rules-envelope.png`, `P1-summary.png`, `P1-ai.png` (and `P1.png`).
+
+### 2-minute demo script
+1. Double-click **Open Casa BIM.command**. *You see:* the Projects page.
+2. Click **Novo projeto**. *You see:* "Seu lote", seven steps on the left, a map on the right.
+3. Type a name. In *"Ou descreva seu lote em palavras"* type: *14 de frente, 15 de fundo, 25 de laterais, cai uns 2 metros para o fundo, a rua fica a leste, Piracicaba* and click **Ler com a IA**. *You see:* "A IA entendeu: trapézio 14 / 15 / 25, cai para o fundo 2,00 m, a rua a leste, Piracicaba/SP". Click **Usar estes valores**. *(Needs the AI key; without it, pick Trapézio in step 2 and type 14 / 15 / 25.)*
+4. Click **Avançar** through the steps. *You see:* the lot to scale with the street at the bottom (2); the sun paths and the hours of sun per side (3); the slope in 3D (4); the green buildable area (5). In step 5 click **Não sei** next to *Taxa de ocupação*: it becomes 60 % A CONFIRMAR and the maximum footprint appears.
+5. In **Resumo** click **Salvar lote**. *You see:* "Lote salvo… etapa Início", and the project opens.
+6. Back on **Projetos**, open **Casa 123** and click **1 Lote**. *You see:* Casa's lot already filled in. Click **7 Resumo**: to confirm with the **Prefeitura** (zone, rates, height, carport, decks), **SEMAE** (sewer and water depth), **CPFL** (supply), the **topógrafo** and the **sondagem**.
+7. In **2 Forma do lote** change *Frente* to 10, then **Resumo → Salvar lote**, then **Plantas**. *You see:* a red message "A casa está fora da área edificável…" and the green dashed line crossing the house. Ctrl+Z on that tab brings the old lot back (or set *Frente* back to 14).
+8. Click **BIM**, click a wall. *You see:* its properties read-only and **Editar em PROJETO**.
+
+### Tests
+- `npm test`: 140 unit tests (17 new): the **regression** (every engine result of Casa 123 Versions 1–3 identical before and after the move, from the committed files and from a model saved before P1); the envelope of a rectangle, the Casa 123 trapezoid and a **corner lot** (front setback on both streets; a house moved into the side-street setback fails); an **irregular 5-corner lot** (area = shoelace formula, clockwise or not); TO/CA/TP; slopes and 4-corner terrain; the city table; the Casa 123 to-confirm list; the AI lot endpoint with a fake Claude (typed JSON, a wrong answer refused, no key, usage logged); the Casa sentence giving exactly the Casa 123 lot.
+- `npm run e2e`: 42 browser tests (5 new): Casa 123 prefilled with its open items; a new lot from the sentence (AI mocked) saved as a project; a corner lot's envelope; a lot change that leaves the house outside (red message, house not moved, undo); Q24 (BIM cannot drag; Edit in DESIGN).
+- `npm run build` passes.
+
+### Not done yet / known gaps
+- **No real AI call yet:** `.env.local` has no key, so `P1-ai.png` shows the mocked answer (Q30).
+- Piracicaba's zone, TO, TP, CA and height are empty and TO CONFIRM in the city table (Q29). Its setbacks are Casa 123's values, marked TO CONFIRM for other lots.
+- Casa 123's latitude/longitude are the city's; clicking the lot on the map in step 1 places it exactly (the sun barely changes).
+- A sideways slope or 4 corner heights are shown in the wizard and the 3D preview; the house engines still use the street-to-rear profile along the middle until P2/P5 place houses on slopes.
+- A lot with an inward corner gets a buildable area on the safe side (the wizard says so).
+- Map: searching an address is not built (click the map or type the coordinates).
+
+### Open questions
+New: Q28 (visible columns from Q20), Q29 (Piracicaba rules), Q30 (one real AI call for the screenshot). Still open: Q7–Q9, Q11–Q13, Q15, Q17–Q18, Q22.
+
+### Next
+P2 (starting point: typology × style × program), when the manager marks it ready.
+
 ## 2026-10-02 — P0 done: two tabs, projects, generalisation, AI server
 
 ### What was built

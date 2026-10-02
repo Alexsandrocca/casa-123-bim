@@ -33,7 +33,7 @@ export function LotCanvas({ lot, region, layer, house, onChange }: {
   const cx = (bx.x0 + bx.x1) / 2, cy = (bx.y0 + bx.y1) / 2;
   const R = Math.max(bx.x1 - bx.x0, bx.y1 - bx.y0) * 0.62;
   const pad = showSun ? Math.max(4, R - Math.min(bx.x1 - bx.x0, bx.y1 - bx.y0) / 2 + 2.5) : 4;
-  const X0 = bx.x0 - pad, X1 = bx.x1 + pad, Y0 = bx.y0 - pad - 2, Y1 = bx.y1 + pad;
+  const X0 = bx.x0 - pad, X1 = bx.x1 + pad, Y0 = bx.y0 - pad - (layer === 'services' || layer === 'summary' ? 3 : 2), Y1 = bx.y1 + pad;
   const px = (x: number) => x - X0;
   const py = (y: number) => Y1 - y;
   const W = X1 - X0, H = Y1 - Y0;
@@ -66,7 +66,7 @@ export function LotCanvas({ lot, region, layer, house, onChange }: {
   out.push(<polygon key="lot" points={pts(l.polygon)} className="lc-lot" data-testid="lc-lot" />);
 
   // ground: heights at the corners and the direction it falls
-  if (layer === 'terrain' || layer === 'summary') {
+  if (layer === 'terrain') {
     const [a, b, c, d] = cornerHeights(l);
     const corners: [P2, number][] = [[[bx.x0, bx.y0], a], [[bx.x1, bx.y0], b], [[bx.x1, bx.y1], c], [[bx.x0, bx.y1], d]];
     for (let k = 0; k < 6; k++) for (let j = 0; j < 6; j++) {
@@ -75,7 +75,8 @@ export function LotCanvas({ lot, region, layer, house, onChange }: {
       const tt = hi - lo > 1e-6 ? (z - lo) / (hi - lo) : 0.5;
       out.push(<rect key={`g${k}${j}`} x={px(x - (bx.x1 - bx.x0) / 12)} y={py(y + (bx.y1 - bx.y0) / 12)} width={(bx.x1 - bx.x0) / 6} height={(bx.y1 - bx.y0) / 6} className="lc-ground" style={{ opacity: 0.12 + 0.4 * tt }} />);
     }
-    corners.forEach(([[x, y], z], i) => out.push(<text key={`h${i}`} x={px(x)} y={py(y) + (i < 2 ? fs * 1.6 : -fs * 0.7)} className="lc-h" style={{ fontSize: fs }} textAnchor={i === 0 || i === 3 ? 'start' : 'end'}>{`${z >= 0 ? '+' : '−'}${t.n(Math.abs(z), 2)} m`}</text>));
+    // heights just inside each corner of the bounding box (the side lengths sit outside)
+    corners.forEach(([[x, y], z], i) => out.push(<text key={`h${i}`} x={px(x + (i === 0 || i === 3 ? 0.5 : -0.5))} y={py(y + (i < 2 ? 0.9 : -1.4))} className="lc-h" style={{ fontSize: fs }} textAnchor={i === 0 || i === 3 ? 'start' : 'end'}>{`${z >= 0 ? '+' : '−'}${t.n(Math.abs(z), 2)} m`}</text>));
   }
 
   // envelope and window line
@@ -151,7 +152,10 @@ export function LotCanvas({ lot, region, layer, house, onChange }: {
       `${t('Water')}: ${s.water.depth.value === null ? t('depth to confirm') : `−${t.n(s.water.depth.value, 2)} m`}`,
       `${t('Power')}: ${s.power.supply.value ? `${s.power.supply.value.phaseV}/${s.power.supply.value.lineV} V ${s.power.supply.value.phases}φ` : t('to confirm')}`,
     ];
-    items.forEach((txt, k) => out.push(<text key={`sv${k}`} x={px(a[0] + ((b[0] - a[0]) * (k + 0.5)) / 3)} y={py((a[1] + b[1]) / 2) + fs * 3.2} className="lc-svc" style={{ fontSize: fs * 0.85 }} textAnchor="middle">{txt}</text>));
+    // one line each, beyond the street band
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, nx = (b[1] - a[1]) / len, ny = -(b[0] - a[0]) / len;
+    const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+    items.forEach((txt, k) => out.push(<text key={`sv${k}`} x={px(mx + nx * (3.6 + k * 0.85))} y={py(my + ny * (3.6 + k * 0.85))} className="lc-svc" style={{ fontSize: fs * 0.85 }} textAnchor="middle" dominantBaseline="middle" data-testid={`lc-svc-${k}`}>{txt}</text>));
   }
 
   // draggable corners

@@ -358,7 +358,7 @@ export function App() {
     let last: string | null = null;
     try { last = localStorage.getItem('casabim.last'); } catch { /* ignore */ }
     if (new URLSearchParams(location.search).has('dev')) useApp.getState().setPanel({ devOpen: true });
-    if (r.page === 'project') useApp.getState().go(r);
+    if (r.page !== 'home') useApp.getState().go(r);
     else if (!location.hash && last) useApp.getState().go({ page: 'project', id: last, tab: 'design' });
     else useApp.getState().go({ page: 'home' });
   }, []);
