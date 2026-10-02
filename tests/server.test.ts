@@ -126,3 +126,38 @@ describe('AI proxy (mocked)', () => {
     expect(existsSync(join(dir, 'settings.json'))).toBe(false); // reading settings writes nothing
   });
 });
+
+describe('P1: describe the lot in words (AI, mocked)', () => {
+  const CASA_SENTENCE = '14 de frente, 15 de fundo, 25 de laterais, cai uns 2 metros para o fundo, a rua fica a leste, Piracicaba';
+  const answer = JSON.stringify({ shape: 'trapezoid', front: 14, rear: 15, left: 25, right: 25, secondStreet: null, terrain: 'down', fall: 2, lowerSide: null, streetFaces: 'E', address: null, city: 'Piracicaba', state: 'SP', notes: [] });
+  const lotCall: CallClaude = async (_cfg, req) => {
+    calls++;
+    expect(req.purpose).toBe('lot description');
+    expect(req.system).toMatch(/Return ONLY one JSON object/);
+    expect(req.messages[0]!.content).toBe(CASA_SENTENCE);
+    return { text: `Here it is:\n${answer}`, usage: { inputTokens: 900, outputTokens: 120 }, model: 'claude-opus-5-5', stop: 'end_turn' };
+  };
+
+  it('returns the lot fields as typed JSON and logs the usage (new projects go to "new-projects")', async () => {
+    const c: ApiContext = { ...ctx(), call: lotCall };
+    const r = await api(c, 'POST', '/api/ai/lot', { text: CASA_SENTENCE });
+    expect(r.status).toBe(200);
+    const b = r.body as { fields: Record<string, unknown>; usage: { usd: number } };
+    expect(b.fields).toMatchObject({ shape: 'trapezoid', front: 14, rear: 15, left: 25, terrain: 'down', fall: 2, streetFaces: 'E', city: 'Piracicaba' });
+    expect(b.usage.usd).toBeGreaterThan(0);
+    expect(readFileSync(join(dir, 'new-projects', 'ai-usage.jsonl'), 'utf8')).toContain('lot description');
+    // with a project, the usage goes to that project
+    await api(c, 'POST', '/api/ai/lot', { text: CASA_SENTENCE, project: 'flat-lot' });
+    expect(readFileSync(join(dir, 'flat-lot', 'ai-usage.jsonl'), 'utf8')).toContain('lot description');
+    // the new-projects folder is not a project
+    expect(((await api(c, 'GET', '/api/projects')).body as { id: string }[]).map((p) => p.id)).toEqual(['flat-lot']);
+  });
+
+  it('an answer that is not the schema is refused (nothing is applied); no key says so', async () => {
+    const bad: CallClaude = async () => ({ text: '{"front": "fourteen"}', usage: { inputTokens: 10, outputTokens: 5 }, model: 'm', stop: 'end_turn' });
+    expect((await api({ ...ctx(), call: bad }, 'POST', '/api/ai/lot', { text: 'x' })).status).toBe(422);
+    const none = await api(ctx(null), 'POST', '/api/ai/lot', { text: 'x' });
+    expect(none.status).toBe(503);
+    expect((none.body as { code: string }).code).toBe('no-key');
+  });
+});

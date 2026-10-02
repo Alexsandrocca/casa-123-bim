@@ -3,7 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { api, type AiStatus } from '../api';
 import { useT } from '../i18n/useT';
 import { LANGS } from '../i18n';
-import { approvalState, useApp } from '../store';
+import { approvalState, useApp, useProject } from '../store';
+import { setbackChecks } from '../model/checks';
 
 export function LangToggle() {
   const lang = useApp((s) => s.lang);
@@ -16,7 +17,7 @@ export function LangToggle() {
 }
 
 const STEPS: { key: string; label: string; phase?: string }[] = [
-  { key: 'lot', label: 'Lot', phase: 'P1' },
+  { key: 'lot', label: 'Lot' },
   { key: 'start', label: 'Start', phase: 'P2' },
   { key: 'plans', label: 'Plans' },
   { key: '3d', label: '3D' },
@@ -31,8 +32,9 @@ export function Stepper() {
   const view = useApp((s) => s.view);
   const approved = useApp((s) => !!s.info?.approvedVersionId);
   const { setTab, setView } = useApp.getState();
-  const current = tab === 'bim' ? 'bim' : view === '3d' ? '3d' : 'plans';
+  const current = tab === 'lot' ? 'lot' : tab === 'bim' ? 'bim' : view === '3d' ? '3d' : 'plans';
   const go = (k: string) => {
+    if (k === 'lot') setTab('lot');
     if (k === 'plans') { setTab('design'); setView('2d'); }
     if (k === '3d') { setTab('design'); setView('3d'); }
     if (k === 'approve') { setTab('design'); document.querySelector<HTMLButtonElement>('[data-testid="approve"]')?.focus(); }
@@ -112,5 +114,20 @@ export function AiIndicator() {
     <button className={'aiind' + (st?.warn ? ' warn' : '') + (st?.connected ? ' on' : '')} onClick={() => setPanel({ aiOpen: true })} data-testid="ai-indicator">
       {label}{st?.warn ? ` · ${st.blocked ? t('budget used up') : t('80 % of budget')}` : ''}
     </button>
+  );
+}
+
+/** P1: when the lot changed and the house no longer fits inside the setbacks, say so (the house is never moved). */
+export function EnvelopeBanner() {
+  const t = useT();
+  const p = useProject();
+  const rows = useMemo(() => setbackChecks(p).filter((c) => c.status === 'fail' && c.id.startsWith('setback:')), [p]);
+  const setTab = useApp((s) => s.setTab);
+  if (!rows.length) return null;
+  return (
+    <div className="envbanner" role="alert" data-testid="envelope-banner">
+      {t('The house is outside the buildable area of the lot:')} {rows.map((r) => `${r.title} ${r.value}`).join(' · ')}.
+      {' '}{t('Nothing was moved: change the design, or check the lot.')} <button className="small" onClick={() => setTab('lot')}>{t('Open the lot')}</button>
+    </div>
   );
 }

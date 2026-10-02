@@ -147,3 +147,17 @@ describe('P1 city table and the to-confirm list', () => {
     expect(by.soil!.items[0]!.text).toMatch(/SPT/);
   });
 });
+
+describe('P1: the Casa 123 sentence read by the AI fills the lot', () => {
+  it('trapezoid 14 / 15 / 25, falling 2 m to the rear, street to the east = the Casa 123 lot', async () => {
+    const { lotFromAi, parseLotAi } = await import('../src/model/lot-ai');
+    const fields = parseLotAi('{"shape":"trapezoid","front":14,"rear":15,"left":25,"right":25,"secondStreet":null,"terrain":"down","fall":2,"lowerSide":null,"streetFaces":"E","address":null,"city":"Piracicaba","state":"SP","notes":[]}');
+    const lot = lotFromAi(defaultLot('Piracicaba', 'SP'), fields);
+    const casa = parseProject(json('../projects/casa-123/versions/v3.json')).site.lot;
+    expect(lot.polygon).toEqual(casa.polygon);
+    expect(lot.streetEdges).toEqual([0]);
+    expect(lot.terrain).toMatchObject({ kind: 'down', fall: 2 });
+    expect(lot.geo.xBearing).toBe(casa.geo.xBearing);
+    expect(lotFigures(lot).area).toBeCloseTo(362.5, 9);
+  });
+});

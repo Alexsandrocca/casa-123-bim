@@ -1,4 +1,6 @@
 // The 2D plan: draws one floor of the model and turns pointer gestures into commands.
+import { setbackChecks } from '../model/checks';
+import { envelope } from '../model/lot';
 import { useMemo, useRef, type PointerEvent as RPointerEvent, type ReactNode } from 'react';
 import { minArea } from '../model/checks';
 import { addDevice, addOpening, moveDevice, moveFixture, moveOpening, moveWall, nextDeviceId, nextOpeningId, wallLimits } from '../model/commands';
@@ -65,6 +67,8 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
   const openings = byLevel(p, level, 'Opening');
   const decks = byLevel(p, level, 'Deck');
   const handles = useMemo(() => lineHandles(p, level), [p, level]);
+  const outside = useMemo(() => setbackChecks(p).some((c) => c.status === 'fail' && c.id.startsWith('setback:')), [p]);
+  const env = useMemo(() => envelope(p.site.lot).map(([x, y]) => [x - p.site.houseOrigin.x, y - p.site.houseOrigin.y] as [number, number]), [p.site.lot, p.site.houseOrigin]);
 
   // Each floor fills the view, as in the prototype.
   // The carport sits in front of the street level: draw it there.
@@ -77,6 +81,7 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
   const px = (x: number) => f1((x - fr.XMIN) * S);
   const py = (y: number) => f1((fr.YMAX - y) * S);
   const W = (fr.XMAX - fr.XMIN) * S, H = (fr.YMAX - fr.YMIN) * S;
+  const envPts = env.length ? env.map(([x, y]) => `${px(x)},${py(y)}`).join(' ') : '';
 
   const line = (x0: number, y0: number, x1: number, y1: number, cls: string, key?: string | number, extra: object = {}) =>
     <line key={key} x1={px(x0)} y1={py(y0)} x2={px(x1)} y2={py(y1)} className={cls} {...extra} />;
@@ -248,7 +253,9 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
 
   /* ---------- drawing ---------- */
   const out: ReactNode[] = [];
-  out.push(rect(outline, 'floor', 'floor'));
+  out.push(rect(outline, 'floor' + (outside ? ' outside' : ''), 'floor', { 'data-outside': outside ? '1' : '0' }));
+  // P1: the buildable envelope of the lot (the house must stay inside it)
+  if (envPts) out.push(<polygon key="envelope" points={envPts} className="envline" data-testid="plan-envelope" />);
   decks.forEach((d) => {
     const r = d.props.rect;
     out.push(rect(r, 'deck', d.id, { 'data-el': d.id }));

@@ -12,7 +12,8 @@ import { ElectricalDialog } from './ElectricalDialog';
 import { EngineeringDialog } from './EngineeringDialog';
 import { FEATURE_TYPES } from '../model/eng/features';
 import { Home } from './Home';
-import { AiIndicator, ApprovalBar, LangToggle, SaveIndicator, Stepper, Tabs } from './Shell';
+import { LotWizardPage, NewProjectPage } from './LotWizard';
+import { AiIndicator, ApprovalBar, EnvelopeBanner, LangToggle, SaveIndicator, Stepper, Tabs } from './Shell';
 import { AiPanel } from './AiPanel';
 import { DevPanel } from './DevPanel';
 import { LegalFooter } from './LegalFooter';
@@ -223,8 +224,8 @@ function Workspace() {
   return (
     <div className={'app tab-' + tab}>
       <Header />
-      <ApprovalBar />
-      {tab === 'design' ? <DesignWorkspace /> : <BimWorkspace />}
+      {tab !== 'lot' && <ApprovalBar />}
+      {tab === 'lot' ? <LotWizardPage /> : tab === 'design' ? <DesignWorkspace /> : <BimWorkspace />}
       <LegalFooter />
       <AboutDialog />
       <AiPanel />
@@ -258,6 +259,7 @@ function DesignWorkspace() {
             <span className="hint">{tool === 'door' ? t('Click a wall to add a door.') : tool === 'window' ? t('Click an outside wall to add a window.') : t('Drag inside walls, doors and windows. Double-click a wall to add an opening.')}</span>
           </ViewBar>
         </div>
+        <EnvelopeBanner />
         <Views style="design" />
         <div className="flash" role="status" aria-live="polite">{message}</div>
       </main>
@@ -331,6 +333,7 @@ function BimWorkspace() {
             ))}
           </div>
         )}
+        <EnvelopeBanner />
         <Views style="bim" />
         <div className="flash" role="status" aria-live="polite">{message}</div>
       </main>
@@ -359,5 +362,5 @@ export function App() {
     else if (!location.hash && last) useApp.getState().go({ page: 'project', id: last, tab: 'design' });
     else useApp.getState().go({ page: 'home' });
   }, []);
-  return route.page === 'home' ? <Home /> : <Workspace />;
+  return route.page === 'home' ? <Home /> : route.page === 'new' ? <NewProjectPage /> : <Workspace />;
 }

@@ -220,6 +220,19 @@ export function resetLevel(level: string, original: Project): Command {
   };
 }
 
+/** P1: change the lot, the address or the city facts (the lot wizard). The checks re-run; the services re-route to the
+ *  new street and supply. The house is never moved. */
+export function setSite(patch: Partial<Pick<Project['site'], 'address' | 'lot' | 'region'>>): Command {
+  return {
+    label: 'Change the lot',
+    apply(p) {
+      const site = { ...p.site, ...patch };
+      if (JSON.stringify(site) === JSON.stringify(p.site)) return p;
+      return withMep({ ...p, site });
+    },
+  };
+}
+
 export function replaceProject(next: Project): Command {
   return { label: 'Open model', apply: () => next };
 }

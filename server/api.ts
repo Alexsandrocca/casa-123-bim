@@ -2,6 +2,10 @@
 import { ProjectFile, Settings } from '../src/model/project-file';
 import { AiError, aiStatus, chat, callClaude, type AiConfig, type CallClaude, type ChatRequest } from './ai';
 import { Storage, StorageError } from './storage';
+import { LOT_AI_SYSTEM, parseLotAi } from '../src/model/lot-ai';
+
+/** Usage of AI calls made before a project exists (the lot wizard of a new project). */
+export const NEW_PROJECTS = 'new-projects';
 
 export interface ApiResult { status: number; body: unknown }
 
@@ -61,6 +65,18 @@ export async function handleApi(ctx: ApiContext, method: string, url: string, bo
         if (!b || typeof b.project !== 'string' || !Array.isArray(b.messages) || !b.messages.length) return err(400, 'Bad chat request');
         storage.get(b.project); // the usage goes to an existing project
         return ok(await chat(storage, ctx.ai, b, ctx.call ?? callClaude));
+      }
+      if (seg[1] === 'lot' && method === 'POST') {
+        // P1: "describe your lot in words" → the lot fields as typed JSON (the wizard previews them; nothing is applied here)
+        const b = body as { project?: string; text?: string };
+        const text = String(b?.text ?? '').trim();
+        if (!text || text.length > 2000) return err(400, 'Write a short description of the lot (up to 2,000 characters).');
+        // a lot described before its project exists is logged under "new-projects" (it counts in the monthly budget)
+        const project = b.project ? (storage.get(b.project), b.project) : NEW_PROJECTS;
+        const r = await chat(storage, ctx.ai, { project, purpose: 'lot description', system: LOT_AI_SYSTEM, messages: [{ role: 'user', content: text }], maxTokens: 800 }, ctx.call ?? callClaude);
+        let fields;
+        try { fields = parseLotAi(r.text); } catch { return err(422, 'Could not read the lot from the answer. Try again, or fill in the steps by hand.', 'unreadable'); }
+        return ok({ fields, usage: r.usage, status: r.status });
       }
       if (seg[1] === 'test' && method === 'POST') {
         const project = String((body as { project?: string })?.project ?? '');

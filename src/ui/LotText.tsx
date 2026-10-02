@@ -11,7 +11,7 @@ export const whoLabel = (t: T, who: Who) => ({
   power: t('Electric utility'),
   gas: t('Gas company'),
   surveyor: t('Surveyor (topographic survey)'),
-  soil: t('Soil test (SPT borings)'),
+  soil: t('Soil investigation company'),
   engineer: t('Architect or engineer'),
 })[who];
 

@@ -3,10 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { api, ApiError } from '../api';
 import { useT } from '../i18n/useT';
 import type { ProjectFile } from '../model/project-file';
-import { rectLot, starterModel } from '../model/starter';
-import { regionFor } from '../model/cities';
-import type { Compass } from '../model/orientation';
-import { lotSummary, useApp } from '../store';
+import { useApp } from '../store';
 import { ZONE_COLOR } from './PlanView';
 import { LegalFooter } from './LegalFooter';
 import { LangToggle } from './Shell';
@@ -29,74 +26,11 @@ function Thumb({ p }: { p: ProjectFile }) {
   );
 }
 
-function NewProject({ onDone }: { onDone: () => void }) {
-  const t = useT();
-  const [f, setF] = useState({ name: '', address: '', city: '', state: '', lat: '', lon: '', width: '12', depth: '30', street: 'S' as Compass });
-  const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState('');
-  const num = (v: string) => Number(v.replace(',', '.'));
-  const valid = f.name.trim() && f.city.trim() && Number.isFinite(num(f.lat)) && f.lat !== '' && Number.isFinite(num(f.lon)) && f.lon !== '' && num(f.width) >= 8 && num(f.depth) >= 15;
-  const create = async () => {
-    setBusy(true); setErr('');
-    try {
-      const city = f.city.trim(), state = f.state.trim().toUpperCase();
-      const model = starterModel({
-        project: f.name.trim(), address: f.address.trim(), region: regionFor(city, state),
-        lot: rectLot({ city, state, lat: num(f.lat), lon: num(f.lon), lotWidth: num(f.width), lotDepth: num(f.depth), street: f.street }),
-      });
-      const now = new Date().toISOString();
-      const info: ProjectFile = {
-        schema: 'casabim-project/1', id: 'new', name: f.name.trim(), address: f.address.trim(), lot: lotSummary(model), program: {}, style: {},
-        versions: [{ id: 'v1', name: 'Version 1', kind: 'design', file: 'versions/v1.json', original: 'originals/v1.json', edits: 0 }],
-        designVersionId: 'v1', approvedVersionId: null, stage: 'plans', language: 'pt-BR', includeInGit: false, created: now, updated: now,
-      };
-      const made = await api.importProject({ schema: 'casabim-export/1', project: info, files: { 'versions/v1.json': model, 'originals/v1.json': model } });
-      onDone();
-      useApp.getState().go({ page: 'project', id: made.id, tab: 'design' });
-    } catch (e) { setErr(e instanceof ApiError ? e.message : (e as Error).message); } finally { setBusy(false); }
-  };
-  const field = (k: keyof typeof f, label: string, hint?: string, inputMode?: 'decimal') => (
-    <label className="nf">
-      <span>{t(label)}</span>
-      <input value={f[k]} inputMode={inputMode} onChange={(e) => setF({ ...f, [k]: e.target.value })} data-testid={`new-${k}`} />
-      {hint && <small className="hint">{t(hint)}</small>}
-    </label>
-  );
-  return (
-    <div className="newproj" data-testid="new-project-form">
-      <h3>{t('New project')}</h3>
-      <p className="hint">{t('A simple single-storey starting house on a flat rectangular lot. The lot wizard (P1) and the house catalogue (P2) come next.')}</p>
-      <div className="nfgrid">
-        {field('name', 'Name')}
-        {field('address', 'Address')}
-        {field('city', 'City')}
-        {field('state', 'State (UF)')}
-        {field('lat', 'Latitude', 'Google Maps: right-click the lot, copy the first number.', 'decimal')}
-        {field('lon', 'Longitude', 'The second number.', 'decimal')}
-        {field('width', 'Lot width at the street (m)', undefined, 'decimal')}
-        {field('depth', 'Lot depth (m)', undefined, 'decimal')}
-        <label className="nf">
-          <span>{t('The street is on the lot’s')}</span>
-          <select value={f.street} onChange={(e) => setF({ ...f, street: e.target.value as Compass })} data-testid="new-street">
-            {(['N', 'E', 'S', 'W'] as const).map((c) => <option key={c} value={c}>{t({ N: 'north side', E: 'east side', S: 'south side', W: 'west side' }[c])}</option>)}
-          </select>
-        </label>
-      </div>
-      {err && <p className="bad">{err}</p>}
-      <div className="btnrow">
-        <button className="strong" disabled={!valid || busy} onClick={create} data-testid="create-project">{busy ? t('Creating…') : t('Create project')}</button>
-        <button className="ghost" onClick={onDone}>{t('Cancel')}</button>
-      </div>
-    </div>
-  );
-}
-
 export function Home() {
   const t = useT();
   const projects = useApp((s) => s.projects);
   const message = useApp((s) => s.message);
   const { loadProjects, go, flash } = useApp.getState();
-  const [creating, setCreating] = useState(false);
   const [confirm, setConfirm] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   useEffect(() => { void loadProjects(); }, [loadProjects]);
@@ -131,10 +65,9 @@ export function Home() {
         <LangToggle />
         <button onClick={() => fileRef.current?.click()}>{t('Import project')}</button>
         <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={(e) => importFile(e.target.files?.[0])} />
-        <button className="strong" onClick={() => setCreating(true)} data-testid="new-project">{t('New project')}</button>
+        <button className="strong" onClick={() => go({ page: 'new' })} data-testid="new-project">{t('New project')}</button>
       </header>
       <main className="homebody">
-        {creating && <NewProject onDone={() => setCreating(false)} />}
         {projects === null && <p className="hint">{t('Loading…')}</p>}
         {projects?.length === 0 && <p className="hint">{t('No projects yet. Is the local server running?')}</p>}
         <ul className="plist" data-testid="project-list">

@@ -2,7 +2,7 @@
 // Projects live on disk through the local server; this browser keeps a copy only for speed and crash recovery.
 import { create } from 'zustand';
 import { api, ApiError } from './api';
-import { CommandError, replaceProject, type Command } from './model/commands';
+import { CommandError, replaceProject, setSite, type Command } from './model/commands';
 import { withMep } from './model/commands';
 import { migrate, upgradeRaw } from './model/migrate';
 import { commit, initHist, redo, runCmd, undo, type Hist } from './model/history';
@@ -11,14 +11,15 @@ import { thumbOf, type ProjectFile, type VersionEntry } from './model/project-fi
 import { syncThickness } from './model/eng/commands';
 import type { Lang } from './i18n';
 
-export type Tab = 'design' | 'bim';
+/** P1: 'lot' is the lot wizard of an existing project (it edits the lot of every working version). */
+export type Tab = 'design' | 'bim' | 'lot';
 export type Tool = 'select' | 'door' | 'window' | 'outlet' | 'feature';
 export type EngTab = 'assumptions' | 'loads' | 'structure' | 'assemblies' | 'thermal' | 'environment' | 'cost';
 export type ViewMode = '2d' | '3d' | 'split';
 export type CameraPreset = 'street' | 'garden' | 'ramp' | 'top';
 export interface Section { h: string; v: 'off' | 'across' | 'along'; pos: number }
 export interface SunTime { month: number; day: number; hour: number }
-export type Route = { page: 'home' } | { page: 'project'; id: string; tab: Tab };
+export type Route = { page: 'home' } | { page: 'new' } | { page: 'project'; id: string; tab: Tab };
 export type SaveState = 'saved' | 'saving' | 'unsaved' | 'error';
 
 /** What the DESIGN tab edits; everything else is the BIM tab's (kept when the design is re-approved). */
@@ -47,10 +48,11 @@ function readUi(): { level: PlanLevel; view: ViewMode } {
 }
 
 export function parseRoute(hash: string): Route {
-  const m = /^#\/p\/([a-z0-9-]+)(?:\/(design|bim))?/.exec(hash);
+  if (/^#\/new\b/.test(hash)) return { page: 'new' };
+  const m = /^#\/p\/([a-z0-9-]+)(?:\/(design|bim|lot))?/.exec(hash);
   return m ? { page: 'project', id: m[1]!, tab: (m[2] as Tab | undefined) ?? 'design' } : { page: 'home' };
 }
-export const routeHash = (r: Route) => (r.page === 'home' ? '#/' : `#/p/${r.id}/${r.tab}`);
+export const routeHash = (r: Route) => (r.page === 'home' ? '#/' : r.page === 'new' ? '#/new' : `#/p/${r.id}/${r.tab}`);
 
 /** The design elements of a model, for comparing a design with its approved snapshot. */
 const designKey = (p: Project) => JSON.stringify(p.elements.filter((e) => DESIGN_TYPES.includes(e.type)));
@@ -158,6 +160,11 @@ export interface AppState {
   pick(id: string | null): void;
   /** P1 (Q24): switch to the DESIGN tab and select the same wall, door, window or room there. */
   editInDesign(id: string): void;
+  /** P1: a message for the lot wizard after a save (it then opens on its summary). */
+  lotNote: string | null;
+  /** P1: save the lot from the wizard into every working version (design versions and the BIM copy), one undo step each.
+   *  The checks re-run; nothing is moved. Returns the number of versions changed. */
+  saveLot(s: LotSave): Promise<number>;
 }
 
 let flashTimer: ReturnType<typeof setTimeout> | undefined;
@@ -173,6 +180,9 @@ export function versionFor(info: ProjectFile, tab: Tab): string {
   if (tab === 'bim') return info.versions.find((v) => v.kind === 'bim')?.id ?? info.designVersionId;
   return info.designVersionId;
 }
+
+/** P1: what the lot wizard saves on an existing project. */
+export interface LotSave { address: string; lot: Project['site']['lot']; region: Project['site']['region']; name?: string }
 
 export const useApp = create<AppState>((set, get) => {
   const hist = () => get().versions[get().active]!;
@@ -269,12 +279,14 @@ export const useApp = create<AppState>((set, get) => {
     camera: { preset: 'street', n: 0 },
     section: { h: 'off', v: 'off', pos: 6 },
     sun: { month: 6, day: 21, hour: 9 },
+    lotNote: null,
 
     go(r) {
       if (typeof location !== 'undefined' && location.hash !== routeHash(r)) location.hash = routeHash(r);
       const cur = get().route;
       set({ route: r });
       if (r.page === 'home') { void get().flush(); void get().loadProjects(); return; }
+      if (r.page === 'new') { void get().flush(); return; }
       if (cur.page !== 'project' || cur.id !== r.id || !get().info) void get().openProject(r.id, r.tab);
       else get().setTab(r.tab);
     },
@@ -328,7 +340,7 @@ export const useApp = create<AppState>((set, get) => {
         store.set(KEY.lang, lang);
         set({
           info, versions, bases, active, level, loading: null, lang, dirty: recovered, saveState: recovered.length ? 'unsaved' : 'saved',
-          route: { page: 'project', id, tab: active === versionFor(info, 'bim') && info.approvedVersionId ? 'bim' : 'design' },
+          route: { page: 'project', id, tab: tab === 'lot' ? 'lot' : active === versionFor(info, 'bim') && info.approvedVersionId ? 'bim' : 'design' },
         });
         if (recovered.length) { get().flash('Changes kept in this browser were brought back.'); scheduleSave(); }
       } catch (e) {
@@ -481,6 +493,33 @@ export const useApp = create<AppState>((set, get) => {
     set3d(patch) { set(patch); },
     goCamera(preset) { set((s) => ({ camera: { preset, n: s.camera.n + 1 }, walk: false })); },
     lookFrom(pos, target) { set((s) => ({ camera: { preset: s.camera.preset, n: s.camera.n + 1, pos, target }, walk: false })); },
+    async saveLot(sv) {
+      const s = get(), info = s.info;
+      if (!info) return 0;
+      let changed = 0;
+      const versions = { ...s.versions };
+      const edits = new Map<string, number>();
+      for (const v of info.versions) {
+        if (v.kind === 'approved' || !versions[v.id]) continue;
+        const h = versions[v.id]!;
+        const next = runCmd(h, setSite({ address: sv.address, lot: sv.lot, region: sv.region }));
+        if (next === h) continue;
+        versions[v.id] = next;
+        changed++;
+        if (v.kind === 'design') edits.set(v.id, 1);
+      }
+      const stage = info.stage === 'lot' ? 'start' : info.stage;
+      const nextInfo: ProjectFile = {
+        ...info, address: sv.address, name: sv.name?.trim() || info.name, stage,
+        versions: info.versions.map((v) => (edits.has(v.id) ? { ...v, edits: (v.edits ?? 0) + 1 } : v)),
+      };
+      const dirty = [...new Set([...s.dirty, ...info.versions.filter((v) => versions[v.id] !== s.versions[v.id]).map((v) => v.id)])];
+      set({ versions, info: nextInfo, dirty, saveState: 'unsaved', selection: null, preview: null });
+      // project.json is saved even when no model changed (name, stage)
+      if (!dirty.length) set({ dirty: [info.designVersionId] });
+      await get().flush();
+      return changed;
+    },
     editInDesign(id) {
       const s = get();
       if (!s.info) return;

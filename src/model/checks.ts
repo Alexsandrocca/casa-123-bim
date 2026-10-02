@@ -183,36 +183,10 @@ function boundaries(p: Project): { role: EdgeRole; name: string; a: P2; b: P2 }[
 /** Neighbour boundaries (not the street). */
 const neighbourBoundaries = (p: Project) => boundaries(p).filter((b) => b.role !== 'street');
 
-function siteChecks(p: Project): CheckResult[] {
+/** Footprint inside the setbacks (P1: every boundary of the lot, with its own setback; a corner lot has two fronts),
+ *  then the site coverage, floor-area ratio, permeable area and height when the lot has those rules. */
+export function setbackChecks(p: Project): CheckResult[] {
   const out: CheckResult[] = [];
-  const bounds = neighbourBoundaries(p);
-
-  // Civil Code 1.301: no window within 1.50 m of a neighbour boundary.
-  for (const L of planLevels(p)) {
-    for (const e of p.elements) {
-      if (e.type !== 'Opening' || e.level !== L) continue;
-      if (e.props.role !== 'window' && e.props.kind !== 'slider') continue;
-      const s = openingSegIn(p, e);
-      if (!s) continue;
-      const A = s.o === 'v' ? toLot(p, s.c, s.a) : toLot(p, s.a, s.c);
-      const B = s.o === 'v' ? toLot(p, s.c, s.b) : toLot(p, s.b, s.c);
-      let best = { d: Infinity, name: '' };
-      for (const bd of bounds) {
-        const d = distSegSeg(A, B, bd.a, bd.b);
-        if (d < best.d) best = { d, name: bd.name };
-      }
-      const host = getEl(p, e.props.host);
-      out.push({
-        id: `1301:${e.id}`, group: 'Site', level: L, elementIds: [e.id],
-        title: `${e.props.kind === 'slider' ? 'Glass slider' : e.props.high ? 'High window' : 'Window'} ${e.id}${host ? '' : ''}`,
-        status: best.d >= 1.5 - TOL ? 'pass' : 'fail',
-        value: `${m(best.d)} from the ${best.name}`,
-        rule: 'No window within 1.50 m of a neighbour boundary', source: 'Civil Code (Código Civil) art. 1.301',
-      });
-    }
-  }
-
-  // Footprint inside the setbacks (P1: every boundary of the lot, with its own setback; a corner lot has two fronts).
   const sb = p.site.lot.rules.setbacks;
   const corners = footprintCorners(p);
   const bs = boundaries(p);
@@ -252,6 +226,39 @@ function siteChecks(p: Project): CheckResult[] {
   if (bs.some((b) => b.role === 'left')) setback(s0.toLowerCase(), `${s0} side`, dist((b) => b.role === 'left'), sb.left);
   if (bs.some((b) => b.role === 'right')) setback(s1.toLowerCase(), `${s1} side`, dist((b) => b.role === 'right'), sb.right);
   out.push(...areaChecks(p));
+  return out;
+}
+
+function siteChecks(p: Project): CheckResult[] {
+  const out: CheckResult[] = [];
+  const bounds = neighbourBoundaries(p);
+
+  // Civil Code 1.301: no window within 1.50 m of a neighbour boundary.
+  for (const L of planLevels(p)) {
+    for (const e of p.elements) {
+      if (e.type !== 'Opening' || e.level !== L) continue;
+      if (e.props.role !== 'window' && e.props.kind !== 'slider') continue;
+      const s = openingSegIn(p, e);
+      if (!s) continue;
+      const A = s.o === 'v' ? toLot(p, s.c, s.a) : toLot(p, s.a, s.c);
+      const B = s.o === 'v' ? toLot(p, s.c, s.b) : toLot(p, s.b, s.c);
+      let best = { d: Infinity, name: '' };
+      for (const bd of bounds) {
+        const d = distSegSeg(A, B, bd.a, bd.b);
+        if (d < best.d) best = { d, name: bd.name };
+      }
+      const host = getEl(p, e.props.host);
+      out.push({
+        id: `1301:${e.id}`, group: 'Site', level: L, elementIds: [e.id],
+        title: `${e.props.kind === 'slider' ? 'Glass slider' : e.props.high ? 'High window' : 'Window'} ${e.id}${host ? '' : ''}`,
+        status: best.d >= 1.5 - TOL ? 'pass' : 'fail',
+        value: `${m(best.d)} from the ${best.name}`,
+        rule: 'No window within 1.50 m of a neighbour boundary', source: 'Civil Code (Código Civil) art. 1.301',
+      });
+    }
+  }
+
+  out.push(...setbackChecks(p));
   if (!p.site.region.rules.code) {
     out.push({
       id: 'site:city-rules', group: 'Site', elementIds: [], title: `City rules for ${p.site.region.city || 'this lot'}`, status: 'confirm',

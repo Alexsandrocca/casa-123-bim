@@ -1,5 +1,6 @@
 // The browser side of the local server's /api. No secrets pass through here.
 import type { ProjectFile, Settings } from './model/project-file';
+import type { LotAiFields } from './model/lot-ai';
 
 export class ApiError extends Error {
   constructor(public status: number, message: string, public code?: string) { super(message); }
@@ -34,5 +35,6 @@ export const api = {
   settings: () => call<Settings>('GET', '/api/settings'),
   putSettings: (s: Settings) => call<Settings>('PUT', '/api/settings', s),
   aiStatus: () => call<AiStatus>('GET', '/api/ai/status'),
+  aiLot: (text: string, project?: string) => call<{ fields: LotAiFields; usage: UsageLine; status: AiStatus }>('POST', '/api/ai/lot', { text, project }),
   aiTest: (project: string) => call<{ ok: boolean; reply: string; usage: UsageLine; status: AiStatus }>('POST', '/api/ai/test', { project }),
 };
