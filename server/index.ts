@@ -62,10 +62,6 @@ const TYPES: Record<string, string> = { '.html': 'text/html', '.js': 'text/javas
 
 async function main() {
   let vite: { middlewares: (req: IncomingMessage, res: ServerResponse, next: () => void) => void } | null = null;
-  if (!PROD) {
-    const { createServer: createVite } = await import('vite');
-    vite = await createVite({ root: ROOT, server: { middlewareMode: true, hmr: { port: PORT + 10000 } }, appType: 'spa' });
-  }
   const dist = join(ROOT, 'dist');
   const server = createServer((req, res) => {
     if (req.url?.startsWith('/api/')) { void api(req, res); return; }
@@ -74,6 +70,11 @@ async function main() {
     const file = p.startsWith(dist) && existsSync(p) && extname(p) ? p : join(dist, 'index.html');
     res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream' }).end(readFileSync(file));
   });
+  if (!PROD) {
+    // live reload shares this server's port (works on any port the launcher gives us)
+    const { createServer: createVite } = await import('vite');
+    vite = await createVite({ root: ROOT, server: { middlewareMode: true, hmr: { server } }, appType: 'spa' });
+  }
   server.listen(PORT, () => {
     console.log(`Casa BIM is running: http://localhost:${PORT}`);
     console.log(apiKey ? `AI: connected (${model}).` : 'AI: no key yet. Double-click "Add AI key.command", paste your key after ANTHROPIC_API_KEY=, save, then close this window and open the app again.');
