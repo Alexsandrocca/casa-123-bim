@@ -1,5 +1,5 @@
 # 09 — Reference images board with AI analysis
-Status: ready
+Status: superseded by docs/product/ROADMAP-v2.md (manager, 2026-10-01)
 
 ## Goal
 The owner uploads photos of real houses and details (facades, paint colours, interiors, roofs, floors, gardens), adds a note or a prompt to each, and gets:

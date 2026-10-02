@@ -1,5 +1,5 @@
 # 06 — Furniture and garden
-Status: draft
+Status: superseded by docs/product/ROADMAP-v2.md (manager, 2026-10-01)
 
 ## Goal
 Furnish the house and design the garden by dragging items from a library, with real sizes and clearance checks, so the family can test daily life: beds, crib, dining for 5, desks, washing line, play area.

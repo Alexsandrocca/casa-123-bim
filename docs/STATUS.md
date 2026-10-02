@@ -387,3 +387,7 @@ Spec 02 — 3D model (it is marked ready).
   - Q8 (move the patio steps).
 - GitHub works (origin is in sync). Keep pushing after every spec.
 - Next: **08**.
+
+## 2026-10-01 — Manager: roadmap realigned (waiting for owner approval)
+- New product direction: `docs/product/ROADMAP-v2.md` (two tabs, DESIGN → approve → BIM; phases P0–P8).
+- Specs 05, 06, 07, 09 and 10 are superseded. Owner approved it (family first, commercial later; API key available). **P0 is ready.**

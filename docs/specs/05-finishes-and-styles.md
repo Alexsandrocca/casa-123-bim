@@ -1,5 +1,5 @@
 # 05 — Finishes, colours and style presets
-Status: draft
+Status: superseded by docs/product/ROADMAP-v2.md (manager, 2026-10-01)
 
 ## Goal
 The family can try looks quickly: pick a style preset, then adjust any material. Everything stays measurable (m² of each finish).

@@ -1,5 +1,5 @@
 # 10 — Generate a new design version from reference images
-Status: ready
+Status: superseded by docs/product/ROADMAP-v2.md (manager, 2026-10-01)
 
 ## Goal
 The owner selects reference photos (spec 09), gives each a role and a prompt, adds an overall prompt, and gets a **complete new design version of Casa 123** inspired by them:

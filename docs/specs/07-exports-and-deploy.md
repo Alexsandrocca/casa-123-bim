@@ -1,5 +1,5 @@
 # 07 — Exports for professionals, and deploy
-Status: draft
+Status: superseded by docs/product/ROADMAP-v2.md (manager, 2026-10-01)
 
 ## Goal
 Hand the model to the architect and engineers without redrawing, and let the family open the app from any device.

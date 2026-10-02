@@ -7,6 +7,9 @@ A BIM-style web app for designing Alexsandro's family house at Rua Alceu Maynard
 - **Manager:** a Claude session in the "CASA 123" project. It writes and approves specs and reads `docs/STATUS.md` and `docs/QUESTIONS.md`.
 - **You (Claude Code):** the coder. Implement specs marked `Status: ready`, one at a time, using `/next-spec`.
 
+## Product direction (from 2026-10-01)
+Read `docs/product/ROADMAP-v2.md`. The app becomes a two-tab product: DESIGN (simple, prompt-driven) → Approve → BIM (technical, per discipline) → Outputs. Phases are P0–P8 in `docs/specs/P*.md`. Family first, commercial later: no hard-coded project facts, all UI text in en + pt-BR, secrets only in `.env.local` on the local server, never in the browser.
+
 ## Source of truth
 - Specs: `docs/specs/`. Never change a spec's requirements. If something is wrong or unclear, write it in `docs/QUESTIONS.md` and pick the most reasonable option so you are not blocked.
 - Design facts: `docs/reference/` (brief, rules, systems, `plan-v2.json`). The prototype `docs/reference/prototype-studio.html` shows the 2D editing behaviour the family already knows.
