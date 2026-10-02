@@ -1,5 +1,6 @@
 // Turns the building model into simple 3D parts (boxes, ground polygons, lines), in house coordinates.
 // Pure: no three.js here, so it can be tested and reused (walk mode, checks, exports).
+import { envelope } from '../model/lot';
 import { eq, openingSeg, pointInRect, wallSeg, type Seg } from '../model/geometry';
 import { profile } from '../model/profiles';
 import type { Carport, Column, Deck, Device, Element, Opening, Project, Rect, Slab, Space, Stair, Wall } from '../model/schema';
@@ -450,15 +451,11 @@ function sitePartsAndSurfaces(p: Project, out: Part[], surfaces: Surface[]) {
       out.push(part);
     }
   }
-  // Setback lines on the ground.
-  const sb = p.site.setbacks;
+  // The buildable envelope on the ground (P1: inside each boundary's setback).
   const line = (pts: [number, number][]) => out.push({ kind: 'line', id: 'site:setback', mat: 'setback', pts: pts.map(([x, y]) => [x, y, g(x, y) + 0.03] as V3) });
   const sample = (fn: (t: number) => [number, number]) => Array.from({ length: 41 }, (_, i) => fn(i / 40));
-  const yF = f.yStreet + sb.front, yR = f.yRear - sb.rear, xS = f.xSouth + sb.sides;
-  line(sample((t) => [xS + (f.xNorth(yF) - sb.sides - xS) * t, yF]));
-  line(sample((t) => [xS + (f.xNorth(yR) - sb.sides - xS) * t, yR]));
-  line(sample((t) => [xS, yF + (yR - yF) * t]));
-  line(sample((t) => { const y = yF + (yR - yF) * t; return [f.xNorth(y) - sb.sides, y]; }));
+  const env = envelope(p.site.lot).map(([x, y]) => [x - p.site.houseOrigin.x, y - p.site.houseOrigin.y] as [number, number]);
+  env.forEach((a, i) => { const b = env[(i + 1) % env.length]!; line(sample((t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t])); });
 
   // Entry steps and landing in front of each street-level door on the front wall.
   if (sl?.outline) {

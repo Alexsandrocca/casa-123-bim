@@ -1,6 +1,7 @@
 // The ground: lot, natural slope, the cut, the north ramp and the south passage.
 // Everything is in house coordinates (x south→north, y street→rear, z up).
 import type { Project, Rect } from './schema';
+import { profileEnds } from './lot';
 
 export type P2 = [number, number];
 export interface GroundZone {
@@ -16,18 +17,35 @@ export interface GroundZone {
 export const RAMP_DEFAULT = { width: 4, slope: 0.125 };
 export const EAVES_LIMIT_DEFAULT = 0.7;
 
+/** x of the right-hand boundary (seen from the street) at a given y: the far end of the lot across at that depth.
+ *  Outside the lot's depth, the boundary line nearest to it is extended. */
+export function rightX(lot: P2[], y: number): number {
+  const ys = lot.map((c) => c[1]);
+  const yc = Math.min(Math.max(y, Math.min(...ys)), Math.max(...ys));
+  let best = -Infinity, line: [P2, P2] | undefined;
+  for (let i = 0; i < lot.length; i++) {
+    const a = lot[i]!, b = lot[(i + 1) % lot.length]!;
+    if (a[1] === b[1] || yc < Math.min(a[1], b[1]) - 1e-9 || yc > Math.max(a[1], b[1]) + 1e-9) continue;
+    const x = a[0] + ((b[0] - a[0]) * (yc - a[1])) / (b[1] - a[1]);
+    if (x > best) { best = x; line = [a, b]; }
+  }
+  if (!line) return Math.max(...lot.map((c) => c[0]));
+  const [a, b] = line;
+  return a[0] + ((b[0] - a[0]) * (y - a[1])) / (b[1] - a[1]);
+}
+
 export function siteFrame(p: Project) {
   const o = p.site.houseOrigin;
-  const lot = p.site.lotPolygon.map(([x, y]) => [x - o.x, y - o.y] as P2);
+  const lot = p.site.lot.polygon.map(([x, y]) => [x - o.x, y - o.y] as P2);
   const yStreet = Math.min(...lot.map((c) => c[1]));
   const yRear = Math.max(...lot.map((c) => c[1]));
   const xSouth = Math.min(...lot.map((c) => c[0]));
-  const [, nFront, nRear] = lot as [P2, P2, P2, P2];
-  /** x of the north boundary at a given y. */
-  const xNorth = (y: number) => nFront[0] + ((nRear[0] - nFront[0]) * (y - nFront[1])) / (nRear[1] - nFront[1]);
+  /** x of the right-hand boundary (Casa 123: the north one) at a given y. */
+  const xNorth = (y: number) => rightX(lot, y);
   const depth = yRear - yStreet;
-  /** Natural ground before any work: 0.00 at the street, falling to −fall at the rear. */
-  const natural = (y: number) => -p.site.fallStreetToRear * (y - yStreet) / depth;
+  /** Natural ground before any work along the middle of the lot (P1: from site.lot.terrain), 0.00 at the street front. */
+  const { front: zf, rear: zr } = profileEnds(p.site.lot);
+  const natural = (y: number) => zf + (zr - zf) * (y - yStreet) / depth;
   const house = houseRect(p);
   const garden = p.site.cut.gardenLevel;
   const ramp = p.site.ramp ?? RAMP_DEFAULT;

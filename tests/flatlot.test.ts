@@ -28,8 +28,8 @@ const CASA = ['Casa 123', 'Piracicaba', 'Alceu', 'CPFL', 'SEMAE', 'LC 474', '-22
 describe('flat-lot fixture (P0)', () => {
   it('is a 12 × 30 m flat lot, street to the west, north to the left, one storey, 3 rooms', () => {
     expect(ProjectFile.parse(read('project.json')).id).toBe('flat-lot');
-    expect(p.site.lot).toEqual({ front: 12, rear: 12, sides: 30 });
-    expect(p.site.fallStreetToRear).toBe(0);
+    expect(p.site.lot.polygon).toEqual([[0, 0], [12, 0], [12, 30], [0, 30]]);
+    expect(p.site.lot.terrain.kind).toBe('flat');
     expect(streetSide(p)).toBe('W');
     // standing in the street looking at the lot (east), north is to the left: the house −x side
     const [nx, ny] = bearingDir(p, 0);

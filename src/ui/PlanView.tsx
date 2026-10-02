@@ -534,7 +534,7 @@ function ElectricalOverlay({ p, level, selection, line, rect, px, py, physics }:
     const sel = selection === d.id || (selCircuit && d.props.circuit === selCircuit) ? ' sel' : '';
     const parts: ReactNode[] = [];
     if (t.group === 'camera') {
-      const b = ((p.site.region.xBearing - (d.props.bearing ?? 0)) * Math.PI) / 180, half = ((cameraFov(d.props.lensMm ?? 2.8) / 2) * Math.PI) / 180, r = cameraRange(d.props.lensMm ?? 2.8);
+      const b = ((p.site.lot.geo.xBearing - (d.props.bearing ?? 0)) * Math.PI) / 180, half = ((cameraFov(d.props.lensMm ?? 2.8) / 2) * Math.PI) / 180, r = cameraRange(d.props.lensMm ?? 2.8);
       const pt = (ang: number) => [x + Math.cos(ang) * r, y + Math.sin(ang) * r] as const;
       const [ax, ay] = pt(b + half), [bx, by] = pt(b - half);
       parts.push(<path key="fov" d={`M${px(x)},${py(y)} L${px(ax)},${py(ay)} A${r * 40},${r * 40} 0 0 0 ${px(bx)},${py(by)} Z`} className="fov2d" />);

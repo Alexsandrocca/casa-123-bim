@@ -3,9 +3,9 @@
 import {
   E, MIN_ROOM_WIDTH, eq, findHandle, getEl, q, snap, spacesOn, wallSeg, type Orient,
 } from './geometry';
-import { Element as ElementSchema, isPlanLevel, planLevels, type Device, type Element, type Opening, type Project, type Rect, type SolarArray, type Wall } from './schema';
+import { Element as ElementSchema, isPlanLevel, planLevels, type Device, type Element, type NumFact, type Opening, type Project, type Rect, type SolarArray, type Wall } from './schema';
 import { clampToHost, nextId, rebuildLevel } from './walls';
-import { UTILITIES_DEFAULT, withPlumbing } from './plumbing/route';
+import { utilities, withPlumbing } from './plumbing/route';
 import { withElectrical } from './electrical/design';
 import { deviceType } from './electrical/library';
 import { hostOne, withHosts } from './mep/hosting';
@@ -308,14 +308,21 @@ export function setPipe(id: string, patch: { dn?: number; material?: 'PVC' | 'PP
 }
 
 /** Street services: sewer depth (from the water company), rainfall intensity… The checks recompute; the pipes re-route. */
-export function setUtilities(patch: Partial<NonNullable<Project['site']['utilities']>>): Command {
+export function setUtilities(patch: Partial<{ sewerDepth: number; sewerOffset: number; waterMainDepth: number; rainIntensity: number }>): Command {
   return {
     label: 'Change street services',
     apply(p) {
-      const u = { ...(p.site.utilities ?? UTILITIES_DEFAULT), ...patch };
+      const u = { ...utilities(p), ...patch };
       if (u.sewerDepth < 0.5 || u.sewerDepth > 8) throw new CommandError('The sewer depth should be between 0.5 and 8 m.');
       if (u.rainIntensity < 50 || u.rainIntensity > 400) throw new CommandError('Rainfall intensity should be between 50 and 400 mm/h.');
-      return withPlumbing({ ...p, site: { ...p.site, utilities: u } });
+      const sv = p.site.lot.services, today = new Date().toISOString().slice(0, 10);
+      const set = (f: NumFact, v: number | undefined): NumFact => (v === undefined || v === f.value ? f : { ...f, value: v, date: today });
+      const services = {
+        ...sv,
+        sewer: { ...sv.sewer, depth: set(sv.sewer.depth, patch.sewerDepth), offset: u.sewerOffset },
+        water: { ...sv.water, depth: set(sv.water.depth, patch.waterMainDepth) },
+      };
+      return withPlumbing({ ...p, site: { ...p.site, lot: { ...p.site.lot, services }, region: { ...p.site.region, rainIntensity: u.rainIntensity } } });
     },
   };
 }

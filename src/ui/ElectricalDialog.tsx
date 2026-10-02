@@ -1,4 +1,5 @@
 // Electrical window: circuits, panels (board and single-line diagram), solar, cameras, bill of materials. Read from the model.
+import { powerCompany, supplyConfirmed, supplyOf } from '../model/region';
 import { exportName } from '../model/legal';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { setSolar } from '../model/commands';
@@ -141,7 +142,7 @@ function SingleLine({ p, circuits, main, sub, pv, inverter, battery, essential }
   const t = useT();
   const rcd = ` · ${t('RCD')}`;
   const tx = (x: number, y: number, s: string, cls = 'sll', anchor: 'start' | 'middle' | 'end' = 'start') => <text key={`${x},${y},${s}`} x={x} y={y} className={cls} textAnchor={anchor}>{s}</text>;
-  o.push(<rect key="cpfl" x={20} y={20} width={120} height={30} className="slbox" />, tx(80, 40, `${p.site.region.supply.utility ?? t('Supply (TO CONFIRM)')} ${p.site.region.supply.phaseV}/${p.site.region.supply.lineV} V ${p.site.region.supply.phases}φ`, 'sll', 'middle'));
+  o.push(<rect key="cpfl" x={20} y={20} width={120} height={30} className="slbox" />, tx(80, 40, `${powerCompany(p)} ${supplyOf(p).phaseV}/${supplyOf(p).lineV} V ${supplyOf(p).phases}φ${supplyConfirmed(p) ? '' : ` (${t('to confirm')})`}`, 'sll', 'middle'));
   o.push(<line key="l1" x1={140} y1={35} x2={180} y2={35} className="slw" />, <rect key="m" x={180} y={22} width={60} height={26} className="slbox" />, tx(210, 39, t('meter ⇄'), 'sll', 'middle'));
   o.push(<line key="l2" x1={240} y1={35} x2={busX1} y2={35} className="slw" />, tx(244, 62, t('main 63 A + DPS'), 'sls'));
   o.push(<line key="bus1" x1={busX1} y1={35} x2={busX1} y2={60 + mainC.length * rowH} className="slbus" />, tx(busX1 + 6, 30, main?.props.name ?? t('Main panel'), 'slt'));
@@ -261,7 +262,7 @@ function Cameras({ p }: { p: Project }) {
           {cov.blind.map(([x, y], i) => <rect key={`b${i}`} x={X(x - cov.cell / 2)} y={Y(y + cov.cell / 2)} width={cov.cell * S} height={cov.cell * S} className="lm-blind" />)}
           {cams.map((c) => {
             const [cx, cy] = c.props.at, lens = c.props.lensMm ?? 2.8;
-            const b = ((p.site.region.xBearing - (c.props.bearing ?? 0)) * Math.PI) / 180, half = ((cameraFov(lens) / 2) * Math.PI) / 180, r = cameraRange(lens);
+            const b = ((p.site.lot.geo.xBearing - (c.props.bearing ?? 0)) * Math.PI) / 180, half = ((cameraFov(lens) / 2) * Math.PI) / 180, r = cameraRange(lens);
             const pt = (a: number) => [X(cx + Math.cos(a) * r), Y(cy + Math.sin(a) * r)];
             const [ax, ay] = pt(b + half), [bx, by] = pt(b - half);
             return (

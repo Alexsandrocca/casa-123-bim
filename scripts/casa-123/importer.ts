@@ -1,5 +1,7 @@
 // Casa 123 only: converts the prototype's cell plans (plan-v2.json, BASE1) into the building model of each version.
 // The app never imports this file; the results live in projects/casa-123/.
+import { upgradeSite, type OldSite } from '../../src/model/migrate';
+import { siteFrame } from '../../src/model/site';
 import { WALL_THICKNESS, boundarySegs, deriveInteriorSegs, eq, fmtLevel, q, segToWallEnds, wallSeg, type Seg } from '../../src/model/geometry';
 import { DECK_SLAB } from '../../src/model/profiles';
 import { generateStructure } from '../../src/model/structure';
@@ -40,8 +42,8 @@ export interface SourceLevels {
   garden: { level: number; from_house_y: number };
 }
 
-/** Where Casa 123 is: Piracicaba/SP, the street to the east (house +x is north). */
-export const CASA_REGION: Project['site']['region'] = {
+/** Where Casa 123 is: Piracicaba/SP, the street to the east (house +x is north). The pre-P1 shape; upgradeSite moves it into site.lot. */
+const CASA_REGION: OldSite['region'] = {
   city: 'Piracicaba', state: 'SP', lat: -22.72, lon: -47.65, utcOffset: -3, xBearing: 0,
   supply: { utility: 'CPFL', phaseV: 127, lineV: 220, phases: 3, confirmed: false },
   water: 'SEMAE',
@@ -52,9 +54,8 @@ export const CASA_REGION: Project['site']['region'] = {
 /** Casa 123 engineering values that are TO CONFIRM for Piracicaba (spec 08). */
 export const CASA_ASSUMPTIONS = { zone: 2, v0: 40 };
 
-export const SITE: Project['site'] = {
+const SITE_BEFORE_P1: OldSite = {
   address: 'Rua Alceu Maynardi Araújo, 123, Nova Piracicaba, Piracicaba/SP',
-  lot: { front: 14, rear: 15, sides: 25 },
   // Assumption: the south boundary is square to the street; the extra metre at the rear widens the north side.
   lotPolygon: [[0, 0], [14, 0], [15, 25], [0, 25]],
   houseOrigin: { x: 1.92, y: 4 },
@@ -75,6 +76,8 @@ export const SITE: Project['site'] = {
     'Which side boundary takes the extra 1 m at the rear',
   ],
 };
+/** P1: the Casa 123 lot (site.lot), from the facts above. */
+export const SITE: Project['site'] = upgradeSite(SITE_BEFORE_P1);
 
 
 const DOOR_HEIGHT: Record<string, number> = { door: 2.1, slider: 2.2, garage: 2.4 };
@@ -454,7 +457,7 @@ function addCrossingNotes(p: Project) {
         const tread = z + (Math.floor(((cut - f.yBottom) * dir) / st.props.tread) + 1) * st.props.riser;
         const wallTop = (p.levels.find((l) => l.id === wall.level)?.elevation ?? 0) + wall.props.height;
         if (tread >= wallTop) { z += f.risers * st.props.riser; continue; } // the flight is above the wall there
-        const ground = -p.site.fallStreetToRear * (cut + p.site.houseOrigin.y) / Math.max(...p.site.lotPolygon.map((c) => c[1]));
+        const ground = siteFrame(p).natural(cut);
         const name = st.props.name.charAt(0).toLowerCase() + st.props.name.slice(1);
         const note = `Stair and retaining wall: the ${name} passes over the cut line (y ${cut.toFixed(2)}), x ${f.x0.toFixed(2)}–${f.x1.toFixed(2)}. `
           + `The ground there is at about ${ground.toFixed(2)}, so the retained soil stays well below the flight (tread about ${tread >= 0 ? '+' : ''}${tread.toFixed(2)} at y ${cut.toFixed(2)}). `

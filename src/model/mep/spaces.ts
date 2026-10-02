@@ -186,7 +186,7 @@ function build(p: Project): MepContext {
     }));
   }
   /* underground: outside the house, and under the lower-level slab on grade */
-  const lot = p.site.lotPolygon.map(([x, y]) => [x - p.site.houseOrigin.x, y - p.site.houseOrigin.y] as P2);
+  const lot = p.site.lot.polygon.map(([x, y]) => [x - p.site.houseOrigin.x, y - p.site.houseOrigin.y] as P2);
   const lx = lot.map((c) => c[0]), ly = lot.map((c) => c[1]);
   const lotRect: Rect = { x0: Math.min(...lx) - 0.5, x1: Math.max(...lx) + 0.5, y0: Math.min(...ly) - 8, y1: Math.max(...ly) };
   // floors that touch the ground: the entry floor and any below it

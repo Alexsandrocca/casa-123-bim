@@ -501,9 +501,10 @@ export const useApp = create<AppState>((set, get) => {
 });
 
 /** Lot summary for the project list, from a design model. */
-export function lotSummary(p: Project): ProjectFile['lot'] {
-  const xs = p.site.lotPolygon.map((c) => c[0]), ys = p.site.lotPolygon.map((c) => c[1]);
-  const area = Math.abs(p.site.lotPolygon.reduce((a, [x, y], i) => { const [u, v] = p.site.lotPolygon[(i + 1) % p.site.lotPolygon.length]!; return a + x * v - u * y; }, 0)) / 2;
+export function lotSummary(p: Pick<Project, 'site'>): ProjectFile['lot'] {
+  const poly = p.site.lot.polygon;
+  const xs = poly.map((c) => c[0]), ys = poly.map((c) => c[1]);
+  const area = Math.abs(poly.reduce((a, [x, y], i) => { const [u, v] = poly[(i + 1) % poly.length]!; return a + x * v - u * y; }, 0)) / 2;
   return { city: p.site.region.city, state: p.site.region.state, front: Math.max(...xs) - Math.min(...xs), depth: Math.max(...ys) - Math.min(...ys), area: Math.round(area * 10) / 10 };
 }
 

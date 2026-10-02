@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { api, ApiError } from '../api';
 import { useT } from '../i18n/useT';
 import type { ProjectFile } from '../model/project-file';
-import { starterModel } from '../model/starter';
+import { rectLot, starterModel } from '../model/starter';
+import { regionFor } from '../model/cities';
 import type { Compass } from '../model/orientation';
 import { lotSummary, useApp } from '../store';
 import { ZONE_COLOR } from './PlanView';
@@ -38,9 +39,10 @@ function NewProject({ onDone }: { onDone: () => void }) {
   const create = async () => {
     setBusy(true); setErr('');
     try {
+      const city = f.city.trim(), state = f.state.trim().toUpperCase();
       const model = starterModel({
-        project: f.name.trim(), address: f.address.trim(), city: f.city.trim(), state: f.state.trim().toUpperCase(),
-        lat: num(f.lat), lon: num(f.lon), lotWidth: num(f.width), lotDepth: num(f.depth), street: f.street,
+        project: f.name.trim(), address: f.address.trim(), region: regionFor(city, state),
+        lot: rectLot({ city, state, lat: num(f.lat), lon: num(f.lon), lotWidth: num(f.width), lotDepth: num(f.depth), street: f.street }),
       });
       const now = new Date().toISOString();
       const info: ProjectFile = {

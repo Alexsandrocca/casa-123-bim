@@ -79,7 +79,7 @@ export function engineeringChecks(p: Project): CheckResult[] {
   });
 
   // eaves added as features
-  const limit = p.site.eavesLimit ?? NaN;
+  const limit = p.site.lot.rules.eaves.value ?? NaN;
   for (const e of p.elements) {
     if (e.type !== 'Feature' || e.props.kind !== 'eave') continue;
     const sl = p.elements.find((x) => x.id === e.props.host);

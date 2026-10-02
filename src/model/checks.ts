@@ -2,7 +2,9 @@
 import {
   distSegSeg, getEl, glassArea, openingSegIn, pointInRect, spaceArea, spacesOn, toLot,
 } from './geometry';
-import { planLevels, type Project, type Space, type Stair } from './schema';
+import { planLevels, type NumFact, type Project, type Rect, type Space, type Stair } from './schema';
+import { ccwLot, edgeRoles, lotFigures, polyArea, type EdgeRole } from './lot';
+import { groundZones } from './site';
 import { compassOf } from './orientation';
 import { cityCode, sanitary } from './region';
 import { checkSupport } from './support';
@@ -166,15 +168,20 @@ function stairChecks(p: Project): CheckResult[] {
   return out;
 }
 
-/** Neighbour boundaries (not the street): south side, rear, north side. Lot coordinates. */
-function neighbourBoundaries(p: Project): { name: string; a: [number, number]; b: [number, number] }[] {
-  const [s0, n0, n1, s1] = p.site.lotPolygon as [[number, number], [number, number], [number, number], [number, number]];
-  return [
-    { name: 'south boundary', a: s0, b: s1 },
-    { name: 'rear boundary', a: s1, b: n1 },
-    { name: 'north boundary', a: n0, b: n1 },
-  ];
+type P2 = [number, number];
+/** The lot's boundaries with their role, in lot coordinates (P1: from site.lot; the left side, the rear, the right side, then the streets). */
+function boundaries(p: Project): { role: EdgeRole; name: string; a: P2; b: P2 }[] {
+  const lot = ccwLot(p.site.lot), roles = edgeRoles(lot), n = lot.polygon.length;
+  const order: Record<EdgeRole, number> = { left: 0, rear: 1, right: 2, street: 3 };
+  return lot.polygon.map((a, i) => {
+    const b = lot.polygon[(i + 1) % n]!, role = roles[i]!;
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+    const name = role === 'rear' ? 'rear boundary' : role === 'street' ? 'street' : `${SIDE[compassOf(p, (b[1] - a[1]) / len, -(b[0] - a[0]) / len)].toLowerCase()} boundary`;
+    return { role, name, a, b };
+  }).sort((u, v) => order[u.role] - order[v.role]);
 }
+/** Neighbour boundaries (not the street). */
+const neighbourBoundaries = (p: Project) => boundaries(p).filter((b) => b.role !== 'street');
 
 function siteChecks(p: Project): CheckResult[] {
   const out: CheckResult[] = [];
@@ -205,41 +212,46 @@ function siteChecks(p: Project): CheckResult[] {
     }
   }
 
-  // Footprint inside the setbacks.
-  const sb = p.site.setbacks;
-  const [, n0, n1] = p.site.lotPolygon as [[number, number], [number, number], [number, number]];
-  const depth = Math.max(...p.site.lotPolygon.map((c) => c[1]));
-  let front = Infinity, rear = Infinity, south = Infinity, north = Infinity;
-  for (const lv of p.levels) {
-    if (!lv.plan || !lv.outline) continue;
-    const o = lv.outline;
-    const corners: [number, number][] = [toLot(p, o.x0, o.y0), toLot(p, o.x1, o.y0), toLot(p, o.x1, o.y1), toLot(p, o.x0, o.y1)];
-    for (const [x, y] of corners) {
-      front = Math.min(front, y);
-      rear = Math.min(rear, depth - y);
-      south = Math.min(south, x);
-      north = Math.min(north, distSegSeg([x, y], [x, y], n0, n1));
+  // Footprint inside the setbacks (P1: every boundary of the lot, with its own setback; a corner lot has two fronts).
+  const sb = p.site.lot.rules.setbacks;
+  const corners = footprintCorners(p);
+  const bs = boundaries(p);
+  const dist = (pick: (b: (typeof bs)[number]) => boolean) => {
+    let d = Infinity;
+    // signed: a corner on the outer side of a boundary counts as negative
+    for (const b of bs.filter(pick)) for (const c of corners) {
+      const out = (b.b[0] - b.a[0]) * (c[1] - b.a[1]) - (b.b[1] - b.a[1]) * (c[0] - b.a[0]) < 0;
+      d = Math.min(d, (out ? -1 : 1) * distSegSeg(c, c, b.a, b.b));
     }
-  }
-  const setback = (key: string, label: string, value: number, need: number) => out.push({
+    return d;
+  };
+  const setback = (key: string, label: string, value: number, need: NumFact) => out.push(need.value === null ? {
+    id: `setback:${key}`, group: 'Site', elementIds: [], title: `${label} setback`, status: 'confirm',
+    value: `${m(value)} (setback TO CONFIRM)`, rule: `Building footprint inside the ${label.toLowerCase()} setback`, source: cityCode(p),
+  } : {
     id: `setback:${key}`, group: 'Site', elementIds: [],
-    title: `${label} setback`, status: value >= need - TOL ? 'pass' : 'fail',
-    value: `${m(value)} (min ${need.toFixed(2)} m)`,
-    rule: `Building footprint at least ${need.toFixed(2)} m from the ${label.toLowerCase()} boundary`,
-    source: `Setbacks given by the owner (${cityCode(p)})`,
+    title: `${label} setback`, status: value >= need.value - TOL ? 'pass' : 'fail',
+    value: `${m(value)} (min ${need.value.toFixed(2)} m)`,
+    rule: `Building footprint at least ${need.value.toFixed(2)} m from the ${label.toLowerCase()} boundary`,
+    source: need.status === 'given' ? `Setbacks given by the owner (${cityCode(p)})` : need.status === 'confirmed' ? `Setbacks confirmed (${cityCode(p)})` : `Setbacks TO CONFIRM (${cityCode(p)})`,
   });
-  setback('front', 'Front', front, sb.front);
-  const carports = p.elements.filter((e) => e.type === 'Carport');
-  if (carports.length) {
-    const r = out[out.length - 1]!;
-    r.value += ` · house building line; not counting the carport (${carports.map((c) => c.id).join(', ')}), see its own check`;
-    r.elementIds = carports.map((c) => c.id);
-  }
-  setback('rear', 'Rear', rear, sb.rear);
+  const streets = bs.filter((b) => b.role === 'street');
+  streets.forEach((st, k) => {
+    setback(k ? `front-${k + 1}` : 'front', k ? `Front (street ${k + 1})` : 'Front', dist((b) => b === st), sb.front);
+    if (k) return;
+    const carports = p.elements.filter((e) => e.type === 'Carport');
+    if (carports.length) {
+      const r = out[out.length - 1]!;
+      r.value += ` · house building line; not counting the carport (${carports.map((c) => c.id).join(', ')}), see its own check`;
+      r.elementIds = carports.map((c) => c.id);
+    }
+  });
+  if (bs.some((b) => b.role === 'rear')) setback('rear', 'Rear', dist((b) => b.role === 'rear'), sb.rear);
   // the two side boundaries, named by the compass point they face
   const s0 = SIDE[compassOf(p, -1, 0)], s1 = SIDE[compassOf(p, 1, 0)];
-  setback(s0.toLowerCase(), `${s0} side`, south, sb.sides);
-  setback(s1.toLowerCase(), `${s1} side`, north, sb.sides);
+  if (bs.some((b) => b.role === 'left')) setback(s0.toLowerCase(), `${s0} side`, dist((b) => b.role === 'left'), sb.left);
+  if (bs.some((b) => b.role === 'right')) setback(s1.toLowerCase(), `${s1} side`, dist((b) => b.role === 'right'), sb.right);
+  out.push(...areaChecks(p));
   if (!p.site.region.rules.code) {
     out.push({
       id: 'site:city-rules', group: 'Site', elementIds: [], title: `City rules for ${p.site.region.city || 'this lot'}`, status: 'confirm',
@@ -267,7 +279,7 @@ function structureChecks(p: Project): CheckResult[] {
       rule: 'Nothing may float', source: 'Project rule (spec 02)',
     });
   }
-  const limit = p.site.eavesLimit;
+  const limit = p.site.lot.rules.eaves.value ?? undefined;
   for (const e of p.elements) {
     if (e.type !== 'Slab' || e.props.eaves === undefined) continue;
     out.push(limit === undefined ? {
@@ -316,8 +328,88 @@ function parkingChecks(p: Project): CheckResult[] {
       id: `carport-setback:${c.id}`, group: 'Site', elementIds: [c.id], title: 'Carport in the front setback',
       status: 'confirm',
       value: 'TO CONFIRM with the city hall (Prefeitura)',
-      rule: `A covered carport in the ${p.site.setbacks.front.toFixed(0)} m front setback, and how much of it counts in site coverage`,
+      rule: `A covered carport in the ${p.site.lot.rules.setbacks.front.value === null ? '' : `${p.site.lot.rules.setbacks.front.value.toFixed(0)} m `}front setback, and how much of it counts in site coverage`,
       source: `${cityCode(p)} (to confirm)`,
+    });
+  }
+  return out;
+}
+
+/** Plan corners of every floor outline, in lot coordinates. */
+function footprintCorners(p: Project): P2[] {
+  const out: P2[] = [];
+  for (const lv of p.levels) {
+    if (!lv.plan || !lv.outline) continue;
+    const o = lv.outline;
+    out.push(toLot(p, o.x0, o.y0), toLot(p, o.x1, o.y0), toLot(p, o.x1, o.y1), toLot(p, o.x0, o.y1));
+  }
+  return out;
+}
+
+/** Area covered by a set of rectangles (overlaps counted once). */
+export function unionArea(rs: Rect[]): number {
+  const xs = [...new Set(rs.flatMap((r) => [r.x0, r.x1]))].sort((a, b) => a - b);
+  let a = 0;
+  for (let i = 0; i + 1 < xs.length; i++) {
+    const xm = (xs[i]! + xs[i + 1]!) / 2;
+    const iv = rs.filter((r) => r.x0 < xm && r.x1 > xm).map((r) => [r.y0, r.y1] as [number, number]).sort((u, v) => u[0] - v[0]);
+    let len = 0, cur: [number, number] | null = null;
+    for (const [y0, y1] of iv) {
+      if (!cur || y0 > cur[1]) { if (cur) len += cur[1] - cur[0]; cur = [y0, y1]; } else cur[1] = Math.max(cur[1], y1);
+    }
+    if (cur) len += cur[1] - cur[0];
+    a += len * (xs[i + 1]! - xs[i]!);
+  }
+  return a;
+}
+
+/** P1: site coverage (TO), floor-area ratio (CA), permeable area (TP) and height, when the lot has those rules. */
+function areaChecks(p: Project): CheckResult[] {
+  const out: CheckResult[] = [];
+  const r = p.site.lot.rules;
+  const lotA = lotFigures(p.site.lot).area;
+  const src = (f: NumFact) => `${cityCode(p)}${f.status === 'to-confirm' ? ' (TO CONFIRM)' : ''}`;
+  const outlines = p.levels.filter((l) => l.plan && l.outline).map((l) => l.outline!);
+  const footprint = unionArea(outlines);
+  if (r.coverage.value !== null) {
+    const max = (r.coverage.value / 100) * lotA;
+    out.push({
+      id: 'site:coverage', group: 'Site', elementIds: [], title: 'Site coverage (TO)', status: footprint <= max + TOL ? 'pass' : 'fail',
+      value: `${m2(footprint)} = ${((footprint / lotA) * 100).toFixed(1)} % of the lot (max ${r.coverage.value} % = ${m2(max)})`,
+      rule: `Building footprint at most ${r.coverage.value} % of the lot (eaves within the limit and the carport as the city decides)`, source: src(r.coverage),
+    });
+  }
+  if (r.far.value !== null) {
+    const built = planLevels(p).reduce((a, L) => a + spacesOn(p, L).reduce((b, s) => b + spaceArea(s), 0), 0);
+    const max = r.far.value * lotA;
+    out.push({
+      id: 'site:far', group: 'Site', elementIds: [], title: 'Floor-area ratio (CA)', status: built <= max + TOL ? 'pass' : 'fail',
+      value: `${m2(built)} built = ${(built / lotA).toFixed(2)} × the lot (max ${r.far.value} = ${m2(max)})`,
+      rule: `Total built area at most ${r.far.value} × the lot area`, source: src(r.far),
+    });
+  }
+  if (r.permeability.value !== null) {
+    const paved = groundZones(p).filter((z) => z.surface === 'paving' || z.surface === 'ramp').reduce((a, z) => a + polyArea(z.poly), 0);
+    const free = Math.max(0, lotA - footprint - paved), min = (r.permeability.value / 100) * lotA;
+    out.push({
+      id: 'site:permeable', group: 'Site', elementIds: [], title: 'Permeable area (TP)', status: free >= min - TOL ? 'pass' : 'fail',
+      value: `about ${m2(free)} = ${((free / lotA) * 100).toFixed(1)} % of the lot (min ${r.permeability.value} % = ${m2(min)})`,
+      rule: `At least ${r.permeability.value} % of the lot left permeable (garden, not paved or built)`, source: src(r.permeability),
+    });
+  }
+  if (r.height.value !== null) {
+    const top = Math.max(...p.elements.flatMap((e) => (e.type === 'Slab' ? [e.props.topElevation + (e.props.parapet ?? 0)] : [])), ...p.levels.map((l) => l.elevation));
+    out.push({
+      id: 'site:height', group: 'Site', elementIds: [], title: 'Height limit', status: top <= r.height.value + TOL ? 'pass' : 'fail',
+      value: `top at +${top.toFixed(2)} m above the street (max ${r.height.value.toFixed(2)} m)`,
+      rule: `Building at most ${r.height.value.toFixed(2)} m high`, source: src(r.height),
+    });
+  }
+  if (r.floors.value !== null) {
+    const n = planLevels(p).length;
+    out.push({
+      id: 'site:floors', group: 'Site', elementIds: [], title: 'Number of floors', status: n <= r.floors.value ? 'pass' : 'fail',
+      value: `${n} floors (max ${r.floors.value})`, rule: `At most ${r.floors.value} floors`, source: src(r.floors),
     });
   }
   return out;

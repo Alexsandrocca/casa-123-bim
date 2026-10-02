@@ -87,5 +87,7 @@ export function placeV3Plumbing(p: Project, overlays: Record<string, { plumb: [s
   add('infiltration-trench', 'LL', [4.3, 19.0], p.site.cut.gardenLevel);
   add('sump-pump', 'LL', [8.0, 16.6], p.site.cut.gardenLevel);
 
-  return { ...p, site: { ...p.site, utilities: CASA_UTILITIES }, elements: [...p.elements, ...fx] };
+  const sv = p.site.lot.services, u = CASA_UTILITIES, est = (value: number, source: string) => ({ value, status: 'to-confirm' as const, source, date: '2026-10-02' });
+  const services = { ...sv, sewer: { ...sv.sewer, depth: est(u.sewerDepth, 'Estimate, SEMAE to confirm'), offset: u.sewerOffset }, water: { ...sv.water, depth: est(u.waterMainDepth, 'Estimate') } };
+  return { ...p, site: { ...p.site, lot: { ...p.site.lot, services }, region: { ...p.site.region, rainIntensity: u.rainIntensity } }, elements: [...p.elements, ...fx] };
 }

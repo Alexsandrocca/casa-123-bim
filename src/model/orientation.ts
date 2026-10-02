@@ -1,5 +1,5 @@
 // Compass ↔ house coordinates. The house axes are fixed to the lot (y away from the street, x to the right when
-// standing in the street); where north is comes from the project (site.region.xBearing), never from the code.
+// standing in the street); where north is comes from the project (site.lot.geo.xBearing), never from the code.
 import type { Project } from './schema';
 
 export type Compass = 'N' | 'E' | 'S' | 'W';
@@ -10,12 +10,12 @@ const norm = (b: number) => ((b % 360) + 360) % 360;
 
 /** Unit plan vector (house x, y) of a compass bearing (0 north, 90 east). */
 export function bearingDir(p: Site, bearing: number): [number, number] {
-  const a = (p.site.region.xBearing - bearing) * rad;
+  const a = (p.site.lot.geo.xBearing - bearing) * rad;
   return [Math.cos(a), Math.sin(a)];
 }
 
 /** Compass bearing of a plan direction (house x, y). */
-export const bearingOf = (p: Site, dx: number, dy: number) => norm(p.site.region.xBearing - Math.atan2(dy, dx) / rad);
+export const bearingOf = (p: Site, dx: number, dy: number) => norm(p.site.lot.geo.xBearing - Math.atan2(dy, dx) / rad);
 
 /** The nearest compass point of a plan direction. */
 export const compassOf = (p: Site, dx: number, dy: number): Compass => (['N', 'E', 'S', 'W'] as const)[Math.round(bearingOf(p, dx, dy) / 90) % 4]!;

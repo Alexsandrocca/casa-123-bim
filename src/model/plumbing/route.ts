@@ -17,9 +17,15 @@ import { kindOf, minSewageSlope, rainCapacity, rainFlow, sewageDnFor, waterDnFor
 type P2 = [number, number];
 type P3 = [number, number, number];
 
-/** Typical street services until the project has its own (site.utilities): all TO CONFIRM with the water company. */
+/** Typical street services until the lot has its own (P1: site.lot.services): all TO CONFIRM with the water company. */
 export const UTILITIES_DEFAULT = { sewerDepth: 1.5, sewerOffset: 5, waterMainDepth: 0.8, rainIntensity: 150 };
-export const utilities = (p: Project) => p.site.utilities ?? UTILITIES_DEFAULT;
+export const utilities = (p: Project) => {
+  const s = p.site.lot.services;
+  return {
+    sewerDepth: s.sewer.depth.value ?? UTILITIES_DEFAULT.sewerDepth, sewerOffset: s.sewer.offset,
+    waterMainDepth: s.water.depth.value ?? UTILITIES_DEFAULT.waterMainDepth, rainIntensity: p.site.region.rainIntensity,
+  };
+};
 
 export interface NoRoute { system: string; network: string; item: string; reason: string }
 
@@ -105,7 +111,7 @@ export function routePlumbing(p: Project): { pipes: PipeSegment[]; auto: Fixture
   const ROOF = elev('roof');
   const shaftEls = p.elements.filter((e): e is ServiceSpace => e.type === 'ServiceSpace' && e.props.kind === 'shaft');
   const shafts = new Shafts(shaftEls, out);
-  const street: Rect = { x0: Math.min(...p.site.lotPolygon.map((c) => c[0] - p.site.houseOrigin.x)) - 0.5, x1: Math.max(...p.site.lotPolygon.map((c) => c[0] - p.site.houseOrigin.x)) + 0.5, y0: f.yStreet - u.sewerOffset - 0.6, y1: f.yStreet };
+  const street: Rect = { x0: Math.min(...p.site.lot.polygon.map((c) => c[0] - p.site.houseOrigin.x)) - 0.5, x1: Math.max(...p.site.lot.polygon.map((c) => c[0] - p.site.houseOrigin.x)) + 0.5, y0: f.yStreet - u.sewerOffset - 0.6, y1: f.yStreet };
   // ceiling boxes of lights and detectors: pipes in the plenums keep clear of them
   const elecShaft = shaftEls.find((s) => /electric/i.test(s.props.name));
   const elecPoints = p.elements.flatMap((d) => {

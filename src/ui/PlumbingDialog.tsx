@@ -1,4 +1,5 @@
 // Plumbing window: riser diagram, sewer section, schedules and street services. Everything is read from the model.
+import { waterCompany } from '../model/region';
 import { exportName } from '../model/legal';
 import { useEffect, useState, type ReactNode } from 'react';
 import { setUtilities } from '../model/commands';
@@ -232,12 +233,12 @@ function Services({ p }: { p: Project }) {
   const u = utilities(p);
   const t = useT();
   const field = (label: string, key: keyof typeof u, unit: string, step: number) => (
-    <ServiceField key={key} label={label} value={u[key]} unit={unit} step={step} onCommit={(v) => run(setUtilities({ [key]: v }))} />
+    <ServiceField key={String(key)} label={label} value={u[key]} unit={unit} step={step} onCommit={(v) => run(setUtilities({ [key]: v }))} />
   );
   return (
     <div className="pl-tab">
       <div className="services">
-        {field(t('Street sewer depth'), 'sewerDepth', t('m below the street ({w} to confirm)', { w: p.site.region.water ?? t('water company') }), 0.05)}
+        {field(t('Street sewer depth'), 'sewerDepth', t('m below the street ({w} to confirm)', { w: waterCompany(p) }), 0.05)}
         {field(t('Sewer distance from the lot'), 'sewerOffset', t('m into the street'), 0.5)}
         {field(t('Water main depth'), 'waterMainDepth', 'm', 0.1)}
         {field(t('Design rainfall'), 'rainIntensity', t('mm/h, 5-minute storm (to confirm)'), 5)}

@@ -5,18 +5,19 @@ import { routeConduits } from './conduits';
 import type { Circuit, Device, Element, Project } from '../schema';
 import { conduitFor, deviceType, dropPct, sectionFor } from './library';
 import { entryLevel, topLevel } from '../schema';
+import { supplyOf } from '../region';
 
 type Phase = 'A' | 'B' | 'C';
 const PHASES: Phase[] = ['A', 'B', 'C'];
 /** Most a general circuit carries: phase voltage × 10 A (1,270 VA at 127 V). */
-const maxGeneralVa = (p: Project) => p.site.region.supply.phaseV * 10;
+const maxGeneralVa = (p: Project) => supplyOf(p).phaseV * 10;
 
 const floorOf = (p: Project, d: Device) => (d.level === 'roof' ? topLevel(p) : d.level === 'site' || d.level === 'carport' ? entryLevel(p) : d.level);
 
 /** The supply voltage for a point: ordinary points use the phase voltage; points that need about 220 V use the
  * phase voltage where it is already 220 V (220/380 supplies) and two phases where it is 127 V (127/220 supplies). */
 export function voltageFor(p: Project, need: 'low' | 'high'): { voltage: number; line: boolean } {
-  const s = p.site.region.supply;
+  const s = supplyOf(p);
   if (need === 'low' || s.phaseV >= 200 || s.phases < 2) return { voltage: s.phaseV, line: false };
   return { voltage: s.lineV, line: true };
 }
@@ -97,7 +98,7 @@ export function withElectrical(p: Project): Project {
   const sub = subPanel(p);
   const all: { id: string; name: string; purpose: Circuit['props']['purpose']; voltage: number; line: boolean; panel: string; devs: Device[] }[] = [...circuits];
   if (sub) {
-    all.push({ id: 'ckt-feeder-LL', name: 'Feeder to the sub-panel', purpose: 'feeder', voltage: p.site.region.supply.lineV, line: true, panel: main.id, devs: [] });
+    all.push({ id: 'ckt-feeder-LL', name: 'Feeder to the sub-panel', purpose: 'feeder', voltage: supplyOf(p).lineV, line: true, panel: main.id, devs: [] });
     route('ckt-feeder-LL', main, [sub]);
   }
 

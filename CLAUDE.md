@@ -16,7 +16,7 @@ Read `docs/product/ROADMAP-v2.md`. The app becomes a two-tab product: DESIGN (si
 - Building data: `projects/<id>/` (project.json + one model per version, in metres). Casa 123 is `projects/casa-123/`; its generators are in `scripts/casa-123/` (never imported by the app). Test fixture: `tests/fixtures/flat-lot/`.
 
 ## Rules
-- Units are metres. House axes: y from the street to the rear, x to the right seen from the street, z up; north, latitude, supply and city rules come from `site.region` (`model/orientation.ts`). Level ids, elevations and every place fact come from the model, never from the code.
+- Units are metres. House axes: y from the street to the rear, x to the right seen from the street, z up; the lot (shape, street sides, north, latitude, terrain, rules, street services) comes from `site.lot` (`model/lot.ts`, `model/orientation.ts`) and the city facts from `site.region` (`model/cities.ts` holds the city table). Level ids, elevations and every place fact come from the model, never from the code.
 - The 2D plan, the 3D model, schedules and checks are all views of the model. No view keeps its own copy of the geometry.
 - Every change goes through undoable commands.
 - Stack: Vite + React + TypeScript (strict) + three.js through @react-three/fiber and drei; zustand for state; Vitest for unit tests and Playwright for end-to-end tests. The local server is `server/` (projects API and the Claude proxy); secrets only in `.env.local`.

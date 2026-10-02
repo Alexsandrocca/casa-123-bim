@@ -3,7 +3,7 @@
 //   slab bays → beams (line loads) → columns (tributary areas of every floor above) → footings (soil pressure).
 import { eq, openingSeg, pointInRect, wallSeg, type Seg } from '../geometry';
 import { isPlanLevel, type Beam, type Column, type Footing, type Opening, type Project, type Rect, type Slab, type Wall } from '../schema';
-import { groundAt, groundZones } from '../site';
+import { groundAt, groundZones, siteFrame } from '../site';
 import { slabCovers, slabRect, slabVoids } from '../structure';
 import { layoutModules, solarArray } from '../electrical/solar';
 import { A } from './assumptions';
@@ -638,10 +638,11 @@ function quantities(p: Project, beams: BeamResult[], columns: ColumnResult[], fo
   }
   // the lower level is dug out of the slope: volume between the natural ground and the lower floor
   const ll = p.levels.find((l) => l.id === 'LL');
+  const { natural } = siteFrame(p);
   if (ll?.outline) {
     const o = ll.outline;
     for (let x = o.x0 + 0.25; x < o.x1; x += 0.5) for (let y = o.y0 + 0.25; y < o.y1; y += 0.5) {
-      const nat = -p.site.fallStreetToRear * (y + p.site.houseOrigin.y) / Math.max(...p.site.lotPolygon.map((c) => c[1]));
+      const nat = natural(y);
       exc += Math.max(0, nat - (ll.elevation - 0.25)) * 0.25;
     }
   }

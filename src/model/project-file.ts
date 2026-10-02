@@ -71,7 +71,7 @@ export const Settings = z.object({
 export type Settings = z.infer<typeof Settings>;
 
 /** The list thumbnail of a design model: lot outline and the entry floor's room cells, in lot coordinates. */
-export function thumbOf(p: { site: { lotPolygon: [number, number][]; houseOrigin: { x: number; y: number } }; levels: { id: string; plan: boolean; elevation: number }[]; elements: { type: string; level: string; props: unknown }[] }): NonNullable<ProjectFile['thumb']> {
+export function thumbOf(p: { site: { lot: { polygon: [number, number][] }; houseOrigin: { x: number; y: number } }; levels: { id: string; plan: boolean; elevation: number }[]; elements: { type: string; level: string; props: unknown }[] }): NonNullable<ProjectFile['thumb']> {
   const plan = p.levels.filter((l) => l.plan);
   const entry = [...plan].sort((a, b) => Math.abs(a.elevation) - Math.abs(b.elevation))[0]?.id;
   const r2 = (v: number) => Math.round(v * 100) / 100;
@@ -81,5 +81,5 @@ export function thumbOf(p: { site: { lotPolygon: [number, number][]; houseOrigin
     const sp = e.props as { zone: string; cells: { x0: number; y0: number; x1: number; y1: number }[] };
     for (const c of sp.cells) rooms.push([r2(c.x0 + p.site.houseOrigin.x), r2(c.y0 + p.site.houseOrigin.y), r2(c.x1 + p.site.houseOrigin.x), r2(c.y1 + p.site.houseOrigin.y), sp.zone]);
   }
-  return { lot: p.site.lotPolygon.map(([x, y]) => [r2(x), r2(y)]), rooms };
+  return { lot: p.site.lot.polygon.map(([x, y]) => [r2(x), r2(y)]), rooms };
 }

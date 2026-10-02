@@ -1,4 +1,4 @@
-// Sun position (NOAA solar calculator) for the project's place (site.region: latitude, longitude, UTC offset, north).
+// Sun position (NOAA solar calculator) for the project's place (site.lot.geo: latitude, longitude, north; site.region: UTC offset).
 import { enuToHouse } from '../model/orientation';
 import type { Project } from '../model/schema';
 
@@ -15,7 +15,7 @@ export interface SunPos {
 
 /** month 1–12, hour in local time (decimal). */
 export function sunPosition(year: number, month: number, day: number, hour: number, p: Pick<Project, 'site'>): SunPos {
-  const site = p.site.region;
+  const site = { ...p.site.lot.geo, utcOffset: p.site.region.utcOffset };
   const utcHours = hour - site.utcOffset;
   const jd0 = Date.UTC(year, month - 1, day) / 86400000 + 2440587.5;
   const jd = jd0 + utcHours / 24;

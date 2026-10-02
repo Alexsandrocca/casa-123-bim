@@ -11,37 +11,186 @@
  "site": {
   "address": "Rua de Teste, 10, Florianópolis/SC",
   "lot": {
-   "front": 12,
-   "rear": 12,
-   "sides": 30
-  },
-  "lotPolygon": [
-   [
-    0,
+   "polygon": [
+    [
+     0,
+     0
+    ],
+    [
+     12,
+     0
+    ],
+    [
+     12,
+     30
+    ],
+    [
+     0,
+     30
+    ]
+   ],
+   "shape": {
+    "status": "to-confirm",
+    "source": ""
+   },
+   "streetEdges": [
     0
    ],
-   [
-    12,
-    0
-   ],
-   [
-    12,
-    30
-   ],
-   [
-    0,
-    30
+   "geo": {
+    "lat": -27.59,
+    "lon": -48.55,
+    "xBearing": 180,
+    "status": "to-confirm",
+    "source": ""
+   },
+   "terrain": {
+    "kind": "flat",
+    "fall": 0,
+    "spots": [],
+    "status": "to-confirm",
+    "source": ""
+   },
+   "rules": {
+    "zone": {
+     "value": null,
+     "status": "to-confirm",
+     "source": "City rules (TO CONFIRM)",
+     "date": "2026-10-02"
+    },
+    "setbacks": {
+     "front": {
+      "value": 4,
+      "status": "to-confirm",
+      "source": "Typical value (TO CONFIRM)",
+      "date": "2026-10-02"
+     },
+     "rear": {
+      "value": 3,
+      "status": "to-confirm",
+      "source": "Typical value (TO CONFIRM)",
+      "date": "2026-10-02"
+     },
+     "left": {
+      "value": 1.5,
+      "status": "to-confirm",
+      "source": "Typical value (TO CONFIRM)",
+      "date": "2026-10-02"
+     },
+     "right": {
+      "value": 1.5,
+      "status": "to-confirm",
+      "source": "Typical value (TO CONFIRM)",
+      "date": "2026-10-02"
+     }
+    },
+    "coverage": {
+     "value": null,
+     "status": "to-confirm",
+     "source": "City rules (TO CONFIRM)",
+     "date": "2026-10-02"
+    },
+    "permeability": {
+     "value": null,
+     "status": "to-confirm",
+     "source": "City rules (TO CONFIRM)",
+     "date": "2026-10-02"
+    },
+    "far": {
+     "value": null,
+     "status": "to-confirm",
+     "source": "City rules (TO CONFIRM)",
+     "date": "2026-10-02"
+    },
+    "height": {
+     "value": null,
+     "status": "to-confirm",
+     "source": "City rules (TO CONFIRM)",
+     "date": "2026-10-02"
+    },
+    "floors": {
+     "value": null,
+     "status": "to-confirm",
+     "source": "City rules (TO CONFIRM)",
+     "date": "2026-10-02"
+    },
+    "eaves": {
+     "value": null,
+     "status": "to-confirm",
+     "source": "City rules (TO CONFIRM)",
+     "date": "2026-10-02"
+    },
+    "notes": ""
+   },
+   "services": {
+    "sewer": {
+     "exists": {
+      "value": null,
+      "status": "to-confirm",
+      "source": "",
+      "date": "2026-10-02"
+     },
+     "depth": {
+      "value": 1.2,
+      "status": "to-confirm",
+      "source": "Typical value (TO CONFIRM)",
+      "date": "2026-10-02"
+     },
+     "offset": 4,
+     "ask": "the water and sewer company"
+    },
+    "water": {
+     "depth": {
+      "value": 0.8,
+      "status": "to-confirm",
+      "source": "Typical value (TO CONFIRM)",
+      "date": "2026-10-02"
+     },
+     "ask": "the water and sewer company"
+    },
+    "power": {
+     "supply": {
+      "value": {
+       "phaseV": 220,
+       "lineV": 380,
+       "phases": 3
+      },
+      "status": "to-confirm",
+      "source": "",
+      "date": "2026-10-02"
+     },
+     "ask": "the electricity company"
+    },
+    "storm": {
+     "kind": {
+      "value": null,
+      "status": "to-confirm",
+      "source": "",
+      "date": "2026-10-02"
+     },
+     "ask": "Prefeitura"
+    },
+    "gas": {
+     "exists": {
+      "value": null,
+      "status": "to-confirm",
+      "source": "",
+      "date": "2026-10-02"
+     },
+     "wanted": false,
+     "ask": "the gas company"
+    }
+   },
+   "notes": [],
+   "confirm": [
+    {
+     "text": "Soil test (SPT borings) before the foundations are designed",
+     "who": "soil"
+    }
    ]
-  ],
+  },
   "houseOrigin": {
    "x": 1.5,
    "y": 4
-  },
-  "fallStreetToRear": 0,
-  "setbacks": {
-   "front": 4,
-   "rear": 3,
-   "sides": 1.5
   },
   "cut": {
    "lineY": 8,
@@ -52,38 +201,15 @@
   "region": {
    "city": "Florianópolis",
    "state": "SC",
-   "lat": -27.59,
-   "lon": -48.55,
    "utcOffset": -3,
-   "xBearing": 180,
-   "supply": {
-    "utility": null,
-    "phaseV": 220,
-    "lineV": 380,
-    "phases": 3,
-    "confirmed": false
-   },
-   "water": null,
    "rules": {
     "code": null,
     "sanitary": null
    },
    "pvYield": null,
-   "solarHeaterShare": null
-  },
-  "utilities": {
-   "sewerDepth": 1.2,
-   "sewerOffset": 4,
-   "waterMainDepth": 0.8,
+   "solarHeaterShare": null,
    "rainIntensity": 150
-  },
-  "toConfirm": [
-   "Topographic survey",
-   "Soil borings",
-   "City zoning and building rules",
-   "Sewer depth",
-   "Electricity supply"
-  ]
+  }
  },
  "structure": {
   "floorToFloor": 3,

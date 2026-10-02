@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { runChecks } from '../src/model/checks';
 import { moveFixture, setPipe, setUtilities } from '../src/model/commands';
-import { migrate } from '../src/model/migrate';
+import { readFileSync } from 'node:fs';
+import { migrate, upgradeRaw } from '../src/model/migrate';
 import { kindOf, sewageDnFor } from '../src/model/plumbing/library';
 import { routePlumbing } from '../src/model/plumbing/route';
 import { Layer, growTree } from '../src/model/mep/grid';
-import type { Fixture, PipeSegment, Project } from '../src/model/schema';
+import { parseProject, type Fixture, type PipeSegment, type Project } from '../src/model/schema';
 import { load } from './helpers';
 
 const v3 = load('casa-123-v3.json');
@@ -105,10 +106,12 @@ describe('plumbing model (Version 3)', () => {
   });
 
   it('adds the plumbing to a Version 3 model saved before spec 03', () => {
-    const old: Project = { ...v3, site: { ...v3.site, utilities: undefined }, elements: v3.elements.filter((e) => e.type !== 'Fixture' && e.type !== 'PipeSegment') };
-    const m = migrate(old, v3);
+    // the site as it was saved then (before P1), without the street services
+    const { utilities: _u, ...oldSite } = (JSON.parse(readFileSync(new URL('./fixtures/p1-regression/sites-before.json', import.meta.url), 'utf8')) as Record<string, Record<string, unknown>>)['casa-v3']!;
+    const raw = { ...v3, site: oldSite, elements: v3.elements.filter((e) => e.type !== 'Fixture' && e.type !== 'PipeSegment') };
+    const m = migrate(parseProject(upgradeRaw(raw, v3)), v3);
     expect(fixtures(m).length).toBe(fixtures(v3).length);
-    expect(m.site.utilities?.sewerDepth).toBe(3);
+    expect(m.site.lot.services.sewer.depth.value).toBe(3);
     expect(routePlumbing(load('casa-123.json')).pipes).toHaveLength(0); // Version 2 has no plumbing
   });
 });

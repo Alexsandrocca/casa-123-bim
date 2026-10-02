@@ -3,7 +3,9 @@
 // that nothing in the engines depends on Casa 123 (tests/fixtures/flat-lot).
 import { boundarySegs, deriveInteriorSegs, q, segToWallEnds, WALL_THICKNESS, wallSeg } from './geometry';
 import { generateStructure } from './structure';
-import { parseProject, type Element, type Fixture, type Opening, type Project, type Region, type Space, type Wall } from './schema';
+import { parseProject, type Element, type Fixture, type Lot, type Opening, type Project, type Region, type Space, type Supply, type Wall } from './schema';
+import { ccwLot, envelope } from './lot';
+import { defaultLot, TYPICAL } from './cities';
 import { deviceMaker, placeRoomPoints } from './electrical/place';
 import type { Device } from './schema';
 import { kindOf } from './plumbing/library';
@@ -13,35 +15,84 @@ import { withElectrical } from './electrical/design';
 import { syncThickness } from './eng/commands';
 import type { Compass } from './orientation';
 
+/** P1: a project starts from its lot (the wizard) and the facts about its city. */
 export interface StarterParams {
   project: string;
   address: string;
-  city: string;
-  state: string;
-  lat: number;
-  lon: number;
-  utcOffset?: number;
-  /** Lot width along the street and depth away from it, m. */
-  lotWidth: number;
-  lotDepth: number;
-  /** Which compass side of the lot the street is on. */
-  street: Compass;
+  region: Region;
+  lot: Lot;
+}
+
+/** A rectangular lot on a flat site for tests and scripts: width along the street, depth, the side the street is on. */
+export interface RectLotParams {
+  city: string; state: string; lat: number; lon: number;
+  lotWidth: number; lotDepth: number; street: Compass;
   setbacks?: { front: number; rear: number; sides: number };
-  supply?: Region['supply'];
+  supply?: Supply;
+  /** Whom to ask for the electricity supply (unknown: a generic name). */
+  power?: string;
 }
 
 const BEARING: Record<Compass, number> = { N: 0, E: 90, S: 180, W: 270 };
 /** House +x points 90° anticlockwise from the street side seen from above: x bearing = street bearing − 90. */
 export const xBearingFor = (street: Compass) => (BEARING[street] + 270) % 360;
 
+export function rectLot(r: RectLotParams): Lot {
+  const lot = defaultLot(r.city, r.state, { lat: r.lat, lon: r.lon });
+  const sb = r.setbacks ?? TYPICAL.setbacks;
+  const tbc = (value: number) => ({ value, status: 'to-confirm' as const, source: 'Typical value (TO CONFIRM)', date: '2026-10-02' });
+  return {
+    ...lot,
+    polygon: [[0, 0], [r.lotWidth, 0], [r.lotWidth, r.lotDepth], [0, r.lotDepth]],
+    geo: { ...lot.geo, xBearing: xBearingFor(r.street) },
+    rules: { ...lot.rules, setbacks: { front: tbc(sb.front), rear: tbc(sb.rear), left: tbc(sb.sides), right: tbc(sb.sides) } },
+    services: {
+      ...lot.services,
+      sewer: { ...lot.services.sewer, depth: tbc(1.2), offset: 4 },
+      water: { ...lot.services.water, depth: tbc(0.8) },
+      power: { supply: { value: r.supply ?? TYPICAL.supply, status: 'to-confirm', source: '', date: '2026-10-02' }, ask: r.power ?? lot.services.power.ask },
+    },
+  };
+}
+
 const rect = (x0: number, y0: number, x1: number, y1: number) => ({ x0, y0, x1, y1 });
 
+/** x range inside a convex polygon along the horizontal line y (empty: null). */
+function across(poly: [number, number][], y: number): [number, number] | null {
+  const xs: number[] = [];
+  for (let i = 0; i < poly.length; i++) {
+    const [ax, ay] = poly[i]!, [bx, by] = poly[(i + 1) % poly.length]!;
+    if (ay === by) { if (Math.abs(y - ay) < 1e-9) xs.push(ax, bx); continue; }
+    if (y < Math.min(ay, by) - 1e-9 || y > Math.max(ay, by) + 1e-9) continue;
+    xs.push(ax + ((bx - ax) * (y - ay)) / (by - ay));
+  }
+  return xs.length >= 2 ? [Math.min(...xs), Math.max(...xs)] : null;
+}
+
+/** The largest house (up to 9 × 8 m, at least 6 × 6) that fits the envelope, as near the street as it can, centred across. */
+export function fitHouse(env: [number, number][]): { x0: number; y0: number; W: number; D: number } {
+  const ys = env.map((c) => c[1]), y00 = Math.min(...ys), y11 = Math.max(...ys);
+  for (let D = 8; D >= 6 - 1e-9; D -= 0.5) {
+    for (let y0 = y00; y0 + D <= y11 + 1e-9; y0 += 0.25) {
+      let lo = -Infinity, hi = Infinity;
+      for (let k = 0; k <= 4; k++) { const r = across(env, y0 + (D * k) / 4); if (!r) { lo = Infinity; break; } lo = Math.max(lo, r[0]); hi = Math.min(hi, r[1]); }
+      const W = Math.min(9, Math.floor((hi - lo) * 20) / 20);
+      if (W >= 6 - 1e-9) return { x0: q((lo + hi - W) / 2), y0: q(y0), W, D };
+    }
+  }
+  // nothing fits: a 6 × 6 m house at the front of the lot, shown in red by the setback checks
+  const r = across(env.length ? env : [[0, 0], [6, 0], [6, 6], [0, 6]], y00) ?? [0, 6];
+  return { x0: q((r[0] + r[1] - 6) / 2), y0: q(y00), W: 6, D: 6 };
+}
+
 export function starterModel(sp: StarterParams): Project {
-  const sb = sp.setbacks ?? { front: 4, rear: 3, sides: 1.5 };
+  const lot = ccwLot(sp.lot);
   const level = 'GF';
   const floor = 0.15, f2f = 3.0, clear = 2.7;
-  // the house: 9 × 8 m, or what fits between the setbacks
-  const W = Math.max(6, Math.min(9, sp.lotWidth - 2 * sb.sides)), D = Math.max(6, Math.min(8, sp.lotDepth - sb.front - sb.rear));
+  // the house: 9 × 8 m, or what fits inside the buildable envelope
+  const env = envelope(lot);
+  const fit = fitHouse(env.length ? env : lot.polygon);
+  const W = fit.W, D = fit.D;
   const xLiving = q(W * 0.55), yBed = q(D * 0.58);
   const spaces: Space[] = [
     { id: `${level}-space-01`, type: 'Space', level, tags: [], props: { name: 'Living and kitchen', zone: 'social', cells: [rect(0, 0, xLiving, D)], lock: false } },
@@ -87,19 +138,10 @@ export function starterModel(sp: StarterParams): Project {
     meta: { project: sp.project, version: 'Version 1', versionId: 'v1', units: 'm', source: 'Starter model (P0)', note: 'A simple single-storey starting point. P2 adds the house catalogue.' },
     site: {
       address: sp.address,
-      lot: { front: sp.lotWidth, rear: sp.lotWidth, sides: sp.lotDepth },
-      lotPolygon: [[0, 0], [sp.lotWidth, 0], [sp.lotWidth, sp.lotDepth], [0, sp.lotDepth]],
-      houseOrigin: { x: q((sp.lotWidth - W) / 2), y: sb.front },
-      fallStreetToRear: 0,
-      setbacks: sb,
+      lot,
+      houseOrigin: { x: fit.x0, y: fit.y0 },
       cut: { lineY: D, gardenLevel: 0, retainingSouthToY: 0, retainingNorthToY: 0 },
-      region: {
-        city: sp.city, state: sp.state, lat: sp.lat, lon: sp.lon, utcOffset: sp.utcOffset ?? -3, xBearing: xBearingFor(sp.street),
-        supply: sp.supply ?? { utility: null, phaseV: 127, lineV: 220, phases: 3, confirmed: false },
-        water: null, rules: { code: null, sanitary: null }, pvYield: null, solarHeaterShare: null,
-      },
-      utilities: { sewerDepth: 1.2, sewerOffset: 4, waterMainDepth: 0.8, rainIntensity: 150 },
-      toConfirm: ['Topographic survey', 'Soil borings', 'City zoning and building rules', 'Sewer depth', 'Electricity supply'],
+      region: sp.region,
     },
     structure: { floorToFloor: f2f, clearHeight: clear, structureDepth: 0.3 },
     levels: [

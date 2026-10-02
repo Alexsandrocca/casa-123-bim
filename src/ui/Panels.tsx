@@ -24,6 +24,8 @@ import { DISCLAIMER, frameOf } from '../model/eng';
 import type { Feature } from '../model/schema';
 import { ZONE_COLOR } from './PlanView';
 import { useT } from '../i18n/useT';
+import { ConfirmList } from './LotText';
+import { toConfirm } from '../model/lot';
 
 type T = ReturnType<typeof useT>;
 /** Lengths and levels in the language's number format. */
@@ -367,7 +369,7 @@ function SlabProps({ s }: { s: Slab }) {
         <Row k={t('Thickness')} v={`${m(s.props.thickness)} m`} />
         {s.props.parapet !== undefined && <Row k={t('Parapet top')} v={lvl(s.props.topElevation + s.props.parapet)} />}
       </div>
-      {s.props.eaves !== undefined && <p className="hint">{p.site.eavesLimit !== undefined ? t('Eaves up to {v} m are not counted in site coverage ({code}).', { v: m(p.site.eavesLimit), code: cityCode(p) }) : t('The eaves limit is TO CONFIRM ({code}).', { code: cityCode(p) })}</p>}
+      {s.props.eaves !== undefined && <p className="hint">{p.site.lot.rules.eaves.value !== null ? t('Eaves up to {v} m are not counted in site coverage ({code}).', { v: m(p.site.lot.rules.eaves.value), code: cityCode(p) }) : t('The eaves limit is TO CONFIRM ({code}).', { code: cityCode(p) })}</p>}
     </>
   );
 }
@@ -779,7 +781,7 @@ export function AboutDialog() {
         <p>{t('The checks cover the rules we know ({sanitary}, Civil Code art. 1.301, stair comfort, setbacks; {code}). They are a guide, not an approval.', { sanitary: sanitary(p), code: cityCode(p) })}</p>
         <p className="disclaimer" data-testid="about-disclaimer">{DISCLAIMER}</p>
         <h4>{t('Still to confirm')}</h4>
-        <ul>{p.site.toConfirm.map((x) => <li key={x}>{x}</li>)}</ul>
+        <ConfirmList t={t} groups={toConfirm(p.site.lot, p)} />
         <p className="hint">{t('Units are metres. Plan axes: y from the street to the rear, x to the right seen from the street (towards the {dir}).', { dir: t(({ N: 'north', E: 'east', S: 'south', W: 'west' } as const)[compassOf(p, 1, 0)]) })}</p>
         <button onClick={() => setAbout(false)} autoFocus>{t('Close')}</button>
       </div>

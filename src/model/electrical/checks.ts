@@ -1,4 +1,5 @@
 // Electrical checks (NBR 5410), solar and cameras.
+import { powerCompany } from '../region';
 import type { CheckResult } from '../checks';
 import { spaceArea, spacesOn } from '../geometry';
 import { planLevels, type Circuit, type Device, type Project } from '../schema';
@@ -87,7 +88,7 @@ export function electricalChecks(p: Project): CheckResult[] {
         id: `elec:phases:${panel.id}`, group: 'Electrical', elementIds: [panel.id], level: panel.level, title: `Phase balance · ${deviceType(panel.props.kind).label}`,
         status: b.imbalance <= 15 ? 'pass' : 'warn',
         value: `A ${(b.loads.A / 1000).toFixed(1)} kW · B ${(b.loads.B / 1000).toFixed(1)} kW · C ${(b.loads.C / 1000).toFixed(1)} kW — imbalance ${b.imbalance.toFixed(1)} %`,
-        rule: 'Spread the circuits so the three phases carry similar loads (target ≤ 15 %)', source: `${S5410}; ${p.site.region.supply.utility ?? 'electricity company'} supply rules (to confirm)`,
+        rule: 'Spread the circuits so the three phases carry similar loads (target ≤ 15 %)', source: `${S5410}; ${powerCompany(p)} supply rules (to confirm)`,
       });
     }
     const unassigned = devices.filter((d) => ['outlet', 'light', 'dedicated'].includes(deviceType(d.props.kind).group) && !circuits.some((c) => c.id === d.props.circuit));

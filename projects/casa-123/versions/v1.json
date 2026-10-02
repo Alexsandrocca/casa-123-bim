@@ -11,37 +11,198 @@
  "site": {
   "address": "Rua Alceu Maynardi Araújo, 123, Nova Piracicaba, Piracicaba/SP",
   "lot": {
-   "front": 14,
-   "rear": 15,
-   "sides": 25
-  },
-  "lotPolygon": [
-   [
-    0,
+   "polygon": [
+    [
+     0,
+     0
+    ],
+    [
+     14,
+     0
+    ],
+    [
+     15,
+     25
+    ],
+    [
+     0,
+     25
+    ]
+   ],
+   "shape": {
+    "status": "given",
+    "source": "Owner"
+   },
+   "streetEdges": [
     0
    ],
-   [
-    14,
-    0
-   ],
-   [
-    15,
-    25
-   ],
-   [
-    0,
-    25
+   "geo": {
+    "lat": -22.72,
+    "lon": -47.65,
+    "xBearing": 0,
+    "status": "given",
+    "source": "Owner: the side the street faces; city coordinates"
+   },
+   "terrain": {
+    "kind": "down",
+    "fall": 2,
+    "spots": [],
+    "status": "to-confirm",
+    "source": "Estimate (no topographic survey yet)"
+   },
+   "rules": {
+    "zone": {
+     "value": null,
+     "status": "to-confirm",
+     "source": "Piracicaba LC 474/2025 (TO CONFIRM)",
+     "date": "2026-10-02"
+    },
+    "setbacks": {
+     "front": {
+      "value": 4,
+      "status": "given",
+      "source": "Owner",
+      "date": "2026-10-02"
+     },
+     "rear": {
+      "value": 6,
+      "status": "given",
+      "source": "Owner",
+      "date": "2026-10-02"
+     },
+     "left": {
+      "value": 1.2,
+      "status": "given",
+      "source": "Owner",
+      "date": "2026-10-02"
+     },
+     "right": {
+      "value": 1.2,
+      "status": "given",
+      "source": "Owner",
+      "date": "2026-10-02"
+     }
+    },
+    "coverage": {
+     "value": null,
+     "status": "to-confirm",
+     "source": "",
+     "date": "2026-10-02"
+    },
+    "permeability": {
+     "value": null,
+     "status": "to-confirm",
+     "source": "",
+     "date": "2026-10-02"
+    },
+    "far": {
+     "value": null,
+     "status": "to-confirm",
+     "source": "",
+     "date": "2026-10-02"
+    },
+    "height": {
+     "value": null,
+     "status": "to-confirm",
+     "source": "",
+     "date": "2026-10-02"
+    },
+    "floors": {
+     "value": null,
+     "status": "to-confirm",
+     "source": "",
+     "date": "2026-10-02"
+    },
+    "eaves": {
+     "value": 0.7,
+     "status": "given",
+     "source": "Piracicaba LC 474/2025",
+     "date": "2026-10-02"
+    },
+    "notes": ""
+   },
+   "services": {
+    "sewer": {
+     "exists": {
+      "value": true,
+      "status": "given",
+      "source": "Owner",
+      "date": "2026-10-02"
+     },
+     "depth": {
+      "value": null,
+      "status": "to-confirm",
+      "source": "",
+      "date": "2026-10-02"
+     },
+     "offset": 5,
+     "ask": "SEMAE"
+    },
+    "water": {
+     "depth": {
+      "value": null,
+      "status": "to-confirm",
+      "source": "",
+      "date": "2026-10-02"
+     },
+     "ask": "SEMAE"
+    },
+    "power": {
+     "supply": {
+      "value": {
+       "phaseV": 127,
+       "lineV": 220,
+       "phases": 3
+      },
+      "status": "to-confirm",
+      "source": "Owner",
+      "date": "2026-10-02"
+     },
+     "ask": "CPFL"
+    },
+    "storm": {
+     "kind": {
+      "value": "gutter",
+      "status": "given",
+      "source": "Owner: overflow to the street gutter",
+      "date": "2026-10-02"
+     },
+     "ask": "Prefeitura"
+    },
+    "gas": {
+     "exists": {
+      "value": null,
+      "status": "to-confirm",
+      "source": "",
+      "date": "2026-10-02"
+     },
+     "wanted": false,
+     "ask": "the gas company"
+    }
+   },
+   "notes": [],
+   "confirm": [
+    {
+     "text": "SPT soil borings",
+     "who": "soil"
+    },
+    {
+     "text": "Climate zone (NBR 15220-3)",
+     "who": "engineer"
+    },
+    {
+     "text": "Whether decks are allowed in the setbacks",
+     "who": "prefeitura"
+    },
+    {
+     "text": "Which side boundary takes the extra 1 m at the rear",
+     "who": "surveyor"
+    }
    ]
-  ],
+  },
   "houseOrigin": {
    "x": 1.92,
    "y": 4
-  },
-  "fallStreetToRear": 2,
-  "setbacks": {
-   "front": 4,
-   "rear": 6,
-   "sides": 1.2
   },
   "cut": {
    "lineY": 8.5,
@@ -53,22 +214,10 @@
    "width": 4,
    "slope": 0.125
   },
-  "eavesLimit": 0.7,
   "region": {
    "city": "Piracicaba",
    "state": "SP",
-   "lat": -22.72,
-   "lon": -47.65,
    "utcOffset": -3,
-   "xBearing": 0,
-   "supply": {
-    "utility": "CPFL",
-    "phaseV": 127,
-    "lineV": 220,
-    "phases": 3,
-    "confirmed": false
-   },
-   "water": "SEMAE",
    "rules": {
     "code": "Piracicaba LC 474/2025",
     "sanitary": "SP sanitary code, Decreto 12.342/78"
@@ -90,18 +239,9 @@
     ],
     "source": "PVGIS-like values, 20° facing north"
    },
-   "solarHeaterShare": 0.7
-  },
-  "toConfirm": [
-   "Topographic survey",
-   "SPT soil borings",
-   "SEMAE sewer depth",
-   "Lot zone and height limit",
-   "Climate zone (NBR 15220-3)",
-   "Whether decks are allowed in the setbacks",
-   "CPFL supply type",
-   "Which side boundary takes the extra 1 m at the rear"
-  ]
+   "solarHeaterShare": 0.7,
+   "rainIntensity": 150
+  }
  },
  "structure": {
   "floorToFloor": 3.1,

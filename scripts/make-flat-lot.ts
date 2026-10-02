@@ -1,15 +1,15 @@
 // Writes tests/fixtures/flat-lot (P0): a flat 12 × 30 m lot with the street to the west (north to the left seen from the
 // street), a single-storey house with 3 rooms. Run: npx tsx scripts/make-flat-lot.ts
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { starterModel } from '../src/model/starter';
+import { rectLot, starterModel } from '../src/model/starter';
+import { regionFor } from '../src/model/cities';
 import type { ProjectFile } from '../src/model/project-file';
 import { lotSummary } from '../src/store';
 
 const dir = new URL('../tests/fixtures/flat-lot/', import.meta.url);
 const model = starterModel({
-  project: 'Flat lot test', address: 'Rua de Teste, 10, Florianópolis/SC', city: 'Florianópolis', state: 'SC',
-  lat: -27.59, lon: -48.55, lotWidth: 12, lotDepth: 30, street: 'W',
-  supply: { utility: null, phaseV: 220, lineV: 380, phases: 3, confirmed: false },
+  project: 'Flat lot test', address: 'Rua de Teste, 10, Florianópolis/SC', region: regionFor('Florianópolis', 'SC'),
+  lot: rectLot({ city: 'Florianópolis', state: 'SC', lat: -27.59, lon: -48.55, lotWidth: 12, lotDepth: 30, street: 'W', supply: { phaseV: 220, lineV: 380, phases: 3 } }),
 });
 const now = '2026-10-02T00:00:00.000Z';
 const info: ProjectFile = {

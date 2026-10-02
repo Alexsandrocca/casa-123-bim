@@ -417,34 +417,101 @@ export const Level = z.object({
 });
 export type Level = z.infer<typeof Level>;
 
-/** The place facts every engine reads (P0: nothing about the place is hard-coded). null = not known yet, TO CONFIRM. */
+/** P1: how sure a lot fact is. given = told by the owner or a document; confirmed = checked with whoever decides it;
+ *  to-confirm = a default or a guess ("I don't know"). */
+export const FactStatus = z.enum(['given', 'confirmed', 'to-confirm']);
+export type FactStatus = z.infer<typeof FactStatus>;
+/** Who confirms a fact. */
+export const Who = z.enum(['prefeitura', 'water', 'power', 'gas', 'surveyor', 'soil', 'engineer']);
+export type Who = z.infer<typeof Who>;
+const fact = <T extends z.ZodType>(v: T) => z.object({ value: v.nullable(), status: FactStatus, source: z.string(), date: z.string() });
+export const NumFact = fact(z.number());
+export type NumFact = z.infer<typeof NumFact>;
+export const TextFact = fact(z.string());
+export const BoolFact = fact(z.boolean());
+export const Supply = z.object({
+  /** Phase-to-neutral and phase-to-phase voltages, e.g. 127/220 or 220/380. */
+  phaseV: z.number().positive(),
+  lineV: z.number().positive(),
+  phases: z.number().int().min(1).max(3),
+});
+export type Supply = z.infer<typeof Supply>;
+
+/** P1: the lot. Every engine reads the place from here (site, sun, setbacks, ground, the routes to the street). */
+export const Lot = z.object({
+  /** Corners in lot metres: origin at the front-left corner seen from the street, x along the street, y away from it; counter-clockwise. */
+  polygon: z.array(Point).min(3),
+  /** How sure the shape is (a survey confirms it). */
+  shape: z.object({ status: FactStatus, source: z.string() }),
+  /** The edges on a street: edge i runs from corner i to corner i + 1. A corner lot has two. */
+  streetEdges: z.array(z.number().int().min(0)).min(1),
+  /** Where it is: latitude, longitude and the compass bearing of the lot x axis (0 = north, 90 = east). The street side (−y) is 90° clockwise from it. */
+  geo: z.object({ lat: z.number().min(-90).max(90), lon: z.number().min(-180).max(180), xBearing: z.number(), status: FactStatus, source: z.string() }),
+  terrain: z.object({
+    kind: z.enum(['flat', 'down', 'up', 'side', 'corners']),
+    /** m. down: the rear is this much lower than the street; up: higher; side: the right side (seen from the street) is lower (negative: the left). */
+    fall: z.number(),
+    /** kind 'corners': heights of the lot's bounding-box corners (front-left, front-right, rear-right, rear-left), m; a bilinear surface. */
+    corners: z.tuple([z.number(), z.number(), z.number(), z.number()]).optional(),
+    /** Survey spot heights [x, y, z] in lot metres (a survey upload, later). */
+    spots: z.array(V3pt),
+    status: FactStatus,
+    source: z.string(),
+  }),
+  rules: z.object({
+    zone: TextFact,
+    setbacks: z.object({ front: NumFact, rear: NumFact, left: NumFact, right: NumFact }),
+    /** Maximum site coverage TO, %. */
+    coverage: NumFact,
+    /** Minimum permeable area TP, %. */
+    permeability: NumFact,
+    /** Floor-area ratio CA (built area / lot area). */
+    far: NumFact,
+    /** Height limit, m, and number of floors. */
+    height: NumFact,
+    floors: NumFact,
+    /** Eaves up to this depth are not counted in site coverage, m. */
+    eaves: NumFact,
+    /** Special notes (e.g. the subdivision's own rules). */
+    notes: z.string(),
+  }),
+  /** Public services in the street, each with whom to ask. */
+  services: z.object({
+    sewer: z.object({
+      exists: BoolFact,
+      /** Depth of the public sewer below the street. */
+      depth: NumFact,
+      /** Distance from the lot boundary to the sewer main in the street, m. */
+      offset: z.number(),
+      ask: z.string(),
+    }),
+    water: z.object({ depth: NumFact, ask: z.string() }),
+    power: z.object({ supply: fact(Supply), ask: z.string() }),
+    storm: z.object({ kind: fact(z.enum(['drain', 'gutter', 'none'])), ask: z.string() }),
+    gas: z.object({ exists: BoolFact, /** The family wants piped gas (otherwise it is not on the to-confirm list). */ wanted: z.boolean(), ask: z.string() }),
+  }),
+  notes: z.array(z.string()),
+  /** Other things to confirm, and with whom. */
+  confirm: z.array(z.object({ text: z.string(), who: Who })),
+});
+export type Lot = z.infer<typeof Lot>;
+
+/** The facts about the city every engine reads (P0). null = not known yet, TO CONFIRM. Since P1 the lot's own facts
+ *  (position, north, supply, water company) are in site.lot. */
 export const Region = z.object({
   city: z.string(),
   /** State (UF). */
   state: z.string(),
-  lat: z.number().min(-90).max(90),
-  lon: z.number().min(-180).max(180),
   /** Hours from UTC (Brazil has no daylight saving). */
   utcOffset: z.number(),
-  /** Compass bearing of the house +x axis (0 = north, 90 = east). The street side (−y) is 90° clockwise from it. */
-  xBearing: z.number(),
-  supply: z.object({
-    /** Electricity company, if known. */
-    utility: z.string().nullable(),
-    /** Phase-to-neutral and phase-to-phase voltages, e.g. 127/220 or 220/380. */
-    phaseV: z.number().positive(),
-    lineV: z.number().positive(),
-    phases: z.number().int().min(1).max(3),
-    confirmed: z.boolean(),
-  }),
-  /** Water and sewer company, if known. */
-  water: z.string().nullable(),
   /** City rules we know: the code that sets the eaves limit and the zoning. null = TO CONFIRM. */
   rules: z.object({ code: z.string().nullable(), sanitary: z.string().nullable() }),
   /** PV specific yield for the place, kWh per kWp per month (12 values), with its source. null = TO CONFIRM. */
   pvYield: z.object({ monthly: z.array(z.number()).length(12), source: z.string() }).nullable(),
   /** Share of the year's hot water a solar heater covers here (0–1). null = TO CONFIRM. */
   solarHeaterShare: z.number().min(0).max(1).nullable(),
+  /** 5-minute design rainfall, mm/h (to confirm for the city). */
+  rainIntensity: z.number(),
 });
 export type Region = z.infer<typeof Region>;
 
@@ -460,13 +527,10 @@ export const Project = z.object({
   }),
   site: z.object({
     address: z.string(),
-    lot: z.object({ front: z.number(), rear: z.number(), sides: z.number() }),
-    /** Lot corners in lot coordinates (x from the south boundary, y from the street), counter-clockwise from the street/south corner. */
-    lotPolygon: z.array(Point).min(3),
+    /** P1: the lot (shape, street sides, place, terrain, rules, street services). */
+    lot: Lot,
     /** Where house (0,0) sits in lot coordinates. */
     houseOrigin: z.object({ x: z.number(), y: z.number() }),
-    fallStreetToRear: z.number(),
-    setbacks: z.object({ front: z.number(), rear: z.number(), sides: z.number() }),
     cut: z.object({
       lineY: z.number(),
       gardenLevel: z.number(),
@@ -475,21 +539,8 @@ export const Project = z.object({
     }),
     /** North side walking ramp from the street down to the garden. */
     ramp: z.object({ width: z.number(), slope: z.number() }).optional(),
-    /** Eaves limit not counted in site coverage (from the city rules in region.rules). */
-    eavesLimit: z.number().optional(),
-    /** Where the lot is: city, coordinates, orientation, electricity supply and the city rules we know. */
+    /** The city: name, state, time zone, codes, solar and rain data. */
     region: Region,
-    /** Public services in the street (spec 03). */
-    utilities: z.object({
-      /** Depth of the public sewer below the street (water company to confirm). */
-      sewerDepth: z.number(),
-      /** Distance from the lot boundary to the sewer main in the street. */
-      sewerOffset: z.number(),
-      waterMainDepth: z.number(),
-      /** 5-minute design rainfall, mm/h (to confirm for the city). */
-      rainIntensity: z.number(),
-    }).optional(),
-    toConfirm: z.array(z.string()),
   }),
   structure: z.object({ floorToFloor: z.number(), clearHeight: z.number(), structureDepth: z.number() }),
   levels: z.array(Level).min(1),
