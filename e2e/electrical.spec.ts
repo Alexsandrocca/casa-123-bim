@@ -1,10 +1,11 @@
 import { expect, test, type Page } from '@playwright/test';
+import { openCasa } from './helpers';
 
 type Hook = { frames(): number };
 const ready = (page: Page) => page.waitForFunction(() => ((window as unknown as { __casa3d?: Hook }).__casa3d?.frames() ?? 0) > 10, null, { timeout: 30000 });
 
 test('add an outlet to a bedroom: the circuit load, the cable check and the schedule update', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page);
   await page.getByTestId('elec2d').check();
   await page.getByRole('tab', { name: 'Upper +3.70' }).click();
   await page.evaluate(() => document.fonts.ready);
@@ -25,7 +26,7 @@ test('add an outlet to a bedroom: the circuit load, the cable check and the sche
   expect(await rowText()).not.toBe(before);
   await page.getByRole('tab', { name: 'Materials' }).click();
   const [download] = await Promise.all([page.waitForEvent('download'), page.getByTestId('elec-csv').click()]);
-  expect(download.suggestedFilename()).toBe('casa-123-v3-electrical.csv');
+  expect(download.suggestedFilename()).toBe('casa-123-bim-electrical.csv');
   await page.keyboard.press('Escape');
   await page.getByTestId('checks-toggle').click();
   await page.getByRole('button', { name: 'Whole house' }).click();
@@ -35,7 +36,7 @@ test('add an outlet to a bedroom: the circuit load, the cable check and the sche
 });
 
 test('kitchen minimum points fail when its outlets are removed', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page);
   await page.getByTestId('elec2d').check();
   await page.getByTestId('checks-toggle').click();
   await expect(page.getByRole('row', { name: /Points · Kitchen/ })).toContainText('outlets 5 of 5');
@@ -52,7 +53,7 @@ test('kitchen minimum points fail when its outlets are removed', async ({ page }
 });
 
 test('electrical window: circuits, panels, solar and camera coverage; screenshots', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page);
   await page.getByTestId('electrical').click();
   await expect(page.getByTestId('circuit-table')).toBeVisible();
   await page.locator('.modal .box').screenshot({ path: 'docs/screens/04-circuits.png' });
@@ -71,7 +72,7 @@ test('electrical window: circuits, panels, solar and camera coverage; screenshot
 });
 
 test('3D: camera views and solar modules', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page);
   await page.getByTestId('view-3d').click();
   await ready(page);
   await page.getByTestId('cones').click();

@@ -1,11 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
+import { openCasa } from './helpers';
 
 // These tests cover Version 2 (specs 01–02). Version 3 opens by default since spec 02b, so start on Version 2.
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    if (!localStorage.getItem('casa123bim.ui.3')) localStorage.setItem('casa123bim.ui.3', JSON.stringify({ active: 'v2', level: 'SL', view: '2d' }));
-  });
-});
 
 const area = (page: Page, room: string) => page.locator(`text[data-room="${room}"]`);
 
@@ -19,8 +15,8 @@ async function dragLine(page: Page, selector: string, dx: number, dy: number) {
 }
 
 test('opens Version 2 on the street level with the prototype room areas', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.getByRole('button', { name: 'Version 2' })).toHaveAttribute('aria-pressed', 'true');
+  await openCasa(page, { version: 'v2' });
+  await expect(page.getByTestId('gross')).toContainText('Version 2');
   await expect(page.getByRole('tab', { name: 'Street +0.60' })).toHaveAttribute('aria-selected', 'true');
   await expect(area(page, 'Kitchen')).toHaveText('14.0 m²');
   await expect(area(page, 'Dining')).toHaveText('10.8 m²');
@@ -35,7 +31,7 @@ test('opens Version 2 on the street level with the prototype room areas', async 
 });
 
 test('dragging the kitchen/dining wall changes both rooms live, and undo restores them', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page, { version: 'v2' });
   await expect(area(page, 'Kitchen')).toHaveText('14.0 m²');
   // Towards the rear (up on screen) makes the kitchen bigger and the dining room smaller.
   await dragLine(page, '[data-line^="h:7.60:"]', 0, -40);
@@ -52,7 +48,7 @@ test('dragging the kitchen/dining wall changes both rooms live, and undo restore
 });
 
 test('the stair walls stay fixed', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page, { version: 'v2' });
   await page.getByRole('tab', { name: 'Upper +3.70' }).click();
   await dragLine(page, '[data-line^="v:1.60:"]', 40, 0);
   await expect(page.getByRole('status')).toContainText('stair core');
@@ -60,7 +56,7 @@ test('the stair walls stay fixed', async ({ page }) => {
 });
 
 test('Version 1 and Version 2 keep their edits separately', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page, { version: 'v2', tab: 'design' });
   await page.getByRole('button', { name: 'Version 1' }).click();
   await expect(area(page, 'Kitchen')).toHaveText('18.9 m²'); // Version 1 kitchen: 5.4 × 3.5
   await dragLine(page, '[data-line^="v:5.40:0.00"]', -40, 0);
@@ -70,14 +66,14 @@ test('Version 1 and Version 2 keep their edits separately', async ({ page }) => 
   await expect(area(page, 'Kitchen')).toHaveText('14.0 m²');
   await page.getByRole('button', { name: 'Version 1' }).click();
   await expect(area(page, 'Kitchen')).toHaveText(v1Kitchen!);
-  // Survives a reload (autosave in the browser).
-  await page.waitForTimeout(400);
+  // Survives a reload (saved to the project folder).
+  await expect(page.getByTestId('save-state')).toHaveText('Saved');
   await page.reload();
   await expect(area(page, 'Kitchen')).toHaveText(v1Kitchen!);
 });
 
 test('select a door, resize it, flip it and delete it', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page, { version: 'v2' });
   const door = page.locator('[data-opening="SL-door-03"] .hit');
   await door.click();
   await expect(page.getByTestId('op-width')).toHaveValue('0.80');
@@ -91,7 +87,7 @@ test('select a door, resize it, flip it and delete it', async ({ page }) => {
 });
 
 test('double-click an outside wall adds a window; checks list opens', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page, { version: 'v2' });
   const before = await page.locator('[data-opening]').count();
   const wall = (await page.locator('[data-wall="SL-wall-02"]').boundingBox())!; // north wall
   await page.mouse.dblclick(wall.x + wall.width / 2, wall.y + wall.height * 0.1);
@@ -103,7 +99,7 @@ test('double-click an outside wall adds a window; checks list opens', async ({ p
 });
 
 test('drag a door along its wall', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page, { version: 'v2' });
   await page.locator('[data-opening="SL-door-03"] .hit').click();
   await expect(page.getByText('y = 5.00, x 3.40 → 4.20')).toBeVisible();
   await dragLine(page, '[data-opening="SL-door-03"] .hit', 60, 0);
@@ -112,9 +108,9 @@ test('drag a door along its wall', async ({ page }) => {
 });
 
 test('Save model downloads the JSON and Open model loads it back', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page, { version: 'v2' });
   const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Save model' }).click()]);
-  expect(download.suggestedFilename()).toBe('casa-123-v2.json');
+  expect(download.suggestedFilename()).toMatch(/-bim\.json$/);
   const model = JSON.parse(await (await download.createReadStream()).toArray().then((c) => Buffer.concat(c).toString('utf8')));
   // Rename the kitchen in the saved file, then open it.
   const kitchen = model.elements.find((e: { type: string; level: string; props: { name: string } }) => e.type === 'Space' && e.level === 'SL' && e.props.name === 'Kitchen');
@@ -124,5 +120,5 @@ test('Save model downloads the JSON and Open model loads it back', async ({ page
   await page.getByTestId('undo').click();
   await expect(area(page, 'Kitchen')).toHaveText('14.0 m²');
   await page.getByTestId('open-file').setInputFiles({ name: 'bad.json', mimeType: 'application/json', buffer: Buffer.from('{"hello":1}') });
-  await expect(page.getByRole('status')).toContainText('not a Casa 123 model');
+  await expect(page.getByRole('status')).toContainText('not a model of this app');
 });

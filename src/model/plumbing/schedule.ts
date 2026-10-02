@@ -1,4 +1,5 @@
 // Plumbing schedules: pipe lengths by system, DN and material; fittings; fixtures. All read from the model.
+import { legalCsvLines } from '../legal';
 import type { Fixture, PipeSegment, Project } from '../schema';
 import { kindOf } from './library';
 
@@ -65,7 +66,7 @@ const csvCell = (v: string | number) => (typeof v === 'number' ? String(v) : /["
 /** One CSV file with three sections. */
 export function scheduleCsv(p: Project): string {
   const s = schedule(p);
-  const lines: string[] = ['Pipes', 'System,DN,Material,Metres', ...s.pipeRows.map((r) => [r.system, r.dn, r.material, r.metres].map(csvCell).join(',')),
+  const lines: string[] = [...legalCsvLines(), 'Pipes', 'System,DN,Material,Metres', ...s.pipeRows.map((r) => [r.system, r.dn, r.material, r.metres].map(csvCell).join(',')),
     '', 'Fittings', 'System,DN,Elbows,Tees', ...s.fittingRows.map((r) => [r.system, r.dn, r.elbows, r.tees].map(csvCell).join(',')),
     '', 'Fixtures', 'Fixture,Level,Count', ...s.fixtureRows.map((r) => [r.label, r.level, r.count].map(csvCell).join(','))];
   return lines.join('\n') + '\n';

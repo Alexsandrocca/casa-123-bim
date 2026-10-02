@@ -141,3 +141,15 @@ Sinduscon-SP publishes R8-N for September 2026: **R$ 2,238.58/m²** (read 2026-1
 
 ## Q23 (2026-10-01, spec 08) — Every floor bay needs props during the pour
 With a 0.95 mm MF-75 deck (2.70 m without props, an assumption), every bay longer than 2.70 m is amber: "needs props". That covers the 3.20–4.10 m spans of all floors and both roofs. That is normal for steel deck, but it is a building cost and a schedule item. **Plan for props, or ask for a 1.25 mm deck (about 3.1 m without props)?**
+
+## Q24 (2026-10-02, P0) — Walls moved in the BIM tab do not go back to the design
+The BIM tab still has today's plan editor, so walls, doors and windows can be dragged there too. Those edits change the BIM copy only; the DESIGN tab does not see them, and the next re-approval replaces the rooms, walls and openings with the design's. **Should the BIM tab lock walls, doors and windows (edit them only in DESIGN), or should a wall moved in BIM also move in the design?** For now: BIM edits stay in BIM.
+
+## Q25 (2026-10-02, P0) — Engine texts in Portuguese
+The buttons, menus, headings and hints switch to Portuguese. The texts the engines write (check rules, sources and values, estimate explanations, device and fixture names, assembly and feature names) stay in English for now: translating them means rewriting several hundred sentences in the engines. **Translate them in P5 (when the BIM tab gets its technical drawings and element cards), or earlier?**
+
+## Q26 (2026-10-02, P0) — A first project without a lot wizard
+"New project" asks for name, address, city, latitude, longitude, lot width and depth and which side the street is on, and draws a simple single-storey house (living and kitchen, bedroom, bathroom). Plumbing for it says "no soil stack yet" until P5. Good enough until P1/P2, or should "New project" wait for the lot wizard?
+
+## Q27 (2026-10-02, P0) — AI exchange rate and budget
+The AI settings start at US$ 1 = R$ 5,40 and a budget of US$ 20 a month (warning at 80 %, blocked at 100 %, with an "allow going over" switch). **Which budget do you want?**

@@ -76,7 +76,7 @@ async function main() {
   });
   server.listen(PORT, () => {
     console.log(`Casa BIM is running: http://localhost:${PORT}`);
-    console.log(apiKey ? `AI: connected (${model}).` : 'AI: no key yet. Open the file .env.local in this folder with TextEdit, paste your key after ANTHROPIC_API_KEY=, save, then close and reopen this window.');
+    console.log(apiKey ? `AI: connected (${model}).` : 'AI: no key yet. Double-click "Add AI key.command", paste your key after ANTHROPIC_API_KEY=, save, then close this window and open the app again.');
   });
 }
 

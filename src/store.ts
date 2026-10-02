@@ -7,7 +7,7 @@ import { withMep } from './model/commands';
 import { migrate, upgradeRaw } from './model/migrate';
 import { commit, initHist, redo, runCmd, undo, type Hist } from './model/history';
 import { parseProject, planLevels, entryLevel, type FeatureKind, type PlanLevel, type Project } from './model/schema';
-import type { ProjectFile, VersionEntry } from './model/project-file';
+import { thumbOf, type ProjectFile, type VersionEntry } from './model/project-file';
 import { syncThickness } from './model/eng/commands';
 import type { Lang } from './i18n';
 
@@ -153,6 +153,8 @@ export interface AppState {
 }
 
 let flashTimer: ReturnType<typeof setTimeout> | undefined;
+let saving: Promise<void> | null = null;
+let saveAgain = false;
 let lastPreview: Command | null = null;
 
 const entry = (info: ProjectFile | null, vid: string) => info?.versions.find((v) => v.id === vid);
@@ -191,6 +193,35 @@ export const useApp = create<AppState>((set, get) => {
     if (base) p = migrate(p, base);
     return { p, recovered: !!cached };
   }
+
+  /** Save the dirty versions and project.json to the project folder. */
+  async function doFlush() {
+      const s = get();
+      if (!s.info || !s.dirty.length) return;
+      const info = s.info;
+      set({ saveState: 'saving' });
+      try {
+        // project.json first: it lists the version files (a new approval adds one), then the models
+        const design = s.versions[info.designVersionId]?.present;
+        const lot = design ? lotSummary(design) : info.lot;
+        const saved = await api.put({ ...info, lot, address: design?.site.address ?? info.address, ...(design ? { thumb: thumbOf(design) } : {}) });
+        for (const vid of s.dirty) {
+          const e = entry(info, vid);
+          const h = s.versions[vid];
+          if (!e || !h || e.kind === 'approved') continue;
+          await api.putVersion(info.id, vid, h.present);
+          store.del(KEY.cache(info.id, vid));
+        }
+        // a version edited while it was being saved stays to save
+        set((st) => {
+          const dirty = st.dirty.filter((d) => !s.dirty.includes(d) || st.versions[d] !== s.versions[d]);
+          return { info: st.info?.id === saved.id ? { ...st.info, updated: saved.updated } : st.info, dirty, saveState: dirty.length ? 'unsaved' : 'saved' };
+        });
+      } catch {
+        set({ saveState: 'error' });
+      }
+  }
+
 
   return {
     route: parseRoute(typeof location === 'undefined' ? '' : location.hash),
@@ -328,7 +359,9 @@ export const useApp = create<AppState>((set, get) => {
       const file = `versions/${id}.json`;
       const bimEntry = info.versions.find((v) => v.kind === 'bim');
       const bimOld = bimEntry ? s.versions[bimEntry.id]?.present : undefined;
-      const bim = bimOld ? mergeIntoBim(bimOld, snap) : snap;
+      // re-approving the same design keeps the BIM work (structure, systems, features); another design version starts afresh
+      const prev = info.approvedVersionId ? entry(info, info.approvedVersionId) : undefined;
+      const bim = bimOld && prev?.from === info.designVersionId ? mergeIntoBim(bimOld, snap) : snap;
       const bimNext: Project = { ...bim, meta: { ...bim.meta, version: `${designEntry.name} · BIM`, versionId: 'bim' } };
       const entries: VersionEntry[] = [
         ...info.versions.filter((v) => v.kind !== 'bim'),
@@ -374,25 +407,10 @@ export const useApp = create<AppState>((set, get) => {
     },
     async flush() {
       clearTimeout(saveTimer);
-      const s = get();
-      if (!s.info || !s.dirty.length) return;
-      const info = s.info;
-      set({ saveState: 'saving' });
-      try {
-        for (const vid of s.dirty) {
-          const e = entry(info, vid);
-          const h = s.versions[vid];
-          if (!e || !h || e.kind === 'approved') continue;
-          await api.putVersion(info.id, vid, h.present);
-          store.del(KEY.cache(info.id, vid));
-        }
-        const design = s.versions[info.designVersionId]?.present;
-        const lot = design ? lotSummary(design) : info.lot;
-        const saved = await api.put({ ...info, lot, address: design?.site.address ?? info.address });
-        set((st) => ({ info: st.info?.id === saved.id ? { ...st.info, updated: saved.updated } : st.info, dirty: st.dirty.filter((d) => !s.dirty.includes(d)), saveState: 'saved' }));
-      } catch {
-        set({ saveState: 'error' });
-      }
+      // one save at a time; a save asked for meanwhile runs right after
+      if (saving) { saveAgain = true; return saving; }
+      saving = doFlush().finally(() => { saving = null; if (saveAgain) { saveAgain = false; void get().flush(); } });
+      return saving;
     },
 
     run(cmd) {

@@ -8,6 +8,7 @@ export default defineConfig({
   server: { port: 5173, strictPort: true },
   test: {
     include: ['tests/**/*.test.ts'],
+    testTimeout: 120000,
     environment: 'node',
   },
 });

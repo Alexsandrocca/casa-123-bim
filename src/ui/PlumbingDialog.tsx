@@ -1,4 +1,5 @@
 // Plumbing window: riser diagram, sewer section, schedules and street services. Everything is read from the model.
+import { exportName } from '../model/legal';
 import { useEffect, useState, type ReactNode } from 'react';
 import { setUtilities } from '../model/commands';
 import { pointInRect } from '../model/geometry';
@@ -9,6 +10,7 @@ import { schedule, scheduleCsv } from '../model/plumbing/schedule';
 import type { Fixture, PipeSegment, PipeSystem, Project } from '../model/schema';
 import { groundAt, groundZones } from '../model/site';
 import { useApp, useProject } from '../store';
+import { useT } from '../i18n/useT';
 
 export const SYSTEM_COLOR: Record<PipeSystem, string> = { cold: '#2F7FB5', hot: '#C8412E', sewage: '#8A5A2B', vent: '#8C9399', rain: '#25A3A3' };
 const SYSTEM_NAME: Record<PipeSystem, string> = { cold: 'Cold water', hot: 'Hot water', sewage: 'Sewage', vent: 'Vent', rain: 'Rainwater' };
@@ -19,6 +21,7 @@ export function PlumbingDialog() {
   const set3d = useApp((s) => s.set3d);
   const p = useProject();
   const [tab, setTab] = useState<Tab>('riser');
+  const t = useT();
   useEffect(() => {
     if (!open) return;
     const k = (e: KeyboardEvent) => { if (e.key === 'Escape') set3d({ plumbingOpen: false }); };
@@ -31,14 +34,14 @@ export function PlumbingDialog() {
     <div className="modal" role="dialog" aria-modal="true" aria-labelledby="pl-title" onClick={() => set3d({ plumbingOpen: false })}>
       <div className="box wide" onClick={(e) => e.stopPropagation()}>
         <div className="phead">
-          <h2 id="pl-title">Plumbing · {p.meta.version}</h2>
-          <button className="ghost" onClick={() => set3d({ plumbingOpen: false })} aria-label="Close">✕</button>
+          <h2 id="pl-title">{t('Plumbing')} · {p.meta.version}</h2>
+          <button className="ghost" onClick={() => set3d({ plumbingOpen: false })} aria-label={t('Close')}>✕</button>
         </div>
-        {!has ? <p>This version has no plumbing yet. The plumbing is designed on Version 3.</p> : (
+        {!has ? <p>{t('This version has no plumbing yet. The plumbing is designed on Version 3.')}</p> : (
           <>
             <div className="seg" role="tablist">
-              {([['riser', 'Riser diagram'], ['section', 'Sewer section'], ['schedule', 'Schedule'], ['services', 'Street services']] as [Tab, string][]).map(([t, l]) => (
-                <button key={t} role="tab" aria-selected={tab === t} aria-pressed={tab === t} onClick={() => setTab(t)}>{l}</button>
+              {([['riser', 'Riser diagram'], ['section', 'Sewer section'], ['schedule', 'Schedule'], ['services', 'Street services']] as [Tab, string][]).map(([k, l]) => (
+                <button key={k} role="tab" aria-selected={tab === k} aria-pressed={tab === k} onClick={() => setTab(k)}>{t(l)}</button>
               ))}
             </div>
             {tab === 'riser' && <Riser p={p} />}
@@ -58,10 +61,11 @@ function Riser({ p }: { p: Project }) {
   const [show, setShow] = useState<Record<PipeSystem, boolean>>({ sewage: true, vent: true, cold: true, hot: true, rain: true });
   const pipes = p.elements.filter((e): e is PipeSegment => e.type === 'PipeSegment' && show[e.props.system]);
   const fixtures = p.elements.filter((e): e is Fixture => e.type === 'Fixture');
+  const t = useT();
   const c30 = Math.cos(Math.PI / 6), s30 = 0.5, Z = 1.6; // heights a little exaggerated so the floors read
   const iso = (x: number, y: number, z: number): [number, number] => [(x + y) * c30, (x - y) * s30 - z * Z];
   const pts = pipes.flatMap((s) => [iso(...s.props.start), iso(...s.props.end)]);
-  if (!pts.length) return <p>No pipes shown.</p>;
+  if (!pts.length) return <p>{t('No pipes shown.')}</p>;
   const xs = pts.map((q) => q[0]), ys = pts.map((q) => q[1]);
   const pad = 2, minX = Math.min(...xs) - pad, minY = Math.min(...ys) - pad, w = Math.max(...xs) - minX + pad, h = Math.max(...ys) - minY + pad;
   const S = Math.min(1000 / w, 560 / h);
@@ -72,10 +76,10 @@ function Riser({ p }: { p: Project }) {
       <div className="ctlrow">
         {(Object.keys(show) as PipeSystem[]).map((k) => (
           <label key={k} className="check"><input type="checkbox" checked={show[k]} onChange={(e) => setShow({ ...show, [k]: e.target.checked })} />
-            <i className="swatch" style={{ background: SYSTEM_COLOR[k] }} />{SYSTEM_NAME[k]}</label>
+            <i className="swatch" style={{ background: SYSTEM_COLOR[k] }} />{t(SYSTEM_NAME[k])}</label>
         ))}
       </div>
-      <svg viewBox={`0 0 ${(w * S).toFixed(0)} ${(h * S).toFixed(0)}`} className="iso" role="img" aria-label="Isometric riser diagram" data-testid="riser">
+      <svg viewBox={`0 0 ${(w * S).toFixed(0)} ${(h * S).toFixed(0)}`} className="iso" role="img" aria-label={t('Isometric riser diagram')} data-testid="riser">
         {levels.map((l) => {
           const o = l.outline!;
           const c = [P(o.x0, o.y0, l.elevation), P(o.x1, o.y0, l.elevation), P(o.x1, o.y1, l.elevation), P(o.x0, o.y1, l.elevation)];
@@ -91,12 +95,12 @@ function Riser({ p }: { p: Project }) {
           return <line key={s.id} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={SYSTEM_COLOR[s.props.system]} strokeWidth={Math.max(1.2, s.props.dn / 40)} strokeDasharray={s.props.pressure && s.props.system === 'sewage' ? '5 3' : undefined} />;
         })}
         {fixtures.map((f) => {
-          const t = kindOf(f.props.kind);
+          const k = kindOf(f.props.kind);
           const [x, y] = P(f.props.at[0], f.props.at[1], f.props.z);
-          return <g key={f.id}><circle cx={x} cy={y} r={2.6} className="isofx" /><text x={x + 4} y={y - 3} className="isot">{t.short}</text></g>;
+          return <g key={f.id}><circle cx={x} cy={y} r={2.6} className="isofx" /><text x={x + 4} y={y - 3} className="isot">{k.short}</text></g>;
         })}
       </svg>
-      <p className="hint">Isometric view of every pipe (heights ×{Z}). Dashed brown: the lower level's pumped line.</p>
+      <p className="hint">{t("Isometric view of every pipe (heights ×{z}). Dashed brown: the lower level's pumped line.", { z: t.n(Z, 1) })}</p>
     </div>
   );
 }
@@ -107,7 +111,8 @@ function SewerSection({ p }: { p: Project }) {
   const run = p.elements.filter((e): e is PipeSegment => e.type === 'PipeSegment' && e.props.network === 'sew-collector');
   const g = llGravity(p);
   const u = utilities(p);
-  if (!run.length) return <p>No sewage collector.</p>;
+  const t = useT();
+  if (!run.length) return <p>{t('No sewage collector.')}</p>;
   const zones = groundZones(p);
   const surface = (x: number, y: number) => {
     let z = groundAt(p, x, y, zones);
@@ -127,7 +132,7 @@ function SewerSection({ p }: { p: Project }) {
   const at = (dd: number) => {
     for (let i = 1; i < nodes.length; i++) {
       const a = nodes[i - 1]!, b = nodes[i]!;
-      if (dd <= b.d + 1e-9) { const t = (dd - a.d) / Math.max(b.d - a.d, 1e-9); return [a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t] as const; }
+      if (dd <= b.d + 1e-9) { const f = (dd - a.d) / Math.max(b.d - a.d, 1e-9); return [a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f] as const; }
     }
     const l = nodes[nodes.length - 1]!; return [l.x, l.y] as const;
   };
@@ -142,7 +147,7 @@ function SewerSection({ p }: { p: Project }) {
   const boxes = p.elements.filter((e): e is Fixture => e.type === 'Fixture' && e.props.kind === 'inspection-box');
   const o: ReactNode[] = [];
   o.push(<polyline key="g" points={ground.map(([dd, z]) => `${X(dd)},${Y(z)}`).join(' ')} className="secground" />);
-  for (let zz = Math.ceil(zMin); zz <= zMax; zz++) o.push(<g key={`z${zz}`}><line x1={ml - 4} x2={W - mr} y1={Y(zz)} y2={Y(zz)} className="secgrid" /><text x={ml - 8} y={Y(zz) + 3} className="seclab" textAnchor="end">{zz.toFixed(2)}</text></g>);
+  for (let zz = Math.ceil(zMin); zz <= zMax; zz++) o.push(<g key={`z${zz}`}><line x1={ml - 4} x2={W - mr} y1={Y(zz)} y2={Y(zz)} className="secgrid" /><text x={ml - 8} y={Y(zz) + 3} className="seclab" textAnchor="end">{t.n(zz, 2)}</text></g>);
   for (let i = 1; i < nodes.length; i++) {
     const a = nodes[i - 1]!, b = nodes[i]!;
     o.push(<line key={`p${i}`} x1={X(a.d)} y1={Y(a.zout)} x2={X(b.d)} y2={Y(b.zin)} className="secpipe" />);
@@ -151,26 +156,26 @@ function SewerSection({ p }: { p: Project }) {
     const box = boxes.find((b) => Math.hypot(b.props.at[0] - n.x, b.props.at[1] - n.y) < 0.3);
     if (box) o.push(<rect key={`b${i}`} x={X(n.d) - 5} y={Y(surface(n.x, n.y))} width={10} height={Math.max(2, Y(n.zout) - Y(surface(n.x, n.y)) + 4)} className="secbox" />);
     o.push(<circle key={`n${i}`} cx={X(n.d)} cy={Y(n.zout)} r={2.6} className="secnode" />);
-    o.push(<text key={`t${i}`} x={X(n.d)} y={Y(n.zout) + 14} className="seclab" textAnchor="middle">{n.zout.toFixed(2)}</text>);
+    o.push(<text key={`t${i}`} x={X(n.d)} y={Y(n.zout) + 14} className="seclab" textAnchor="middle">{t.n(n.zout, 2)}</text>);
     if (box) o.push(<text key={`bt${i}`} x={X(n.d)} y={Y(surface(n.x, n.y)) - 6} className="seclab" textAnchor="middle">CI</text>);
   });
   // street sewer
   const sewerZ = -u.sewerDepth;
   o.push(<circle key="sewer" cx={X(total)} cy={Y(sewerZ + 0.15)} r={0.15 * sz} className="secsewer" />);
   o.push(<line key="need" x1={X(total) - 80} x2={X(total) + 10} y1={Y(g.needs)} y2={Y(g.needs)} className="secneed" />);
-  o.push(<text key="needt" x={X(total) - 82} y={Y(g.needs) - 4} className="seclab bad" textAnchor="end">{`connection must arrive above ${g.needs.toFixed(2)}`}</text>);
-  o.push(<text key="sewt" x={X(total) - 8} y={Y(sewerZ) + 22} className="seclab" textAnchor="end">{`street sewer, ${u.sewerDepth.toFixed(2)} m deep`}</text>);
+  o.push(<text key="needt" x={X(total) - 82} y={Y(g.needs) - 4} className="seclab bad" textAnchor="end">{t('connection must arrive above {z}', { z: t.n(g.needs, 2) })}</text>);
+  o.push(<text key="sewt" x={X(total) - 8} y={Y(sewerZ) + 22} className="seclab" textAnchor="end">{t('street sewer, {d} m deep', { d: t.n(u.sewerDepth, 2) })}</text>);
   // what the lower level would do by gravity
   o.push(<line key="ll" x1={X(llD)} y1={Y(g.leaves)} x2={X(total)} y2={Y(g.arrives)} className={'secll' + (g.ok ? ' ok' : '')} />);
-  o.push(<text key="llt" x={X(llD) + 6} y={Y(g.leaves) - 6} className={'seclab ' + (g.ok ? 'ok' : 'bad')}>{`lower level by gravity: leaves ${g.leaves.toFixed(2)}, arrives ${g.arrives.toFixed(2)} — ${g.ok ? 'works' : 'too low: lift station needed'}`}</text>);
-  o.push(<text key="st" x={X(total)} y={H - 10} className="seclab" textAnchor="end">STREET →</text>);
-  o.push(<text key="ho" x={X(0)} y={H - 10} className="seclab">house (stack {run[0]!.props.start[1].toFixed(1)}) ←</text>);
+  o.push(<text key="llt" x={X(llD) + 6} y={Y(g.leaves) - 6} className={'seclab ' + (g.ok ? 'ok' : 'bad')}>{t('lower level by gravity: leaves {a}, arrives {b} — {r}', { a: t.n(g.leaves, 2), b: t.n(g.arrives, 2), r: g.ok ? t('works') : t('too low: lift station needed') })}</text>);
+  o.push(<text key="st" x={X(total)} y={H - 10} className="seclab" textAnchor="end">{`${t('STREET')} →`}</text>);
+  o.push(<text key="ho" x={X(0)} y={H - 10} className="seclab">{t('house (stack {y}) ←', { y: t.n(run[0]!.props.start[1], 1) })}</text>);
   return (
     <div className="pl-tab">
-      <svg viewBox={`0 0 ${W} ${H}`} className="sec" role="img" aria-label="Longitudinal section of the sewage run to the street" data-testid="sewer-section">{o}</svg>
+      <svg viewBox={`0 0 ${W} ${H}`} className="sec" role="img" aria-label={t('Longitudinal section of the sewage run to the street')} data-testid="sewer-section">{o}</svg>
       <div className="ctlrow">
         <SewerDepth p={p} />
-        <span className="hint">{`Brown: the house sewage, ${total.toFixed(1)} m from the farthest stack to the street sewer at 1 %. Dashed: the lower level if it drained by gravity. Vertical scale ×${(sz / sx).toFixed(1)}.`}</span>
+        <span className="hint">{t('Brown: the house sewage, {l} m from the farthest stack to the street sewer at 1 %. Dashed: the lower level if it drained by gravity. Vertical scale ×{v}.', { l: t.n(total, 1), v: t.n(sz / sx, 1) })}</span>
       </div>
     </div>
   );
@@ -180,12 +185,13 @@ function SewerDepth({ p }: { p: Project }) {
   const run = useApp((s) => s.run);
   const u = utilities(p);
   const [v, setV] = useState(u.sewerDepth.toFixed(2));
+  const t = useT();
   useEffect(() => setV(u.sewerDepth.toFixed(2)), [u.sewerDepth]);
   const commit = () => { const n = Number(v.replace(',', '.')); if (Number.isFinite(n) && Math.abs(n - u.sewerDepth) > 1e-6) run(setUtilities({ sewerDepth: n })); else setV(u.sewerDepth.toFixed(2)); };
   return (
     <label className="field small">
-      <span>Street sewer depth</span>
-      <span className="inputwrap"><input type="number" step={0.05} value={v} onChange={(e) => setV(e.target.value)} onBlur={commit} onKeyDown={(e) => { if (e.key === 'Enter') commit(); }} data-testid="sewer-depth" /><em>m (SEMAE to confirm)</em></span>
+      <span>{t('Street sewer depth')}</span>
+      <span className="inputwrap"><input type="number" step={0.05} value={v} onChange={(e) => setV(e.target.value)} onBlur={commit} onKeyDown={(e) => { if (e.key === 'Enter') commit(); }} data-testid="sewer-depth" /><em>{t('m (SEMAE to confirm)')}</em></span>
     </label>
   );
 }
@@ -194,26 +200,27 @@ function SewerDepth({ p }: { p: Project }) {
 
 function Schedule({ p }: { p: Project }) {
   const s = schedule(p);
+  const t = useT();
   const download = () => {
     const blob = new Blob([scheduleCsv(p)], { type: 'text/csv' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `casa-123-${p.meta.versionId}-plumbing-schedule.csv`;
+    a.download = exportName(p, 'plumbing-schedule.csv');
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   };
   return (
     <div className="pl-tab sched">
-      <div className="ctlrow"><b>{s.totalMetres} m of pipe</b><button onClick={download} data-testid="csv">Download CSV</button></div>
+      <div className="ctlrow"><b>{t('{n} m of pipe', { n: t.n(s.totalMetres, Number.isInteger(s.totalMetres) ? 0 : 1) })}</b><button onClick={download} data-testid="csv">{t('Download CSV')}</button></div>
       <div className="schedgrid">
-        <table className="rooms"><thead><tr><th>Pipes</th><th>DN</th><th>Material</th><th>m</th></tr></thead>
-          <tbody>{s.pipeRows.map((r) => <tr key={`${r.system}${r.dn}${r.material}`}><td><i style={{ background: SYSTEM_COLOR[r.system as PipeSystem] }} />{SYSTEM_NAME[r.system as PipeSystem]}</td><td>{r.dn}</td><td>{r.material}</td><td>{r.metres.toFixed(1)}</td></tr>)}</tbody></table>
-        <table className="rooms"><thead><tr><th>Fittings</th><th>DN</th><th>Elbows</th><th>Tees</th></tr></thead>
-          <tbody>{s.fittingRows.map((r) => <tr key={`${r.system}${r.dn}`}><td><i style={{ background: SYSTEM_COLOR[r.system as PipeSystem] }} />{SYSTEM_NAME[r.system as PipeSystem]}</td><td>{r.dn}</td><td>{r.elbows}</td><td>{r.tees}</td></tr>)}</tbody></table>
-        <table className="rooms"><thead><tr><th>Fixtures</th><th>Level</th><th>No.</th></tr></thead>
+        <table className="rooms"><thead><tr><th>{t('Pipes')}</th><th>DN</th><th>{t('Material')}</th><th>m</th></tr></thead>
+          <tbody>{s.pipeRows.map((r) => <tr key={`${r.system}${r.dn}${r.material}`}><td><i style={{ background: SYSTEM_COLOR[r.system as PipeSystem] }} />{t(SYSTEM_NAME[r.system as PipeSystem])}</td><td>{r.dn}</td><td>{r.material}</td><td>{t.n(r.metres, 1)}</td></tr>)}</tbody></table>
+        <table className="rooms"><thead><tr><th>{t('Fittings')}</th><th>DN</th><th>{t('Elbows')}</th><th>{t('Tees')}</th></tr></thead>
+          <tbody>{s.fittingRows.map((r) => <tr key={`${r.system}${r.dn}`}><td><i style={{ background: SYSTEM_COLOR[r.system as PipeSystem] }} />{t(SYSTEM_NAME[r.system as PipeSystem])}</td><td>{r.dn}</td><td>{r.elbows}</td><td>{r.tees}</td></tr>)}</tbody></table>
+        <table className="rooms"><thead><tr><th>{t('Fixtures')}</th><th>{t('Level')}</th><th>{t('No.')}</th></tr></thead>
           <tbody>{s.fixtureRows.map((r) => <tr key={`${r.kind}${r.level}`}><td>{r.label}</td><td>{r.level}</td><td>{r.count}</td></tr>)}</tbody></table>
       </div>
-      <p className="hint">Quantities for design and budgeting. Fittings are counted where pipes meet (two at an angle = elbow; three or more = tee).</p>
+      <p className="hint">{t('Quantities for design and budgeting. Fittings are counted where pipes meet (two at an angle = elbow; three or more = tee).')}</p>
     </div>
   );
 }
@@ -223,19 +230,20 @@ function Schedule({ p }: { p: Project }) {
 function Services({ p }: { p: Project }) {
   const run = useApp((s) => s.run);
   const u = utilities(p);
+  const t = useT();
   const field = (label: string, key: keyof typeof u, unit: string, step: number) => (
     <ServiceField key={key} label={label} value={u[key]} unit={unit} step={step} onCommit={(v) => run(setUtilities({ [key]: v }))} />
   );
   return (
     <div className="pl-tab">
       <div className="services">
-        {field('Street sewer depth', 'sewerDepth', `m below the street (${p.site.region.water ?? 'water company'} to confirm)`, 0.05)}
-        {field('Sewer distance from the lot', 'sewerOffset', 'm into the street', 0.5)}
-        {field('Water main depth', 'waterMainDepth', 'm', 0.1)}
-        {field('Design rainfall', 'rainIntensity', 'mm/h, 5-minute storm (to confirm)', 5)}
+        {field(t('Street sewer depth'), 'sewerDepth', t('m below the street ({w} to confirm)', { w: p.site.region.water ?? t('water company') }), 0.05)}
+        {field(t('Sewer distance from the lot'), 'sewerOffset', t('m into the street'), 0.5)}
+        {field(t('Water main depth'), 'waterMainDepth', 'm', 0.1)}
+        {field(t('Design rainfall'), 'rainIntensity', t('mm/h, 5-minute storm (to confirm)'), 5)}
       </div>
-      <p className="hint">Changing a value re-checks the plumbing at once (and can be undone). The lower level needs the lift station unless the sewer is deep enough.</p>
-      <p className="hint">{networkLabel('sew-collector')}: {llGravity(p).ok ? 'the lower level could drain by gravity.' : 'the lower level cannot drain by gravity.'}</p>
+      <p className="hint">{t('Changing a value re-checks the plumbing at once (and can be undone). The lower level needs the lift station unless the sewer is deep enough.')}</p>
+      <p className="hint">{networkLabel('sew-collector')}: {llGravity(p).ok ? t('the lower level could drain by gravity.') : t('the lower level cannot drain by gravity.')}</p>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { openCasa } from './helpers';
 
 // Spec 08: architectural features and engineering estimates.
 type Hook = { frames(): number };
@@ -9,7 +10,7 @@ const openEngineering = async (page: Page, tab: string) => {
 };
 
 test('assemblies: exterior walls to light steel frame — thickness, U-value and thermal result follow; disclaimer shown', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page);
   await openEngineering(page, 'assemblies');
   await expect(page.getByTestId('disclaimer')).toContainText('ART/RRT');
   await page.getByTestId('asm-default-exterior').selectOption('ext-lsf');
@@ -28,7 +29,7 @@ test('assemblies: exterior walls to light steel frame — thickness, U-value and
 });
 
 test('structure: utilisation colours, load path and kN in 3D; a weaker soil makes bigger footings', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page);
   await openEngineering(page, 'structure');
   const before = await page.getByTestId('footing-table').locator('tbody tr').nth(6).locator('td').last().textContent();
   await page.getByTestId('eng-tab-assumptions').click();
@@ -45,7 +46,7 @@ test('structure: utilisation colours, load path and kN in 3D; a weaker soil make
 });
 
 test('features: a brise on the west living window, placed from the palette, cuts its December sun', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page);
   await openEngineering(page, 'environment');
   const row = page.getByTestId('sun-table').locator('tr[data-window="SL-win-07"]');
   const dec0 = parseFloat((await row.locator('td').nth(2).textContent()) ?? '0');
@@ -71,7 +72,7 @@ test('features: a brise on the west living window, placed from the palette, cuts
 });
 
 test('cost card: both methods, biggest items, snapshot and the other versions', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page);
   await openEngineering(page, 'cost');
   const card = page.getByTestId('cost-card');
   await expect(card).toContainText('By quantities');

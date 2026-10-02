@@ -1,11 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
+import { openCasa } from './helpers';
 
 // These tests cover Version 2 (specs 01–02). Version 3 opens by default since spec 02b, so start on Version 2.
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    if (!localStorage.getItem('casa123bim.ui.3')) localStorage.setItem('casa123bim.ui.3', JSON.stringify({ active: 'v2', level: 'SL', view: '2d' }));
-  });
-});
 
 type Hook = { frames(): number; project(x: number, y: number, z: number): [number, number] };
 const ready = (page: Page) => page.waitForFunction(() => ((window as unknown as { __casa3d?: Hook }).__casa3d?.frames() ?? 0) > 10, null, { timeout: 30000 });
@@ -13,7 +9,7 @@ const screen = (page: Page, x: number, y: number, z: number) =>
   page.evaluate(([a, b, c]) => (window as unknown as { __casa3d: Hook }).__casa3d.project(a!, b!, c!), [x, y, z]);
 
 test('switch between 2D, 3D and split', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page, { version: 'v2' });
   await expect(page.locator('svg.plan')).toBeVisible();
   await page.getByTestId('view-3d').click();
   await ready(page);
@@ -27,7 +23,7 @@ test('switch between 2D, 3D and split', async ({ page }) => {
 });
 
 test('click a wall in 3D selects it in both views; and the 2D plan follows', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page, { version: 'v2' });
   await page.getByTestId('view-split').click();
   await ready(page);
   await page.getByRole('button', { name: 'Street', exact: true }).click();
@@ -47,7 +43,7 @@ test('click a wall in 3D selects it in both views; and the 2D plan follows', asy
 });
 
 test('screenshots: street, garden and section', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page, { version: 'v2' });
   await page.getByTestId('view-3d').click();
   await ready(page);
   await page.getByRole('button', { name: 'Street', exact: true }).click();
@@ -66,7 +62,7 @@ test('screenshots: street, garden and section', async ({ page }) => {
 });
 
 test('walk mode starts at the street and moves with the keyboard', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page, { version: 'v2' });
   await page.getByTestId('view-3d').click();
   await ready(page);
   await page.getByTestId('walk').click();
@@ -80,7 +76,7 @@ test('walk mode starts at the street and moves with the keyboard', async ({ page
 });
 
 test('drag the section plane by its red bar', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page, { version: 'v2' });
   await page.getByTestId('view-3d').click();
   await ready(page);
   await page.getByRole('button', { name: 'Section & sun ▾' }).click();

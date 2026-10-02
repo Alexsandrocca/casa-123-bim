@@ -1,4 +1,5 @@
 // Electrical schedules: circuits, and the bill of materials (cable by section, conduit, boxes, breakers, RCDs, devices).
+import { legalCsvLines } from '../legal';
 import type { Circuit, Conduit, Device, Project } from '../schema';
 import { deviceType } from './library';
 
@@ -53,6 +54,7 @@ export function electricalCsv(p: Project): string {
   const rows = circuitRows(p);
   const b = billOfMaterials(p);
   const lines = [
+    ...legalCsvLines(),
     'Circuits', 'Id,Circuit,Panel,Points,Load,Voltage,Phases,Current A,Section mm2,Breaker A,RCD,Length m,Drop %',
     ...rows.map((r) => [r.id, r.name, r.panel, r.points, r.load, r.voltage, r.phases, r.current, r.section, r.breaker, r.rcd ? 'yes' : 'no', r.length, r.drop].map(csvCell).join(',')),
     '', 'Cable', 'Section mm2,Metres', ...b.cable.map((x) => `${x.section},${x.metres}`),

@@ -108,11 +108,11 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
   const addAt = (x: number, y: number, want?: 'door' | 'window') => {
     const st = useApp.getState();
     const w = nearestWall(x, y, 0.4);
-    if (!w) { st.flash('Click on a wall to add a door or window.'); return; }
+    if (!w) { st.flash(t('Click on a wall to add a door or window.')); return; }
     const exterior = w.props.wallType === 'exterior' || w.props.wallType === 'retaining';
     const role = want ?? (exterior ? 'window' : 'door');
-    if (role === 'window' && !exterior) { st.flash('Windows go on outside walls. Use a door for an inside wall.'); return; }
-    if (w.props.wallType === 'retaining') { st.flash('That wall holds back the ground (retaining wall), so it cannot have openings.'); return; }
+    if (role === 'window' && !exterior) { st.flash(t('Windows go on outside walls. Use a door for an inside wall.')); return; }
+    if (w.props.wallType === 'retaining') { st.flash(t('That wall holds back the ground (retaining wall), so it cannot have openings.')); return; }
     const s = wallSeg(w);
     const id = nextOpeningId(st.versions[st.active]!.present, level, role);
     if (st.run(addOpening(id, w.id, s.o === 'v' ? y : x, role))) st.select(id);
@@ -124,10 +124,10 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
     const [x, y] = toPlan(ev);
     if (tool === 'outlet') {
       const room = spaces.find((sp) => sp.props.cells.some((c) => x > c.x0 && x < c.x1 && y > c.y0 && y < c.y1));
-      if (!room) { st.flash('Click inside a room to add an outlet on its nearest wall.'); return; }
+      if (!room) { st.flash(t('Click inside a room to add an outlet on its nearest wall.')); return; }
       const at = nearestWallPoint(room, [x, y]);
       const id = nextDeviceId(st.versions[st.active]!.present, 'outlet');
-      if (st.run(addDevice(id, 'outlet', level, at, `Outlet · ${room.props.name}`))) { st.select(id); st.flash(`Outlet added to ${room.props.name}; its circuit, cable and schedule are updated.`); }
+      if (st.run(addDevice(id, 'outlet', level, at, `Outlet · ${room.props.name}`))) { st.select(id); st.flash(t('Outlet added to {room}; its circuit, cable and schedule are updated.', { room: room.props.name })); }
       return;
     }
     if (tool === 'feature') {
@@ -139,13 +139,13 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
       if (st.run(addFeature(kind, { opening: og?.getAttribute('data-opening') ?? undefined, wall: w?.id, at: [x, y], level }))) {
         const now = useApp.getState();
         const added = now.versions[now.active]!.present.elements.find((e) => e.type === 'Feature' && !before.elements.some((b) => b.id === e.id));
-        if (added) { st.select(added.id); st.flash(`${featureType(kind).label} placed. ${featureType(kind).effect}`); }
+        if (added) { st.select(added.id); st.flash(t('{label} placed. {effect}', { label: featureType(kind).label, effect: featureType(kind).effect })); }
       }
       return;
     }
     if (tool !== 'select') { addAt(x, y, tool); return; }
-    const t = ev.target as Element;
-    const dg = elec2d ? t.closest('[data-device]') : null;
+    const tg = ev.target as Element;
+    const dg = elec2d ? tg.closest('[data-device]') : null;
     if (dg) {
       const id = dg.getAttribute('data-device')!;
       const dv = p.elements.find((e) => e.id === id);
@@ -157,7 +157,7 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
       }
       return;
     }
-    const fg = plumbing2d ? t.closest('[data-fixture]') : null;
+    const fg = plumbing2d ? tg.closest('[data-fixture]') : null;
     if (fg) {
       const id = fg.getAttribute('data-fixture')!;
       const fx = p.elements.find((e) => e.id === id);
@@ -169,7 +169,7 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
       }
       return;
     }
-    const og = t.closest('[data-opening]'), hg = t.closest('[data-handle]'), wg = t.closest('[data-wall]'), sg = t.closest('[data-space]');
+    const og = tg.closest('[data-opening]'), hg = tg.closest('[data-handle]'), wg = tg.closest('[data-wall]'), sg = tg.closest('[data-space]');
     if (og) {
       const id = og.getAttribute('data-opening')!;
       const op = openings.find((o) => o.id === id)!;
@@ -182,14 +182,14 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
       const at = h.o === 'v' ? y : x;
       const w = nearestWall(x, y, 0.5);
       st.select(w && wallSeg(w).o === h.o ? w.id : null);
-      if (h.locked) { st.flash('That wall belongs to the stair core, which stays fixed.'); return; }
+      if (h.locked) { st.flash(t('That wall belongs to the stair core, which stays fixed.')); return; }
       drag.current = { kind: 'wall', h, at, x0: x, y0: y, moved: false };
     } else if (wg) {
       st.select(wg.getAttribute('data-wall'));
-      st.flash('The outer walls stay fixed. Drag an inside wall to resize rooms.');
+      st.flash(t('The outer walls stay fixed. Drag an inside wall to resize rooms.'));
       return;
-    } else if (t.closest('[data-el]')) {
-      st.select(t.closest('[data-el]')!.getAttribute('data-el'));
+    } else if (tg.closest('[data-el]')) {
+      st.select(tg.closest('[data-el]')!.getAttribute('data-el'));
       return;
     } else if (sg) {
       st.select(sg.getAttribute('data-space'));
@@ -212,17 +212,17 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
       const lim = wallLimits(st.versions[st.active]!.present, level, d.h.o, d.h.c, d.at);
       if (infoRef.current && lim) {
         const at = Math.min(Math.max(snap(to), lim.lo), lim.hi);
-        const edge = at === lim.lo || at === lim.hi ? ' · rooms keep at least 0.80 m' : '';
-        infoRef.current.textContent = `Wall at ${at.toFixed(2)} m${edge}`;
+        const edge = at === lim.lo || at === lim.hi ? ` · ${t('rooms keep at least {v} m', { v: t.n(0.8, 2) })}` : '';
+        infoRef.current.textContent = `${t('Wall at {v} m', { v: t.n(at, 2) })}${edge}`;
       }
     } else if (d.kind === 'device') {
       st.previewCmd(moveDevice(d.id, x - d.dx, y - d.dy));
       const dv = useApp.getState().preview?.elements.find((e) => e.id === d.id);
-      if (infoRef.current && dv?.type === 'Device') infoRef.current.textContent = `${dv.props.name} at x ${dv.props.at[0].toFixed(2)}, y ${dv.props.at[1].toFixed(2)} · its circuit re-routes when you let go`;
+      if (infoRef.current && dv?.type === 'Device') infoRef.current.textContent = t('{name} at x {x}, y {y} · its circuit re-routes when you let go', { name: dv.props.name, x: t.n(dv.props.at[0], 2), y: t.n(dv.props.at[1], 2) });
     } else if (d.kind === 'fixture') {
       st.previewCmd(moveFixture(d.id, x - d.dx, y - d.dy));
       const f = useApp.getState().preview?.elements.find((e) => e.id === d.id);
-      if (infoRef.current && f?.type === 'Fixture') infoRef.current.textContent = `${f.props.name} at x ${f.props.at[0].toFixed(2)}, y ${f.props.at[1].toFixed(2)} · pipes re-route when you let go`;
+      if (infoRef.current && f?.type === 'Fixture') infoRef.current.textContent = t('{name} at x {x}, y {y} · pipes re-route when you let go', { name: f.props.name, x: t.n(f.props.at[0], 2), y: t.n(f.props.at[1], 2) });
     } else {
       st.previewCmd(moveOpening(d.id, (d.o === 'h' ? x : y) - d.off));
     }
@@ -263,7 +263,7 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
     out.push(rect(r, 'carport' + (selection === c.id ? ' sel' : ''), c.id, { 'data-el': c.id }));
     c.props.parking.forEach((b, i) => {
       out.push(rect(b, 'bay', `${c.id}b${i}`));
-      out.push(<text key={`${c.id}bt${i}`} x={px((b.x0 + b.x1) / 2)} y={py((b.y0 + b.y1) / 2)} className="deckt" textAnchor="middle">{`car ${i + 1} · 2.50 × 5.00`}</text>);
+      out.push(<text key={`${c.id}bt${i}`} x={px((b.x0 + b.x1) / 2)} y={py((b.y0 + b.y1) / 2)} className="deckt" textAnchor="middle">{`${t('car {n}', { n: i + 1 })} · ${t.n(2.5, 2)} × ${t.n(5, 2)}`}</text>);
     });
     for (const col of p.elements) {
       if (col.type !== 'Column' || !col.tags.includes('carport')) continue;
@@ -274,9 +274,9 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
       if (d.type !== 'Device' || d.level !== 'carport') continue;
       const at = d.props.at as number[];
       out.push(rect({ x0: at[0]! - 0.12, y0: at[1]! - 0.12, x1: at[0]! + 0.12, y1: at[1]! + 0.12 }, 'ebx', d.id, { 'data-el': d.id }));
-      out.push(<text key={d.id + 't'} x={px(at[0]! - 0.3)} y={py(at[1]! + 0.25)} className="deckt" textAnchor="end">EV 7 kW</text>);
+      out.push(<text key={d.id + 't'} x={px(at[0]! - 0.3)} y={py(at[1]! + 0.25)} className="deckt" textAnchor="end">{t('EV 7 kW')}</text>);
     }
-    out.push(<text key={c.id + 't'} x={px((r.x0 + r.x1) / 2)} y={py(r.y0 + 0.35)} className="deckt strong" textAnchor="middle">{`${c.props.name} · roof +${c.props.roofFront.toFixed(2)} → +${(c.props.roofFront + c.props.slope * (r.y1 - r.y0)).toFixed(2)} · ${c.props.solarModules} solar modules`}</text>);
+    out.push(<text key={c.id + 't'} x={px((r.x0 + r.x1) / 2)} y={py(r.y0 + 0.35)} className="deckt strong" textAnchor="middle">{`${c.props.name} · ${t('roof +{a} → +{b}', { a: t.n(c.props.roofFront, 2), b: t.n(c.props.roofFront + c.props.slope * (r.y1 - r.y0), 2) })} · ${t('{n} solar modules', { n: c.props.solarModules })}`}</text>);
   }
   for (const s of spaces) {
     if (s.props.zone === 'stair') continue;
@@ -331,7 +331,7 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
     const a = spaceArea(s), m = minArea(s), bad = m > 0 && a < m - 0.005;
     const cx = (c.x0 + c.x1) / 2, cy = (c.y0 + c.y1) / 2;
     out.push(<text key={s.id + 'n'} x={px(cx)} y={py(cy + 0.1)} className={c.x1 - c.x0 < 2.2 ? 'rn2' : 'rn'} textAnchor="middle">{s.props.name}</text>);
-    out.push(<text key={s.id + 'a'} x={px(cx)} y={py(cy) + 14} className={'ra' + (bad ? ' bad' : '')} textAnchor="middle" data-room={s.props.name}>{`${a.toFixed(1)} m²${bad ? ' · min ' + m : ''}`}</text>);
+    out.push(<text key={s.id + 'a'} x={px(cx)} y={py(cy) + 14} className={'ra' + (bad ? ' bad' : '')} textAnchor="middle" data-room={s.props.name}>{`${t.n(a, 1)} m²${bad ? ` · ${t('min {m}', { m: t.n(m, Number.isInteger(m) ? 0 : 1) })}` : ''}`}</text>);
   }
 
   // Live dimension strings along the front and the x0 side (BIM style only).
@@ -342,14 +342,14 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
   out.push(line(xs[0]!, yd, xs[xs.length - 1]!, yd, 'dim', 'dx'));
   xs.forEach((v, i) => {
     out.push(line(v, yd - 0.12, v, yd + 0.12, 'dim', `dx${i}`));
-    if (i) out.push(<text key={`dxt${i}`} x={px((v + xs[i - 1]!) / 2)} y={py(yd) - 4} className="dt" textAnchor="middle">{(v - xs[i - 1]!).toFixed(2)}</text>);
+    if (i) out.push(<text key={`dxt${i}`} x={px((v + xs[i - 1]!) / 2)} y={py(yd) - 4} className="dt" textAnchor="middle">{t.n(v - xs[i - 1]!, 2)}</text>);
   });
   out.push(line(xd, ys[0]!, xd, ys[ys.length - 1]!, 'dim', 'dy'));
   ys.forEach((v, i) => {
     out.push(line(xd - 0.12, v, xd + 0.12, v, 'dim', `dy${i}`));
     if (i && v - ys[i - 1]! > 0.5) {
       const m = (v + ys[i - 1]!) / 2, tx = px(xd) - 5, ty = py(m);
-      out.push(<text key={`dyt${i}`} x={tx} y={ty} className="dt" textAnchor="middle" transform={`rotate(-90 ${tx} ${ty})`}>{(v - ys[i - 1]!).toFixed(2)}</text>);
+      out.push(<text key={`dyt${i}`} x={tx} y={ty} className="dt" textAnchor="middle" transform={`rotate(-90 ${tx} ${ty})`}>{t.n(v - ys[i - 1]!, 2)}</text>);
     }
   });
   }
@@ -360,7 +360,7 @@ export function PlanView({ style = 'bim' }: { style?: 'design' | 'bim' }) {
     <div className="planwrap">
       <svg
         ref={svgRef} className={'plan tool-' + tool} viewBox={`0 0 ${W.toFixed(0)} ${H.toFixed(0)}`}
-        role="img" aria-label={`Editable floor plan, ${lv.name}`}
+        role="img" aria-label={t('Editable floor plan, {level}', { level: lv.name })}
         onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={endDrag} onPointerCancel={endDrag}
         onDoubleClick={onDoubleClick}
       >
@@ -405,6 +405,7 @@ function OpeningGlyph({ op, s, selected, line, rect, px, py }: { op: Opening; s:
 
 function Stair({ p, s, level, rect, line, px, py }: { p: Project; s: Space; level: string } & Draw) {
   const c = s.props.cells[0]!;
+  const tr = useT();
   const o: ReactNode[] = [rect(c, 'stairbg', 'bg', { 'data-space': s.id })];
   const chev = (x: number, y: number, k: string) =>
     <path key={k} d={`M${px(x - 0.2)},${py(y - 0.28)} L${px(x)},${py(y)} L${px(x + 0.2)},${py(y - 0.28)}`} className="sarrow" />;
@@ -422,12 +423,12 @@ function Stair({ p, s, level, rect, line, px, py }: { p: Project; s: Space; leve
   const kind = s.props.stairKind;
   if (kind === 'dual') {
     const m = (c.x0 + c.x1) / 2;
-    o.push(...lane(c.x0, m - 0.08, c.y0, c.y1, 'UP', false, 'u'), ...lane(m + 0.08, c.x1, c.y0, c.y1, 'DOWN', false, 'd'));
+    o.push(...lane(c.x0, m - 0.08, c.y0, c.y1, tr('UP'), false, 'u'), ...lane(m + 0.08, c.x1, c.y0, c.y1, tr('DOWN'), false, 'd'));
     o.push(rect({ x0: m - 0.08, y0: c.y0 + 0.3, x1: m + 0.08, y1: c.y1 }, 'cwall', 'cw'), line(c.x1, c.y0 + 0.3, c.x1, c.y1, 'rail', 'rail'));
   } else if (kind === 'lane') {
-    o.push(...lane(c.x0, c.x1, c.y0, c.y1, 'from street', false, 'l'), note(c.y1 + 0.5, 'garden ↑'));
+    o.push(...lane(c.x0, c.x1, c.y0, c.y1, tr('from street'), false, 'l'), note(c.y1 + 0.5, tr('garden ↑')));
   } else if (kind === 'void') {
-    o.push(...lane(c.x0, c.x1, c.y0, c.y1, 'UP', true, 'v'), line(c.x1, c.y0, c.x1, c.y1, 'rail', 'rail'), note(c.y1 + 0.45, 'arrive'));
+    o.push(...lane(c.x0, c.x1, c.y0, c.y1, tr('UP'), true, 'v'), line(c.x1, c.y0, c.x1, c.y1, 'rail', 'rail'), note(c.y1 + 0.45, tr('arrive')));
   } else {
     // U-stair open to the rear; the landing is at the front end.
     const mid = (c.x0 + c.x1) / 2, land = 1.1;
@@ -439,7 +440,7 @@ function Stair({ p, s, level, rect, line, px, py }: { p: Project; s: Space; leve
     o.push(line(c.x0, c.y0 + land, c.x1, c.y0 + land, 'tread', 'land'), rect({ x0: mid - 0.05, y0: c.y0 + land, x1: mid + 0.05, y1: c.y1 }, 'cwall', 'cw'));
     const ax = c.x0 + 0.6, bx = c.x1 - 0.6;
     o.push(<path key="arr" d={`M${px(bx)},${py(c.y1 - 0.2)} L${px(bx)},${py(c.y0 + 0.55)} L${px(ax)},${py(c.y0 + 0.55)} L${px(ax)},${py(c.y1 - 0.25)}`} className="sarrow" />);
-    if (level === planLevels(p)[0] && planLevels(p).length > 1 && p.site.cut.gardenLevel < 0) o.push(note(c.y1 + 0.45, 'to garden ↑'));
+    if (level === planLevels(p)[0] && planLevels(p).length > 1 && p.site.cut.gardenLevel < 0) o.push(note(c.y1 + 0.45, tr('to garden ↑')));
   }
   return <g>{o}</g>;
 }

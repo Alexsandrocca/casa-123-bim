@@ -2,6 +2,79 @@
 
 _Updated by Claude Code after every spec. The manager reads this file._
 
+## 2026-10-02 — P0 done: two tabs, projects, generalisation, AI server
+
+### What was built
+- **Projects home.** Opening the app shows the last project opened, or the list. Each card shows name, address, stage, city and lot area, last edit and a small plan. Buttons: **New project**, **Open**, **Duplicate**, **Export project**, **Delete** (asks first, on the page). **Import project** reads an exported file.
+  - **Casa 123** is the first project, with Versions 1, 2 and 3. Edits this browser kept from before are brought in once, the first time it opens.
+  - **New project** asks for name, address, city, latitude/longitude, lot size and which side the street is on. It draws a simple single-storey house (living and kitchen, bedroom, bathroom) until P1/P2 (Q26).
+- **Inside a project:**
+  - a journey bar *Lot → Start → Plans → 3D → Approve → BIM → Outputs*; Lot, Start and Outputs are greyed "coming in P1/P2/P7";
+  - two tabs, **DESIGN** and **BIM**.
+- **DESIGN tab:** the same model drawn simply.
+  - Plan: room colours, names and areas, clean walls, doors and windows. No pipes, points, dimension chains or checks bar.
+  - 3D: shell, roof, site and sun. No x-ray, systems or structure colours.
+  - Walls, doors and windows drag as before. A side list shows the rooms and their areas, and a room can be renamed there.
+  - **Approve design** freezes a named copy ("Approved 2 — 2026-10-02").
+- **BIM tab:** today's app, unchanged, on the approved version: plan editor, 3D, plumbing, electrical, engineering, features, checks.
+- **Approval:**
+  - after a design edit, both tabs show "Changes since approval: N", with **Re-approve** (BIM follows; the BIM work is kept) and **Discard changes** (back to the approved design; undo brings the change back);
+  - Casa 123 starts with Version 3 approved, so BIM opens as before.
+- **Storage:**
+  - every project is a folder `projects/<id>/` (project.json plus one file per version), written by the local server;
+  - the browser only keeps unsaved changes until the server has them;
+  - `projects/casa-123` is committed; other projects stay out of git unless "Include in git" is on;
+  - Save/Open model still works per version; Export/Import project is one JSON with every version.
+- **No Casa 123 facts in the code.** City, coordinates, north, CPFL 127/220 V, SEMAE, the Piracicaba rules, the PV yield, zone 2 and V0 40 m/s are now in the project's data. The full list is in DECISIONS.
+  - A second project, the **flat-lot fixture**: 12 × 30 m, street to the west, north to the left, one storey, 3 rooms, Florianópolis, 220/380 V. It runs site, 3D, structure, plumbing, electrical, estimates and every check without an error and without one Casa 123 word (test).
+  - Unknown city rules show TO CONFIRM.
+  - Its plumbing says "no soil stack yet" for each fixture instead of drawing nothing (P5 lays out new projects).
+- **Local AI server.**
+  - `Open Casa BIM.command` (the old name still works) starts one server for the app, the project files and the Claude connection.
+  - The key lives only in `.env.local`. **Add AI key.command** opens that file in TextEdit so the owner pastes the key himself.
+  - The header shows "AI: connected · this month US$ x". The AI panel has **Test AI connection** (one tiny call), costs in US$ and R$, and a monthly budget (warns at 80 %, blocks at 100 %, can be allowed).
+  - Every call is logged in the project's `ai-usage.jsonl`.
+  - Model: Claude Opus 5.5.
+- **Command catalogue and dry run** (for P3):
+  - 14 typed commands (resize/rename room, move wall, move/resize/flip/add/delete opening, assembly, feature, fixtures, devices);
+  - a dry run lists the changes in plain words, for example "Garage: 27.0 → 25.1 m² · Kitchen: 14.0 → 15.9 m² · Wall between Garage and Kitchen moved 0.35 m east", plus the checks that change;
+  - nothing is applied until Apply (one undo). Hidden panel: Ctrl/Cmd + Shift + D.
+- **Ready for later:**
+  - all screen text in English and Brazilian Portuguese (PT/EN toggle; Portuguese by default; numbers as 78,2 m²);
+  - the legal notice in both languages under every screen and at the top of every CSV.
+
+### How to see it
+1. Double-click **Open Casa BIM.command**. Keep its window open.
+2. The browser opens the Projects page (or the last project). Click **Open** on Casa 123.
+3. Screenshots: `docs/screens/P0-home.png`, `P0-design.png`, `P0-bim.png`, `P0-flat-lot.png`.
+
+### 2-minute demo script
+1. Double-click **Open Casa BIM.command**. *You see:* the Projects page with Casa 123 (its little plan, "BIM", Piracicaba/SP).
+2. Click **Open**. *You see:* the **PROJETO** (DESIGN) tab with Version 3, a calm coloured plan with names and areas, the journey bar on top and "Aprovado: Approved 1" in a blue strip.
+3. Click **3D**. *You see:* the house, roof and garden, without pipes or colours. Click **2D** again.
+4. Drag the wall between Kitchen and Dining towards the rear. *You see:* both areas change, and the strip turns beige: **"Alterações desde a aprovação: 1"**.
+5. Click the **BIM** tab. *You see:* today's app with the old kitchen size (BIM is still on the approved design) and the same "1 change" strip. Click **Reaprovar**: the kitchen in BIM now has the new size.
+6. Click **EN** at the top. *You see:* every button and heading in English. Click **PT** to go back.
+7. Click **IA: sem chave** (AI: no key). *You see:* three steps to add the key with "Add AI key.command". After you add it and reopen the app, **Testar conexão com a IA** answers "ok" and shows the cost of the test.
+8. Click **← Projetos** and **Novo projeto**. Fill in a name, a city and the coordinates (Google Maps), then **Criar projeto**. *You see:* a small house on your lot, ready to drag.
+
+### Tests
+- `npm test`: 123 unit tests (20 new): the flat-lot run through every engine with no Casa 123 word and the right sun for Florianópolis; the projects API (files only inside `projects/`, frozen snapshots, git rule); the AI proxy with a fake Claude (no key → explanation; usage line with tokens and US$/R$; budget 80 %/100 %); the key never in any answer; **a build with a fake key whose output never contains it**; the catalogue and the dry run (Garage −2 m²).
+- `npm run e2e`: 37 browser tests (6 new): Projects home → DESIGN → BIM, the approval flow, the flat-lot project, AI without a key, the dry run, the language toggle. Every earlier test now runs on its own copy of Casa 123.
+- `npm run build` passes.
+
+### Not done yet / known gaps
+- The texts the engines write (check rules, estimates, device names) are still English (Q25).
+- Walls moved in the BIM tab stay in BIM (Q24).
+- New projects get rule electrical points and three fixtures, but no plumbing layout yet (P5).
+- The first open of Casa 123 loads 2.5 MB of models; it takes about a second.
+
+### Open questions
+New: Q24 (BIM wall edits), Q25 (engine texts in Portuguese), Q26 ("New project" before the lot wizard), Q27 (AI budget). Still open: Q7–Q9, Q11–Q13, Q15, Q17–Q23.
+
+### Next
+P1 (lot wizard), when the manager marks it ready.
+
 ## 2026-10-01 — Spec 08 done: architectural features and engineering estimates
 
 ### What was built

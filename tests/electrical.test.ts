@@ -113,7 +113,8 @@ describe('electrical design (Version 3)', () => {
 
   it('exports the circuit schedule and bill of materials as CSV', () => {
     const csv = electricalCsv(v3);
-    expect(csv.split('\n')[0]).toBe('Circuits');
+    expect(csv.split('\n')[0]).toMatch(/^# Estudo preliminar/); // P0: the legal notice heads every export
+    expect(csv.split('\n')[2]).toBe('Circuits');
     expect(csv).toContain('Section mm2,Metres');
     const b = billOfMaterials(v3);
     expect(b.cable.find((x) => x.section === 2.5)!.metres).toBeGreaterThan(50);

@@ -122,7 +122,8 @@ describe('plumbing schedules', () => {
     expect(s.fittingRows.reduce((a, r) => a + r.elbows + r.tees, 0)).toBeGreaterThan(20);
     expect(s.fixtureRows.find((r) => r.kind === 'toilet' && r.level === 'UF')!.count).toBe(3);
     const csv = scheduleCsv(v3);
-    expect(csv.split('\n')[0]).toBe('Pipes');
+    expect(csv.split('\n')[1]).toMatch(/^# Preliminary design/);
+    expect(csv.split('\n')[2]).toBe('Pipes');
     expect(csv).toContain('System,DN,Material,Metres');
     expect(csv).toContain('Toilet (WC),UF,3');
   });

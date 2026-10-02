@@ -40,8 +40,8 @@ button.danger { color: var(--bad); }
 .app {
   height: 100%; display: grid;
   grid-template-columns: 78px minmax(0, 1fr) 340px;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  grid-template-areas: "top top top" "tools center props" "checks checks checks";
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+  grid-template-areas: "top top top" "bar bar bar" "tools center props" "checks checks checks" "legal legal legal";
 }
 .top { grid-area: top; display: flex; align-items: center; gap: 12px 16px; flex-wrap: wrap; padding: 10px 16px; border-bottom: 2px solid var(--ink); background: var(--paper); }
 .brand { margin-right: 12px; }
@@ -169,7 +169,7 @@ button.small { font-size: 12.5px; min-height: 28px; padding: 3px 10px; }
 @media (max-width: 820px) {
   .views.split { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
   .walkpad { right: 12px; }
-  .app { height: auto; min-height: 100%; grid-template-columns: 64px minmax(0, 1fr); grid-template-rows: auto 70vh auto auto; grid-template-areas: "top top" "tools center" "props props" "checks checks"; }
+  .app { height: auto; min-height: 100%; grid-template-columns: 64px minmax(0, 1fr); grid-template-rows: auto auto 70vh auto auto auto; grid-template-areas: "top top" "bar bar" "tools center" "props props" "checks checks" "legal legal"; }
   .props { border-left: 0; border-top: 1px solid var(--rule); }
 }
 
@@ -323,3 +323,60 @@ td.u-ok { color: var(--ok); } td.u-amber { color: var(--warn); font-weight: 600;
 .legend3d i.u-ok { background: #3F8F4F; } .legend3d i.u-amber { background: #D99A20; } .legend3d i.u-red { background: #C8412E; } .legend3d i.lp { background: #7A3FB0; height: 3px; }
 .kn { font-family: var(--mono); font-size: 10.5px; background: rgba(251,252,250,.92); border: 1px solid #7A3FB0; color: #3A1F5C; padding: 0 4px; border-radius: 3px; white-space: nowrap; pointer-events: none; }
 .kn.red { border-color: #C8412E; color: #C8412E; } .kn.amber { border-color: #D99A20; }
+
+/* ---------- P0: projects, journey, tabs, approval, AI, legal ---------- */
+.back { font-size: 13px; min-height: 30px; padding: 3px 8px; }
+.tabs { display: inline-flex; border: 2px solid var(--ink); border-radius: 6px; overflow: hidden; }
+.tabs button { border: 0; border-radius: 0; font-family: var(--display); font-weight: 700; font-size: 16px; letter-spacing: .08em; padding: 4px 16px; min-height: 32px; background: var(--sheet); }
+.tabs button + button { border-left: 2px solid var(--ink); }
+.tabs button[aria-pressed="true"] { background: var(--ink); color: var(--sheet); }
+.stepper ol { list-style: none; display: flex; flex-wrap: wrap; gap: 2px; margin: 0; padding: 0; }
+.stepper button { min-height: 28px; padding: 2px 8px; font-size: 12.5px; border-color: transparent; background: transparent; display: inline-flex; align-items: center; gap: 5px; }
+.stepper button:disabled { opacity: .5; }
+.stepper small { font-size: 10px; color: var(--muted); font-family: var(--mono); }
+.stepper .n { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--rule); font-size: 11px; font-family: var(--mono); }
+.stepper li.cur button { color: var(--accent); font-weight: 600; }
+.stepper li.cur .n { background: var(--accent); color: var(--sheet); border-color: var(--accent); }
+.approvalbar { grid-area: bar; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 5px 16px; background: var(--accent-w); font-size: 13px; border-bottom: 1px solid var(--rule); }
+.approvalbar.changed { background: #F6EAD2; }
+.approvalbar .chg { font-weight: 600; color: var(--warn); }
+.savestate { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+.savestate.error { color: var(--bad); } .savestate.unsaved, .savestate.saving { color: var(--warn); }
+.aiind { font-size: 12px; min-height: 28px; padding: 2px 10px; color: var(--muted); }
+.aiind.on { color: var(--ok); } .aiind.warn { color: var(--warn); border-color: var(--warn); }
+.legal { grid-area: legal; display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 18px; padding: 4px 12px; font-size: 11.5px; color: var(--muted); border-top: 1px solid var(--rule); background: var(--paper); }
+.loadingpage { display: grid; place-items: center; height: 100%; color: var(--muted); gap: 8px; align-content: center; }
+.props.design .roomlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.roomlist button { width: 100%; display: grid; grid-template-columns: 14px 1fr auto; gap: 8px; align-items: center; text-align: left; border-color: transparent; background: transparent; }
+.roomlist button.sel { border-color: var(--accent); background: var(--accent-w); }
+.roomlist i { width: 12px; height: 12px; border: 1px solid var(--rule); }
+.roomlist b { font-family: var(--mono); font-weight: 500; font-size: 12.5px; }
+.approvebox { margin-top: auto; display: grid; gap: 6px; padding-top: 10px; border-top: 1px solid var(--rule); }
+.approvebox button { justify-self: stretch; }
+.app.tab-design .tools { }
+.devtext { width: 100%; font-family: var(--mono); font-size: 12.5px; padding: 8px; border: 1px solid var(--rule); background: var(--paper); color: var(--ink); }
+.devres ul { margin: 0; padding-left: 18px; font-size: 13.5px; }
+.howto ol { margin: 6px 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; }
+
+.home { min-height: 100%; display: flex; flex-direction: column; }
+.hometop { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; padding: 18px 24px 12px; border-bottom: 2px solid var(--ink); }
+.homebody { flex: 1; width: min(1100px, 100%); margin: 0 auto; padding: 18px 16px 24px; display: grid; gap: 14px; align-content: start; }
+.plist { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.pcard { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 12px; background: var(--sheet); border: 1px solid var(--rule); }
+.pthumb { padding: 0; border: 1px solid var(--rule); background: var(--paper); height: 150px; display: block; }
+.thumb { width: 100%; height: 100%; display: block; }
+.thumb.empty { background: repeating-linear-gradient(45deg, var(--paper), var(--paper) 6px, var(--sheet) 6px, var(--sheet) 12px); }
+.th-lot { fill: #EEF1EA; stroke: var(--muted); stroke-width: .12; }
+.th-room { stroke: var(--ink); stroke-width: .08; }
+.pinfo { display: grid; gap: 6px; align-content: start; }
+.pmeta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--muted); align-items: center; }
+.stagechip { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; padding: 1px 8px; border: 1px solid var(--accent); color: var(--accent); border-radius: 10px; }
+.confirm { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px; background: #F9E7E2; border: 1px solid var(--bad); font-size: 13.5px; }
+.newproj { background: var(--sheet); border: 1px solid var(--accent); padding: 14px; display: grid; gap: 10px; }
+.nfgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px 14px; }
+.nf { display: grid; gap: 3px; font-size: 13.5px; }
+.nf input, .nf select, .props .field input { font: inherit; padding: 6px 8px; border: 1px solid var(--rule); border-radius: 4px; background: var(--paper); color: var(--ink); min-height: 34px; }
+@media (max-width: 640px) {
+  .pcard { grid-template-columns: 1fr; }
+  .pthumb { height: 120px; }
+}

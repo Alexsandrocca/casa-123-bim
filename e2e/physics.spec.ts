@@ -1,11 +1,12 @@
 import { expect, test, type Page } from '@playwright/test';
+import { openCasa } from './helpers';
 
 // Spec 04b: plumbing and electrical that obey the building.
 type Hook = { frames(): number };
 const ready = (page: Page) => page.waitForFunction(() => ((window as unknown as { __casa3d?: Hook }).__casa3d?.frames() ?? 0) > 10, null, { timeout: 30000 });
 
 test('physics colours on the plan: street level and upper floor; every run hosted, no clashes', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page);
   await page.getByTestId('plumbing2d').check();
   await page.getByTestId('elec2d').check();
   await page.getByTestId('physics2d').check();
@@ -24,7 +25,7 @@ test('physics colours on the plan: street level and upper floor; every run hoste
 });
 
 test('"Why here?" on a pipe and on a device', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page);
   await page.getByTestId('plumbing2d').check();
   await page.locator('[data-el^="cold-SL"]').first().click({ force: true });
   await expect(page.getByTestId('why-here')).toContainText(/In (the )?|Lowered ceiling|Shaft|wall/);
@@ -35,7 +36,7 @@ test('"Why here?" on a pipe and on a device', async ({ page }) => {
 });
 
 test('3D: the Physics view shows shafts and plenums, every run in the colour of its host', async ({ page }) => {
-  await page.goto('/');
+  await openCasa(page);
   await page.getByTestId('view-3d').click();
   await ready(page);
   await page.getByTestId('physics').click();

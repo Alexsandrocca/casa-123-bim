@@ -44,12 +44,17 @@ export const ProjectFile = z.object({
   includeInGit: z.boolean(),
   created: z.string(),
   updated: z.string(),
+  /** Small plan for the project list: the lot outline and the entry floor's rooms, in lot coordinates. */
+  thumb: z.object({
+    lot: z.array(z.tuple([z.number(), z.number()])),
+    rooms: z.array(z.tuple([z.number(), z.number(), z.number(), z.number(), z.string()])),
+  }).optional(),
 });
 export type ProjectFile = z.infer<typeof ProjectFile>;
 
 /** Ids are folder names: lower case letters, digits and hyphens. */
 export const slugify = (name: string) =>
-  name.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'project';
+  name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'project';
 
 /** Global settings (projects/settings.json): AI prices, exchange rate, monthly budget. */
 export const Settings = z.object({
@@ -64,3 +69,17 @@ export const Settings = z.object({
   }),
 });
 export type Settings = z.infer<typeof Settings>;
+
+/** The list thumbnail of a design model: lot outline and the entry floor's room cells, in lot coordinates. */
+export function thumbOf(p: { site: { lotPolygon: [number, number][]; houseOrigin: { x: number; y: number } }; levels: { id: string; plan: boolean; elevation: number }[]; elements: { type: string; level: string; props: unknown }[] }): NonNullable<ProjectFile['thumb']> {
+  const plan = p.levels.filter((l) => l.plan);
+  const entry = [...plan].sort((a, b) => Math.abs(a.elevation) - Math.abs(b.elevation))[0]?.id;
+  const r2 = (v: number) => Math.round(v * 100) / 100;
+  const rooms: [number, number, number, number, string][] = [];
+  for (const e of p.elements) {
+    if (e.type !== 'Space' || e.level !== entry) continue;
+    const sp = e.props as { zone: string; cells: { x0: number; y0: number; x1: number; y1: number }[] };
+    for (const c of sp.cells) rooms.push([r2(c.x0 + p.site.houseOrigin.x), r2(c.y0 + p.site.houseOrigin.y), r2(c.x1 + p.site.houseOrigin.x), r2(c.y1 + p.site.houseOrigin.y), sp.zone]);
+  }
+  return { lot: p.site.lotPolygon.map(([x, y]) => [r2(x), r2(y)]), rooms };
+}

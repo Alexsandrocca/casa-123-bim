@@ -5,9 +5,10 @@ import type { Project } from '../schema';
 import { assemblyOf, values } from './assemblies';
 import { section } from './steel';
 import { DISCLAIMER, costOf, frameOf } from './index';
+import { legalCsvLines } from '../legal';
 
 const cell = (v: string | number) => { const s = typeof v === 'number' ? String(+v.toFixed(3)) : v; return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
-const rows = (head: string[], body: (string | number)[][]) => [`# ${DISCLAIMER}`, head.join(','), ...body.map((r) => r.map(cell).join(','))].join('\n') + '\n';
+const rows = (head: string[], body: (string | number)[][]) => [...legalCsvLines(), `# ${DISCLAIMER}`, head.join(','), ...body.map((r) => r.map(cell).join(','))].join('\n') + '\n';
 
 export function assembliesCsv(p: Project): string {
   const body: (string | number)[][] = [];

@@ -48,6 +48,7 @@ export function resizeRoom(room: string, deltaM2: number, level?: string): Comma
       if (target < 1) throw new CommandError(`${s.props.name} would be smaller than 1 m².`);
       const handles = lineHandles(p, s.level).filter((h) => !h.locked && h.spaceIds.includes(s.id))
         .sort((a, b) => (b.b - b.a) - (a.b - a.a));
+      let best: { next: Project; err: number } | null = null;
       for (const h of handles) {
         const len = h.b - h.a;
         // which side of the line the room is on decides the direction
@@ -60,8 +61,11 @@ export function resizeRoom(room: string, deltaM2: number, level?: string): Comma
         let next: Project;
         try { next = moveWall(s.level, h.o, h.c, at, to).apply(p); } catch { continue; }
         const after = next.elements.find((e): e is Space => e.type === 'Space' && e.id === s.id);
-        if (after && Math.abs(spaceArea(after) - target) <= 0.05 + Math.abs(deltaM2) * 0.05) return next;
+        const err = after ? Math.abs(spaceArea(after) - target) : Infinity;
+        // walls move in 5 cm steps: keep the wall that lands closest to the area asked for
+        if (err <= 0.05 + Math.abs(deltaM2) * 0.05 && (!best || err < best.err)) best = { next, err };
       }
+      if (best) return best.next;
       throw new CommandError(`No inside wall of ${s.props.name} can move far enough to change it by ${deltaM2.toFixed(1)} m².`);
     },
   };
